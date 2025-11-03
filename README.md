@@ -22,3 +22,7 @@ Scripture Habit is a web application designed to support individuals in building
 
 > "If ye have desires to serve God ye are called to the work."  
 > — Doctrine and Covenants 4:3
+
+## Bmbola Osholowu's Favorite Quote
+
+“Service is the rent we pay for the privilege of living on this earth.” — Shirley Chisholm
