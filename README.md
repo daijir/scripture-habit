@@ -23,13 +23,10 @@ Scripture Habit is a web application designed to support individuals in building
 > "If ye have desires to serve God ye are called to the work."  
 > — Doctrine and Covenants 4:3
 
-<<<<<<< HEAD
 ## Greice Moreira's Favorite Quote from Scripture
 
 > "Voici, Dieu est ma délivrance, je serai plein de confiance, et je ne craindrai rien ; car le Seigneur Jéhovah est ma force et le sujet de mes louanges ; c’est lui qui m’a sauvé."  
 > — 2 Néphi 22:2
-=======
 ## Bmbola Osholowu's Favorite Quote
 
 “Service is the rent we pay for the privilege of living on this earth.” — Shirley Chisholm
->>>>>>> origin/main
