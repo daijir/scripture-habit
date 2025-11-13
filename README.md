@@ -30,3 +30,6 @@ Scripture Habit is a web application designed to support individuals in building
 ## Bmbola Osholowu's Favorite Quote
 
 “Service is the rent we pay for the privilege of living on this earth.” — Shirley Chisholm
+
+## Ivan Sembatya
+"It's better to trust in God than putting confidence in man".(psalms 118:5)
