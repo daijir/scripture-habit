@@ -1,0 +1,8 @@
+# Ignore the service account key
+serviceAccountKey.json
+
+# Ignore node_modules
+node_modules
+
+# Ignore .env file
+.env
