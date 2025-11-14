@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
+import type { Analytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -19,7 +20,16 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+let analytics: Analytics | undefined;
+try {
+  // analytics may throw if config is missing or measurementId is not set.
+  analytics = getAnalytics(app);
+} catch (err) {
+  // Non-fatal: analytics is optional during development.
+  // Keep app usable even if analytics can't be initialized.
+  // eslint-disable-next-line no-console
+  console.warn('Firebase analytics initialization failed (continuing without analytics):', err);
+}
 const auth = getAuth(app);
 
 export { app, analytics, auth };
