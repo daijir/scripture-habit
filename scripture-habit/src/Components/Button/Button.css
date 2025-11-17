@@ -1,0 +1,24 @@
+.GlassButton {
+  padding: 0.8rem 1.5rem;
+  border-radius: 0.5rem;
+
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+
+  cursor: pointer;
+  color: var(--black);
+  font-size: 1em;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.GlassButton:hover {
+  opacity: 0.9;
+  background-color: rgba(255, 255, 255, 0.35); 
+}
+
+.GlassButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
