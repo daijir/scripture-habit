@@ -1,13 +1,13 @@
 import React from 'react';
-import Hero from './Components/Hero/Hero';
-import RightSide from './Components/RightSide/RightSide';
-import Sidebar from './Components/Sidebar/Sidebar';
-
+import Hero from '../Hero/Hero';
+import RightSide from '../RightSide/RightSide';
+import Sidebar from '../Sidebar/Sidebar';
+import './Dashboard.css';
 
 const Dashboard  = () => {
   return (
-    <div className='App'>
-      <div className='AppGlass'>
+    <div className='App Dashboard'>
+      <div className='AppGlass Grid'>
           <Sidebar/>
           <Hero/>
           <RightSide/>

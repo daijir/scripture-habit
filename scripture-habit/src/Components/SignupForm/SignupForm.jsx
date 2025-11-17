@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import Button from '../Button/Button';
 
 export default function SignupForm() {
   const [nickname, setNickname] = useState('');
@@ -52,9 +53,9 @@ export default function SignupForm() {
             style={{ width: '100%', padding: 6 }}
           />
         </div>
-        <button type="submit" style={{ padding: 8 }}>
+        <Button type="submit">
           Sign Up
-        </button>
+        </Button>
       </form>
       {error && <p style={{ color: 'red', marginTop: 10 }}>{error}</p>}
     </div>

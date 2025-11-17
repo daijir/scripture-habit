@@ -25,11 +25,12 @@ const Sidebar = () => {
                 </div>
             ]
         }
-        )}
-      </div>
-      <div className="menuItem">
+        )}      
+        <div className="menuItem">
           <UilSignOutAlt/>
+        </div>
       </div>
+
     </div>
   );
 };
