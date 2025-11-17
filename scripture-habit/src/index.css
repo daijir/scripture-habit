@@ -11,6 +11,41 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --yellow: linear-gradient(180deg, #F8D49A -146.42%, #FAD79D -46.42%);
+  --orange: #fca61f;
+  --black: #242d49;
+  --gray: #788097;
+  --purple: linear-gradient(180deg, #BB67FF 0%, #C484F3 100%);
+  --pink: #FF919D;
+  --glass: rgba(255, 255, 255, 0.54);
+  --boxShadow: 0px 19px 60px rgb(0 0 0 / 8%);
+  --smboxShadow: -79px 51px 60px rgba(0, 0, 0, 0.08);
+  --activeItem: #f799a354;
+}
+
+.App {
+  background: linear-gradient(
+    106.37deg,
+    #feac5e 29.63%,
+    #c779d0 51.55%,
+    #4bc0c8 90.85%
+  );
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+}
+
+.AppGlass {
+  display: grid;
+  height: 97%;
+  width: 97%;
+  border-radius: 2rem;
+  background-color: var(--glass);
+  overflow: hidden;
+  grid-template-columns: 11rem auto 20rem;
+  gap: 10px;
 }
 
 a {

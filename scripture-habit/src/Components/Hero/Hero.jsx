@@ -1,7 +1,7 @@
 import React from 'react';
 import './Hero.css';
 
-const Hero: React.FC = () => {
+const Hero = () => {
   return (
     <div className="Hero">
       <p>Hero</p>
