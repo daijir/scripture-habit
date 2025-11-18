@@ -6,6 +6,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import Hero from '../Hero/Hero';
 import RightSide from '../RightSide/RightSide';
 import Sidebar from '../Sidebar/Sidebar';
+import GroupChat from '../GroupChat/GroupChat'; // Import GroupChat
 import './Dashboard.css';
 
 const Dashboard = () => {
@@ -17,7 +18,7 @@ const Dashboard = () => {
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      setLoading(false);
+      // Don't set loading to false here, wait for user data to be fetched
     });
 
     return () => unsubscribeAuth();
@@ -25,12 +26,14 @@ const Dashboard = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      setLoading(true);
       if (user) {
         try {
           const userRef = doc(db, 'users', user.uid);
           const userSnap = await getDoc(userRef);
           if (userSnap.exists()) {
-            setUserData(userSnap.data());
+            // Include user's UID in the userData state
+            setUserData({ uid: user.uid, ...userSnap.data() });
           } else {
             console.log("No such user document!");
             setUserData(null);
@@ -93,12 +96,12 @@ const Dashboard = () => {
     );
   }
 
-  // If user is in a group
+  // If user is in a group, render the chat interface
   return (
     <div className='App Dashboard'>
       <div className='AppGlass Grid'>
           <Sidebar/>
-          <Hero/>
+          <GroupChat groupId={userData.groupId} userData={userData} />
           <RightSide/>
       </div>
     </div>
