@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { auth, db } from './firebase';
-import { doc, getDoc, writeBatch, increment } from 'firebase/firestore';
+import { doc, getDoc, writeBatch } from 'firebase/firestore'; // Removed 'increment'
 import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -73,7 +73,7 @@ export default function JoinGroup() {
       // 1. Update group: add user to members array and increment membersCount
       batch.update(groupRef, {
         members: [...groupData.members, user.uid],
-        membersCount: increment(1)
+        membersCount: groupData.membersCount + 1 // Use client-side calculation
       });
 
       // 2. Update user: set their groupId
@@ -106,7 +106,7 @@ export default function JoinGroup() {
             type="text"
             placeholder="Enter Group ID"
             value={groupCode}
-            onChange={(e) => setGroupCode(e.target.value)}
+            onChange={(e) => setGroupCode(e.g.target.value)}
             required
           />
 
