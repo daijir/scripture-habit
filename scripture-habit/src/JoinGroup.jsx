@@ -106,7 +106,7 @@ export default function JoinGroup() {
             type="text"
             placeholder="Enter Group ID"
             value={groupCode}
-            onChange={(e) => setGroupCode(e.g.target.value)}
+            onChange={(e) => setGroupCode(e.target.value)}
             required
           />
 
