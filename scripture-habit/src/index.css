@@ -11,47 +11,66 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --yellow: linear-gradient(180deg, #F8D49A -146.42%, #FAD79D -46.42%);
+  --orange: #fca61f;
+  --black: #242d49;
+  --gray: #788097;
+  --purple: linear-gradient(180deg, #BB67FF 0%, #C484F3 100%);
+  --pink: #FF919D;
+  --glass: rgba(255, 255, 255, 0.54);
+  --boxShadow: 0px 19px 60px rgb(0 0 0 / 8%);
+  --smboxShadow: -79px 51px 60px rgba(0, 0, 0, 0.08);
+  --activeItem: #f799a354;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
+.App {
+  background: linear-gradient(
+    106.37deg,
+    #feac5e 29.63%,
+    #c779d0 51.55%,
+    #4bc0c8 90.85%
+  );
+  height: 100vh;
+  width: 100vw;
   display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+}
+
+.AppGlass {
+  height: 97%;
+  width: 97%;
+  border-radius: 2rem;
+  background-color: var(--glass);
+  overflow: hidden;
+}
+
+.welcome {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  
+  align-items: center;     
+  width: 90vw;              
+  max-width: 600px;        
+  height: 80vh;             
+  border-radius: 2rem;
+  background-color: var(--glass);
+  padding: 2rem;
+  text-align: center;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.AppGlass.welcome .buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
 @media (prefers-color-scheme: light) {

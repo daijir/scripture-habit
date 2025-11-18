@@ -1,0 +1,11 @@
+
+.Grid {
+  display: grid;
+  height: 97%;
+  width: 97%;
+  border-radius: 2rem;
+  background-color: var(--glass);
+  overflow: hidden;
+  grid-template-columns: 11rem auto 20rem;
+  gap: 10px;
+}

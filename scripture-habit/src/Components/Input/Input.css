@@ -1,0 +1,27 @@
+.GlassInputContainer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 300px;
+}
+
+.GlassInput {
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+
+  /* glass effect */
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background-color: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(10px);
+
+  color: var(--black);
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.GlassInput:focus {
+  border-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.25);
+}
