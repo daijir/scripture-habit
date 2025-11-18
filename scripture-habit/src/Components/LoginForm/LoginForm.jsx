@@ -2,19 +2,30 @@ import { useState } from 'react';
 import './LoginForm.css';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
+import { auth } from '../../firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
     if (!email.endsWith('@gmail.com')) {
       setError('Please use a Gmail address.');
       return;
+    }
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate('/dashboard');
+    } catch (error) {
+      setError(error.message);
     }
   };
 
