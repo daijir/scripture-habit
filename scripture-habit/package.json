@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@iconscout/react-unicons": "^2.2.5",
-    "firebase": "^12.5.0",
+    "firebase": "^12.6.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router-dom": "^7.9.6"
