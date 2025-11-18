@@ -32,9 +32,28 @@ app.get('/groups', async (_req, res) => {
 });
 
 // Join a group (simple validation). Expects { groupId, userId }
-app.post('/join-group', async (req, res) => {
-  const { groupId, userId } = req.body;
-  if (!groupId || !userId) return res.status(400).json({ error: 'groupId and userId required' });
+// Middleware to verify Firebase ID token from `Authorization: Bearer <token>` header
+async function verifyIdToken(req: any, res: any, next: any) {
+  const authHeader = (req.headers.authorization || req.headers.Authorization) as string | undefined;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Missing or invalid Authorization header' });
+  }
+  const idToken = authHeader.split(' ')[1];
+  try {
+    const decoded = await admin.auth().verifyIdToken(idToken);
+    // attach uid to request for handlers
+    req.userUid = decoded.uid;
+    return next();
+  } catch (err) {
+    return res.status(401).json({ error: 'Invalid ID token', details: String(err) });
+  }
+}
+
+app.post('/join-group', verifyIdToken, async (req: any, res: any) => {
+  const { groupId } = req.body;
+  const userId = req.userUid as string | undefined;
+  if (!groupId) return res.status(400).json({ error: 'groupId required' });
+  if (!userId) return res.status(401).json({ error: 'authentication required' });
 
   try {
     const groupRef = db.collection('groups').doc(groupId);

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { getFirestore, doc, updateDoc, arrayUnion } from 'firebase/firestore';
-import { app } from '../firebase';
+import { app, auth } from '../firebase';
 
 type Props = {
   group: { id: string; name: string; description?: string; members?: string[] };
@@ -21,8 +21,28 @@ export default function GroupCard({ group, currentUser }: Props) {
     if (isMember) return;
     setJoining(true);
     try {
-      const groupRef = doc(db, 'groups', group.id);
-      await updateDoc(groupRef, { members: arrayUnion(currentUser.uid) });
+      // Try server-side join first (requires ID token)
+      const backend = import.meta.env.VITE_BACKEND_URL ?? 'http://localhost:5001';
+      const idToken = await auth.currentUser?.getIdToken();
+      if (idToken) {
+        const res = await fetch(`${backend}/join-group`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${idToken}`,
+          },
+          body: JSON.stringify({ groupId: group.id }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err?.error || 'Server join failed');
+        }
+        // server will write membership to Firestore; onSnapshot will update UI
+      } else {
+        // fallback to client-side update if token unavailable
+        const groupRef = doc(db, 'groups', group.id);
+        await updateDoc(groupRef, { members: arrayUnion(currentUser.uid) });
+      }
     } catch (err) {
       console.error('Join failed', err);
       alert('Unable to join group');
