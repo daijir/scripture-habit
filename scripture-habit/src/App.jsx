@@ -7,6 +7,8 @@ import Sidebar from './Components/Sidebar/Sidebar';
 import LoginForm from './Components/LoginForm/LoginForm';
 import Button from './Components/Button/Button';
 import Dashboard from './Components/Dashboard/Dashboard';
+import GroupForm from './Components/GroupForm/GroupForm';
+import JoinGroup from './JoinGroup.jsx'
 
 const App  = () => {
   return (
@@ -37,6 +39,8 @@ const App  = () => {
       <Route path="/signup" element={<SignupForm />} />
       {/* Dashboard page */}
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/group-form" element={<GroupForm />} />
+      <Route path="/join-group" element={<JoinGroup />} />
     </Routes>
   );
 };
