@@ -87,10 +87,14 @@ const Dashboard = () => {
         <div className='AppGlass welcome'>
           <h1>Welcome, {userData.nickname}!</h1>
           <p>You are not part of any group yet.</p>
-          <Link to="/group-form">
-            <button className="create-btn">Create a Group</button>
-          </Link>
-          {/* TODO: Add Join Group button later */}
+          <div className="welcome-buttons">
+            <Link to="/group-form">
+              <button className="create-btn">Create a Group</button>
+            </Link>
+            <Link to="/join-group">
+              <button className="join-btn">Join a Group</button>
+            </Link>
+          </div>
         </div>
       </div>
     );
