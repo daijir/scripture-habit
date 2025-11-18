@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import Button from '../Button/Button';
-import { auth } from '../../firebase';
+import { auth, db } from '../../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
 export default function SignupForm() {
@@ -21,7 +22,15 @@ export default function SignupForm() {
     }
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Save additional user info to Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        nickname: nickname,
+        email: email,
+      });
+
       navigate('/dashboard');
     } catch (error) {
       setError(error.message);
