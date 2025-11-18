@@ -76,10 +76,10 @@ export default function JoinGroup() {
         membersCount: groupData.membersCount + 1 // Use client-side calculation
       });
 
-      // 2. Update user: set their groupId
-      batch.update(userRef, {
+      // 2. Update or Create user doc: set their groupId
+      batch.set(userRef, {
         groupId: groupSnap.id
-      });
+      }, { merge: true });
 
       await batch.commit();
 
