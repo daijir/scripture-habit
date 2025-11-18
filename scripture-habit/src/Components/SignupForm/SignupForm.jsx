@@ -22,18 +22,42 @@ export default function SignupForm() {
     }
 
     try {
+      // 1. Create user in Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
+      const now = new Date();
 
-      // Save additional user info to Firestore
-      await setDoc(doc(db, 'users', user.uid), {
+      // 2. Prepare user data document according to the desired schema
+      const userData = {
+        createdAt: now,
+        email: user.email,
+        groupId: "",
+        joinedAt: now,
+        lastActiveAt: now,
         nickname: nickname,
-        email: email,
-      });
+        preferredCheckInTime: "00:00",
+        streakCount: 1,
+        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      };
 
+      // 3. Save user data to Firestore with specific error handling
+      try {
+        await setDoc(doc(db, 'users', user.uid), userData);
+      } catch (firestoreError) {
+        console.error("Error writing user data to Firestore:", firestoreError);
+        setError("Failed to save user profile. Please contact support.");
+        // Optional: You might want to delete the created user if saving fails
+        // await user.delete();
+        return; // Stop execution if Firestore write fails
+      }
+
+      // 4. Redirect to dashboard
       navigate('/dashboard');
-    } catch (error) {
-      setError(error.message);
+
+    } catch (authError) {
+      // Handle Authentication errors
+      console.error("Error creating user in Authentication:", authError);
+      setError(authError.message);
     }
   };
 
