@@ -27,9 +27,8 @@ export default function LoginForm() {
       const user = userCredential.user;
 
       try {
-        const todayString = new Date().toLocaleDateString('en-CA');
         await updateDoc(doc(db, 'users', user.uid), {
-          lastActiveAt: todayString
+          lastActiveAt: new Date()
         });
       } catch (updateError) {
         console.error("Error updating last active time:", updateError);
