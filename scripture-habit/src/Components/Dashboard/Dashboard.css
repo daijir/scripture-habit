@@ -9,3 +9,9 @@
   grid-template-columns: 11rem auto 20rem;
   gap: 10px;
 }
+
+.welcome-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}

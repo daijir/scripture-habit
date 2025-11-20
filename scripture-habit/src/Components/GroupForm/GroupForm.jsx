@@ -3,6 +3,8 @@ import { useState } from "react";
 import { auth, db } from '../../firebase';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import Input from '../Input/Input';
+import Button from '../Button/Button';
 
 export default function GroupForm() {
   const [groupName, setGroupName] = useState("");
@@ -57,33 +59,31 @@ export default function GroupForm() {
   }
 
   return (
-    <div className="group-page">
-      <div className="group-card">
+    <div className="App GroupForm">
+      <div className="AppGlass">
         <h1>Create a Study Group</h1>
         <p className="subtitle">
           Build a scripture study group and invite others to join.
         </p>
 
         <form onSubmit={handleSubmit} className="group-form">
-          <label>Group Name</label>
-          <input
+          <Input
+            label = "Group Name"
             type="text"
             placeholder="Enter group name"
             value={groupName}
             onChange={(e) => setGroupName(e.target.value)}
             required
           />
-
-          <label>Description (optional)</label>
-          <textarea
-            placeholder="Write a short description..."
+          <Input
+            label="Description (optional)"
+            as="textarea"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
 
-          <label>Max Members</label>
-          <input
-            type="number"
+          <Input
+            label="Max Members"
             value={maxMembers}
             onChange={(e) => setMaxMembers(e.target.value)}
             min="2" // Minimum 2 members for a group
@@ -100,9 +100,9 @@ export default function GroupForm() {
             <label htmlFor="isPublic">Public Group</label>
           </div>
 
-          <button type="submit" className="create-btn">
+          <Button type="submit" style={{marginTop:24}}>
             Create Group
-          </button>
+          </Button>
         </form>
         {error && <p className="error-message">{error}</p>}
       </div>
