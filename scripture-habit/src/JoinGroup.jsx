@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { auth, db } from './firebase';
-import { doc, getDoc, writeBatch } from 'firebase/firestore'; // Removed 'increment'
+import { doc, getDoc, writeBatch, onSnapshot, increment, arrayUnion } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from "firebase/auth";
 
@@ -12,17 +12,20 @@ export default function JoinGroup() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    let userDocUnsubscribe = () => {};
+    const authUnsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
         const userRef = doc(db, 'users', currentUser.uid);
-        const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-          setUserData(userSnap.data());
-        }
+        // Use onSnapshot to listen for real-time updates
+        userDocUnsubscribe = onSnapshot(userRef, (docSnap) => {
+          if (docSnap.exists()) {
+            setUserData(docSnap.data());
+          }
+        });
       }
     });
-    return () => unsubscribe();
+    return () => { authUnsubscribe(); userDocUnsubscribe(); };
   }, []);
 
   async function handleSubmit(e) {
@@ -72,14 +75,14 @@ export default function JoinGroup() {
 
       // 1. Update group: add user to members array and increment membersCount
       batch.update(groupRef, {
-        members: [...groupData.members, user.uid],
-        membersCount: groupData.membersCount + 1 // Use client-side calculation
+        members: arrayUnion(user.uid), // Use arrayUnion for safer addition
+        membersCount: increment(1) // Use Firestore's atomic increment
       });
 
-      // 2. Update or Create user doc: set their groupId
-      batch.set(userRef, {
+      // 2. Update user doc: set their groupId
+      batch.update(userRef, {
         groupId: groupSnap.id
-      }, { merge: true });
+      });
 
       await batch.commit();
 
@@ -88,7 +91,12 @@ export default function JoinGroup() {
 
     } catch (e) {
       console.error("Error joining group:", e);
-      setError("Failed to join group. Please try again.");
+      // Firestoreの権限エラーを具体的にハンドリングする
+      if (e.code === 'permission-denied') {
+        setError("You do not have permission to join this group. This might be a configuration issue.");
+      } else {
+        setError("Failed to join group. Please try again.");
+      }
     }
   }
 
@@ -110,7 +118,7 @@ export default function JoinGroup() {
             required
           />
 
-          {error && <p className="error">{error}</p>}
+          {error && <p className="error-message">{error}</p>}
 
           <button type="submit" className="create-btn">
             Join Group
