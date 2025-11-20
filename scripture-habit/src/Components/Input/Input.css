@@ -1,9 +1,10 @@
 .GlassInputContainer {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   width: 100%;
   max-width: 300px;
+
 }
 
 .GlassInput {

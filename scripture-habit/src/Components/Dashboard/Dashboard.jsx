@@ -8,6 +8,7 @@ import RightSide from '../RightSide/RightSide';
 import Sidebar from '../Sidebar/Sidebar';
 import GroupChat from '../GroupChat/GroupChat'; // Import GroupChat
 import './Dashboard.css';
+import Button from '../Button/Button';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -90,10 +91,10 @@ const Dashboard = () => {
           <p>You are not part of any group yet.</p>
           <div className="welcome-buttons">
             <Link to="/group-form">
-              <button className="create-btn">Create a Group</button>
+              <Button className="create-btn">Create a Group</Button>
             </Link>
             <Link to="/join-group">
-              <button className="join-btn">Join a Group</button>
+              <Button className="join-btn">Join a Group</Button>
             </Link>
           </div>
         </div>
