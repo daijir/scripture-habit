@@ -57,7 +57,11 @@ export default function SignupForm() {
     } catch (authError) {
       // Handle Authentication errors
       console.error("Error creating user in Authentication:", authError);
-      setError(authError.message);
+      if (authError.code === 'auth/email-already-in-use') {
+        setError("This email address is already in use. Please log in or use a different email.");
+      } else {
+        setError(authError.message);
+      }
     }
   };
 
