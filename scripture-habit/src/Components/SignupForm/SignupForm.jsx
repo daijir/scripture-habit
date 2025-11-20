@@ -28,6 +28,7 @@ export default function SignupForm() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       const now = new Date();
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       // 2. Prepare user data document according to the desired schema
       const userData = {
@@ -36,10 +37,11 @@ export default function SignupForm() {
         groupId: "",
         joinedAt: now,
         lastActiveAt: now,
+        lastPostDate: "", // Initially empty, updated on first post
         nickname: nickname,
         preferredCheckInTime: "00:00",
-        streakCount: 1,
-        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        streakCount: 0, // Start at 0
+        timeZone: timeZone,
       };
 
       // 3. Save user data to Firestore with specific error handling
@@ -59,7 +61,11 @@ export default function SignupForm() {
     } catch (authError) {
       // Handle Authentication errors
       console.error("Error creating user in Authentication:", authError);
-      setError(authError.message);
+      if (authError.code === 'auth/email-already-in-use') {
+        setError("This email address is already in use. Please log in or use a different email.");
+      } else {
+        setError(authError.message);
+      }
     }
   };
 

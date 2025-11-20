@@ -2,8 +2,9 @@ import { useState } from 'react';
 import './LoginForm.css';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
-import { auth } from '../../firebase';
+import { auth, db } from '../../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginForm() {
@@ -22,7 +23,17 @@ export default function LoginForm() {
     }
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      try {
+        await updateDoc(doc(db, 'users', user.uid), {
+          lastActiveAt: new Date()
+        });
+      } catch (updateError) {
+        console.error("Error updating last active time:", updateError);
+      }
+
       navigate('/dashboard');
     } catch (error) {
       setError(error.message);
@@ -30,7 +41,7 @@ export default function LoginForm() {
   };
 
   return (
-    <div className='App LoginForm'> 
+    <div className='App LoginForm'>
       <div className='AppGlass'>
         <h2>Log In</h2>
         <form onSubmit={handleSubmit}>
@@ -41,7 +52,7 @@ export default function LoginForm() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <Input 
+          <Input
             label="Password"
             type='password'
             value={password}

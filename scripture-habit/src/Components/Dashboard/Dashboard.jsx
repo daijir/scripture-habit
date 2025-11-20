@@ -15,6 +15,7 @@ const Dashboard = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedView, setSelectedView] = useState(0);
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
@@ -105,9 +106,24 @@ const Dashboard = () => {
   return (
     <div className='App Dashboard'>
       <div className='AppGlass Grid'>
-          <Sidebar/>
+        <Sidebar selected={selectedView} setSelected={setSelectedView} />
+        {selectedView === 0 && (
+          <div className="DashboardContent">
+            <h1>Dashboard Overview</h1>
+            <p>Welcome back, {userData.nickname}!</p>
+            {/* Add dashboard widgets here later */}
+          </div>
+        )}
+        {selectedView === 1 && (
+          <div className="DashboardContent">
+            <h1>Scriptures</h1>
+            <p>Scripture study features coming soon...</p>
+          </div>
+        )}
+        {selectedView === 2 && (
           <GroupChat groupId={userData.groupId} userData={userData} />
-          <RightSide/>
+        )}
+        <RightSide />
       </div>
     </div>
   );

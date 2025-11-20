@@ -26,12 +26,15 @@ export default function GroupForm() {
 
     try {
       const now = new Date();
+      // Generate a random 6-character alphanumeric invite code
+      const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+
       const newGroupData = {
         name: groupName,
         description: description,
         createdAt: now,
         groupStreak: 0, // Default initial streak
-        inviteCode: "", // Can be generated later or left empty
+        inviteCode: inviteCode,
         isPublic: isPublic,
         maxMembers: Number(maxMembers),
         membersCount: 1, // Creator is the first member
