@@ -39,3 +39,19 @@ export const ScripturesGallery = [
         src: scripture3, title: 'My Study 3', description: 'Greice Study'
     },
 ]
+
+// Scriptures Options for Study
+
+export const ScripturesOptions = [
+    {
+        value: "bible",
+        label:"Bible"
+    },
+    {
+        value: "bofm",
+        label:"Book of Mormon"
+    },    {
+        value: "d&c",
+        label:"Doctrine and Convenants"
+    },
+]

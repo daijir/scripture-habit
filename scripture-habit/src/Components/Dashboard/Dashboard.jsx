@@ -9,6 +9,8 @@ import Sidebar from '../Sidebar/Sidebar';
 import GroupChat from '../GroupChat/GroupChat'; // Import GroupChat
 import './Dashboard.css';
 import Button from '../Button/Button';
+import GalleryImages from '../GalleryImages/GalleryImages';
+import NewEntry from '../NewEntry/NewEntry';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -16,6 +18,10 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedView, setSelectedView] = useState(0);
+  
+  {/* Control modal NewEntry*/}
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
@@ -75,7 +81,7 @@ const Dashboard = () => {
           <h1>Welcome!</h1>
           <p>Your user profile is being set up or could not be found.</p>
           <Link to="/group-form">
-            <button className="create-btn">Create a Group</button>
+            <Button className="create-btn">Create a Group</Button>
           </Link>
         </div>
       </div>
@@ -112,6 +118,12 @@ const Dashboard = () => {
             <h1>Dashboard Overview</h1>
             <p>Welcome back, {userData.nickname}!</p>
             {/* Add dashboard widgets here later */}
+            <GalleryImages/>
+
+            {/* Modal */}
+            <Button onClick={() => setIsModalOpen(true)}>New Entry</Button>
+            <NewEntry isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+            
           </div>
         )}
         {selectedView === 1 && (

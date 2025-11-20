@@ -5,6 +5,7 @@ import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import Input from '../Input/Input';
 import Button from '../Button/Button';
+import Checkbox from '../Input/Checkbox';
 
 export default function GroupForm() {
   const [groupName, setGroupName] = useState("");
@@ -93,17 +94,14 @@ export default function GroupForm() {
             required
           />
 
-          <div className="checkbox-container">
-            <input
-              type="checkbox"
+          <Checkbox
+              label="Public Group"
               id="isPublic"
               checked={isPublic}
               onChange={(e) => setIsPublic(e.target.checked)}
-            />
-            <label htmlFor="isPublic">Public Group</label>
-          </div>
+          />
 
-          <Button type="submit" style={{marginTop:24}}>
+          <Button type="submit">
             Create Group
           </Button>
         </form>
