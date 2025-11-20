@@ -26,14 +26,15 @@ export default function SignupForm() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       const now = new Date();
+      const todayString = now.toLocaleDateString('en-CA'); // YYYY-MM-DD
 
       // 2. Prepare user data document according to the desired schema
       const userData = {
         createdAt: now,
         email: user.email,
         groupId: "",
-        joinedAt: now,
-        lastActiveAt: now,
+        joinedAt: todayString,
+        lastActiveAt: todayString,
         nickname: nickname,
         preferredCheckInTime: "00:00",
         streakCount: 1,
