@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { db } from '../../firebase';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc } from 'firebase/firestore';
 import './GroupChat.css';
 
 const GroupChat = ({ groupId, userData }) => {
   const [messages, setMessages] = useState([]);
+  const [groupData, setGroupData] = useState(null);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,10 +15,20 @@ const GroupChat = ({ groupId, userData }) => {
     if (!groupId) return;
 
     setLoading(true);
+
+    // Fetch group details
+    const groupRef = doc(db, 'groups', groupId);
+    const unsubscribeGroup = onSnapshot(groupRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setGroupData(docSnap.data());
+      }
+    });
+
+    // Fetch messages
     const messagesRef = collection(db, 'groups', groupId, 'messages');
     const q = query(messagesRef, orderBy('createdAt'));
 
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const unsubscribeMessages = onSnapshot(q, (querySnapshot) => {
       const msgs = [];
       querySnapshot.forEach((doc) => {
         msgs.push({ id: doc.id, ...doc.data() });
@@ -25,14 +36,19 @@ const GroupChat = ({ groupId, userData }) => {
       setMessages(msgs);
       setLoading(false);
       // Scroll to the bottom after messages are loaded/updated
-      dummy.current.scrollIntoView({ behavior: 'smooth' });
+      if (dummy.current) {
+        dummy.current.scrollIntoView({ behavior: 'smooth' });
+      }
     }, (err) => {
       console.error("Error fetching messages:", err);
       setError("Failed to load messages.");
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeGroup();
+      unsubscribeMessages();
+    };
   }, [groupId]);
 
   const handleSendMessage = async (e) => {
@@ -58,7 +74,12 @@ const GroupChat = ({ groupId, userData }) => {
   return (
     <div className="GroupChat">
       <div className="chat-header">
-        <h2>Group Chat</h2>
+        <h2>{groupData ? groupData.name : 'Group Chat'}</h2>
+        {groupData && (
+          <div className="invite-code-display" style={{ fontSize: '0.9rem', marginTop: '5px' }}>
+            <span>Invite Code: <strong>{groupData.inviteCode}</strong></span>
+          </div>
+        )}
       </div>
       <div className="messages-container">
         {loading && <p>Loading messages...</p>}
