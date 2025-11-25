@@ -23,8 +23,30 @@ app.get('/health', (_req, res) => {
 // Return public groups (match frontend field `isPublic`)
 app.get('/groups', async (_req, res) => {
   try {
-    const snap = await db.collection('groups').where('isPublic', '==', true).get();
-    const groups = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }));
+    // Support optional client-side filters to mirror frontend behavior
+    const membersCountLt = _req.query?.membersCountLt ? Number(_req.query.membersCountLt) : undefined;
+    // Firestore doesn't support OR queries; to be backward-compatible with older docs
+    // that used `public: true` we will query both `isPublic` and `public` and merge results.
+    const groupsMap: Record<string, any> = {};
+
+    const buildQuery = (field: string) => {
+      let qq: FirebaseFirestore.Query = db.collection('groups').where(field, '==', true);
+      if (typeof membersCountLt === 'number' && !Number.isNaN(membersCountLt)) {
+        qq = qq.where('membersCount', '<', membersCountLt);
+      }
+      return qq;
+    };
+
+    const q1 = buildQuery('isPublic');
+    const snap1 = await q1.get();
+    snap1.docs.forEach((d) => { groupsMap[d.id] = { id: d.id, ...(d.data() as any) }; });
+
+    // Also query legacy `public` field and merge
+    const q2 = buildQuery('public');
+    const snap2 = await q2.get();
+    snap2.docs.forEach((d) => { groupsMap[d.id] = { id: d.id, ...(d.data() as any) }; });
+
+    const groups = Object.values(groupsMap);
     res.json(groups);
   } catch (err) {
     res.status(500).json({ error: 'failed to fetch groups', details: String(err) });
@@ -62,9 +84,33 @@ app.post('/join-group', verifyIdToken, async (req: any, res: any) => {
     const data = g.data() as any;
 
     // If group is public, allow join. Private groups require invite (not implemented yet).
-    // Use `isPublic` to match frontend-created documents
-    if (data?.isPublic) {
+    // Allow either `isPublic` (new) or `public` (legacy) to permit joining public groups
+    if (data?.isPublic || data?.public) {
+      // Prevent double-joins
+      const isAlreadyMember = Array.isArray(data.members) && data.members.includes(userId);
+      if (isAlreadyMember) {
+        return res.status(200).json({ ok: true, message: 'already a member' });
+      }
+
+      // Use a transaction to update group and user atomically
+      await db.runTransaction(async (t) => {
+        const grpSnap = await t.get(groupRef);
+        if (!grpSnap.exists) throw new Error('group disappeared');
+        const grpData = grpSnap.data() as any;
+        // update group members array and membersCount
+        t.update(groupRef, {
+          members: admin.firestore.FieldValue.arrayUnion(userId),
+          membersCount: admin.firestore.FieldValue.increment(1),
+        });
+
+        // update user document to set groupId
+        const userRef = db.collection('users').doc(userId);
+        t.update(userRef, { groupId: groupId });
+      });
+
+      // Also create a members subcollection doc for audit/history
       await groupRef.collection('members').doc(userId).set({ joinedAt: admin.firestore.FieldValue.serverTimestamp() });
+
       return res.json({ ok: true });
     }
 
