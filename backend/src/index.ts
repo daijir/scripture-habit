@@ -20,10 +20,10 @@ app.get('/health', (_req, res) => {
   res.json({ ok: true, now: new Date().toISOString() });
 });
 
-// Return public groups
+// Return public groups (match frontend field `isPublic`)
 app.get('/groups', async (_req, res) => {
   try {
-    const snap = await db.collection('groups').where('public', '==', true).get();
+    const snap = await db.collection('groups').where('isPublic', '==', true).get();
     const groups = snap.docs.map((d) => ({ id: d.id, ...(d.data() as any) }));
     res.json(groups);
   } catch (err) {
@@ -62,7 +62,8 @@ app.post('/join-group', verifyIdToken, async (req: any, res: any) => {
     const data = g.data() as any;
 
     // If group is public, allow join. Private groups require invite (not implemented yet).
-    if (data?.public) {
+    // Use `isPublic` to match frontend-created documents
+    if (data?.isPublic) {
       await groupRef.collection('members').doc(userId).set({ joinedAt: admin.firestore.FieldValue.serverTimestamp() });
       return res.json({ ok: true });
     }
