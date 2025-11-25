@@ -11,7 +11,40 @@ try {
   // best-effort: if already initialized, ignore
 }
 
-const db = admin.firestore();
+// Determine whether we have credentials or an emulator configured. If not,
+// fall back to a lightweight in-memory mock so local development can continue
+// without access to the real Firebase project.
+const hasCredentials = Boolean(process.env.GOOGLE_APPLICATION_CREDENTIALS || process.env.FIRESTORE_EMULATOR_HOST);
+if (!hasCredentials) {
+  // eslint-disable-next-line no-console
+  console.warn('firebase-admin credentials/emulator not detected — using in-memory mock for Firestore.');
+}
+
+const db = hasCredentials ? admin.firestore() : null as unknown as FirebaseFirestore.Firestore;
+
+// Simple in-memory mock data used when credentials are not available.
+const mockGroups: Record<string, any> = {
+  'mock-group-1': {
+    id: 'mock-group-1',
+    name: 'Public Test Group',
+    description: 'A seeded public group for local development',
+    isPublic: true,
+    membersCount: 1,
+    members: ['mock-user-1'],
+    ownerId: 'mock-user-1',
+    createdAt: new Date().toISOString(),
+  },
+  'mock-group-2': {
+    id: 'mock-group-2',
+    name: 'Nearly Full Group',
+    description: 'Used to test membersCount filtering',
+    isPublic: true,
+    membersCount: 4,
+    members: ['u1','u2','u3','u4'],
+    ownerId: 'u1',
+    createdAt: new Date().toISOString(),
+  },
+};
 const app = express();
 app.use(cors({ origin: true }));
 app.use(express.json());
@@ -25,6 +58,15 @@ app.get('/groups', async (_req, res) => {
   try {
     // Support optional client-side filters to mirror frontend behavior
     const membersCountLt = _req.query?.membersCountLt ? Number(_req.query.membersCountLt) : undefined;
+    // If credentials/emulator are not available, return mocked groups for local dev
+    if (!hasCredentials) {
+      let resGroups = Object.values(mockGroups);
+      if (typeof membersCountLt === 'number' && !Number.isNaN(membersCountLt)) {
+        resGroups = resGroups.filter((g: any) => (g.membersCount ?? 0) < membersCountLt);
+      }
+      return res.json(resGroups);
+    }
+
     // Firestore doesn't support OR queries; to be backward-compatible with older docs
     // that used `public: true` we will query both `isPublic` and `public` and merge results.
     const groupsMap: Record<string, any> = {};
@@ -56,6 +98,19 @@ app.get('/groups', async (_req, res) => {
 // Join a group (simple validation). Expects { groupId, userId }
 // Middleware to verify Firebase ID token from `Authorization: Bearer <token>` header
 async function verifyIdToken(req: any, res: any, next: any) {
+  // In mock mode (no credentials), accept a relaxed token to make local dev easy.
+  if (!hasCredentials) {
+    const authHeader = (req.headers.authorization || req.headers.Authorization) as string | undefined;
+    if (authHeader && authHeader.startsWith('Bearer mock:')) {
+      req.userUid = authHeader.split(':')[1];
+      return next();
+    }
+    // allow an explicit header `x-mock-user` or fall back to a default mock user
+    const mockUser = req.headers['x-mock-user'] || 'mock-user-1';
+    req.userUid = String(mockUser);
+    return next();
+  }
+
   const authHeader = (req.headers.authorization || req.headers.Authorization) as string | undefined;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Missing or invalid Authorization header' });
@@ -78,6 +133,23 @@ app.post('/join-group', verifyIdToken, async (req: any, res: any) => {
   if (!userId) return res.status(401).json({ error: 'authentication required' });
 
   try {
+    // If we're running without credentials, operate on the in-memory mock
+    if (!hasCredentials) {
+      const g = mockGroups[groupId];
+      if (!g) return res.status(404).json({ error: 'group not found (mock)' });
+      const data = g as any;
+
+      if (data?.isPublic || data?.public) {
+        const isAlreadyMember = Array.isArray(data.members) && data.members.includes(userId);
+        if (isAlreadyMember) return res.status(200).json({ ok: true, message: 'already a member (mock)' });
+        data.members = Array.isArray(data.members) ? [...data.members, userId] : [userId];
+        data.membersCount = (data.membersCount || 0) + 1;
+        mockGroups[groupId] = data;
+        return res.json({ ok: true, mock: true });
+      }
+      return res.status(403).json({ error: 'group is private (mock)' });
+    }
+
     const groupRef = db.collection('groups').doc(groupId);
     const g = await groupRef.get();
     if (!g.exists) return res.status(404).json({ error: 'group not found' });
