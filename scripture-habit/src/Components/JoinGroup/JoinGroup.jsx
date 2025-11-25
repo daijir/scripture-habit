@@ -30,7 +30,20 @@ export default function JoinGroup() {
 
     const fetchPublicGroups = async () => {
       try {
-        // Use server-side composite query now that the required index exists.
+        // Prefer server-driven list so we can centralize logic and avoid client composite index
+        const resp = await fetch('/groups?membersCountLt=5');
+        if (resp.ok) {
+          const groups = await resp.json();
+          setPublicGroups(groups || []);
+          return;
+        }
+        console.warn('Backend /groups returned', resp.status);
+      } catch (e) {
+        console.warn('Backend /groups fetch failed, falling back to client query:', e);
+      }
+
+      // Fallback: client-side Firestore query (keeps original behavior)
+      try {
         const q = query(
           collection(db, 'groups'),
           where('isPublic', '==', true),
@@ -43,7 +56,7 @@ export default function JoinGroup() {
         });
         setPublicGroups(groups);
       } catch (e) {
-        console.error('Error fetching public groups (composite query):', e);
+        console.error('Error fetching public groups (composite query fallback):', e);
         setPublicGroups([]);
       }
     };
@@ -62,7 +75,7 @@ export default function JoinGroup() {
       return;
     }
 
-    if (groupData.members.includes(user.uid)) {
+    if (groupData.members && groupData.members.includes(user.uid)) {
       setError("You are already a member of this group.");
       return;
     }
@@ -72,6 +85,29 @@ export default function JoinGroup() {
       return;
     }
 
+    // Try server-side join first
+    try {
+      const idToken = await user.getIdToken();
+      const resp = await fetch('/join-group', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ groupId })
+      });
+      if (resp.ok) {
+        alert(`Successfully joined group: ${groupData.name}`);
+        navigate('/dashboard');
+        return;
+      }
+      const errText = await resp.text();
+      console.warn('Server join failed:', resp.status, errText);
+    } catch (e) {
+      console.warn('Server join failed, falling back to client update:', e);
+    }
+
+    // Fallback to client-side batched writes (original behavior)
     const groupRef = doc(db, "groups", groupId);
     const userRef = doc(db, "users", user.uid);
     const batch = writeBatch(db);
