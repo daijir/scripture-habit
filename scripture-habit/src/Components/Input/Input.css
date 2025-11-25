@@ -1,9 +1,10 @@
 .GlassInputContainer {
   display: flex;
   flex-direction: column;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   width: 100%;
   max-width: 300px;
+
 }
 
 .GlassInput {
@@ -24,4 +25,10 @@
 .GlassInput:focus {
   border-color: rgba(255, 255, 255, 0.5);
   background-color: rgba(255, 255, 255, 0.25);
+}
+
+.GlassInputContainer label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: rgba(0,0,0,0.8);
 }

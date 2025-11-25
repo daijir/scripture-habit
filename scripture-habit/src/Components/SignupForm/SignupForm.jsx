@@ -4,6 +4,8 @@ import { auth, db } from '../../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
+import Input from '../Input/Input';
+import './SignupForm.css'
 
 export default function SignupForm() {
   const [nickname, setNickname] = useState('');
@@ -26,6 +28,7 @@ export default function SignupForm() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       const now = new Date();
+      const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       // 2. Prepare user data document according to the desired schema
       const userData = {
@@ -34,10 +37,11 @@ export default function SignupForm() {
         groupId: "",
         joinedAt: now,
         lastActiveAt: now,
+        lastPostDate: "", // Initially empty, updated on first post
         nickname: nickname,
         preferredCheckInTime: "00:00",
-        streakCount: 1,
-        timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        streakCount: 0, // Start at 0
+        timeZone: timeZone,
       };
 
       // 3. Save user data to Firestore with specific error handling
@@ -57,49 +61,46 @@ export default function SignupForm() {
     } catch (authError) {
       // Handle Authentication errors
       console.error("Error creating user in Authentication:", authError);
-      setError(authError.message);
+      if (authError.code === 'auth/email-already-in-use') {
+        setError("This email address is already in use. Please log in or use a different email.");
+      } else {
+        setError(authError.message);
+      }
     }
   };
 
   return (
-    <div style={{ maxWidth: 400, margin: '0 auto', padding: 20 }}>
-      <h2>Sign Up</h2>
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: 10 }}>
-          <label>Nickname</label>
-          <input
+    <div className="App SignupForm">    
+      <div className='AppGlass'>
+        <h2>Sign Up</h2>
+        <form onSubmit={handleSubmit}>
+          <Input
+            label="Nickname"
             type="text"
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-            required
-            style={{ width: '100%', padding: 6 }}
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              required
           />
-        </div>
-        <div style={{ marginBottom: 10 }}>
-          <label>Gmail Address</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            style={{ width: '100%', padding: 6 }}
-          />
-        </div>
-        <div style={{ marginBottom: 10 }}>
-          <label>Password</label>
-          <input
+          <Input 
+              label="Gmail Address"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required/>
+          <Input 
+            label="Password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            style={{ width: '100%', padding: 6 }}
-          />
-        </div>
-        <Button type="submit">
-          Sign Up
-        </Button>
-      </form>
-      {error && <p style={{ color: 'red', marginTop: 10 }}>{error}</p>}
+            />
+          <Button type="submit">
+            Sign Up
+          </Button>
+        </form>
+        {error && <p style={{ color: 'red', marginTop: 10 }}>{error}</p>}
+      </div>
     </div>
+
   );
 }

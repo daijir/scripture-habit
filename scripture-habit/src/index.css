@@ -23,6 +23,7 @@
   --activeItem: #f799a354;
 }
 
+
 .App {
   background: linear-gradient(
     106.37deg,
@@ -71,7 +72,13 @@
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  background: linear-gradient(90deg, #feac5e 0%, #c779d0 50%, #4bc0c8 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
+
+
 
 @media (prefers-color-scheme: light) {
   :root {
