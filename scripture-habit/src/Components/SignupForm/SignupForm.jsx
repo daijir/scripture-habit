@@ -71,7 +71,7 @@ export default function SignupForm() {
 
   return (
     <div className="App SignupForm">    
-      <div className='AppGlass'>
+      <div className='AppGlass Form'>
         <h2>Sign Up</h2>
         <form onSubmit={handleSubmit}>
           <Input

@@ -1,7 +1,8 @@
 import React from 'react';
 import './Input.css';
 
-const Input = ({ 
+const Input = ({
+  id, 
   label, 
   type = 'text', 
   value, 
@@ -19,6 +20,7 @@ const Input = ({
       {label && <label>{label}</label>}
 
       <Component
+        id={id}
         type={as === 'textarea' ? undefined : type}
         value={value}
         onChange={onChange}
