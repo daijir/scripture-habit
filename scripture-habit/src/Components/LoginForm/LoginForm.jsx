@@ -2,9 +2,8 @@ import { useState } from 'react';
 import './LoginForm.css';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
-import { auth, db } from '../../firebase';
+import { auth } from '../../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { doc, updateDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
 export default function LoginForm() {
@@ -24,15 +23,7 @@ export default function LoginForm() {
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      try {
-        await updateDoc(doc(db, 'users', user.uid), {
-          lastActiveAt: new Date()
-        });
-      } catch (updateError) {
-        console.error("Error updating last active time:", updateError);
-      }
+      // const user = userCredential.user; // user unused if we don't update doc
 
       navigate('/dashboard');
     } catch (error) {

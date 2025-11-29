@@ -36,11 +36,11 @@ export default function SignupForm() {
         email: user.email,
         groupId: "",
         joinedAt: now,
-        lastActiveAt: now,
         lastPostDate: "", // Initially empty, updated on first post
         nickname: nickname,
         preferredCheckInTime: "00:00",
         streakCount: 0, // Start at 0
+        totalEntries: 0, // Initialize total entries
         timeZone: timeZone,
       };
 
