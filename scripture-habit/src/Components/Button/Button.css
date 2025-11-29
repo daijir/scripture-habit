@@ -11,7 +11,7 @@
   font-size: 1em;
   font-weight: bold;
   transition: all 0.2s ease;
-  margin-top: 24px;
+  margin: 24px 0 24px 0;
 }
 
 .GlassButton:hover {
