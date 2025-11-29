@@ -6,6 +6,9 @@ import { useNavigate } from 'react-router-dom';
 import Input from '../Input/Input';
 import Button from '../Button/Button';
 import Checkbox from '../Input/Checkbox';
+import { toast } from "react-toastify";
+
+
 
 export default function GroupForm() {
   const [groupName, setGroupName] = useState("");
@@ -53,7 +56,7 @@ export default function GroupForm() {
         groupId: newGroupId,
       });
 
-      alert(`Group Created: ${groupName}`);
+      toast.success(`🎉 Group "${groupName}" created successfully!`);
       navigate('/dashboard'); // Redirect to dashboard after creation
 
     } catch (e) {

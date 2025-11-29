@@ -5,6 +5,8 @@ import { doc, getDoc, writeBatch, onSnapshot, increment, arrayUnion, collection,
 import { useNavigate } from 'react-router-dom';
 import { onAuthStateChanged } from "firebase/auth";
 import '../GroupForm/GroupForm.css';
+import Button from '../Button/Button';
+import Input from '../Input/Input';
 
 export default function JoinGroup() {
   const [groupCode, setGroupCode] = useState("");
@@ -159,8 +161,8 @@ export default function JoinGroup() {
   }
 
   return (
-    <div className="group-page">
-      <div className="join-group-container">
+    <div className="App">
+      <div className="AppGlass join-group-container">
 
         {/* セクション1: 招待コード入力 */}
         <div className="group-card-section">
@@ -169,25 +171,21 @@ export default function JoinGroup() {
             <p>Enter the code shared by your group leader to join directly.</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="invite-code-form">
-            <div className="input-wrapper">
-              <label htmlFor="inviteCode">Invite Code</label>
-              <input
+          <form onSubmit={handleSubmit}>
+            <Input
+                label="Invite Code"
                 id="inviteCode"
                 type="text"
-                className="styled-input"
                 placeholder="e.g. X9J2KL"
                 value={groupCode}
                 onChange={(e) => setGroupCode(e.target.value.toUpperCase())}
                 required
-              />
-            </div>
-
+            />
             {error && <p className="error">{error}</p>}
 
-            <button type="submit" className="primary-btn">
+            <Button type="submit">
               Join Group
-            </button>
+            </Button>
           </form>
         </div>
 
