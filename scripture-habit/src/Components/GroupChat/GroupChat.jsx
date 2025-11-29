@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { db } from '../../firebase';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, getDoc } from 'firebase/firestore';
+import { toast } from 'react-toastify';
+import ReactMarkdown from 'react-markdown'; // Import ReactMarkdown
 import './GroupChat.css';
 
 const GroupChat = ({ groupId, userData }) => {
@@ -64,10 +66,9 @@ const GroupChat = ({ groupId, userData }) => {
         senderNickname: userData.nickname,
       });
       setNewMessage('');
-      // The dummy ref will scroll down automatically via the onSnapshot listener
     } catch (e) {
       console.error("Error sending message:", e);
-      setError("Failed to send message.");
+      toast.error(`Failed to send message: ${e.message || e}`);
     }
   };
 
@@ -76,7 +77,7 @@ const GroupChat = ({ groupId, userData }) => {
       <div className="chat-header">
         <h2>{groupData ? groupData.name : 'Group Chat'}</h2>
         {groupData && (
-          <div className="invite-code-display" style={{ fontSize: '0.9rem', marginTop: '5px' }}>
+          <div className="invite-code-display">
             <span>Invite Code: <strong>{groupData.inviteCode}</strong></span>
           </div>
         )}
@@ -84,22 +85,43 @@ const GroupChat = ({ groupId, userData }) => {
       <div className="messages-container">
         {loading && <p>Loading messages...</p>}
         {error && <p className="error-message">{error}</p>}
-        {messages.map((msg) => (
-          <div key={msg.id} className={`message ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}>
-            <span className="sender-name">{msg.senderNickname}</span>
-            <p>{msg.text}</p>
-          </div>
-        ))}
+        {messages.map((msg) => {
+          if (msg.senderId === 'system' || msg.isSystemMessage) {
+            return (
+              <div key={msg.id} className="message system-message">
+                <p>{msg.text}</p>
+              </div>
+            );
+          }
+          return (
+            <div key={msg.id} className={`message ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}>
+              <span className="sender-name">{msg.senderNickname}</span>
+              <div className="message-content">
+                {msg.text && (
+                  msg.isEntry ? (
+                    <div className="entry-message-content">
+                      <ReactMarkdown>{msg.text}</ReactMarkdown>
+                    </div>
+                  ) : (
+                    <p>{msg.text}</p>
+                  )
+                )}
+              </div>
+            </div>
+          );
+        })}
         <div ref={dummy}></div>
       </div>
       <form onSubmit={handleSendMessage} className="send-message-form">
-        <input
-          type="text"
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
-        />
-        <button type="submit">Send</button>
+        <div className="input-wrapper">
+          <input
+            type="text"
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Type a message..."
+          />
+          <button type="submit">Send</button>
+        </div>
       </form>
     </div>
   );

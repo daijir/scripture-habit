@@ -9,12 +9,11 @@
 
 .logo{
     display: flex;
-    height: 5rem;
     font-weight: bold;
     font-size: 22px;
     gap: 1rem;
     align-items: center;
-    height: 4%;
+    justify-content: center; /* Center horizontally */
 }
 
 .logo>span>span{
