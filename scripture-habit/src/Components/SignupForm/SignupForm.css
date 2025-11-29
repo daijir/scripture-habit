@@ -3,10 +3,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 80vh;
 }
 
 .SignupForm form {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.Form {
+  min-height: 80vh;
+  align-content: center;
 }

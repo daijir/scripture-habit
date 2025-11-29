@@ -21,6 +21,7 @@
   --boxShadow: 0px 19px 60px rgb(0 0 0 / 8%);
   --smboxShadow: -79px 51px 60px rgba(0, 0, 0, 0.08);
   --activeItem: #f799a354;
+  --border-radius: 16px;
 }
 
 
@@ -31,20 +32,21 @@
     #c779d0 51.55%,
     #4bc0c8 90.85%
   );
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   font-family: 'Inter', sans-serif;
+  padding: 16px 0;
 }
 
 .AppGlass {
-  height: 97%;
+  padding-top: 20px;
+  min-height: 97%;
   width: 97%;
   border-radius: 2rem;
   background-color: var(--glass);
-  overflow: hidden;
 }
 
 .welcome {
@@ -78,7 +80,10 @@ h1 {
   -webkit-text-fill-color: transparent;
 }
 
-
+h2 {
+  margin: 0 0 6px 0;
+  font-weight: 700;
+}
 
 @media (prefers-color-scheme: light) {
   :root {
