@@ -18,7 +18,7 @@ export const SidebarData = [
     },
     {
         icon: UilClipboardAlt,
-        heading: "Scriptures",
+        heading: "My Entries",
     },
     {
         icon: UilUsersAlt,
@@ -44,14 +44,22 @@ export const ScripturesGallery = [
 
 export const ScripturesOptions = [
     {
-        value: "bible",
-        label:"Bible"
+        value: "Old Testament",
+        label:"Old Testament"
     },
     {
-        value: "bofm",
+        value: "New Testament",
+        label:"New Testament"
+    },
+    {
+        value: "Book of Mormon",
         label:"Book of Mormon"
     },    {
-        value: "d&c",
+        value: "Doctrine and Convenants",
         label:"Doctrine and Convenants"
+    },
+    {
+        value: "Pearl of Great Price",
+        label: "Pearl of Great Price"
     },
 ]

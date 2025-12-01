@@ -129,7 +129,7 @@ const NewEntry = ({ isOpen, onClose, userData }) => {
             // 4. Share Entry to Group Chat
             if (isPublic && userData.groupId) {
                 const messagesRef = collection(db, 'groups', userData.groupId, 'messages');
-                const messageText = `📖 **New Study Entry**\n\n**Title:** ${newEntry}\n**Scripture:** ${scripture}\n\n${comment}`;
+                const messageText = `📖 **New Study Entry**\n\n**Title:** ${newEntry}\n\n**Scripture:** ${scripture}\n\n${comment}`;
                 
                 await addDoc(messagesRef, {
                     text: messageText,
@@ -171,7 +171,7 @@ const NewEntry = ({ isOpen, onClose, userData }) => {
 
                 {/* Scripture selection (react-select) */}
                 <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="scripture-select" style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>Choose the scripture</label>
+                    <label htmlFor="scripture-select" style={{ display: 'block', marginBottom: '0.5rem', color: 'black' }}>Choose the scripture</label>
                     <Select
                         options={ScripturesOptions}
                         onChange={(option) => {
@@ -187,10 +187,28 @@ const NewEntry = ({ isOpen, onClose, userData }) => {
                                 borderColor: '#ddd',
                                 borderRadius: '0.5rem',
                                 padding: '0.2rem',
+                                color: 'black',
+                            }),
+                            placeholder: (base) => ({
+                                ...base,
+                                color: 'black', 
+                            }),
+                            singleValue: (base) => ({
+                                ...base,
+                                color: 'black', 
+                            }),
+                            option: (base, { isFocused, isSelected }) => ({
+                                ...base,
+                                color: 'black', 
+                                backgroundColor: isSelected ? 'rgba(255, 145, 157, 0.2)' : isFocused ? 'rgba(255, 145, 157, 0.1)' : null,
+                                '&:active': {
+                                    backgroundColor: 'rgba(255, 145, 157, 0.3)',
+                                },
                             }),
                             menu: (base) => ({
                                 ...base,
-                                zIndex: 100
+                                zIndex: 100,
+                                color: 'black' 
                             })
                         }}
                     />
