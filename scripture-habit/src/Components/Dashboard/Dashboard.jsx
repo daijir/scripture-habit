@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { auth, db } from '../../firebase';
-import { doc, onSnapshot, collection, query, where } from 'firebase/firestore';
+import { doc, onSnapshot, collection, query, where, orderBy, limit } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
+import ReactMarkdown from 'react-markdown'; // Import ReactMarkdown
 import Hero from '../Hero/Hero';
 import Sidebar from '../Sidebar/Sidebar';
 import GroupChat from '../GroupChat/GroupChat'; // Import GroupChat
@@ -10,6 +11,7 @@ import './Dashboard.css';
 import Button from '../Button/Button';
 import GalleryImages from '../GalleryImages/GalleryImages';
 import NewEntry from '../NewEntry/NewEntry';
+import MyEntries from '../MyEntries/MyEntries';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -19,9 +21,41 @@ const Dashboard = () => {
   const [selectedView, setSelectedView] = useState(0);
   const [groupTotalEntries, setGroupTotalEntries] = useState(0);
   const [personalEntriesCount, setPersonalEntriesCount] = useState(null);
+  const [recentEntries, setRecentEntries] = useState([]); // State for recent entries
 
   {/* Control modal NewEntry*/ }
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  // Fetch recent 3 entries
+  useEffect(() => {
+    if (!userData || !userData.groupId) return;
+
+    try {
+      const messagesRef = collection(db, 'groups', userData.groupId, 'messages');
+      const q = query(
+        messagesRef,
+        where('senderId', '==', userData.uid),
+        where('isEntry', '==', true),
+        orderBy('createdAt', 'desc'),
+        limit(3)
+      );
+
+      const unsubscribeRecent = onSnapshot(q, (querySnapshot) => {
+        const entries = [];
+        querySnapshot.forEach((doc) => {
+          entries.push({ id: doc.id, ...doc.data() });
+        });
+        setRecentEntries(entries);
+      }, (err) => {
+        console.error("Error fetching recent entries:", err);
+      });
+
+      return () => unsubscribeRecent();
+    } catch (err) {
+      console.error("Error setting up recent entries listener:", err);
+    }
+  }, [userData]);
+
 
 
   useEffect(() => {
@@ -220,9 +254,6 @@ const Dashboard = () => {
                 <h1>Dashboard Overview</h1>
                 <p className="welcome-text">Welcome back, <strong>{userData.nickname}</strong>!</p>
               </div>
-              <Button onClick={() => setIsModalOpen(true)} className="new-entry-btn">
-                + New Entry
-              </Button>
             </div>
 
             <div className="dashboard-stats">
@@ -246,28 +277,53 @@ const Dashboard = () => {
 
             <div className="dashboard-section">
               <div className="section-header">
+                <h3>Recent Entries</h3>
+                <Link to="#" className="see-all" onClick={(e) => { e.preventDefault(); setSelectedView(1); }}>See All</Link>
+              </div>
+              <div className="gallery-container">
+                <div className="recent-entries-grid">
+                  {recentEntries.length === 0 ? (
+                    <p className="no-entries-dashboard">No recent entries.</p>
+                  ) : (
+                    recentEntries.map((entry) => (
+                      <div key={entry.id} className="entry-card dashboard-entry-card">
+                        <div className="entry-date">
+                          {entry.createdAt?.toDate().toLocaleDateString() || 'Unknown Date'}
+                        </div>
+                        <div className="entry-content">
+                          <ReactMarkdown>
+                            {entry.text
+                              .replace('📖 **New Study Entry**\n\n', '')
+                              .replace(/\n\*\*Scripture:\*\*/g, '\n\n**Scripture:**')}
+                          </ReactMarkdown>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="dashboard-section">
+              <div className="section-header">
                 <h3>Recent Scriptures</h3>
-                <Link to="#" className="see-all">See All</Link>
               </div>
               <div className="gallery-container">
                 <GalleryImages />
               </div>
             </div>
 
-            {/* Modal */}
-            <NewEntry isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} />
-
           </div>
         )}
         {selectedView === 1 && (
-          <div className="DashboardContent">
-            <h1>Scriptures</h1>
-            <p>Scripture study features coming soon...</p>
-          </div>
+          <MyEntries userData={userData} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
         )}
         {selectedView === 2 && (
           <GroupChat groupId={userData.groupId} userData={userData} />
         )}
+        
+        {/* Modal - Available across views */}
+        <NewEntry isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} />
       </div>
     </div>
   );

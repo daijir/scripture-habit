@@ -39,7 +39,6 @@
   justify-content: center;
   align-items: flex-start;
   font-family: 'Inter', sans-serif;
-  padding: 16px 0;
 }
 
 .AppGlass {
@@ -75,7 +74,7 @@
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
-  background: linear-gradient(90deg, #feac5e 0%, #c779d0 50%, #4bc0c8 100%);
+  background: black;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -96,5 +95,19 @@ h2 {
   }
   button {
     background-color: #f9f9f9;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .App {
+    padding: 0;
+    align-items: stretch;
+  }
+
+  .AppGlass {
+    width: 100%;
+    min-height: 100vh;
+    border-radius: 0;
+    padding-top: 0;
   }
 }

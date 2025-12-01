@@ -3,17 +3,19 @@ import { db } from '../../firebase';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown'; // Import ReactMarkdown
-// import { UilPlus } from '@iconscout/react-unicons'; // Removed Plus icon import
+import { UilPlus } from '@iconscout/react-unicons';
+import NewEntry from '../NewEntry/NewEntry';
 import './GroupChat.css';
 
-// Removed openNewEntryModal from props
 const GroupChat = ({ groupId, userData }) => { 
   const [messages, setMessages] = useState([]);
   const [groupData, setGroupData] = useState(null);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const containerRef = useRef(null); // Ref for the container
+  const [isNewEntryOpen, setIsNewEntryOpen] = useState(false);
+  const containerRef = useRef(null); // Restored containerRef
+  const textareaRef = useRef(null); // Ref for the textarea
 
   // ... existing useEffects ...
 
@@ -60,8 +62,16 @@ const GroupChat = ({ groupId, userData }) => {
     }
   }, [messages]);
 
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+    }
+  }, [newMessage]);
+
   const handleSendMessage = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault(); // Handle both form submit and manual calls
     if (newMessage.trim() === '' || !userData) return;
 
     const messagesRef = collection(db, 'groups', groupId, 'messages');
@@ -71,16 +81,32 @@ const GroupChat = ({ groupId, userData }) => {
         createdAt: serverTimestamp(),
         senderId: userData.uid, // Assuming userData has uid
         senderNickname: userData.nickname,
+        isEntry: false, // Explicitly set isEntry to false for regular chat messages
       });
       setNewMessage('');
+      // Reset height
+      if (textareaRef.current) {
+        textareaRef.current.style.height = 'auto';
+      }
     } catch (e) {
       console.error("Error sending message:", e);
       toast.error(`Failed to send message: ${e.message || e}`);
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      // On desktop, Enter sends. On mobile, Enter adds a new line (default behavior).
+      if (window.innerWidth > 768) {
+        e.preventDefault();
+        handleSendMessage();
+      }
+    }
+  };
+
   return (
     <div className="GroupChat">
+      <NewEntry isOpen={isNewEntryOpen} onClose={() => setIsNewEntryOpen(false)} userData={userData} />
       <div className="chat-header">
         <h2>{groupData ? groupData.name : 'Group Chat'}</h2> {/* Restored original header */}
         {groupData && (
@@ -124,12 +150,17 @@ const GroupChat = ({ groupId, userData }) => {
       <form onSubmit={handleSendMessage} className="send-message-form">
         <div className="input-wrapper">
           {/* Removed add-entry-btn */}
-          <input
-            type="text"
+          <textarea
+            ref={textareaRef}
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type a message..."
+            onKeyDown={handleKeyDown}
+            placeholder="Click + button to create a new entry or type a message..."
+            rows={1}
           />
+          <div className="add-entry-btn" onClick={() => setIsNewEntryOpen(true)}>
+            <UilPlus />
+          </div>
           <button type="submit">Send</button>
         </div>
       </form>

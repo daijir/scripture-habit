@@ -16,6 +16,7 @@
     background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -35,7 +36,7 @@
 
 .invite-code-display {
     background: white;
-    padding: 0.4rem 1rem; 
+    padding: 0.4rem 1rem;
     border-radius: 2rem;
     font-size: 0.85rem;
     color: var(--gray);
@@ -57,7 +58,7 @@
     flex: 1 1 auto;
     min-height: 0;
     overflow-y: auto;
-    padding: 1.5rem 2rem; 
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -126,8 +127,8 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    padding: 0.8rem 1.2rem; 
-    border-radius: 1.2rem; 
+    padding: 0.8rem 1.2rem;
+    border-radius: 1.2rem;
     font-size: 0.95rem;
     line-height: 1.5;
     overflow-wrap: anywhere;
@@ -136,7 +137,7 @@
     max-width: 100%;
     box-sizing: border-box;
     position: relative;
-    white-space: pre-wrap; 
+    white-space: pre-wrap;
 }
 
 .message.sent .message-content {
@@ -154,9 +155,9 @@
 }
 
 /* Styles for plain text messages */
-.message-content > p {
-    margin: 0; 
-    padding: 0; 
+.message-content>p {
+    margin: 0;
+    padding: 0;
 }
 
 .entry-message-content {
@@ -166,13 +167,13 @@
     border-radius: 0;
 }
 
-.entry-message-content > * {
-    margin: 0; 
-    padding: 0; 
-    line-height: 1.5; 
+.entry-message-content>* {
+    margin: 0;
+    padding: 0;
+    line-height: 1.5;
 }
 
-.entry-message-content > *:not(:last-child) {
+.entry-message-content>*:not(:last-child) {
     margin-bottom: 0.5rem;
 }
 
@@ -211,6 +212,7 @@
     backdrop-filter: blur(10px);
     padding: 1rem 2rem;
     border-top: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 2rem;
     position: sticky;
     bottom: 0;
     z-index: 12;
@@ -263,11 +265,13 @@
 
 .input-wrapper {
     display: flex;
-    align-items: center;
-    gap: 1rem; 
+    align-items: flex-end;
+    /* Align to bottom as textarea grows */
+    gap: 1rem;
     background: white;
-    padding: 0.5rem; 
-    border-radius: 3rem;
+    padding: 0.5rem;
+    border-radius: 1.5rem;
+    /* Adjusted for textarea look */
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
     border: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -290,7 +294,24 @@
     color: var(--pink);
 }
 
-.input-wrapper input[type="text"] {
+.add-entry-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--gray);
+    transition: all 0.2s;
+}
+
+.add-entry-btn:hover {
+    background: #f0f0f0;
+    color: var(--pink);
+}
+
+.input-wrapper textarea {
     flex: 1;
     border: none;
     background: transparent;
@@ -298,9 +319,20 @@
     font-size: 1rem;
     outline: none;
     color: var(--black);
+    resize: none;
+    /* Disable manual resize */
+    font-family: inherit;
+    /* Inherit font family */
+    min-height: 24px;
+    /* Initial height */
+    max-height: 150px;
+    /* Limit max height */
+    overflow-y: auto;
+    /* Scroll if content exceeds max height */
+    line-height: 1.5;
 }
 
-.input-wrapper input[type="text"]::placeholder {
+.input-wrapper textarea::placeholder {
     color: #ccc;
 }
 
@@ -328,21 +360,65 @@
 @media screen and (max-width: 768px) {
     .chat-header {
         padding: 0.5rem 1rem;
+        border-radius: 0;
     }
+
     .chat-header h2 {
         font-size: 1rem;
     }
+
     .invite-code-display {
         font-size: 0.7rem;
         padding: 0.2rem 0.5rem;
     }
-    
+
+    .GroupChat {
+        border-radius: 0;
+    }
+
     .send-message-form {
-        bottom: 70px; 
-        border-radius: 0 0 2rem 2rem; 
+        position: fixed;
+        bottom: 70px;
+        /* Sit directly on top of sidebar */
+        left: 0;
+        right: 0;
+        border-radius: 0;
+        padding: 0.75rem 1rem;
+        /* Add padding for internal spacing */
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        /* Subtle shadow upwards */
+        background-color: #f0f2f5;
+        /* Light gray background for the container */
+        backdrop-filter: none;
+    }
+
+    .input-wrapper {
+        gap: 0.5rem;
+        padding: 0.3rem 0.5rem;
+        background-color: white;
+        /* White background for the input field */
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        /* Subtle border for definition */
+    }
+
+    .input-wrapper textarea {
+        font-size: 0.95rem;
+        min-width: 0;
+        /* Allow input to shrink */
+    }
+
+    .input-wrapper button[type="submit"] {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .add-entry-btn {
+        width: 32px;
+        height: 32px;
     }
 
     .messages-container {
-        padding-bottom: 180px; 
+        padding-bottom: 180px;
+        /* Adjusted to account for fixed input form + bottom nav */
     }
 }
