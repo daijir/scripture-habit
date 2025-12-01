@@ -110,7 +110,7 @@ const NewEntry = ({ isOpen, onClose, userData }) => {
                 if (userData.groupId && newStreak > 0) {
                     const messagesRef = collection(db, 'groups', userData.groupId, 'messages');
                     await addDoc(messagesRef, {
-                        text: `🎉 ${userData.nickname} reached a ${newStreak} day streak! Way to go!!`,
+                        text: `🎉🎉🎉 **${userData.nickname} reached a ${newStreak} day streak! Way to go!!** 🎉🎉🎉`,
                         senderId: 'system', 
                         senderNickname: 'Scripture Habit Bot',
                         createdAt: serverTimestamp(),

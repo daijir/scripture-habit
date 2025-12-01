@@ -167,44 +167,44 @@ const Dashboard = () => {
 
   const getDisplayStreak = () => {
     try {
-        if (!userData) return 0;
-        const streak = userData.streakCount || 0;
-        if (!userData.lastPostDate) return 0;
+      if (!userData) return 0;
+      const streak = userData.streakCount || 0;
+      if (!userData.lastPostDate) return 0;
 
-        let timeZone = userData.timeZone || 'UTC';
-        try {
-            // Validate timezone
-            Intl.DateTimeFormat(undefined, { timeZone });
-        } catch (e) {
-            console.warn("Invalid timezone in userData, falling back to UTC:", timeZone);
-            timeZone = 'UTC';
-        }
+      let timeZone = userData.timeZone || 'UTC';
+      try {
+        // Validate timezone
+        Intl.DateTimeFormat(undefined, { timeZone });
+      } catch (e) {
+        console.warn("Invalid timezone in userData, falling back to UTC:", timeZone);
+        timeZone = 'UTC';
+      }
 
-        const now = new Date();
-        const todayStr = now.toLocaleDateString('en-CA', { timeZone });
-        
-        let lastPostDate;
-        if (userData.lastPostDate && typeof userData.lastPostDate.toDate === 'function') {
-            lastPostDate = userData.lastPostDate.toDate();
-        } else {
-            lastPostDate = new Date(userData.lastPostDate);
-        }
-        
-        if (isNaN(lastPostDate.getTime())) return 0;
+      const now = new Date();
+      const todayStr = now.toLocaleDateString('en-CA', { timeZone });
 
-        const lastPostDateStr = lastPostDate.toLocaleDateString('en-CA', { timeZone });
-        
-        const today = new Date(todayStr);
-        const lastPost = new Date(lastPostDateStr);
-        const diffTime = today - lastPost;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      let lastPostDate;
+      if (userData.lastPostDate && typeof userData.lastPostDate.toDate === 'function') {
+        lastPostDate = userData.lastPostDate.toDate();
+      } else {
+        lastPostDate = new Date(userData.lastPostDate);
+      }
 
-        if (diffDays <= 1) return streak;
+      if (isNaN(lastPostDate.getTime())) return 0;
 
-        return 0;
+      const lastPostDateStr = lastPostDate.toLocaleDateString('en-CA', { timeZone });
+
+      const today = new Date(todayStr);
+      const lastPost = new Date(lastPostDateStr);
+      const diffTime = today - lastPost;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays <= 1) return streak;
+
+      return 0;
     } catch (error) {
-        console.error("Error calculating streak:", error);
-        return 0;
+      console.error("Error calculating streak:", error);
+      return 0;
     }
   };
 
