@@ -3,15 +3,19 @@ import { db } from '../../firebase';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, getDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown'; // Import ReactMarkdown
+// import { UilPlus } from '@iconscout/react-unicons'; // Removed Plus icon import
 import './GroupChat.css';
 
-const GroupChat = ({ groupId, userData }) => {
+// Removed openNewEntryModal from props
+const GroupChat = ({ groupId, userData }) => { 
   const [messages, setMessages] = useState([]);
   const [groupData, setGroupData] = useState(null);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const dummy = useRef(); // For auto-scrolling
+  const containerRef = useRef(null); // Ref for the container
+
+  // ... existing useEffects ...
 
   useEffect(() => {
     if (!groupId) return;
@@ -37,10 +41,6 @@ const GroupChat = ({ groupId, userData }) => {
       });
       setMessages(msgs);
       setLoading(false);
-      // Scroll to the bottom after messages are loaded/updated
-      if (dummy.current) {
-        dummy.current.scrollIntoView({ behavior: 'smooth' });
-      }
     }, (err) => {
       console.error("Error fetching messages:", err);
       setError("Failed to load messages.");
@@ -52,6 +52,13 @@ const GroupChat = ({ groupId, userData }) => {
       unsubscribeMessages();
     };
   }, [groupId]);
+
+  // Auto-scroll to bottom when messages change
+  useEffect(() => {
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -75,21 +82,24 @@ const GroupChat = ({ groupId, userData }) => {
   return (
     <div className="GroupChat">
       <div className="chat-header">
-        <h2>{groupData ? groupData.name : 'Group Chat'}</h2>
+        <h2>{groupData ? groupData.name : 'Group Chat'}</h2> {/* Restored original header */}
         {groupData && (
           <div className="invite-code-display">
-            <span>Invite Code: <strong>{groupData.inviteCode}</strong></span>
+            <span>Invite Code: <strong>{groupData.inviteCode}</strong></span> {/* Restored original invite code display */}
           </div>
         )}
+        {/* Removed header button */}
       </div>
-      <div className="messages-container">
+      <div className="messages-container" ref={containerRef}>
         {loading && <p>Loading messages...</p>}
         {error && <p className="error-message">{error}</p>}
         {messages.map((msg) => {
           if (msg.senderId === 'system' || msg.isSystemMessage) {
             return (
               <div key={msg.id} className="message system-message">
-                <p>{msg.text}</p>
+                <div className="message-content">
+                  <ReactMarkdown>{msg.text}</ReactMarkdown>
+                </div>
               </div>
             );
           }
@@ -110,10 +120,10 @@ const GroupChat = ({ groupId, userData }) => {
             </div>
           );
         })}
-        <div ref={dummy}></div>
       </div>
       <form onSubmit={handleSendMessage} className="send-message-form">
         <div className="input-wrapper">
+          {/* Removed add-entry-btn */}
           <input
             type="text"
             value={newMessage}
