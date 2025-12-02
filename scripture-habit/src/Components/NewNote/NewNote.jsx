@@ -1,26 +1,32 @@
 import React, { useState } from 'react';
-import './NewEntry.css';
-import { ScripturesOptions } from '../../Data/Data';
-import Select from 'react-select';
-import Checkbox from '../Input/Checkbox';
-import Input from '../Input/Input';
 import { db } from '../../firebase';
 import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment } from 'firebase/firestore';
+import { toast } from 'react-toastify';
+import ReactMarkdown from 'react-markdown';
+import { UilTimes, UilImageUpload, UilTrashAlt } from '@iconscout/react-unicons';
+import Select from 'react-select';
+import { ScripturesOptions } from '../../Data/Data';
+import Checkbox from '../Input/Checkbox';
+import Input from '../Input/Input';
+import './NewNote.css'; // Renamed CSS import
 
-const NewEntry = ({ isOpen, onClose, userData }) => {
+const NewNote = ({ isOpen, onClose, userData }) => {
     //Form fields
-    const [newEntry, setNewEntry] = useState('');
+    const [newNote, setNewNote] = useState(''); // Renamed from newEntry
     const [scripture, setScripture] = useState('');
     const [selectedOption, setSelectedOption] = useState(null);
     const [comment, setComment] = useState('');
-    const [isPublic, setIsPublic] = useState(true); // Default to public
+    const [isPublic, setIsPublic] = useState(true); 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+    // Keeping these for potential future image support
+    const [selectedImage, setSelectedImage] = useState(null); 
+    const [previewUrl, setPreviewUrl] = useState(null);
 
     if (!isOpen) return null;
 
     const handleSubmit = async () => {
-        if (!newEntry || !scripture) {
+        if (!newNote || !scripture) {
             setError("Please fill in the title and select a scripture.");
             return;
         }
@@ -29,23 +35,6 @@ const NewEntry = ({ isOpen, onClose, userData }) => {
         setError(null);
 
         try {
-            // 1. Create Post
-            /* 
-            // Temporarily disabled due to permission issues
-            const postData = {
-                title: newEntry,
-                scripture: scripture,
-                comment: comment,
-                userId: userData.uid,
-                userNickname: userData.nickname,
-                groupId: userData.groupId,
-                isPublic: isPublic,
-                createdAt: serverTimestamp(),
-            };
-
-            await addDoc(collection(db, 'groups', userData.groupId, 'posts'), postData);
-            */
-
             // 2. Update Streak
             const userRef = doc(db, 'users', userData.uid);
             const userSnap = await getDoc(userRef);
@@ -103,7 +92,7 @@ const NewEntry = ({ isOpen, onClose, userData }) => {
                 await updateDoc(userRef, {
                     streakCount: newStreak,
                     lastPostDate: serverTimestamp(),
-                    totalEntries: increment(1)
+                    totalNotes: increment(1) // Renamed from totalEntries
                 });
 
                 // 3. Announcement in Group Chat
@@ -118,38 +107,37 @@ const NewEntry = ({ isOpen, onClose, userData }) => {
                     });
                 }
             } else {
-                // Just update lastPostDate if it was today (to keep it fresh? maybe not needed if we only care about streak date)
-                // But let's update it to show latest activity
                 await updateDoc(userRef, {
                     lastPostDate: serverTimestamp(),
-                    totalEntries: increment(1)
+                    totalNotes: increment(1) // Renamed from totalEntries
                 });
             }
 
-            // 4. Share Entry to Group Chat
+            // 4. Share Note to Group Chat
             if (isPublic && userData.groupId) {
                 const messagesRef = collection(db, 'groups', userData.groupId, 'messages');
-                const messageText = `📖 **New Study Entry**\n\n**Title:** ${newEntry}\n\n**Scripture:** ${scripture}\n\n${comment}`;
+                const messageText = `📖 **New Study Note**\n\n**Title:** ${newNote}\n\n**Scripture:** ${scripture}\n\n${comment}`;
                 
                 await addDoc(messagesRef, {
                     text: messageText,
                     senderId: userData.uid,
                     senderNickname: userData.nickname,
                     createdAt: serverTimestamp(),
-                    isEntry: true
+                    isNote: true // Renamed from isEntry
                 });
             }
 
             setLoading(false);
             onClose();
             // Reset form
-            setNewEntry('');
+            setNewNote('');
             setScripture('');
             setComment('');
+            toast.success("Note posted successfully!");
 
         } catch (e) {
-            console.error("Error creating entry:", e);
-            setError("Failed to create entry. Please try again.");
+            console.error("Error creating note:", e);
+            setError("Failed to create note. Please try again.");
             setLoading(false);
         }
     };
@@ -157,15 +145,15 @@ const NewEntry = ({ isOpen, onClose, userData }) => {
     return (
         <div className="ModalOverlay" onClick={onClose}>
             <div className="ModalContent" onClick={(e) => e.stopPropagation()}>
-                <h1>New Entry</h1>
+                <h1>New Note</h1> {/* Updated Text */}
                 {error && <p className="error-message" style={{ color: 'red' }}>{error}</p>}
 
                 {/* Title input */}
                 <Input
                     label="Title"
                     type="text"
-                    value={newEntry}
-                    onChange={(e) => setNewEntry(e.target.value)}
+                    value={newNote}
+                    onChange={(e) => setNewNote(e.target.value)}
                     required
                 />
 
@@ -233,7 +221,7 @@ const NewEntry = ({ isOpen, onClose, userData }) => {
                 <div className="modal-actions" style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
                     <button onClick={onClose} className="cancel-btn" style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: '#ddd', cursor: 'pointer' }}>Cancel</button>
                     <button onClick={handleSubmit} disabled={loading} className="submit-btn" style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: 'var(--pink)', color: 'white', cursor: 'pointer' }}>
-                        {loading ? 'Posting...' : 'Post Entry'}
+                        {loading ? 'Posting...' : 'Post Note'} {/* Updated Text */}
                     </button>
                 </div>
             </div>
@@ -241,4 +229,4 @@ const NewEntry = ({ isOpen, onClose, userData }) => {
     );
 };
 
-export default NewEntry;
+export default NewNote;

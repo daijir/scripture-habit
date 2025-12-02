@@ -34,6 +34,12 @@
     font-weight: 700;
 }
 
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
 .invite-code-display {
     background: white;
     padding: 0.4rem 1rem;
@@ -52,6 +58,113 @@
     font-family: monospace;
     font-size: 1rem;
     letter-spacing: 1px;
+}
+
+.leave-group-btn {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--black);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.leave-group-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: scale(1.05);
+}
+
+/* Modal Styles */
+.leave-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+}
+
+.leave-modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    animation: scaleIn 0.2s ease;
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.leave-modal-content h3 {
+    margin-top: 0;
+    color: var(--black);
+    font-size: 1.5rem;
+}
+
+.leave-modal-content p {
+    color: var(--gray);
+    margin-bottom: 2rem;
+    line-height: 1.5;
+}
+
+.leave-modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.modal-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.modal-btn.cancel {
+    background: #f0f0f0;
+    color: var(--black);
+}
+
+.modal-btn.cancel:hover {
+    background: #e0e0e0;
+}
+
+.modal-btn.leave {
+    background: #ff3b30;
+    color: white;
+    box-shadow: 0 4px 10px rgba(255, 59, 48, 0.3);
+}
+
+.modal-btn.leave:hover {
+    background: #ff2d20;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(255, 59, 48, 0.4);
 }
 
 .messages-container {

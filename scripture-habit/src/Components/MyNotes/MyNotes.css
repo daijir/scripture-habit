@@ -1,4 +1,4 @@
-.MyEntries {
+.MyNotes {
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -8,27 +8,27 @@
     box-sizing: border-box;
 }
 
-.entries-header-container {
+.notes-header-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1.5rem;
 }
 
-.entries-header-container h1 {
+.notes-header-container h1 {
     margin-bottom: 0;
     color: black;
     font-size: 1.8rem; /* Slightly smaller */
 }
 
-.entries-grid {
+.notes-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
     padding-bottom: 2rem;
 }
 
-.entry-card {
+.note-card {
     background: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(10px);
     border-radius: 1rem;
@@ -41,12 +41,12 @@
     gap: 0.5rem;
 }
 
-.entry-card:hover {
+.note-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-.entry-date {
+.note-date {
     font-size: 0.8rem;
     color: var(--gray);
     align-self: flex-end;
@@ -54,18 +54,18 @@
     font-weight: 500;
 }
 
-.entry-content {
+.note-content {
     font-size: 0.9rem;
     color: var(--black);
     line-height: 1.5;
 }
 
-.entry-content p {
+.note-content p {
     margin: 0;
     margin-bottom: 0.5rem;
 }
 
-.no-entries {
+.no-notes {
     color: var(--gray);
     font-style: italic;
     text-align: center;
@@ -73,8 +73,8 @@
     margin-top: 2rem;
 }
 
-.MyEntries.loading,
-.MyEntries.error {
+.MyNotes.loading,
+.MyNotes.error {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -84,19 +84,19 @@
 }
 
 @media screen and (max-width: 768px) {
-    .MyEntries {
+    .MyNotes {
         padding: 1rem;
         padding-bottom: 90px;
         /* Space for bottom navigation */
     }
 
-    .entries-grid {
+    .notes-grid {
         grid-template-columns: 1fr;
         /* Single column on mobile */
         gap: 1rem;
     }
 
-    .entry-card {
+    .note-card {
         padding: 1rem;
     }
 }

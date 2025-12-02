@@ -1,24 +1,24 @@
-.Sidebar{
+.Sidebar {
     display: flex;
     flex-direction: column;
     position: relative;
     padding-top: 4rem;
     transition: all 300ms ease;
     min-height: 80vh;
-    color: var(--black); /* Default text color to black */
+    color: var(--black);
 }
 
-.logo{
+.logo {
     display: flex;
     font-weight: bold;
     font-size: 22px;
     gap: 1rem;
     align-items: center;
-    justify-content: center; /* Center horizontally */
+    justify-content: center;
 }
 
-.logo>span>span{
-    color: var(--pink)
+.logo>span>span {
+    color: var(--white)
 }
 
 .menu {
@@ -48,19 +48,21 @@
 .active {
     background: var(--activeItem);
     margin-left: 0;
-    color: var(--pink); /* Active item text color to pink */
+    color: var(--white);
+    /* Active item text color to pink */
 }
 
-.active::before{
+.active::before {
     content: '';
     width: 8px;
     height: 100%;
-    background: var(--pink);
+    background: var(--white);
     margin-right: calc(1rem - 8px);
 
 }
-.menu .menuItem:last-child{
-    position:absolute;
+
+.menu .menuItem:last-child {
+    position: absolute;
     bottom: 2.3rem;
     width: 100%;
 }
@@ -83,7 +85,7 @@
         border-radius: 0;
         border-top: 1px solid rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(10px);
-        box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
     }
 
     .logo {
@@ -110,7 +112,7 @@
         padding: 0;
     }
 
-    .menuItem > span {
+    .menuItem>span {
         display: none;
     }
 
@@ -118,7 +120,7 @@
         background: var(--pink);
         color: white;
     }
-    
+
     .active::before {
         display: none;
     }

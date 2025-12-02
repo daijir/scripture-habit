@@ -18,7 +18,7 @@ export const SidebarData = [
     },
     {
         icon: UilClipboardAlt,
-        heading: "My Entries",
+        heading: "My Notes",
     },
     {
         icon: UilUsersAlt,

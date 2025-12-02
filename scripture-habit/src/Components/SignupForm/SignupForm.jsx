@@ -40,7 +40,7 @@ export default function SignupForm() {
         nickname: nickname,
         preferredCheckInTime: "00:00",
         streakCount: 0, // Start at 0
-        totalEntries: 0, // Initialize total entries
+        totalNotes: 0, // Initialize total notes
         timeZone: timeZone,
       };
 

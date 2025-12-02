@@ -3,15 +3,16 @@ import { Link } from 'react-router-dom';
 import { auth, db } from '../../firebase';
 import { doc, onSnapshot, collection, query, where, orderBy, limit } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
-import ReactMarkdown from 'react-markdown'; // Import ReactMarkdown
+import ReactMarkdown from 'react-markdown'; 
+import { UilPlus } from '@iconscout/react-unicons';
 import Hero from '../Hero/Hero';
 import Sidebar from '../Sidebar/Sidebar';
-import GroupChat from '../GroupChat/GroupChat'; // Import GroupChat
+import GroupChat from '../GroupChat/GroupChat'; 
 import './Dashboard.css';
 import Button from '../Button/Button';
 import GalleryImages from '../GalleryImages/GalleryImages';
-import NewEntry from '../NewEntry/NewEntry';
-import MyEntries from '../MyEntries/MyEntries';
+import NewNote from '../NewNote/NewNote'; // Renamed import
+import MyNotes from '../MyNotes/MyNotes'; // Renamed import
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -19,66 +20,67 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedView, setSelectedView] = useState(0);
-  const [groupTotalEntries, setGroupTotalEntries] = useState(0);
-  const [personalEntriesCount, setPersonalEntriesCount] = useState(null);
-  const [recentEntries, setRecentEntries] = useState([]); // State for recent entries
+  const [groupTotalNotes, setGroupTotalNotes] = useState(0); // Renamed state
+  const [personalNotesCount, setPersonalNotesCount] = useState(null); // Renamed state
+  const [recentNotes, setRecentNotes] = useState([]); // Renamed state
 
-  {/* Control modal NewEntry*/ }
+  {/* Control modal NewNote*/ }
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-  // Fetch recent 3 entries
+  // Fetch recent 3 notes
   useEffect(() => {
     if (!userData || !userData.groupId) return;
 
     try {
       const messagesRef = collection(db, 'groups', userData.groupId, 'messages');
+      // Query for 'isNote' instead of 'isEntry'
       const q = query(
         messagesRef,
         where('senderId', '==', userData.uid),
-        where('isEntry', '==', true),
+        where('isNote', '==', true), 
         orderBy('createdAt', 'desc'),
         limit(3)
       );
 
       const unsubscribeRecent = onSnapshot(q, (querySnapshot) => {
-        const entries = [];
+        const notes = [];
         querySnapshot.forEach((doc) => {
-          entries.push({ id: doc.id, ...doc.data() });
+          notes.push({ id: doc.id, ...doc.data() });
         });
-        setRecentEntries(entries);
+        setRecentNotes(notes);
       }, (err) => {
-        console.error("Error fetching recent entries:", err);
+        console.error("Error fetching recent notes:", err);
       });
 
       return () => unsubscribeRecent();
     } catch (err) {
-      console.error("Error setting up recent entries listener:", err);
+      console.error("Error setting up recent notes listener:", err);
     }
   }, [userData]);
 
 
 
   useEffect(() => {
-    // Listen for group's total entries (messages with isEntry === true)
-    let unsubscribeGroupEntries = null;
+    // Listen for group's total notes (messages with isNote === true)
+    let unsubscribeGroupNotes = null;
     if (userData && userData.groupId) {
       try {
         const messagesRef = collection(db, 'groups', userData.groupId, 'messages');
-        const q = query(messagesRef, where('isEntry', '==', true));
-        unsubscribeGroupEntries = onSnapshot(q, (querySnapshot) => {
-          setGroupTotalEntries(querySnapshot.size || 0);
+        const q = query(messagesRef, where('isNote', '==', true));
+        unsubscribeGroupNotes = onSnapshot(q, (querySnapshot) => {
+          setGroupTotalNotes(querySnapshot.size || 0);
         }, (err) => {
-          console.error('Error fetching group entries count:', err);
+          console.error('Error fetching group notes count:', err);
         });
       } catch (err) {
-        console.error('Error setting up group entries listener:', err);
+        console.error('Error setting up group notes listener:', err);
       }
     } else {
-      setGroupTotalEntries(0);
+      setGroupTotalNotes(0);
     }
 
     return () => {
-      if (unsubscribeGroupEntries) unsubscribeGroupEntries();
+      if (unsubscribeGroupNotes) unsubscribeGroupNotes();
     };
   }, [userData]);
 
@@ -91,25 +93,25 @@ const Dashboard = () => {
     return () => unsubscribeAuth();
   }, []);
 
-  // Keep a fallback/authoritative count of the current user's entries
+  // Keep a fallback/authoritative count of the current user's notes
   useEffect(() => {
     let unsubscribePersonal = null;
     try {
       if (userData && userData.groupId && userData.uid) {
         const messagesRef = collection(db, 'groups', userData.groupId, 'messages');
-        const q = query(messagesRef, where('isEntry', '==', true), where('senderId', '==', userData.uid));
+        const q = query(messagesRef, where('isNote', '==', true), where('senderId', '==', userData.uid));
         unsubscribePersonal = onSnapshot(q, (snap) => {
-          setPersonalEntriesCount(snap.size || 0);
+          setPersonalNotesCount(snap.size || 0);
         }, (err) => {
-          console.error('Error fetching personal entries count:', err);
-          setPersonalEntriesCount(null);
+          console.error('Error fetching personal notes count:', err);
+          setPersonalNotesCount(null);
         });
       } else {
-        setPersonalEntriesCount(null);
+        setPersonalNotesCount(null);
       }
     } catch (err) {
-      console.error('Error setting up personal entries listener:', err);
-      setPersonalEntriesCount(null);
+      console.error('Error setting up personal notes listener:', err);
+      setPersonalNotesCount(null);
     }
 
     return () => {
@@ -254,11 +256,14 @@ const Dashboard = () => {
                 <h1>Dashboard Overview</h1>
                 <p className="welcome-text">Welcome back, <strong>{userData.nickname}</strong>!</p>
               </div>
+              <button className="new-note-btn" onClick={() => setIsModalOpen(true)}>
+                <UilPlus /> New Note
+              </button>
             </div>
 
             <div className="dashboard-stats">
               <div className="stat-card streak-card">
-                <h3>{getDisplayStreak()} days streak!</h3>
+                <h3>Streak</h3>
                 <div className="streak-value">
                   <span className="number">{userData.streakCount || 0}</span>
                   <span className="label">days</span>
@@ -267,33 +272,34 @@ const Dashboard = () => {
               </div>
               {/* Placeholder for other stats */}
               <div className="stat-card">
-                <h3>Total Entries</h3>
+                <h3>Total Notes</h3> {/* Updated Text */}
                 <div className="streak-value">
-                  <span className="number">{(personalEntriesCount !== null ? personalEntriesCount : (userData.totalEntries || 0))}</span>
-                  <span className="label">entries</span>
+                  <span className="number">{(personalNotesCount !== null ? personalNotesCount : (userData.totalNotes || 0))}</span>
+                  <span className="label">notes</span> {/* Updated Text */}
                 </div>
               </div>
             </div>
 
             <div className="dashboard-section">
               <div className="section-header">
-                <h3>Recent Entries</h3>
+                <h3>Recent Notes</h3> {/* Updated Text */}
                 <Link to="#" className="see-all" onClick={(e) => { e.preventDefault(); setSelectedView(1); }}>See All</Link>
               </div>
               <div className="gallery-container">
-                <div className="recent-entries-grid">
-                  {recentEntries.length === 0 ? (
-                    <p className="no-entries-dashboard">No recent entries.</p>
+                <div className="recent-notes-grid">
+                  {recentNotes.length === 0 ? (
+                    <p className="no-notes-dashboard">No recent notes.</p>
                   ) : (
-                    recentEntries.map((entry) => (
-                      <div key={entry.id} className="entry-card dashboard-entry-card">
-                        <div className="entry-date">
-                          {entry.createdAt?.toDate().toLocaleDateString() || 'Unknown Date'}
+                    recentNotes.map((note) => (
+                      <div key={note.id} className="note-card dashboard-note-card">
+                        <div className="note-date">
+                          {note.createdAt?.toDate().toLocaleDateString() || 'Unknown Date'}
                         </div>
-                        <div className="entry-content">
+                        <div className="note-content">
                           <ReactMarkdown>
-                            {entry.text
-                              .replace('📖 **New Study Entry**\n\n', '')
+                            {note.text
+                              .replace('📖 **New Study Note**\n\n', '')
+                              .replace('📖 **New Study Entry**\n\n', '') // Backward compatibility
                               .replace(/\n\*\*Scripture:\*\*/g, '\n\n**Scripture:**')}
                           </ReactMarkdown>
                         </div>
@@ -316,14 +322,14 @@ const Dashboard = () => {
           </div>
         )}
         {selectedView === 1 && (
-          <MyEntries userData={userData} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+          <MyNotes userData={userData} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
         )}
         {selectedView === 2 && (
           <GroupChat groupId={userData.groupId} userData={userData} />
         )}
         
         {/* Modal - Available across views */}
-        <NewEntry isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} />
+        <NewNote isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from 'react'; // Import useEffect
 
 import SignupForm from './Components/SignupForm/SignupForm';
 import LoginForm from './Components/LoginForm/LoginForm';
@@ -9,10 +10,19 @@ import Dashboard from './Components/Dashboard/Dashboard';
 import GroupForm from './Components/GroupForm/GroupForm';
 import JoinGroup from './Components/JoinGroup/JoinGroup';
 import GroupDetails from "./Components/GroupDetails/GroupDetails";
+// import AdminTools from './Components/Admin/AdminTools'; // Comment out after use
 
 const App = () => {
+  // Run migration once on app load (temporary)
+  useEffect(() => {
+    // migrateData(); 
+    // Uncomment above line to run migration, then comment it out again.
+    // For now, I'll leave it commented to let user decide when to run.
+  }, []);
+
   return (
     <div className="App">
+       {/* <AdminTools />  Uncomment to show migration button */}
       <Routes>
         {/* Home */}
         <Route
