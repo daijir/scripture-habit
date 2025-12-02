@@ -32,7 +32,6 @@ export default function JoinGroup() {
 
     const fetchPublicGroups = async () => {
       try {
-        // Prefer server-driven list so we can centralize logic and avoid client composite index
         const resp = await fetch('/groups?membersCountLt=5');
         if (resp.ok) {
           const groups = await resp.json();
@@ -44,7 +43,6 @@ export default function JoinGroup() {
         console.warn('Backend /groups fetch failed, falling back to client query:', e);
       }
 
-      // Fallback: client-side Firestore query (keeps original behavior)
       try {
         const q = query(
           collection(db, 'groups'),
@@ -87,7 +85,6 @@ export default function JoinGroup() {
       return;
     }
 
-    // Try server-side join first
     try {
       const idToken = await user.getIdToken();
       const resp = await fetch('/join-group', {
@@ -109,7 +106,6 @@ export default function JoinGroup() {
       console.warn('Server join failed, falling back to client update:', e);
     }
 
-    // Fallback to client-side batched writes (original behavior)
     const groupRef = doc(db, "groups", groupId);
     const userRef = doc(db, "users", user.uid);
     const batch = writeBatch(db);
@@ -163,8 +159,6 @@ export default function JoinGroup() {
   return (
     <div className="App">
       <div className="AppGlass join-group-container">
-
-        {/* セクション1: 招待コード入力 */}
         <div className="group-card-section">
           <div className="section-header">
             <h2>Have an Invite Code?</h2>
@@ -189,7 +183,6 @@ export default function JoinGroup() {
           </form>
         </div>
 
-        {/* セクション2: 公開グループ一覧 */}
         <div className="public-groups-section">
           <div className="section-header">
             <h2>Explore Public Groups</h2>
@@ -221,7 +214,6 @@ export default function JoinGroup() {
           )}
         </div>
 
-        {/* セクション3: グループ作成への誘導 */}
         <div className="create-group-cta">
           <p>Want to start your own community?</p>
           <Link to="/group-form" className="create-group-link">Create a Group</Link>

@@ -9,8 +9,6 @@ import scripture1 from '../assets/images/scrip1.JPG'
 import scripture2 from '../assets/images/scrip2.jpg'
 import scripture3 from '../assets/images/scrip3.jpg'
 
-// Sidebar Data
-
 export const SidebarData = [
     {
         icon: UilEstate,
@@ -26,8 +24,6 @@ export const SidebarData = [
     },    
 ]
 
-//Scriptures Gallery
-
 export const ScripturesGallery = [
     {
         src: scripture1, title: 'My Study 1', description: 'Greice Study'
@@ -39,8 +35,6 @@ export const ScripturesGallery = [
         src: scripture3, title: 'My Study 3', description: 'Greice Study'
     },
 ]
-
-// Scriptures Options for Study
 
 export const ScripturesOptions = [
     {

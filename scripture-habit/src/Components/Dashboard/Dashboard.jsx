@@ -57,8 +57,6 @@ const Dashboard = () => {
     }
   }, [userData]);
 
-
-
   useEffect(() => {
     let unsubscribeGroupNotes = null;
     if (userData && userData.groupId) {
@@ -166,7 +164,7 @@ const Dashboard = () => {
     return <div className='App Dashboard'>Please log in to view the dashboard.</div>;
   }
 
-  // If user is logged in but userData is not fetched or doesn't exist
+  
   if (!userData) {
     return (
       <div className='App Dashboard'>
@@ -181,7 +179,7 @@ const Dashboard = () => {
     );
   }
 
-  // If user is logged in and userData exists
+  
   if (!userData.groupId || userData.groupId === "") {
     return <Navigate to="/group-options" replace />;
   }
@@ -194,7 +192,7 @@ const Dashboard = () => {
 
       let timeZone = userData.timeZone || 'UTC';
       try {
-        // Validate timezone
+        
         Intl.DateTimeFormat(undefined, { timeZone });
       } catch (e) {
         console.warn("Invalid timezone in userData, falling back to UTC:", timeZone);
@@ -253,7 +251,7 @@ const Dashboard = () => {
     return content;
   };
 
-  // If user is in a group, render the chat interface
+  
   return (
     <div className='App Dashboard'>
       <div className='AppGlass Grid'>
@@ -279,19 +277,18 @@ const Dashboard = () => {
                 </div>
                 <p className="streak-subtext">Keep it up!</p>
               </div>
-              {/* Placeholder for other stats */}
               <div className="stat-card">
-                <h3>Total Notes</h3> {/* Updated Text */}
+                <h3>Total Notes</h3>
                 <div className="streak-value">
                   <span className="number">{(personalNotesCount !== null ? personalNotesCount : (userData.totalNotes || 0))}</span>
-                  <span className="label">notes</span> {/* Updated Text */}
+                  <span className="label">notes</span>
                 </div>
               </div>
             </div>
 
             <div className="dashboard-section">
               <div className="section-header">
-                <h3>Recent Notes</h3> {/* Updated Text */}
+                <h3>Recent Notes</h3>
                 <Link to="#" className="see-all" onClick={(e) => { e.preventDefault(); setSelectedView(1); }}>See All</Link>
               </div>
               <div className="gallery-container">
@@ -334,7 +331,6 @@ const Dashboard = () => {
           <GroupChat groupId={userData.groupId} userData={userData} />
         )}
 
-        {/* Modal - Available across views */}
         <NewNote isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} />
       </div>
     </div>

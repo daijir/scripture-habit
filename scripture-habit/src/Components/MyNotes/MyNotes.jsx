@@ -10,8 +10,6 @@ import './MyNotes.css';
 const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  // State for managing note interactions
   const [selectedNote, setSelectedNote] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -57,7 +55,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
       await deleteDoc(doc(db, 'groups', userData.groupId, 'messages', selectedNote.id));
       toast.success("Note deleted successfully");
       setIsDeleteModalOpen(false);
-      setIsEditModalOpen(false); // Close edit modal too if open
+      setIsEditModalOpen(false); 
       setSelectedNote(null);
     } catch (error) {
       console.error("Error deleting note:", error);
@@ -76,10 +74,6 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
     if (chapterMatch && scriptureMatch) {
       const chapter = chapterMatch[1].trim();
       const scripture = scriptureMatch[1].trim();
-
-      // We try to find where the scripture line ends to get the comment
-      // Or where the chapter line ends.
-      // Since we don't know the order in the source string, we find the max index.
       const chapterEnd = chapterMatch.index + chapterMatch[0].length;
       const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
       const maxEnd = Math.max(chapterEnd, scriptureEnd);
@@ -135,7 +129,6 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
       {isDeleteModalOpen && (
         <div className="ModalOverlay" onClick={() => setIsDeleteModalOpen(false)} style={{ zIndex: 1100 }}>
           <div className="ModalContent delete-modal" onClick={(e) => e.stopPropagation()}>
@@ -149,7 +142,6 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
         </div>
       )}
 
-      {/* Edit Note Modal */}
       <NewNote
         isOpen={isEditModalOpen}
         onClose={() => {

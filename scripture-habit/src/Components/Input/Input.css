@@ -9,9 +9,7 @@
 
 .GlassInput {
   padding: 0.6rem 1rem;
-  border-radius: 0.5rem;
-
-  /* glass effect */
+  border-radius: 0.5rem;  
   border: 1px solid rgba(255, 255, 255, 0.25);
   background-color: rgba(255, 255, 255, 0.35);
   backdrop-filter: blur(10px);

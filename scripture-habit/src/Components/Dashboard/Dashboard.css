@@ -45,7 +45,6 @@
   overflow-y: auto;
 }
 
-/* Dashboard Content Layout */
 .DashboardContent {
   padding: 2rem;
   display: flex;
@@ -56,7 +55,6 @@
   box-sizing: border-box;
 }
 
-/* Header */
 .dashboard-header {
   display: flex;
   justify-content: space-between;
@@ -100,7 +98,6 @@
   box-shadow: 0px 15px 30px rgba(0, 0, 0, 0.1);
 }
 
-/* Stats Cards */
 .dashboard-stats {
   display: flex;
   gap: 1.5rem;
@@ -156,11 +153,9 @@
   margin: 0.5rem 0 0 0;
   font-size: 0.85rem;
   color: #4bc0c8;
-  /* Success color */
   font-weight: 500;
 }
 
-/* Sections */
 .dashboard-section {
   display: flex;
   flex-direction: column;
@@ -196,7 +191,6 @@
   padding: 1rem;
 }
 
-/* Recent Notes Grid in Dashboard */
 .recent-notes-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -268,6 +262,5 @@
 
   .recent-entries-grid {
     grid-template-columns: 1fr;
-    /* Single column on mobile */
   }
 }

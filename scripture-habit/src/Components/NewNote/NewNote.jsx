@@ -8,50 +8,38 @@ import Select from 'react-select';
 import { ScripturesOptions } from '../../Data/Data';
 import Checkbox from '../Input/Checkbox';
 import Input from '../Input/Input';
-import './NewNote.css'; // Renamed CSS import
+import './NewNote.css'; 
 
 const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete }) => {
-    //Form fields
-    const [chapter, setChapter] = useState(''); // Renamed from newNote/newEntry
+    
+    const [chapter, setChapter] = useState(''); 
     const [scripture, setScripture] = useState('');
     const [selectedOption, setSelectedOption] = useState(null);
     const [comment, setComment] = useState('');
     const [isPublic, setIsPublic] = useState(true);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    // Keeping these for potential future image support
+    
     const [selectedImage, setSelectedImage] = useState(null);
     const [previewUrl, setPreviewUrl] = useState(null);
 
     React.useEffect(() => {
         if (isOpen && noteToEdit) {
             let text = noteToEdit.text || '';
-
-            // Remove header lines if present
             text = text.replace(/📖 \*\*New Study Note\*\*\n+/, '');
             text = text.replace(/📖 \*\*New Study Entry\*\*\n+/, '');
-
-            // Extract Chapter (or Title for backward compatibility)
-            // Matches "**Chapter:** " or "**Title:** " followed by anything until a newline or end of string
+      
             const chapterMatch = text.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
             const chap = chapterMatch ? chapterMatch[1].trim() : '';
-
-            // Extract Scripture
-            // Matches "**Scripture:** " followed by anything until a newline or end of string
+    
             const scriptureMatch = text.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
             const script = scriptureMatch ? scriptureMatch[1].trim() : '';
 
-            // Extract Comment
-            // Everything after the scripture line
             let comm = '';
             if (scriptureMatch) {
-                // Find the end of the scripture match
                 const scriptureEndIndex = scriptureMatch.index + scriptureMatch[0].length;
-                // Get the rest of the string
                 comm = text.substring(scriptureEndIndex).trim();
-            } else {
-                // Fallback: if no scripture found, maybe it's all comment? 
-                // Or try to strip chapter/title if found.
+            } else {     
                 if (chapterMatch) {
                     const chapterEndIndex = chapterMatch.index + chapterMatch[0].length;
                     comm = text.substring(chapterEndIndex).trim();
@@ -63,8 +51,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete }) => {
             setChapter(chap);
             setScripture(script);
             setComment(comm);
-
-            // Find option for select (case-insensitive search)
+            
             const option = ScripturesOptions.find(opt => opt.value.toLowerCase() === script.toLowerCase());
             setSelectedOption(option || null);
             setIsPublic(true);
@@ -93,15 +80,13 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete }) => {
             const messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Chapter:** ${chapter}\n\n${comment}`;
 
             if (noteToEdit) {
-                // UPDATE EXISTING NOTE
                 const messageRef = doc(db, 'groups', userData.groupId, 'messages', noteToEdit.id);
                 await updateDoc(messageRef, {
                     text: messageText,
                 });
                 toast.success("Note updated successfully!");
             } else {
-                // CREATE NEW NOTE
-                // 2. Update Streak
+                
                 const userRef = doc(db, 'users', userData.uid);
                 const userSnap = await getDoc(userRef);
                 const currentUserData = userSnap.data();
@@ -123,30 +108,24 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete }) => {
                 let streakUpdated = false;
 
                 if (!lastPostDate) {
-                    // First post ever
                     newStreak = 1;
                     streakUpdated = true;
                 } else {
                     const lastPostDateStr = lastPostDate.toLocaleDateString('en-CA', { timeZone });
-
                     if (todayStr !== lastPostDateStr) {
-                        // It's a new day
                         const todayDate = new Date(todayStr);
                         const lastPostDateObj = new Date(lastPostDateStr);
                         const diffTime = todayDate - lastPostDateObj;
                         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
                         if (diffDays === 1) {
-                            // Consecutive day
                             newStreak += 1;
                             streakUpdated = true;
                         } else {
-                            // Streak broken
                             newStreak = 1;
                             streakUpdated = true;
                         }
                     } else {
-                        // Same day correction
                         if (newStreak === 0) {
                             newStreak = 1;
                             streakUpdated = true;
@@ -158,10 +137,9 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete }) => {
                     await updateDoc(userRef, {
                         streakCount: newStreak,
                         lastPostDate: serverTimestamp(),
-                        totalNotes: increment(1) // Renamed from totalEntries
+                        totalNotes: increment(1) 
                     });
 
-                    // 3. Announcement in Group Chat
                     if (userData.groupId && newStreak > 0) {
                         const messagesRef = collection(db, 'groups', userData.groupId, 'messages');
                         await addDoc(messagesRef, {
@@ -175,11 +153,10 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete }) => {
                 } else {
                     await updateDoc(userRef, {
                         lastPostDate: serverTimestamp(),
-                        totalNotes: increment(1) // Renamed from totalEntries
+                        totalNotes: increment(1) 
                     });
                 }
 
-                // 4. Share Note to Group Chat
                 if (isPublic && userData.groupId) {
                     const messagesRef = collection(db, 'groups', userData.groupId, 'messages');
 
@@ -188,7 +165,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete }) => {
                         senderId: userData.uid,
                         senderNickname: userData.nickname,
                         createdAt: serverTimestamp(),
-                        isNote: true // Renamed from isEntry
+                        isNote: true 
                     });
                 }
                 toast.success("Note posted successfully!");
@@ -196,7 +173,6 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete }) => {
 
             setLoading(false);
             onClose();
-            // Reset form
             setChapter('');
             setScripture('');
             setComment('');
@@ -232,8 +208,6 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete }) => {
                     )}
                 </div>
                 {error && <p className="error-message" style={{ color: 'red' }}>{error}</p>}
-
-                {/* Scripture selection (react-select) */}
                 <div style={{ marginBottom: '1rem' }}>
                     <label htmlFor="scripture-select" style={{ display: 'block', marginBottom: '0.5rem', color: 'black' }}>Choose the scripture</label>
                     <Select
@@ -278,7 +252,6 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete }) => {
                     />
                 </div>
 
-                {/* Chapter input */}
                 <Input
                     label="Chapter"
                     type="text"
@@ -288,17 +261,15 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete }) => {
                     placeholder="Enter a chapter (e.g. Alma 5)"
                 />
 
-                {/* Comment textarea */}
                 <Input
                     label="Comment"
-                    as="textarea" //Custom Input componet supports textarea
+                    as="textarea" 
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     required
                     placeholder="Enter a comment (e.g. This chapter reminded me that true conversion begins in the heart.)"
                 />
 
-                {/* Visibility option */}
                 <Checkbox
                     label="Share with my group"
                     id="isPublic"

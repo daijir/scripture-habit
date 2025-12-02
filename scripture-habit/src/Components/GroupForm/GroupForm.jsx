@@ -30,34 +30,34 @@ export default function GroupForm() {
 
     try {
       const now = new Date();
-      // Generate a random 6-character alphanumeric invite code
+      
       const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase();
 
       const newGroupData = {
         name: groupName,
         description: description,
         createdAt: now,
-        groupStreak: 0, // Default initial streak
+        groupStreak: 0, 
         inviteCode: inviteCode,
         isPublic: isPublic,
         maxMembers: Number(maxMembers),
-        membersCount: 1, // Creator is the first member
+        membersCount: 1, 
         ownerUserId: user.uid,
-        members: [user.uid], // Add creator to members array
+        members: [user.uid], 
       };
 
-      // 1. Create new group document in Firestore
+      
       const docRef = await addDoc(collection(db, 'groups'), newGroupData);
       const newGroupId = docRef.id;
 
-      // 2. Update the current user's document with the new groupId
+      
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
         groupId: newGroupId,
       });
 
       toast.success(`🎉 Group "${groupName}" created successfully!`);
-      navigate('/dashboard'); // Redirect to dashboard after creation
+      navigate('/dashboard'); 
 
     } catch (e) {
       console.error("Error creating group or updating user:", e);
@@ -93,7 +93,7 @@ export default function GroupForm() {
             label="Max Members"
             value={maxMembers}
             onChange={(e) => setMaxMembers(e.target.value)}
-            min="2" // Minimum 2 members for a group
+            min="2" 
             required
           />
 
