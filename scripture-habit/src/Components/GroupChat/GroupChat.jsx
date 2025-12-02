@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { db, auth } from '../../firebase';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, arrayRemove } from 'firebase/firestore';
+import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt } from '@iconscout/react-unicons';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import ReactMarkdown from 'react-markdown'; 
-import { UilPlus, UilSignOutAlt } from '@iconscout/react-unicons';
+import ReactMarkdown from 'react-markdown';
 import NewNote from '../NewNote/NewNote'; // Renamed import
 import './GroupChat.css';
 
-const GroupChat = ({ groupId, userData }) => { 
+const GroupChat = ({ groupId, userData }) => {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [groupData, setGroupData] = useState(null);
@@ -17,8 +17,10 @@ const GroupChat = ({ groupId, userData }) => {
   const [error, setError] = useState(null);
   const [isNewNoteOpen, setIsNewNoteOpen] = useState(false); // Renamed state
   const [showLeaveModal, setShowLeaveModal] = useState(false);
-  const containerRef = useRef(null); 
-  const textareaRef = useRef(null); 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteConfirmationName, setDeleteConfirmationName] = useState('');
+  const containerRef = useRef(null);
+  const textareaRef = useRef(null);
 
   // ... existing useEffects ...
 
@@ -47,8 +49,10 @@ const GroupChat = ({ groupId, userData }) => {
       setMessages(msgs);
       setLoading(false);
     }, (err) => {
-      console.error("Error fetching messages:", err);
-      setError("Failed to load messages.");
+      if (err.code !== 'permission-denied') {
+        console.error("Error fetching messages:", err);
+        setError("Failed to load messages.");
+      }
       setLoading(false);
     });
 
@@ -82,7 +86,7 @@ const GroupChat = ({ groupId, userData }) => {
       await addDoc(messagesRef, {
         text: newMessage,
         createdAt: serverTimestamp(),
-        senderId: userData.uid, 
+        senderId: userData.uid,
         senderNickname: userData.nickname,
         isNote: false, // Explicitly set isNote to false for regular chat messages
         isEntry: false, // Backward compatibility or explicit false
@@ -103,7 +107,7 @@ const GroupChat = ({ groupId, userData }) => {
 
     try {
       const idToken = await auth.currentUser.getIdToken();
-      
+
       const response = await fetch('/leave-group', {
         method: 'POST',
         headers: {
@@ -119,12 +123,42 @@ const GroupChat = ({ groupId, userData }) => {
       }
 
       toast.success("You have left the group.");
-      navigate('/join-group');
+      navigate('/group-options');
     } catch (error) {
       console.error("Error leaving group:", error);
       toast.error(`Failed to leave group: ${error.message}`);
     } finally {
       setShowLeaveModal(false);
+    }
+  };
+
+  const handleDeleteGroup = async () => {
+    if (!userData || !groupId || !groupData) return;
+
+    if (deleteConfirmationName !== groupData.name) {
+      toast.error("Group name does not match.");
+      return;
+    }
+
+    try {
+      // 1. Update current user's groupId to empty
+      const userRef = doc(db, 'users', userData.uid);
+      await updateDoc(userRef, {
+        groupId: ''
+      });
+
+      // 2. Delete the group document
+      // Note: Subcollections (messages) are not automatically deleted in Firestore client SDK.
+      // They will become orphaned. For a production app, use a Cloud Function to delete recursively.
+      await deleteDoc(doc(db, 'groups', groupId));
+
+      toast.success("Group deleted successfully.");
+      navigate('/group-options');
+    } catch (error) {
+      console.error("Error deleting group:", error);
+      toast.error(`Failed to delete group: ${error.message}`);
+    } finally {
+      setShowDeleteModal(false);
     }
   };
 
@@ -138,6 +172,57 @@ const GroupChat = ({ groupId, userData }) => {
     }
   };
 
+  const formatNoteForDisplay = (text) => {
+    if (!text) return '';
+    let content = text;
+
+    const headerMatch = content.match(/^(📖 \*\*New Study Note\*\*\n+|📖 \*\*New Study Entry\*\*\n+)/);
+    const header = headerMatch ? headerMatch[0] : '';
+
+    // Remove header for parsing
+    let body = content.replace(/^(📖 \*\*New Study Note\*\*\n+|📖 \*\*New Study Entry\*\*\n+)/, '');
+
+    const chapterMatch = body.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
+    const scriptureMatch = body.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
+
+    if (chapterMatch && scriptureMatch) {
+      const chapter = chapterMatch[1].trim();
+      const scripture = scriptureMatch[1].trim();
+
+      // Find comment
+      const chapterEnd = chapterMatch.index + chapterMatch[0].length;
+      const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
+      const maxEnd = Math.max(chapterEnd, scriptureEnd);
+
+      const comment = body.substring(maxEnd).trim();
+
+      return `${header}${scripture}\n${chapter}\n\n**Comment:**\n${comment}`;
+    }
+
+    return content;
+  };
+
+  const togglePublicStatus = async () => {
+    if (!groupData || !groupId) return;
+    try {
+      const groupRef = doc(db, 'groups', groupId);
+      await updateDoc(groupRef, {
+        isPublic: !groupData.isPublic
+      });
+      toast.success(`Group is now ${!groupData.isPublic ? 'Public' : 'Private'}`);
+    } catch (error) {
+      console.error("Error updating group status:", error);
+      toast.error("Failed to update group status");
+    }
+  };
+
+  const handleCopyInviteCode = () => {
+    if (groupData && groupData.inviteCode) {
+      navigator.clipboard.writeText(groupData.inviteCode);
+      toast.success("Invite code copied to clipboard!");
+    }
+  };
+
   return (
     <div className="GroupChat">
       <NewNote isOpen={isNewNoteOpen} onClose={() => setIsNewNoteOpen(false)} userData={userData} />
@@ -145,17 +230,37 @@ const GroupChat = ({ groupId, userData }) => {
         <h2>{groupData ? groupData.name : 'Group Chat'}</h2> {/* Restored original header */}
         {groupData && (
           <div className="header-right">
-            <div className="invite-code-display">
-              <span>Invite Code: <strong>{groupData.inviteCode}</strong></span> {/* Restored original invite code display */}
+            {userData.uid === groupData.ownerUserId && (
+              <div className="group-status-toggle">
+                <span className="status-label">{groupData.isPublic ? 'Public' : 'Private'}</span>
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    checked={groupData.isPublic || false}
+                    onChange={togglePublicStatus}
+                  />
+                  <span className="slider round"></span>
+                </label>
+              </div>
+            )}
+            <div className="invite-code-display" onClick={handleCopyInviteCode} title="Copy Invite Code">
+              <span>Invite Code: <strong>{groupData.inviteCode}</strong></span>
+              <UilCopy size="16" className="copy-icon" />
             </div>
-            <button className="leave-group-btn" onClick={() => setShowLeaveModal(true)} title="Leave Group">
-              <UilSignOutAlt size="20" />
-            </button>
+            {userData.uid === groupData.ownerUserId ? (
+              <button className="leave-group-btn delete-group-btn" onClick={() => setShowDeleteModal(true)} title="Delete Group">
+                <UilTrashAlt size="20" />
+              </button>
+            ) : (
+              <button className="leave-group-btn" onClick={() => setShowLeaveModal(true)} title="Leave Group">
+                <UilSignOutAlt size="20" />
+              </button>
+            )}
           </div>
         )}
         {/* Removed header button */}
       </div>
-      
+
       {/* Leave Group Confirmation Modal */}
       {showLeaveModal && (
         <div className="leave-modal-overlay">
@@ -165,6 +270,34 @@ const GroupChat = ({ groupId, userData }) => {
             <div className="leave-modal-actions">
               <button className="modal-btn cancel" onClick={() => setShowLeaveModal(false)}>Cancel</button>
               <button className="modal-btn leave" onClick={handleLeaveGroup}>Leave Group</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Delete Group Confirmation Modal */}
+      {showDeleteModal && (
+        <div className="leave-modal-overlay">
+          <div className="leave-modal-content">
+            <h3 className="delete-modal-title">Delete Group?</h3>
+            <p>This action cannot be undone. All messages and data will be permanently lost.</p>
+            <p>Please type <strong>{groupData.name}</strong> to confirm.</p>
+            <input
+              type="text"
+              className="delete-confirmation-input"
+              value={deleteConfirmationName}
+              onChange={(e) => setDeleteConfirmationName(e.target.value)}
+              placeholder="Enter group name"
+            />
+            <div className="leave-modal-actions">
+              <button className="modal-btn cancel" onClick={() => { setShowDeleteModal(false); setDeleteConfirmationName(''); }}>Cancel</button>
+              <button
+                className="modal-btn leave"
+                onClick={handleDeleteGroup}
+                disabled={deleteConfirmationName !== groupData?.name}
+              >
+                Delete Group
+              </button>
             </div>
           </div>
         </div>
@@ -190,7 +323,7 @@ const GroupChat = ({ groupId, userData }) => {
                 {msg.text && (
                   (msg.isNote || msg.isEntry) ? ( // Check for both new and old flags
                     <div className="entry-message-content">
-                      <ReactMarkdown>{msg.text}</ReactMarkdown>
+                      <ReactMarkdown>{formatNoteForDisplay(msg.text)}</ReactMarkdown>
                     </div>
                   ) : (
                     <p>{msg.text}</p>

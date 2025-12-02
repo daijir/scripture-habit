@@ -2,7 +2,7 @@ import './GroupForm.css';
 import { useState } from "react";
 import { auth, db } from '../../firebase';
 import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Input from '../Input/Input';
 import Button from '../Button/Button';
 import Checkbox from '../Input/Checkbox';
@@ -75,7 +75,7 @@ export default function GroupForm() {
 
         <form onSubmit={handleSubmit} className="group-form">
           <Input
-            label = "Group Name"
+            label="Group Name"
             type="text"
             placeholder="Enter group name"
             value={groupName}
@@ -98,10 +98,10 @@ export default function GroupForm() {
           />
 
           <Checkbox
-              label="Public Group"
-              id="isPublic"
-              checked={isPublic}
-              onChange={(e) => setIsPublic(e.target.checked)}
+            label="Public Group"
+            id="isPublic"
+            checked={isPublic}
+            onChange={(e) => setIsPublic(e.target.checked)}
           />
 
           <Button type="submit">
@@ -109,6 +109,11 @@ export default function GroupForm() {
           </Button>
         </form>
         {error && <p className="error-message">{error}</p>}
+
+        <div className="join-group-cta">
+          <p>Looking for an existing group?</p>
+          <Link to="/join-group" className="join-group-link">Join a Group</Link>
+        </div>
       </div>
     </div>
   );

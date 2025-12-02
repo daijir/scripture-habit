@@ -3,7 +3,7 @@ import Button from '../Button/Button';
 import { auth, db } from '../../firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Input from '../Input/Input';
 import './SignupForm.css'
 
@@ -55,8 +55,8 @@ export default function SignupForm() {
         return; // Stop execution if Firestore write fails
       }
 
-      // 4. Redirect to dashboard
-      navigate('/dashboard');
+      // 4. Redirect to group options
+      navigate('/group-options');
 
     } catch (authError) {
       // Handle Authentication errors
@@ -70,35 +70,39 @@ export default function SignupForm() {
   };
 
   return (
-    <div className="App SignupForm">    
+    <div className="App SignupForm">
       <div className='AppGlass Form'>
         <h2>Sign Up</h2>
         <form onSubmit={handleSubmit}>
           <Input
             label="Nickname"
             type="text"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              required
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            required
           />
-          <Input 
-              label="Gmail Address"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required/>
-          <Input 
+          <Input
+            label="Gmail Address"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required />
+          <Input
             label="Password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            />
+          />
           <Button type="submit">
             Sign Up
           </Button>
         </form>
         {error && <p style={{ color: 'red', marginTop: 10 }}>{error}</p>}
+
+        <div className="auth-switch">
+          <p>Already have an account? <Link to="/login" className="auth-link">Log In</Link></p>
+        </div>
       </div>
     </div>
 

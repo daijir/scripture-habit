@@ -2,7 +2,7 @@ import './JoinGroup.css';
 import { useState, useEffect } from "react";
 import { auth, db } from '../../firebase';
 import { doc, getDoc, writeBatch, onSnapshot, increment, arrayUnion, collection, query, where, getDocs } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { onAuthStateChanged } from "firebase/auth";
 import '../GroupForm/GroupForm.css';
 import Button from '../Button/Button';
@@ -173,13 +173,13 @@ export default function JoinGroup() {
 
           <form onSubmit={handleSubmit}>
             <Input
-                label="Invite Code"
-                id="inviteCode"
-                type="text"
-                placeholder="e.g. X9J2KL"
-                value={groupCode}
-                onChange={(e) => setGroupCode(e.target.value.toUpperCase())}
-                required
+              label="Invite Code"
+              id="inviteCode"
+              type="text"
+              placeholder="e.g. X9J2KL"
+              value={groupCode}
+              onChange={(e) => setGroupCode(e.target.value.toUpperCase())}
+              required
             />
             {error && <p className="error">{error}</p>}
 
@@ -219,6 +219,12 @@ export default function JoinGroup() {
               ))}
             </div>
           )}
+        </div>
+
+        {/* セクション3: グループ作成への誘導 */}
+        <div className="create-group-cta">
+          <p>Want to start your own community?</p>
+          <Link to="/group-form" className="create-group-link">Create a Group</Link>
         </div>
 
       </div>

@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { auth, db } from '../../firebase';
 import { doc, onSnapshot, collection, query, where, orderBy, limit } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
-import ReactMarkdown from 'react-markdown'; 
+import ReactMarkdown from 'react-markdown';
 import { UilPlus } from '@iconscout/react-unicons';
 import Hero from '../Hero/Hero';
 import Sidebar from '../Sidebar/Sidebar';
-import GroupChat from '../GroupChat/GroupChat'; 
+import GroupChat from '../GroupChat/GroupChat';
 import './Dashboard.css';
 import Button from '../Button/Button';
 import GalleryImages from '../GalleryImages/GalleryImages';
-import NewNote from '../NewNote/NewNote'; // Renamed import
-import MyNotes from '../MyNotes/MyNotes'; // Renamed import
+import NewNote from '../NewNote/NewNote';
+import MyNotes from '../MyNotes/MyNotes';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
@@ -20,24 +20,21 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedView, setSelectedView] = useState(0);
-  const [groupTotalNotes, setGroupTotalNotes] = useState(0); // Renamed state
-  const [personalNotesCount, setPersonalNotesCount] = useState(null); // Renamed state
-  const [recentNotes, setRecentNotes] = useState([]); // Renamed state
+  const [groupTotalNotes, setGroupTotalNotes] = useState(0);
+  const [personalNotesCount, setPersonalNotesCount] = useState(null);
+  const [recentNotes, setRecentNotes] = useState([]);
 
-  {/* Control modal NewNote*/ }
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
-  // Fetch recent 3 notes
   useEffect(() => {
     if (!userData || !userData.groupId) return;
 
     try {
       const messagesRef = collection(db, 'groups', userData.groupId, 'messages');
-      // Query for 'isNote' instead of 'isEntry'
       const q = query(
         messagesRef,
         where('senderId', '==', userData.uid),
-        where('isNote', '==', true), 
+        where('isNote', '==', true),
         orderBy('createdAt', 'desc'),
         limit(3)
       );
@@ -49,7 +46,9 @@ const Dashboard = () => {
         });
         setRecentNotes(notes);
       }, (err) => {
-        console.error("Error fetching recent notes:", err);
+        if (err.code !== 'permission-denied') {
+          console.error("Error fetching recent notes:", err);
+        }
       });
 
       return () => unsubscribeRecent();
@@ -61,7 +60,6 @@ const Dashboard = () => {
 
 
   useEffect(() => {
-    // Listen for group's total notes (messages with isNote === true)
     let unsubscribeGroupNotes = null;
     if (userData && userData.groupId) {
       try {
@@ -70,7 +68,9 @@ const Dashboard = () => {
         unsubscribeGroupNotes = onSnapshot(q, (querySnapshot) => {
           setGroupTotalNotes(querySnapshot.size || 0);
         }, (err) => {
-          console.error('Error fetching group notes count:', err);
+          if (err.code !== 'permission-denied') {
+            console.error('Error fetching group notes count:', err);
+          }
         });
       } catch (err) {
         console.error('Error setting up group notes listener:', err);
@@ -87,13 +87,11 @@ const Dashboard = () => {
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
-      // Don't set loading to false here, wait for user data to be fetched
     });
 
     return () => unsubscribeAuth();
   }, []);
 
-  // Keep a fallback/authoritative count of the current user's notes
   useEffect(() => {
     let unsubscribePersonal = null;
     try {
@@ -103,7 +101,9 @@ const Dashboard = () => {
         unsubscribePersonal = onSnapshot(q, (snap) => {
           setPersonalNotesCount(snap.size || 0);
         }, (err) => {
-          console.error('Error fetching personal notes count:', err);
+          if (err.code !== 'permission-denied') {
+            console.error('Error fetching personal notes count:', err);
+          }
           setPersonalNotesCount(null);
         });
       } else {
@@ -183,22 +183,7 @@ const Dashboard = () => {
 
   // If user is logged in and userData exists
   if (!userData.groupId || userData.groupId === "") {
-    return (
-      <div className='App Dashboard'>
-        <div className='AppGlass welcome'>
-          <h1>Welcome, {userData.nickname}!</h1>
-          <p>You are not part of any group yet.</p>
-          <div className="welcome-buttons">
-            <Link to="/group-form">
-              <Button className="create-btn">Create a Group</Button>
-            </Link>
-            <Link to="/join-group">
-              <Button className="join-btn">Join a Group</Button>
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
+    return <Navigate to="/group-options" replace />;
   }
 
   const getDisplayStreak = () => {
@@ -242,6 +227,30 @@ const Dashboard = () => {
       console.error("Error calculating streak:", error);
       return 0;
     }
+  };
+
+  const formatNoteForDisplay = (text) => {
+    if (!text) return '';
+    let content = text.replace(/📖 \*\*New Study Note\*\*\n+/, '')
+      .replace(/📖 \*\*New Study Entry\*\*\n+/, '');
+
+    const chapterMatch = content.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
+    const scriptureMatch = content.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
+
+    if (chapterMatch && scriptureMatch) {
+      const chapter = chapterMatch[1].trim();
+      const scripture = scriptureMatch[1].trim();
+
+      const chapterEnd = chapterMatch.index + chapterMatch[0].length;
+      const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
+
+      const maxEnd = Math.max(chapterEnd, scriptureEnd);
+      const comment = content.substring(maxEnd).trim();
+
+      return `**Scripture:** ${scripture}\n\n**Chapter:** ${chapter}\n\n${comment}`;
+    }
+
+    return content;
   };
 
   // If user is in a group, render the chat interface
@@ -297,10 +306,7 @@ const Dashboard = () => {
                         </div>
                         <div className="note-content">
                           <ReactMarkdown>
-                            {note.text
-                              .replace('📖 **New Study Note**\n\n', '')
-                              .replace('📖 **New Study Entry**\n\n', '') // Backward compatibility
-                              .replace(/\n\*\*Scripture:\*\*/g, '\n\n**Scripture:**')}
+                            {formatNoteForDisplay(note.text)}
                           </ReactMarkdown>
                         </div>
                       </div>
@@ -327,7 +333,7 @@ const Dashboard = () => {
         {selectedView === 2 && (
           <GroupChat groupId={userData.groupId} userData={userData} />
         )}
-        
+
         {/* Modal - Available across views */}
         <NewNote isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} />
       </div>
