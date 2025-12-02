@@ -21,7 +21,7 @@ export default function GroupCard({ group, currentUser }: Props) {
     if (isMember) return;
     setJoining(true);
     try {
-      const backend = import.meta.env.VITE_BACKEND_URL ?? 'http://localhost:5001';
+      const backend = import.meta.env.VITE_BACKEND_URL ?? '/api';
       const idToken = await auth.currentUser?.getIdToken();
       if (idToken) {
         const res = await fetch(`${backend}/join-group`, {
