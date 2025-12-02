@@ -42,6 +42,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/group-form" element={<GroupForm />} />
         <Route path="/join-group" element={<JoinGroup />} />
+        
         <Route path="/group-options" element={<GroupOptions />} />
         <Route path="/group/:id" element={<GroupDetails />} />
       </Routes>

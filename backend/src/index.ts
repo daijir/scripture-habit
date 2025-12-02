@@ -45,17 +45,17 @@ app.get('/groups', (req, res) => {
 function mockVerify(req: any, res: any, next: any) {
   const authHeader = req.headers.authorization as string | undefined;
   if (authHeader && authHeader.startsWith('Bearer mock:')) {
-    req.userUid = authHeader.split(':')[1];
+    (req as any).userUid = authHeader.split(':')[1];
     return next();
   }
   // default mock user
-  req.userUid = 'mock-user-1';
+  (req as any).userUid = 'mock-user-1';
   return next();
 }
 
 app.post('/join-group', mockVerify, (req, res) => {
   const { groupId } = req.body;
-  const userId = req.userUid as string | undefined;
+  const userId = (req as any).userUid as string | undefined;
   if (!groupId) return res.status(400).json({ error: 'groupId required' });
   if (!userId) return res.status(401).json({ error: 'authentication required' });
 

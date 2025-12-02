@@ -6,11 +6,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/verify-login': 'http://localhost:5000',
-      '/join-group': 'http://localhost:5000',
-      '/leave-group': 'http://localhost:5000',
-      '/groups': 'http://localhost:5000',
-      '/migrate-data': 'http://localhost:5000',
+      '/verify-login': 'http://localhost:5001',
+      '/join-group': 'http://localhost:5001',
+      '/leave-group': 'http://localhost:5001',
+      '/groups': 'http://localhost:5001',
+      '/migrate-data': 'http://localhost:5001',
     },
   },
   build: {
