@@ -57,17 +57,56 @@ export default function GroupCard({ group, currentUser }: Props) {
 
   const [showDetails, setShowDetails] = useState(false);
   const closeBtnRef = useRef<HTMLButtonElement | null>(null);
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const previousActiveElement = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!showDetails) return;
     // focus the close button when modal opens
     closeBtnRef.current?.focus();
 
+    // save previously focused element to restore when modal closes
+    previousActiveElement.current = document.activeElement as HTMLElement | null;
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setShowDetails(false);
+      if (e.key === 'Escape') {
+        setShowDetails(false);
+        return;
+      }
+      if (e.key === 'Tab') {
+        // implement focus trap
+        const container = modalRef.current;
+        if (!container) return;
+        const focusable = Array.from(
+          container.querySelectorAll<HTMLElement>(
+            'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"])'
+          )
+        ).filter((el) => el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement);
+        if (focusable.length === 0) {
+          e.preventDefault();
+          return;
+        }
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first || document.activeElement === modalRef.current) {
+            e.preventDefault();
+            last.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first.focus();
+          }
+        }
+      }
     };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      // restore focus
+      if (previousActiveElement.current) previousActiveElement.current.focus();
+    };
   }, [showDetails]);
 
   return (
@@ -97,10 +136,26 @@ export default function GroupCard({ group, currentUser }: Props) {
       </div>
 
       {showDetails && (
-        <div className="modal-overlay" onClick={() => setShowDetails(false)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="modal-overlay"
+          onClick={() => setShowDetails(false)}
+          role="presentation"
+        >
+          <div
+            className="modal"
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby={`group-${group.id}-title`}
+            aria-describedby={`group-${group.id}-desc`}
+            ref={modalRef}
+          >
             <h3>{group.name}</h3>
-            {group.description ? <p>{group.description}</p> : <p>No description.</p>}
+            {group.description ? (
+              <p id={`group-${group.id}-desc`}>{group.description}</p>
+            ) : (
+              <p id={`group-${group.id}-desc`}>No description.</p>
+            )}
             <p>
               <strong>Members:</strong> {group.members?.length ?? 0}
             </p>
