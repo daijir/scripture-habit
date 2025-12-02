@@ -1,4 +1,4 @@
-/* Use more generic or updated class names if specific to Note */
+
 .new-note-overlay {
   position: fixed;
   top: 0;
@@ -48,13 +48,6 @@
 
 }
 
-/* .Select {
-  padding: 0.6rem 1rem;
-  border-radius: 0.5rem;
-
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background-color: rgba(255, 255, 255, 0.35);
-/* Use more generic or updated class names if specific to Note */
 .new-note-overlay {
   position: fixed;
   top: 0;
@@ -103,18 +96,6 @@
   gap: 8px;
 
 }
-
-/* .Select {
-  padding: 0.6rem 1rem;
-  border-radius: 0.5rem;
-
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background-color: rgba(255, 255, 255, 0.35);
-  backdrop-filter: blur(10px);
-
-  transition: all 0.2s ease;
-}
- */
 
 .ModalContent .GlassInputContainer {
   max-width: 100%;

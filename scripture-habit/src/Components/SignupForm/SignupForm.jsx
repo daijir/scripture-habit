@@ -24,42 +24,35 @@ export default function SignupForm() {
     }
 
     try {
-      // 1. Create user in Authentication
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       const now = new Date();
       const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-      // 2. Prepare user data document according to the desired schema
       const userData = {
         createdAt: now,
         email: user.email,
         groupId: "",
         joinedAt: now,
-        lastPostDate: "", // Initially empty, updated on first post
+        lastPostDate: "", 
         nickname: nickname,
         preferredCheckInTime: "00:00",
-        streakCount: 0, // Start at 0
-        totalNotes: 0, // Initialize total notes
+        streakCount: 0, 
+        totalNotes: 0, 
         timeZone: timeZone,
       };
 
-      // 3. Save user data to Firestore with specific error handling
       try {
         await setDoc(doc(db, 'users', user.uid), userData);
       } catch (firestoreError) {
         console.error("Error writing user data to Firestore:", firestoreError);
         setError("Failed to save user profile. Please contact support.");
-        // Optional: You might want to delete the created user if saving fails
-        // await user.delete();
-        return; // Stop execution if Firestore write fails
+        return; 
       }
 
-      // 4. Redirect to group options
       navigate('/group-options');
 
     } catch (authError) {
-      // Handle Authentication errors
       console.error("Error creating user in Authentication:", authError);
       if (authError.code === 'auth/email-already-in-use') {
         setError("This email address is already in use. Please log in or use a different email.");

@@ -3,7 +3,7 @@ import LeaveGroupButton from "../Button/LeaveGroupButton";
 import DeleteGroupButton from "../Button/DeleteGroupButton";
 
 export default function GroupDetails({ group }) {
-  const { id } = useParams(); // group ID from URL
+  const { id } = useParams(); 
   if (!group) return <p>Loading...</p>;
 
   return (

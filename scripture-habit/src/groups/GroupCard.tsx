@@ -21,7 +21,6 @@ export default function GroupCard({ group, currentUser }: Props) {
     if (isMember) return;
     setJoining(true);
     try {
-      // Try server-side join first (requires ID token)
       const backend = import.meta.env.VITE_BACKEND_URL ?? 'http://localhost:5001';
       const idToken = await auth.currentUser?.getIdToken();
       if (idToken) {
@@ -37,9 +36,7 @@ export default function GroupCard({ group, currentUser }: Props) {
           const err = await res.json().catch(() => ({}));
           throw new Error(err?.error || 'Server join failed');
         }
-        // server will write membership to Firestore; onSnapshot will update UI
       } else {
-        // fallback to client-side update if token unavailable
         const groupRef = doc(db, 'groups', group.id);
         await updateDoc(groupRef, { members: arrayUnion(currentUser.uid) });
       }

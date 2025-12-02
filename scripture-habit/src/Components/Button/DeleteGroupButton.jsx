@@ -13,7 +13,7 @@ export default function DeleteGroupButton({ groupId, ownerUserId }) {
     try {
       await deleteDoc(doc(db, 'groups', groupId));
       alert("Group deleted");
-      // Optionally redirect user to dashboard after deletion
+          
     } catch (err) {
       console.error(err);
       alert("Failed to delete group");

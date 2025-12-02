@@ -96,7 +96,7 @@
     transform: scale(1.05);
 }
 
-/* Modal Styles */
+
 .leave-modal-overlay {
     position: fixed;
     top: 0;
@@ -322,7 +322,7 @@
     border-bottom-left-radius: 0.2rem;
 }
 
-/* Styles for plain text messages */
+
 .message-content>p {
     margin: 0;
     padding: 0;
@@ -434,12 +434,10 @@
 .input-wrapper {
     display: flex;
     align-items: flex-end;
-    /* Align to bottom as textarea grows */
     gap: 1rem;
     background: white;
     padding: 0.5rem;
     border-radius: 1.5rem;
-    /* Adjusted for textarea look */
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
     border: 1px solid rgba(0, 0, 0, 0.05);
 }
@@ -488,15 +486,10 @@
     outline: none;
     color: var(--black);
     resize: none;
-    /* Disable manual resize */
     font-family: inherit;
-    /* Inherit font family */
     min-height: 24px;
-    /* Initial height */
     max-height: 150px;
-    /* Limit max height */
     overflow-y: auto;
-    /* Scroll if content exceeds max height */
     line-height: 1.5;
 }
 
@@ -546,33 +539,26 @@
 
     .send-message-form {
         position: fixed;
-        bottom: 70px;
-        /* Sit directly on top of sidebar */
+        bottom: 70px;    
         left: 0;
         right: 0;
         border-radius: 0;
         padding: 0.75rem 1rem;
-        /* Add padding for internal spacing */
         box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-        /* Subtle shadow upwards */
         background-color: #f0f2f5;
-        /* Light gray background for the container */
         backdrop-filter: none;
     }
 
     .input-wrapper {
         gap: 0.5rem;
         padding: 0.3rem 0.5rem;
-        background-color: white;
-        /* White background for the input field */
+        background-color: white;    
         border: 1px solid rgba(0, 0, 0, 0.05);
-        /* Subtle border for definition */
     }
 
     .input-wrapper textarea {
         font-size: 0.95rem;
-        min-width: 0;
-        /* Allow input to shrink */
+        min-width: 0; 
     }
 
     .input-wrapper button[type="submit"] {
@@ -586,12 +572,10 @@
     }
 
     .messages-container {
-        padding-bottom: 180px;
-        /* Adjusted to account for fixed input form + bottom nav */
+        padding-bottom: 180px;   
     }
 }
 
-/* Toggle Switch Styles */
 .group-status-toggle {
     display: flex;
     align-items: center;

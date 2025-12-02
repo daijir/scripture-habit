@@ -23,7 +23,7 @@ export default function LoginForm() {
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      // const user = userCredential.user; // user unused if we don't update doc
+      
 
       navigate('/dashboard');
     } catch (error) {

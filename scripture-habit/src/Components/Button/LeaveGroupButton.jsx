@@ -7,13 +7,13 @@ export default function LeaveGroupButton({ groupId }) {
     if (!user) return alert("Not logged in");
 
     try {
-      // Remove user from group's members array
+      
       const groupRef = doc(db, 'groups', groupId);
       await updateDoc(groupRef, {
         members: arrayRemove(user.uid)
       });
 
-      // Remove groupId from user's document
+      
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
         groupId: null

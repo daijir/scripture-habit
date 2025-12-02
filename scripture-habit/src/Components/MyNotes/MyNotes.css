@@ -19,7 +19,7 @@
     margin-bottom: 0;
     color: black;
     font-size: 1.8rem;
-    /* Slightly smaller */
+    
 }
 
 .notes-grid {
@@ -88,12 +88,10 @@
     .MyNotes {
         padding: 1rem;
         padding-bottom: 90px;
-        /* Space for bottom navigation */
     }
 
     .notes-grid {
         grid-template-columns: 1fr;
-        /* Single column on mobile */
         gap: 1rem;
     }
 
@@ -102,7 +100,6 @@
     }
 }
 
-/* Modal Styles */
 .options-modal {
     max-width: 300px;
     text-align: center;

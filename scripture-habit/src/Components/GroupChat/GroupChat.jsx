@@ -5,7 +5,7 @@ import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, u
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
-import NewNote from '../NewNote/NewNote'; // Renamed import
+import NewNote from '../NewNote/NewNote'; 
 import './GroupChat.css';
 
 const GroupChat = ({ groupId, userData }) => {
@@ -15,21 +15,18 @@ const GroupChat = ({ groupId, userData }) => {
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isNewNoteOpen, setIsNewNoteOpen] = useState(false); // Renamed state
+  const [isNewNoteOpen, setIsNewNoteOpen] = useState(false); 
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmationName, setDeleteConfirmationName] = useState('');
   const containerRef = useRef(null);
   const textareaRef = useRef(null);
 
-  // ... existing useEffects ...
-
   useEffect(() => {
     if (!groupId) return;
 
     setLoading(true);
 
-    // Fetch group details
     const groupRef = doc(db, 'groups', groupId);
     const unsubscribeGroup = onSnapshot(groupRef, (docSnap) => {
       if (docSnap.exists()) {
@@ -37,7 +34,6 @@ const GroupChat = ({ groupId, userData }) => {
       }
     });
 
-    // Fetch messages
     const messagesRef = collection(db, 'groups', groupId, 'messages');
     const q = query(messagesRef, orderBy('createdAt'));
 
@@ -62,14 +58,12 @@ const GroupChat = ({ groupId, userData }) => {
     };
   }, [groupId]);
 
-  // Auto-scroll to bottom when messages change
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   }, [messages]);
 
-  // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -78,7 +72,7 @@ const GroupChat = ({ groupId, userData }) => {
   }, [newMessage]);
 
   const handleSendMessage = async (e) => {
-    if (e) e.preventDefault(); // Handle both form submit and manual calls
+    if (e) e.preventDefault(); 
     if (newMessage.trim() === '' || !userData) return;
 
     const messagesRef = collection(db, 'groups', groupId, 'messages');
@@ -88,11 +82,11 @@ const GroupChat = ({ groupId, userData }) => {
         createdAt: serverTimestamp(),
         senderId: userData.uid,
         senderNickname: userData.nickname,
-        isNote: false, // Explicitly set isNote to false for regular chat messages
-        isEntry: false, // Backward compatibility or explicit false
+        isNote: false, 
+        isEntry: false, 
       });
       setNewMessage('');
-      // Reset height
+      
       if (textareaRef.current) {
         textareaRef.current.style.height = 'auto';
       }
@@ -140,16 +134,12 @@ const GroupChat = ({ groupId, userData }) => {
       return;
     }
 
-    try {
-      // 1. Update current user's groupId to empty
+    try { 
       const userRef = doc(db, 'users', userData.uid);
       await updateDoc(userRef, {
         groupId: ''
       });
 
-      // 2. Delete the group document
-      // Note: Subcollections (messages) are not automatically deleted in Firestore client SDK.
-      // They will become orphaned. For a production app, use a Cloud Function to delete recursively.
       await deleteDoc(doc(db, 'groups', groupId));
 
       toast.success("Group deleted successfully.");
@@ -164,7 +154,7 @@ const GroupChat = ({ groupId, userData }) => {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      // On desktop, Enter sends. On mobile, Enter adds a new line (default behavior).
+      
       if (window.innerWidth > 768) {
         e.preventDefault();
         handleSendMessage();
@@ -179,7 +169,6 @@ const GroupChat = ({ groupId, userData }) => {
     const headerMatch = content.match(/^(📖 \*\*New Study Note\*\*\n+|📖 \*\*New Study Entry\*\*\n+)/);
     const header = headerMatch ? headerMatch[0] : '';
 
-    // Remove header for parsing
     let body = content.replace(/^(📖 \*\*New Study Note\*\*\n+|📖 \*\*New Study Entry\*\*\n+)/, '');
 
     const chapterMatch = body.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
@@ -188,8 +177,6 @@ const GroupChat = ({ groupId, userData }) => {
     if (chapterMatch && scriptureMatch) {
       const chapter = chapterMatch[1].trim();
       const scripture = scriptureMatch[1].trim();
-
-      // Find comment
       const chapterEnd = chapterMatch.index + chapterMatch[0].length;
       const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
       const maxEnd = Math.max(chapterEnd, scriptureEnd);
@@ -227,7 +214,7 @@ const GroupChat = ({ groupId, userData }) => {
     <div className="GroupChat">
       <NewNote isOpen={isNewNoteOpen} onClose={() => setIsNewNoteOpen(false)} userData={userData} />
       <div className="chat-header">
-        <h2>{groupData ? groupData.name : 'Group Chat'}</h2> {/* Restored original header */}
+        <h2>{groupData ? groupData.name : 'Group Chat'}</h2>
         {groupData && (
           <div className="header-right">
             {userData.uid === groupData.ownerUserId && (
@@ -258,10 +245,8 @@ const GroupChat = ({ groupId, userData }) => {
             )}
           </div>
         )}
-        {/* Removed header button */}
       </div>
 
-      {/* Leave Group Confirmation Modal */}
       {showLeaveModal && (
         <div className="leave-modal-overlay">
           <div className="leave-modal-content">
@@ -275,7 +260,6 @@ const GroupChat = ({ groupId, userData }) => {
         </div>
       )}
 
-      {/* Delete Group Confirmation Modal */}
       {showDeleteModal && (
         <div className="leave-modal-overlay">
           <div className="leave-modal-content">
@@ -321,7 +305,7 @@ const GroupChat = ({ groupId, userData }) => {
               <span className="sender-name">{msg.senderNickname}</span>
               <div className="message-content">
                 {msg.text && (
-                  (msg.isNote || msg.isEntry) ? ( // Check for both new and old flags
+                  (msg.isNote || msg.isEntry) ? ( 
                     <div className="entry-message-content">
                       <ReactMarkdown>{formatNoteForDisplay(msg.text)}</ReactMarkdown>
                     </div>
@@ -336,7 +320,6 @@ const GroupChat = ({ groupId, userData }) => {
       </div>
       <form onSubmit={handleSendMessage} className="send-message-form">
         <div className="input-wrapper">
-          {/* Removed add-entry-btn */}
           <textarea
             ref={textareaRef}
             value={newMessage}
@@ -345,7 +328,7 @@ const GroupChat = ({ groupId, userData }) => {
             placeholder="Click + button to create a new note or type a message..."
             rows={1}
           />
-          <div className="add-entry-btn" onClick={() => setIsNewNoteOpen(true)}> {/* Class name kept for CSS or rename later */}
+          <div className="add-entry-btn" onClick={() => setIsNewNoteOpen(true)}> 
             <UilPlus />
           </div>
           <button type="submit">Send</button>
