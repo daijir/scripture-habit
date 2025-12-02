@@ -51,6 +51,14 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.invite-code-display:hover {
+    background: #f8f8f8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
 .invite-code-display strong {
@@ -58,6 +66,15 @@
     font-family: monospace;
     font-size: 1rem;
     letter-spacing: 1px;
+}
+
+.copy-icon {
+    color: var(--gray);
+    transition: color 0.2s ease;
+}
+
+.invite-code-display:hover .copy-icon {
+    color: var(--pink);
 }
 
 .leave-group-btn {
@@ -97,18 +114,21 @@
 
 .leave-modal-content {
     background: white;
-    padding: 2rem;
+    padding: 2.5rem 2rem;
     border-radius: 1.5rem;
     width: 90%;
-    max-width: 400px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    max-width: 420px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
     text-align: center;
     animation: scaleIn 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 @keyframes scaleIn {
     from {
-        transform: scale(0.9);
+        transform: scale(0.95);
         opacity: 0;
     }
 
@@ -119,21 +139,46 @@
 }
 
 .leave-modal-content h3 {
-    margin-top: 0;
+    margin: 0;
     color: var(--black);
     font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.delete-modal-title {
+    color: #ff3b30 !important;
 }
 
 .leave-modal-content p {
     color: var(--gray);
-    margin-bottom: 2rem;
-    line-height: 1.5;
+    margin: 0;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.delete-confirmation-input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 0.8rem;
+    border: 2px solid #eee;
+    font-size: 1rem;
+    transition: all 0.2s;
+    outline: none;
+    box-sizing: border-box;
+    text-align: center;
+    color: black;
+}
+
+.delete-confirmation-input:focus {
+    border-color: var(--pink);
+    background: #fff5f6;
 }
 
 .leave-modal-actions {
     display: flex;
     gap: 1rem;
     justify-content: center;
+    margin-top: 0.5rem;
 }
 
 .modal-btn {
@@ -143,28 +188,38 @@
     cursor: pointer;
     border: none;
     transition: all 0.2s ease;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    flex: 1;
+    max-width: 150px;
 }
 
 .modal-btn.cancel {
-    background: #f0f0f0;
-    color: var(--black);
+    background: #f5f5f5;
+    color: var(--gray);
 }
 
 .modal-btn.cancel:hover {
     background: #e0e0e0;
+    color: var(--black);
 }
 
 .modal-btn.leave {
     background: #ff3b30;
     color: white;
-    box-shadow: 0 4px 10px rgba(255, 59, 48, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 59, 48, 0.25);
 }
 
-.modal-btn.leave:hover {
+.modal-btn.leave:hover:not(:disabled) {
     background: #ff2d20;
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(255, 59, 48, 0.4);
+    box-shadow: 0 6px 16px rgba(255, 59, 48, 0.35);
+}
+
+.modal-btn.leave:disabled {
+    background: #ffccc9;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
 }
 
 .messages-container {
@@ -534,4 +589,67 @@
         padding-bottom: 180px;
         /* Adjusted to account for fixed input form + bottom nav */
     }
+}
+
+/* Toggle Switch Styles */
+.group-status-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-right: 0.5rem;
+}
+
+.status-label {
+    font-size: 0.85rem;
+    color: var(--gray);
+    font-weight: 500;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 20px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 20px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: var(--pink);
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px var(--pink);
+}
+
+input:checked+.slider:before {
+    transform: translateX(20px);
 }

@@ -10,6 +10,7 @@ import Dashboard from './Components/Dashboard/Dashboard';
 import GroupForm from './Components/GroupForm/GroupForm';
 import JoinGroup from './Components/JoinGroup/JoinGroup';
 import GroupDetails from "./Components/GroupDetails/GroupDetails";
+import GroupOptions from './Components/GroupOptions/GroupOptions';
 // import AdminTools from './Components/Admin/AdminTools'; // Comment out after use
 
 const App = () => {
@@ -22,7 +23,7 @@ const App = () => {
 
   return (
     <div className="App">
-       {/* <AdminTools />  Uncomment to show migration button */}
+      {/* <AdminTools />  Uncomment to show migration button */}
       <Routes>
         {/* Home */}
         <Route
@@ -49,6 +50,7 @@ const App = () => {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/group-form" element={<GroupForm />} />
         <Route path="/join-group" element={<JoinGroup />} />
+        <Route path="/group-options" element={<GroupOptions />} />
         <Route path="/group/:id" element={<GroupDetails />} />
       </Routes>
       <ToastContainer position="top-right" autoClose={3000} />

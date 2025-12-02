@@ -1,0 +1,88 @@
+.GroupOptions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.options-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    text-align: center;
+    max-width: 800px;
+    width: 90%;
+}
+
+.options-container h2 {
+    margin-bottom: 0.5rem;
+    color: var(--black);
+}
+
+.subtitle {
+    color: var(--gray);
+    margin-bottom: 3rem;
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
+    width: 100%;
+}
+
+.option-card {
+    background: rgba(255, 255, 255, 0.6);
+    padding: 2rem;
+    border-radius: 1.5rem;
+    text-decoration: none;
+    color: var(--black);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.option-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.option-card .icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.option-card h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.option-card p {
+    margin: 0;
+    color: var(--gray);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+.join-card:hover {
+    border-color: #4a6cf7;
+}
+
+.join-card:hover h3 {
+    color: #4a6cf7;
+}
+
+.create-card:hover {
+    border-color: #8e44ad;
+}
+
+.create-card:hover h3 {
+    color: #8e44ad;
+}

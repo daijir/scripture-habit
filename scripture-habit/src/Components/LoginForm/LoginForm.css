@@ -10,3 +10,22 @@
   flex-direction: column;
   align-items: center;
 }
+
+.auth-switch {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: var(--gray);
+}
+
+.auth-link {
+  color: #4a6cf7;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 0.3rem;
+  transition: color 0.2s;
+}
+
+.auth-link:hover {
+  color: #3251d4;
+  text-decoration: underline;
+}
