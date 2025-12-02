@@ -5,7 +5,7 @@ import {
 
 } from "@iconscout/react-unicons";
 
-import scripture1 from '../assets/images/scrip1.JPG'
+import scripture1 from '../assets/images/scrip1.jpg'
 import scripture2 from '../assets/images/scrip2.jpg'
 import scripture3 from '../assets/images/scrip3.jpg'
 
@@ -21,7 +21,7 @@ export const SidebarData = [
     {
         icon: UilUsersAlt,
         heading: "My Group",
-    },    
+    },
 ]
 
 export const ScripturesGallery = [
@@ -39,18 +39,18 @@ export const ScripturesGallery = [
 export const ScripturesOptions = [
     {
         value: "Old Testament",
-        label:"Old Testament"
+        label: "Old Testament"
     },
     {
         value: "New Testament",
-        label:"New Testament"
+        label: "New Testament"
     },
     {
         value: "Book of Mormon",
-        label:"Book of Mormon"
-    },    {
+        label: "Book of Mormon"
+    }, {
         value: "Doctrine and Convenants",
-        label:"Doctrine and Convenants"
+        label: "Doctrine and Convenants"
     },
     {
         value: "Pearl of Great Price",
