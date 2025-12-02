@@ -20,18 +20,16 @@
   --glass: rgba(255, 255, 255, 0.54);
   --boxShadow: 0px 19px 60px rgb(0 0 0 / 8%);
   --smboxShadow: -79px 51px 60px rgba(0, 0, 0, 0.08);
-  --activeItem: #f799a354;
+  --activeItem: rgba(255, 255, 255, 0.6);
   --border-radius: 16px;
 }
 
 
 .App {
-  background: linear-gradient(
-    106.37deg,
-    #feac5e 29.63%,
-    #c779d0 51.55%,
-    #4bc0c8 90.85%
-  );
+  background: linear-gradient(106.37deg,
+      #feac5e 29.63%,
+      #c779d0 51.55%,
+      #4bc0c8 90.85%);
   min-height: 100vh;
   width: 100%;
   overflow-x: hidden;
@@ -52,11 +50,11 @@
 .welcome {
   display: flex;
   flex-direction: column;
-  justify-content: center;  
-  align-items: center;     
-  width: 90vw;              
-  max-width: 600px;        
-  height: 80vh;             
+  justify-content: center;
+  align-items: center;
+  width: 90vw;
+  max-width: 600px;
+  height: 80vh;
   border-radius: 2rem;
   background-color: var(--glass);
   padding: 2rem;
@@ -90,9 +88,11 @@ h2 {
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }
