@@ -5,7 +5,7 @@ import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, u
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
-import NewNote from '../NewNote/NewNote'; 
+import NewNote from '../NewNote/NewNote';
 import './GroupChat.css';
 
 const GroupChat = ({ groupId, userData }) => {
@@ -15,7 +15,7 @@ const GroupChat = ({ groupId, userData }) => {
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isNewNoteOpen, setIsNewNoteOpen] = useState(false); 
+  const [isNewNoteOpen, setIsNewNoteOpen] = useState(false);
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmationName, setDeleteConfirmationName] = useState('');
@@ -72,7 +72,7 @@ const GroupChat = ({ groupId, userData }) => {
   }, [newMessage]);
 
   const handleSendMessage = async (e) => {
-    if (e) e.preventDefault(); 
+    if (e) e.preventDefault();
     if (newMessage.trim() === '' || !userData) return;
 
     const messagesRef = collection(db, 'groups', groupId, 'messages');
@@ -82,11 +82,11 @@ const GroupChat = ({ groupId, userData }) => {
         createdAt: serverTimestamp(),
         senderId: userData.uid,
         senderNickname: userData.nickname,
-        isNote: false, 
-        isEntry: false, 
+        isNote: false,
+        isEntry: false,
       });
       setNewMessage('');
-      
+
       if (textareaRef.current) {
         textareaRef.current.style.height = 'auto';
       }
@@ -102,7 +102,7 @@ const GroupChat = ({ groupId, userData }) => {
     try {
       const idToken = await auth.currentUser.getIdToken();
 
-      const response = await fetch('/leave-group', {
+      const response = await fetch('/api/leave-group', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -134,7 +134,7 @@ const GroupChat = ({ groupId, userData }) => {
       return;
     }
 
-    try { 
+    try {
       const userRef = doc(db, 'users', userData.uid);
       await updateDoc(userRef, {
         groupId: ''
@@ -154,7 +154,7 @@ const GroupChat = ({ groupId, userData }) => {
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
-      
+
       if (window.innerWidth > 768) {
         e.preventDefault();
         handleSendMessage();
@@ -305,7 +305,7 @@ const GroupChat = ({ groupId, userData }) => {
               <span className="sender-name">{msg.senderNickname}</span>
               <div className="message-content">
                 {msg.text && (
-                  (msg.isNote || msg.isEntry) ? ( 
+                  (msg.isNote || msg.isEntry) ? (
                     <div className="entry-message-content">
                       <ReactMarkdown>{formatNoteForDisplay(msg.text)}</ReactMarkdown>
                     </div>
@@ -328,7 +328,7 @@ const GroupChat = ({ groupId, userData }) => {
             placeholder="Click + button to create a new note or type a message..."
             rows={1}
           />
-          <div className="add-entry-btn" onClick={() => setIsNewNoteOpen(true)}> 
+          <div className="add-entry-btn" onClick={() => setIsNewNoteOpen(true)}>
             <UilPlus />
           </div>
           <button type="submit">Send</button>

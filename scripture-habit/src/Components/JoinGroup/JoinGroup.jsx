@@ -32,7 +32,7 @@ export default function JoinGroup() {
 
     const fetchPublicGroups = async () => {
       try {
-        const resp = await fetch('/groups?membersCountLt=5');
+        const resp = await fetch('/api/groups?membersCountLt=5');
         if (resp.ok) {
           const groups = await resp.json();
           setPublicGroups(groups || []);
@@ -87,7 +87,7 @@ export default function JoinGroup() {
 
     try {
       const idToken = await user.getIdToken();
-      const resp = await fetch('/join-group', {
+      const resp = await fetch('/api/join-group', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
