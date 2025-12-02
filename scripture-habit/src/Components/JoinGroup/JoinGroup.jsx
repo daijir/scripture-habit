@@ -7,6 +7,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import '../GroupForm/GroupForm.css';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
+import GroupCard from '../../groups/GroupCard';
 
 export default function JoinGroup() {
   const [groupCode, setGroupCode] = useState("");
@@ -193,22 +194,13 @@ export default function JoinGroup() {
             <p className="no-groups-message">No public groups available to join.</p>
           ) : (
             <div className="groups-grid">
-              {publicGroups.map(group => (
-                <div key={group.id} className="group-item-card">
-                  <div>
-                    <div className="group-name">{group.name}</div>
-                    <div className="group-desc">{group.description}</div>
-                  </div>
-                  <div className="group-meta">
-                    <span className="member-count">👥 {group.membersCount}/{group.maxMembers}</span>
-                    <button
-                      onClick={() => joinGroup(group.id, group)}
-                      className="join-icon-btn"
-                    >
-                      Join
-                    </button>
-                  </div>
-                </div>
+              {publicGroups.map((group) => (
+                <GroupCard
+                  key={group.id}
+                  group={group}
+                  currentUser={user}
+                  onJoin={async (groupId, groupData) => await joinGroup(groupId, groupData)}
+                />
               ))}
             </div>
           )}
