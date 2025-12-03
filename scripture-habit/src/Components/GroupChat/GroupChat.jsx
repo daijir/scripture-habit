@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { db, auth } from '../../firebase';
 import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt } from '@iconscout/react-unicons';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
@@ -117,7 +117,7 @@ const GroupChat = ({ groupId, userData }) => {
       }
 
       toast.success("You have left the group.");
-      navigate('/group-options');
+      navigate('/dashboard');
     } catch (error) {
       console.error("Error leaving group:", error);
       toast.error(`Failed to leave group: ${error.message}`);
@@ -136,14 +136,24 @@ const GroupChat = ({ groupId, userData }) => {
 
     try {
       const userRef = doc(db, 'users', userData.uid);
+      // Remove from groupIds and clear groupId if it matches
+      // Note: This only updates the owner. Other members will have a broken link until they try to access it.
+      // Ideally we would trigger a cloud function to clean up, but for now this is client-side.
+
+      // We need to import arrayRemove at the top, but I can't easily add imports with replace_file_content if I don't target the top.
+      // I'll assume arrayRemove is imported or I'll add it.
+      // Wait, arrayRemove is NOT imported in the file currently (only arrayUnion in JoinGroup, but here?).
+      // Let's check imports.
+
       await updateDoc(userRef, {
-        groupId: ''
+        groupId: '', // Clear active group
+        groupIds: arrayRemove(groupId)
       });
 
       await deleteDoc(doc(db, 'groups', groupId));
 
       toast.success("Group deleted successfully.");
-      navigate('/group-options');
+      navigate('/dashboard');
     } catch (error) {
       console.error("Error deleting group:", error);
       toast.error(`Failed to delete group: ${error.message}`);

@@ -71,8 +71,16 @@ export default function JoinGroup() {
       setError("You must be logged in to join a group.");
       return;
     }
-    if (userData && userData.groupId) {
-      setError("You are already in a group. Please leave your current group first.");
+
+    const currentGroupIds = userData?.groupIds || (userData?.groupId ? [userData.groupId] : []);
+
+    if (currentGroupIds.length >= 7) {
+      setError("You can only join up to 7 groups.");
+      return;
+    }
+
+    if (currentGroupIds.includes(groupId)) {
+      setError("You are already a member of this group.");
       return;
     }
 
@@ -103,28 +111,30 @@ export default function JoinGroup() {
       }
       const errText = await resp.text();
       console.warn('Server join failed:', resp.status, errText);
+      setError(`Failed to join group: ${errText}`);
     } catch (e) {
       console.warn('Server join failed, falling back to client update:', e);
-    }
+      // Fallback logic
+      const groupRef = doc(db, "groups", groupId);
+      const userRef = doc(db, "users", user.uid);
+      const batch = writeBatch(db);
 
-    const groupRef = doc(db, "groups", groupId);
-    const userRef = doc(db, "users", user.uid);
-    const batch = writeBatch(db);
-
-    try {
-      batch.update(groupRef, {
-        members: arrayUnion(user.uid),
-        membersCount: increment(1)
-      });
-      batch.update(userRef, {
-        groupId: groupId
-      });
-      await batch.commit();
-      alert(`Successfully joined group: ${groupData.name}`);
-      navigate('/dashboard');
-    } catch (e) {
-      console.error("Error joining group:", e);
-      setError("Failed to join group. Please try again.");
+      try {
+        batch.update(groupRef, {
+          members: arrayUnion(user.uid),
+          membersCount: increment(1)
+        });
+        batch.update(userRef, {
+          groupIds: arrayUnion(groupId),
+          groupId: groupId // Set as active
+        });
+        await batch.commit();
+        alert(`Successfully joined group: ${groupData.name}`);
+        navigate('/dashboard');
+      } catch (e) {
+        console.error("Error joining group:", e);
+        setError("Failed to join group. Please try again.");
+      }
     }
   };
 

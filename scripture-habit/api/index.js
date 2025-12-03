@@ -86,7 +86,10 @@ app.post('/api/join-group', async (req, res) => {
             if (!groupDoc.exists) throw new Error('Group not found.');
 
             const userData = userDoc.data();
-            if (userData.groupId) throw new Error('User already in a group.');
+            const groupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
+
+            if (groupIds.includes(groupId)) throw new Error('User already in this group.');
+            if (groupIds.length >= 7) throw new Error('You can only join up to 7 groups.');
 
             const groupData = groupDoc.data();
             if (groupData.members && groupData.members.includes(uid)) throw new Error('User already in this group.');
@@ -96,7 +99,11 @@ app.post('/api/join-group', async (req, res) => {
                 members: admin.firestore.FieldValue.arrayUnion(uid),
                 membersCount: admin.firestore.FieldValue.increment(1)
             });
+
+            // Update user's groupIds and set groupId to the new one (as "active" or "primary" for backward compatibility if needed, 
+            // but ideally we rely on groupIds). We'll keep groupId as the "last joined" or "primary" for now to avoid breaking other things immediately.
             t.update(userRef, {
+                groupIds: admin.firestore.FieldValue.arrayUnion(groupId),
                 groupId: groupId
             });
 
@@ -144,10 +151,11 @@ app.post('/api/leave-group', async (req, res) => {
             if (!userDoc.exists) throw new Error('User not found.');
             const userData = userDoc.data();
 
-            const currentGroupId = groupId || userData.groupId;
-            if (!currentGroupId) throw new Error('User is not in a group.');
+            // Determine which group to leave
+            const targetGroupId = groupId || userData.groupId;
+            if (!targetGroupId) throw new Error('No group specified to leave.');
 
-            const groupRef = db.collection('groups').doc(currentGroupId);
+            const groupRef = db.collection('groups').doc(targetGroupId);
             const groupDoc = await t.get(groupRef);
 
             if (groupDoc.exists) {
@@ -157,8 +165,21 @@ app.post('/api/leave-group', async (req, res) => {
                 });
             }
 
+            // Update user data
+            // Remove from groupIds
+            // If the left group was the 'groupId' (primary), we should probably pick another one or set to null.
+
+            const currentGroupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
+            const newGroupIds = currentGroupIds.filter(id => id !== targetGroupId);
+
+            let newPrimaryGroupId = userData.groupId;
+            if (userData.groupId === targetGroupId) {
+                newPrimaryGroupId = newGroupIds.length > 0 ? newGroupIds[0] : null;
+            }
+
             t.update(userRef, {
-                groupId: null
+                groupIds: admin.firestore.FieldValue.arrayRemove(targetGroupId),
+                groupId: newPrimaryGroupId
             });
 
             // Add system message
