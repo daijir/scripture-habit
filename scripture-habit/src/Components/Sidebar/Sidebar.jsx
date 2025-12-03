@@ -27,7 +27,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
     <>
       <div className="Sidebar">
         <div className='logo'>
-          Scriptures Habit
+          Scripture Habit
         </div>
         <div className="menu">
           {/* Dashboard */}
