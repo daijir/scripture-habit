@@ -384,7 +384,7 @@ const Dashboard = () => {
 
             <div className="dashboard-section">
               <div className="section-header">
-                <h3>Recent Scriptures</h3>
+                <h3>Randome Scripture Photo from Developer</h3>
               </div>
               <div className="gallery-container">
                 <GalleryImages />
