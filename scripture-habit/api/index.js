@@ -1,7 +1,9 @@
-const express = require('express');
-const admin = require('firebase-admin');
-const cors = require('cors');
-require('dotenv').config();
+import express from 'express';
+import admin from 'firebase-admin';
+import cors from 'cors';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 // Initialize Firebase Admin SDK
 // Check if already initialized to avoid "default app already exists" error in serverless environment
@@ -203,4 +205,4 @@ app.get('/api/groups', async (req, res) => {
 });
 
 // Export the app for Vercel
-module.exports = app;
+export default app;
