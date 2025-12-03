@@ -539,7 +539,7 @@
 
     .send-message-form {
         position: fixed;
-        bottom: 70px;    
+        bottom: 70px;
         left: 0;
         right: 0;
         border-radius: 0;
@@ -552,13 +552,13 @@
     .input-wrapper {
         gap: 0.5rem;
         padding: 0.3rem 0.5rem;
-        background-color: white;    
+        background-color: white;
         border: 1px solid rgba(0, 0, 0, 0.05);
     }
 
     .input-wrapper textarea {
         font-size: 0.95rem;
-        min-width: 0; 
+        min-width: 0;
     }
 
     .input-wrapper button[type="submit"] {
@@ -572,7 +572,7 @@
     }
 
     .messages-container {
-        padding-bottom: 180px;   
+        padding-bottom: 180px;
     }
 }
 
@@ -636,4 +636,21 @@ input:focus+.slider {
 
 input:checked+.slider:before {
     transform: translateX(20px);
+}
+
+.date-separator {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0 1rem;
+    width: 100%;
+}
+
+.date-separator span {
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--gray);
+    padding: 0.3rem 0.8rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border: 1px solid rgba(0, 0, 0, 0.05);
 }
