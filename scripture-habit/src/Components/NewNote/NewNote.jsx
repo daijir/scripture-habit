@@ -8,7 +8,7 @@ import { ScripturesOptions } from '../../Data/Data';
 import Input from '../Input/Input';
 import './NewNote.css';
 
-const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups = [], isGroupContext = false }) => {
+const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups = [], isGroupContext = false, currentGroupId = null }) => {
 
     const [chapter, setChapter] = useState('');
     const [scripture, setScripture] = useState('');
@@ -103,7 +103,8 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             if (noteToEdit) {
                 if (isGroupContext) {
                     // Editing an existing note (which is a message in a specific group)
-                    const messageRef = doc(db, 'groups', userData.groupId, 'messages', noteToEdit.id);
+                    const targetGroupId = currentGroupId || userData.groupId;
+                    const messageRef = doc(db, 'groups', targetGroupId, 'messages', noteToEdit.id);
                     await updateDoc(messageRef, {
                         text: messageText,
                     });
@@ -198,8 +199,11 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     groupsToPostTo = userGroups.map(g => g.id);
                 } else if (shareOption === 'specific') {
                     groupsToPostTo = selectedShareGroups;
-                } else if (shareOption === 'current' && userData.groupId) {
-                    groupsToPostTo = [userData.groupId];
+                } else if (shareOption === 'current') {
+                    const targetId = currentGroupId || userData.groupId;
+                    if (targetId) {
+                        groupsToPostTo = [targetId];
+                    }
                 }
 
                 // Post to each target group
@@ -223,7 +227,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     chapter: chapter,
                     comment: comment,
                     shareOption: shareOption,
-                    sharedWithGroups: shareOption === 'specific' ? selectedShareGroups : (shareOption === 'all' ? userGroups.map(g => g.id) : (shareOption === 'current' && userData.groupId ? [userData.groupId] : []))
+                    sharedWithGroups: shareOption === 'specific' ? selectedShareGroups : (shareOption === 'all' ? userGroups.map(g => g.id) : (shareOption === 'current' ? (currentGroupId || userData.groupId ? [currentGroupId || userData.groupId] : []) : []))
                 });
 
                 await Promise.all(postPromises);
@@ -345,7 +349,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                                 <span>All my groups</span>
                             </label>
 
-                            {isGroupContext && userData.groupId && (
+                            {isGroupContext && (currentGroupId || userData.groupId) && (
                                 <label className="radio-option">
                                     <input
                                         type="radio"

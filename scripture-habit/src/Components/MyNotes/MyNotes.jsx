@@ -5,6 +5,7 @@ import ReactMarkdown from 'react-markdown';
 import { UilPlus, UilBookOpen } from '@iconscout/react-unicons';
 import NewNote from '../NewNote/NewNote';
 import { toast } from 'react-toastify';
+import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
 import './MyNotes.css';
 
 const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
@@ -122,6 +123,24 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
                   {formatNoteForDisplay(note.text)}
                 </ReactMarkdown>
               </div>
+              {getGospelLibraryUrl(note.scripture, note.chapter) && (
+                <a
+                  href={getGospelLibraryUrl(note.scripture, note.chapter)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  style={{
+                    display: 'inline-block',
+                    marginTop: '10px',
+                    fontSize: '0.8rem',
+                    color: 'var(--gray)',
+                    textDecoration: 'none',
+                    fontWeight: 'bold'
+                  }}
+                >
+                  📖 Read in Gospel Library
+                </a>
+              )}
             </div>
           ))}
         </div>

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
 import NewNote from '../NewNote/NewNote';
+import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
 import './GroupChat.css';
 
 const GroupChat = ({ groupId, userData }) => {
@@ -242,7 +243,7 @@ const GroupChat = ({ groupId, userData }) => {
 
   return (
     <div className="GroupChat">
-      <NewNote isOpen={isNewNoteOpen} onClose={() => setIsNewNoteOpen(false)} userData={userData} isGroupContext={true} userGroups={userGroups} />
+      <NewNote isOpen={isNewNoteOpen} onClose={() => setIsNewNoteOpen(false)} userData={userData} isGroupContext={true} userGroups={userGroups} currentGroupId={groupId} />
       <div className="chat-header">
         <h2>{groupData ? groupData.name : 'Group Chat'}</h2>
         {groupData && (
@@ -338,6 +339,36 @@ const GroupChat = ({ groupId, userData }) => {
                   (msg.isNote || msg.isEntry) ? (
                     <div className="entry-message-content">
                       <ReactMarkdown>{formatNoteForDisplay(msg.text)}</ReactMarkdown>
+                      {(() => {
+                        const chapterMatch = msg.text.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
+                        const scriptureMatch = msg.text.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
+                        if (chapterMatch && scriptureMatch) {
+                          const scripture = scriptureMatch[1].trim();
+                          const chapter = chapterMatch[1].trim();
+                          const url = getGospelLibraryUrl(scripture, chapter);
+                          if (url) {
+                            return (
+                              <a
+                                href={url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                style={{
+                                  display: 'inline-block',
+                                  marginTop: '5px',
+                                  fontSize: '0.75rem',
+                                  color: msg.senderId === userData?.uid ? 'white' : 'var(--gray)',
+                                  textDecoration: 'none',
+                                  fontWeight: 'bold'
+                                }}
+                              >
+                                📖 Read in Gospel Library
+                              </a>
+                            );
+                          }
+                        }
+                        return null;
+                      })()}
                     </div>
                   ) : (
                     <p>{msg.text}</p>
