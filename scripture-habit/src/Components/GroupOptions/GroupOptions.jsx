@@ -22,6 +22,10 @@ const GroupOptions = () => {
                         <p>Start your own group and invite friends.</p>
                     </Link>
                 </div>
+
+                <Link to="/dashboard" className="back-link">
+                    Back to Dashboard
+                </Link>
             </div>
         </div>
     );

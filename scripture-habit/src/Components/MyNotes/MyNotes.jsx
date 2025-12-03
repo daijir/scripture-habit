@@ -15,16 +15,14 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   useEffect(() => {
-    if (!userData || !userData.groupId || !userData.uid) {
+    if (!userData || !userData.uid) {
       setLoading(false);
       return;
     }
 
-    const messagesRef = collection(db, 'groups', userData.groupId, 'messages');
+    const notesRef = collection(db, 'users', userData.uid, 'notes');
     const q = query(
-      messagesRef,
-      where('senderId', '==', userData.uid),
-      where('isNote', '==', true),
+      notesRef,
       orderBy('createdAt', 'desc')
     );
 
@@ -49,13 +47,13 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
   };
 
   const confirmDelete = async () => {
-    if (!selectedNote || !userData.groupId) return;
+    if (!selectedNote || !userData.uid) return;
 
     try {
-      await deleteDoc(doc(db, 'groups', userData.groupId, 'messages', selectedNote.id));
+      await deleteDoc(doc(db, 'users', userData.uid, 'notes', selectedNote.id));
       toast.success("Note deleted successfully");
       setIsDeleteModalOpen(false);
-      setIsEditModalOpen(false); 
+      setIsEditModalOpen(false);
       setSelectedNote(null);
     } catch (error) {
       console.error("Error deleting note:", error);

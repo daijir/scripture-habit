@@ -13,6 +13,11 @@ service cloud.firestore {
 
       // A user can update their own document.
       allow update: if request.auth != null && request.auth.uid == userId;
+
+      // Rules for the 'notes' subcollection
+      match /notes/{noteId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
     }
     
     // Rules for the 'groups' collection
