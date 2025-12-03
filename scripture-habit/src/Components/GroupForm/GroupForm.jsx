@@ -1,7 +1,7 @@
 import './GroupForm.css';
 import { useState } from "react";
 import { auth, db } from '../../firebase';
-import { collection, addDoc, doc, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import Input from '../Input/Input';
 import Button from '../Button/Button';
@@ -30,34 +30,35 @@ export default function GroupForm() {
 
     try {
       const now = new Date();
-      
+
       const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase();
 
       const newGroupData = {
         name: groupName,
         description: description,
         createdAt: now,
-        groupStreak: 0, 
+        groupStreak: 0,
         inviteCode: inviteCode,
         isPublic: isPublic,
         maxMembers: Number(maxMembers),
-        membersCount: 1, 
+        membersCount: 1,
         ownerUserId: user.uid,
-        members: [user.uid], 
+        members: [user.uid],
       };
 
-      
+
       const docRef = await addDoc(collection(db, 'groups'), newGroupData);
       const newGroupId = docRef.id;
 
-      
+
       const userRef = doc(db, 'users', user.uid);
       await updateDoc(userRef, {
-        groupId: newGroupId,
+        groupIds: arrayUnion(newGroupId),
+        groupId: newGroupId, // Set as active
       });
 
       toast.success(`🎉 Group "${groupName}" created successfully!`);
-      navigate('/dashboard'); 
+      navigate('/dashboard');
 
     } catch (e) {
       console.error("Error creating group or updating user:", e);
@@ -93,7 +94,7 @@ export default function GroupForm() {
             label="Max Members"
             value={maxMembers}
             onChange={(e) => setMaxMembers(e.target.value)}
-            min="2" 
+            min="2"
             required
           />
 

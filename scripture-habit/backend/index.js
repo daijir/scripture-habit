@@ -27,8 +27,8 @@ app.post('/verify-login', async (req, res) => {
 
     console.log('Verified user:', { uid, email });
 
-    
-    
+
+
 
     res.status(200).send({ message: 'Login verified successfully.', user: { uid, email } });
   } catch (error) {
@@ -39,11 +39,6 @@ app.post('/verify-login', async (req, res) => {
 
 
 app.post('/join-group', async (req, res) => {
-  const { token } = req.body; 
-  
-  
-  
-  
   const authHeader = req.headers.authorization;
   let idToken;
   if (authHeader && authHeader.startsWith('Bearer ')) {
@@ -70,23 +65,53 @@ app.post('/join-group', async (req, res) => {
       const groupDoc = await t.get(groupRef);
 
       if (!groupDoc.exists) throw new Error('Group not found.');
-      
+
       const userData = userDoc.data();
-      if (userData.groupId) throw new Error('User already in a group.');
-      
+      const groupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
+
+      if (groupIds.includes(groupId)) throw new Error('User already in this group.');
+      if (groupIds.length >= 7) throw new Error('You can only join up to 7 groups.');
+
       const groupData = groupDoc.data();
-      if (groupData.members && groupData.members.includes(uid)) throw new Error('User already in this group.');
+
+      // Check if user is already a member of the group
+      if (groupData.members && groupData.members.includes(uid)) {
+        if (!groupIds.includes(groupId)) {
+          // Inconsistency detected: User is in group members but group is not in user's list.
+          // Repair: Add to user's list
+          t.update(userRef, {
+            groupIds: admin.firestore.FieldValue.arrayUnion(groupId)
+          });
+          return; // Exit transaction successfully, skipping other updates
+        } else {
+          throw new Error('User already in this group.');
+        }
+      }
+
       if (groupData.membersCount >= groupData.maxMembers) throw new Error('Group is full.');
 
       t.update(groupRef, {
         members: admin.firestore.FieldValue.arrayUnion(uid),
         membersCount: admin.firestore.FieldValue.increment(1)
       });
-      t.update(userRef, {
-        groupId: groupId
-      });
 
-      
+      // Update user's groupIds and set groupId to the new one (as "active" or "primary")
+      if (!userData.groupIds && userData.groupId) {
+        // Migration: User has a group but no groupIds array yet.
+        // Initialize array with both the old group and the new group.
+        const uniqueIds = [...new Set([userData.groupId, groupId])];
+        t.update(userRef, {
+          groupIds: uniqueIds,
+          groupId: groupId
+        });
+      } else {
+        t.update(userRef, {
+          groupIds: admin.firestore.FieldValue.arrayUnion(groupId),
+          groupId: groupId
+        });
+      }
+
+      // Add system message
       const messagesRef = groupRef.collection('messages').doc();
       t.set(messagesRef, {
         text: `👋 **${userData.nickname || 'A user'}** joined the group!`,
@@ -116,8 +141,8 @@ app.post('/leave-group', async (req, res) => {
     return res.status(401).send('Unauthorized: No token provided.');
   }
 
-  const { groupId } = req.body; 
-  
+  const { groupId } = req.body;
+
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     const uid = decodedToken.uid;
@@ -126,21 +151,15 @@ app.post('/leave-group', async (req, res) => {
     await db.runTransaction(async (t) => {
       const userRef = db.collection('users').doc(uid);
       const userDoc = await t.get(userRef);
-      
+
       if (!userDoc.exists) throw new Error('User not found.');
       const userData = userDoc.data();
-      
-      const currentGroupId = groupId || userData.groupId;
-      if (!currentGroupId) throw new Error('User is not in a group.');
-      
-      
-      if (groupId && userData.groupId !== groupId) {
-         
-         
-         
-      }
 
-      const groupRef = db.collection('groups').doc(currentGroupId);
+      // Determine which group to leave
+      const targetGroupId = groupId || userData.groupId;
+      if (!targetGroupId) throw new Error('No group specified to leave.');
+
+      const groupRef = db.collection('groups').doc(targetGroupId);
       const groupDoc = await t.get(groupRef);
 
       if (groupDoc.exists) {
@@ -149,12 +168,22 @@ app.post('/leave-group', async (req, res) => {
           membersCount: admin.firestore.FieldValue.increment(-1)
         });
       }
-      
+
+      // Update user data
+      const currentGroupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
+      const newGroupIds = currentGroupIds.filter(id => id !== targetGroupId);
+
+      let newPrimaryGroupId = userData.groupId;
+      if (userData.groupId === targetGroupId) {
+        newPrimaryGroupId = newGroupIds.length > 0 ? newGroupIds[0] : null;
+      }
+
       t.update(userRef, {
-        groupId: null
+        groupIds: admin.firestore.FieldValue.arrayRemove(targetGroupId),
+        groupId: newPrimaryGroupId
       });
 
-      
+      // Add system message
       if (groupDoc.exists) {
         const messagesRef = groupRef.collection('messages').doc();
         t.set(messagesRef, {
@@ -179,7 +208,7 @@ app.get('/groups', async (req, res) => {
   try {
     const db = admin.firestore();
     const groupsRef = db.collection('groups');
-    
+
     const snapshot = await groupsRef
       .where('isPublic', '==', true)
       .where('membersCount', '<', 5)
@@ -199,20 +228,20 @@ app.get('/groups', async (req, res) => {
 
 
 app.post('/migrate-data', async (req, res) => {
-  
-  
+
+
   console.log('Starting data migration on backend...');
   const db = admin.firestore();
-  
+
   try {
-    
+
     const groupsSnapshot = await db.collection('groups').get();
     console.log(`Found ${groupsSnapshot.size} groups.`);
     let messagesMigrated = 0;
 
     for (const groupDoc of groupsSnapshot.docs) {
       const messagesRef = groupDoc.ref.collection('messages');
-      
+
       const messagesSnapshot = await messagesRef.where('isEntry', '==', true).get();
 
       if (messagesSnapshot.empty) continue;
@@ -221,11 +250,11 @@ app.post('/migrate-data', async (req, res) => {
       let batchCount = 0;
 
       messagesSnapshot.forEach(doc => {
-        
+
         if (doc.data().isNote === undefined) {
-            batch.update(doc.ref, { isNote: true });
-            batchCount++;
-            messagesMigrated++;
+          batch.update(doc.ref, { isNote: true });
+          batchCount++;
+          messagesMigrated++;
         }
       });
 
@@ -235,7 +264,7 @@ app.post('/migrate-data', async (req, res) => {
       }
     }
 
-    
+
     const usersSnapshot = await db.collection('users').get();
     console.log(`Found ${usersSnapshot.size} users.`);
     let usersMigrated = 0;
@@ -257,12 +286,12 @@ app.post('/migrate-data', async (req, res) => {
     }
 
     console.log('Migration complete.');
-    res.status(200).json({ 
-      message: 'Migration complete', 
-      stats: { 
-        messagesMigrated, 
-        usersMigrated 
-      } 
+    res.status(200).json({
+      message: 'Migration complete',
+      stats: {
+        messagesMigrated,
+        usersMigrated
+      }
     });
 
   } catch (error) {

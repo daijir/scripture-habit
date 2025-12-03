@@ -23,14 +23,75 @@ const Dashboard = () => {
   const [groupTotalNotes, setGroupTotalNotes] = useState(0);
   const [personalNotesCount, setPersonalNotesCount] = useState(null);
   const [recentNotes, setRecentNotes] = useState([]);
+  const [userGroups, setUserGroups] = useState([]);
+  const [activeGroupId, setActiveGroupId] = useState(null);
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
 
+  // Fetch user groups details
   useEffect(() => {
-    if (!userData || !userData.groupId) return;
+    if (!userData) return;
+
+    const groupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
+
+    if (groupIds.length === 0) {
+      setUserGroups([]);
+      return;
+    }
+
+    // Set active group if not set
+    if (!activeGroupId && groupIds.length > 0) {
+      setActiveGroupId(groupIds[0]);
+    }
+
+    const fetchGroups = async () => {
+      const unsubscribers = [];
+      const groupsData = {};
+
+      groupIds.forEach(gid => {
+        const unsub = onSnapshot(doc(db, 'groups', gid), (docSnap) => {
+          if (docSnap.exists()) {
+            groupsData[gid] = { id: gid, ...docSnap.data() };
+            // Update state with new data
+            setUserGroups(prev => {
+              // Re-map based on groupIds order to keep consistency
+              const newGroups = groupIds
+                .map(id => groupsData[id] || prev.find(g => g.id === id))
+                .filter(Boolean);
+              return newGroups;
+            });
+          }
+        });
+        unsubscribers.push(unsub);
+      });
+
+      return () => {
+        unsubscribers.forEach(unsub => unsub());
+      };
+    };
+
+    const cleanupPromise = fetchGroups();
+    return () => {
+      cleanupPromise.then(cleanup => cleanup && cleanup());
+    };
+  }, [userData?.groupIds, userData?.groupId]);
+
+  // Update activeGroupId if the user leaves the current group
+  useEffect(() => {
+    if (userGroups.length > 0) {
+      if (!activeGroupId || !userGroups.find(g => g.id === activeGroupId)) {
+        setActiveGroupId(userGroups[0].id);
+      }
+    } else {
+      setActiveGroupId(null);
+    }
+  }, [userGroups]);
+
+  useEffect(() => {
+    if (!userData || !activeGroupId) return;
 
     try {
-      const messagesRef = collection(db, 'groups', userData.groupId, 'messages');
+      const messagesRef = collection(db, 'groups', activeGroupId, 'messages');
       const q = query(
         messagesRef,
         where('senderId', '==', userData.uid),
@@ -55,13 +116,13 @@ const Dashboard = () => {
     } catch (err) {
       console.error("Error setting up recent notes listener:", err);
     }
-  }, [userData]);
+  }, [userData, activeGroupId]);
 
   useEffect(() => {
     let unsubscribeGroupNotes = null;
-    if (userData && userData.groupId) {
+    if (userData && activeGroupId) {
       try {
-        const messagesRef = collection(db, 'groups', userData.groupId, 'messages');
+        const messagesRef = collection(db, 'groups', activeGroupId, 'messages');
         const q = query(messagesRef, where('isNote', '==', true));
         unsubscribeGroupNotes = onSnapshot(q, (querySnapshot) => {
           setGroupTotalNotes(querySnapshot.size || 0);
@@ -80,7 +141,7 @@ const Dashboard = () => {
     return () => {
       if (unsubscribeGroupNotes) unsubscribeGroupNotes();
     };
-  }, [userData]);
+  }, [userData, activeGroupId]);
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
@@ -93,8 +154,8 @@ const Dashboard = () => {
   useEffect(() => {
     let unsubscribePersonal = null;
     try {
-      if (userData && userData.groupId && userData.uid) {
-        const messagesRef = collection(db, 'groups', userData.groupId, 'messages');
+      if (userData && activeGroupId && userData.uid) {
+        const messagesRef = collection(db, 'groups', activeGroupId, 'messages');
         const q = query(messagesRef, where('isNote', '==', true), where('senderId', '==', userData.uid));
         unsubscribePersonal = onSnapshot(q, (snap) => {
           setPersonalNotesCount(snap.size || 0);
@@ -115,7 +176,7 @@ const Dashboard = () => {
     return () => {
       if (unsubscribePersonal) unsubscribePersonal();
     };
-  }, [userData]);
+  }, [userData, activeGroupId]);
 
   useEffect(() => {
     let unsubscribeUser = null;
@@ -164,7 +225,6 @@ const Dashboard = () => {
     return <div className='App Dashboard'>Please log in to view the dashboard.</div>;
   }
 
-  
   if (!userData) {
     return (
       <div className='App Dashboard'>
@@ -179,8 +239,10 @@ const Dashboard = () => {
     );
   }
 
-  
-  if (!userData.groupId || userData.groupId === "") {
+  // Allow access if user has groups, even if groupId is not set (migration case)
+  const hasGroups = (userData.groupIds && userData.groupIds.length > 0) || userData.groupId;
+
+  if (!hasGroups) {
     return <Navigate to="/group-options" replace />;
   }
 
@@ -192,7 +254,6 @@ const Dashboard = () => {
 
       let timeZone = userData.timeZone || 'UTC';
       try {
-        
         Intl.DateTimeFormat(undefined, { timeZone });
       } catch (e) {
         console.warn("Invalid timezone in userData, falling back to UTC:", timeZone);
@@ -251,11 +312,17 @@ const Dashboard = () => {
     return content;
   };
 
-  
+
   return (
     <div className='App Dashboard'>
       <div className='AppGlass Grid'>
-        <Sidebar selected={selectedView} setSelected={setSelectedView} />
+        <Sidebar
+          selected={selectedView}
+          setSelected={setSelectedView}
+          userGroups={userGroups}
+          activeGroupId={activeGroupId}
+          setActiveGroupId={setActiveGroupId}
+        />
         {selectedView === 0 && (
           <div className="DashboardContent">
             <div className="dashboard-header">
@@ -328,7 +395,7 @@ const Dashboard = () => {
           <MyNotes userData={userData} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
         )}
         {selectedView === 2 && (
-          <GroupChat groupId={userData.groupId} userData={userData} />
+          <GroupChat groupId={activeGroupId} userData={userData} />
         )}
 
         <NewNote isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} />
