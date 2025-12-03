@@ -6,11 +6,11 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/verify-login': 'http://localhost:5000',
-      '/join-group': 'http://localhost:5000',
-      '/leave-group': 'http://localhost:5000',
-      '/groups': 'http://localhost:5000',
-      '/migrate-data': 'http://localhost:5000',
+      '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
     },
   },
   build: {
