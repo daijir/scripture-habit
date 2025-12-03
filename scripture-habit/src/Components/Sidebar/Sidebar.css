@@ -225,6 +225,7 @@
     background: var(--glass);
     cursor: pointer;
     transition: all 0.2s ease;
+    color: var(--black);
 }
 
 .modal-group-item:hover {
@@ -234,6 +235,7 @@
 .modal-group-item.active-group {
     background: var(--activeItem);
     color: var(--pink);
+    font-weight: bold;
 }
 
 .modal-create-group {
@@ -256,6 +258,7 @@
     border-radius: 0.5rem;
     cursor: pointer;
     margin-top: 0.5rem;
+    color: var(--black);
 }
 
 @media screen and (max-width: 768px) {
