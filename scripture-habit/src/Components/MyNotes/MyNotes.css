@@ -54,15 +54,18 @@
     font-weight: 500;
 }
 
-.note-content {
+.note-content,
+.note-content-preview {
     font-size: 0.9rem;
     color: var(--black);
     line-height: 1.5;
 }
 
-.note-content p {
+.note-content p,
+.note-content-preview p {
     margin: 0;
     margin-bottom: 0.5rem;
+    color: var(--black);
 }
 
 .no-notes {
