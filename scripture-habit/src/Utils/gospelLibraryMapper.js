@@ -23,19 +23,32 @@ export const getGospelLibraryUrl = (volume, chapterInput) => {
     // Example: "Alma 5" -> Book: "Alma", Chapter: "5"
     // Example: "D&C 4" -> Book: "D&C", Chapter: "4" (Special handling for D&C)
 
-    // Regex to find the last number in the string
-    const match = chapterInput.match(/(.*?)(\d+)\s*$/);
+    // Regex to find the last number in the string, possibly followed by verses
+    // Matches: "Alma 7", "Alma 7:11", "Alma 7:11-13", "138"
+    // Group 1: Book name (e.g. "Alma" or "")
+    // Group 2: Chapter number (e.g. "7")
+    // Group 3: Verses (optional, e.g. ":11" or ":11-13")
+    const match = chapterInput.match(/(.*?)\s*(\d+)(?::(\d+(?:-\d+)?))?\s*$/);
 
     if (!match) return null; // Could not find a chapter number
 
     let bookName = match[1].trim().toLowerCase().replace(/[.]/g, ''); // Remove dots, lowercase
     const chapterNum = match[2];
+    const verses = match[3]; // This will be "11" or "11-13" if present
+
+    let urlSuffix = lang;
+    if (verses) {
+        // If verses are present, add id and p parameters
+        // Example: id=11-13&p11
+        const firstVerse = verses.split('-')[0];
+        urlSuffix += `&id=${verses}#p${firstVerse}`;
+    }
 
     // Special handling for Doctrine and Covenants
     if (volumeUrlPart === "dc-testament") {
         // D&C usually just has section number, or "D&C [num]", "Section [num]"
         // The URL is always .../dc-testament/dc/[num]
-        return `${baseUrl}/dc-testament/dc/${chapterNum}${lang}`;
+        return `${baseUrl}/dc-testament/dc/${chapterNum}${urlSuffix}`;
     }
 
     // Mapping for other volumes
@@ -139,7 +152,7 @@ export const getGospelLibraryUrl = (volume, chapterInput) => {
 
     if (!bookUrlPart) return null;
 
-    return `${baseUrl}/${volumeUrlPart}/${bookUrlPart}/${chapterNum}${lang}`;
+    return `${baseUrl}/${volumeUrlPart}/${bookUrlPart}/${chapterNum}${urlSuffix}`;
 };
 
 export const getScriptureInfoFromText = (text) => {
