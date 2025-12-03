@@ -6,10 +6,8 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      // Proxy all API requests under /api to backend mock on 5001.
-      // This keeps client routes like `/join-group` available for the SPA.
-      '^/api': {
-        target: 'http://localhost:5001',
+      '/api': {
+        target: 'http://localhost:5000',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
