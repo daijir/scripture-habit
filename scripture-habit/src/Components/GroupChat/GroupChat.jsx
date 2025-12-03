@@ -321,73 +321,90 @@ const GroupChat = ({ groupId, userData }) => {
       <div className="messages-container" ref={containerRef}>
         {loading && <p>Loading messages...</p>}
         {error && <p className="error-message">{error}</p>}
-        {messages.map((msg) => {
-          if (msg.senderId === 'system' || msg.isSystemMessage) {
-            return (
-              <div key={msg.id} className="message system-message">
-                <div className="message-content">
-                  <ReactMarkdown>{msg.text}</ReactMarkdown>
-                </div>
-              </div>
-            );
+        {messages.map((msg, index) => {
+          const prevMsg = messages[index - 1];
+          const currentDate = msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000) : new Date();
+          const prevDate = prevMsg?.createdAt?.seconds ? new Date(prevMsg.createdAt.seconds * 1000) : null;
+
+          let showDateSeparator = false;
+          if (!prevDate) {
+            showDateSeparator = true;
+          } else if (currentDate.toDateString() !== prevDate.toDateString()) {
+            showDateSeparator = true;
           }
+
           return (
-            <div key={msg.id} className={`message ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}>
-              <span className="sender-name">{msg.senderNickname}</span>
-              <div className="message-bubble-row" style={{ display: 'flex', alignItems: 'flex-end', gap: '5px' }}>
-                {msg.senderId === userData?.uid && (
-                  <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', marginBottom: '2px', whiteSpace: 'nowrap' }}>
-                    {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                  </span>
-                )}
-                <div className="message-content">
-                  {msg.text && (
-                    (msg.isNote || msg.isEntry) ? (
-                      <div className="entry-message-content">
-                        <ReactMarkdown>{formatNoteForDisplay(msg.text)}</ReactMarkdown>
-                        {(() => {
-                          const chapterMatch = msg.text.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
-                          const scriptureMatch = msg.text.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
-                          if (chapterMatch && scriptureMatch) {
-                            const scripture = scriptureMatch[1].trim();
-                            const chapter = chapterMatch[1].trim();
-                            const url = getGospelLibraryUrl(scripture, chapter);
-                            if (url) {
-                              return (
-                                <a
-                                  href={url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  onClick={(e) => e.stopPropagation()}
-                                  style={{
-                                    display: 'inline-block',
-                                    marginTop: '5px',
-                                    fontSize: '0.75rem',
-                                    color: msg.senderId === userData?.uid ? 'white' : 'var(--gray)',
-                                    textDecoration: 'none',
-                                    fontWeight: 'bold'
-                                  }}
-                                >
-                                  📖 Read in Gospel Library
-                                </a>
-                              );
-                            }
-                          }
-                          return null;
-                        })()}
-                      </div>
-                    ) : (
-                      <p>{msg.text}</p>
-                    )
-                  )}
+            <React.Fragment key={msg.id}>
+              {showDateSeparator && (
+                <div className="date-separator">
+                  <span>{currentDate.toLocaleDateString([], { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' })}</span>
                 </div>
-                {msg.senderId !== userData?.uid && (
-                  <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', marginBottom: '2px', whiteSpace: 'nowrap' }}>
-                    {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                  </span>
-                )}
-              </div>
-            </div>
+              )}
+              {msg.senderId === 'system' || msg.isSystemMessage ? (
+                <div className="message system-message">
+                  <div className="message-content">
+                    <ReactMarkdown>{msg.text}</ReactMarkdown>
+                  </div>
+                </div>
+              ) : (
+                <div className={`message ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}>
+                  <span className="sender-name">{msg.senderNickname}</span>
+                  <div className="message-bubble-row" style={{ display: 'flex', alignItems: 'flex-end', gap: '5px' }}>
+                    {msg.senderId === userData?.uid && (
+                      <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', marginBottom: '2px', whiteSpace: 'nowrap' }}>
+                        {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                      </span>
+                    )}
+                    <div className="message-content">
+                      {msg.text && (
+                        (msg.isNote || msg.isEntry) ? (
+                          <div className="entry-message-content">
+                            <ReactMarkdown>{formatNoteForDisplay(msg.text)}</ReactMarkdown>
+                            {(() => {
+                              const chapterMatch = msg.text.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
+                              const scriptureMatch = msg.text.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
+                              if (chapterMatch && scriptureMatch) {
+                                const scripture = scriptureMatch[1].trim();
+                                const chapter = chapterMatch[1].trim();
+                                const url = getGospelLibraryUrl(scripture, chapter);
+                                if (url) {
+                                  return (
+                                    <a
+                                      href={url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      onClick={(e) => e.stopPropagation()}
+                                      style={{
+                                        display: 'inline-block',
+                                        marginTop: '5px',
+                                        fontSize: '0.75rem',
+                                        color: msg.senderId === userData?.uid ? 'white' : 'var(--gray)',
+                                        textDecoration: 'none',
+                                        fontWeight: 'bold'
+                                      }}
+                                    >
+                                      📖 Read in Gospel Library
+                                    </a>
+                                  );
+                                }
+                              }
+                              return null;
+                            })()}
+                          </div>
+                        ) : (
+                          <p>{msg.text}</p>
+                        )
+                      )}
+                    </div>
+                    {msg.senderId !== userData?.uid && (
+                      <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', marginBottom: '2px', whiteSpace: 'nowrap' }}>
+                        {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+            </React.Fragment>
           );
         })}
       </div>
