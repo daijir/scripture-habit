@@ -101,11 +101,22 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             const messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Chapter:** ${chapter}\n\n${comment}`;
 
             if (noteToEdit) {
-                // Editing an existing note (which is a message in a specific group)
-                const messageRef = doc(db, 'groups', userData.groupId, 'messages', noteToEdit.id);
-                await updateDoc(messageRef, {
-                    text: messageText,
-                });
+                if (isGroupContext) {
+                    // Editing an existing note (which is a message in a specific group)
+                    const messageRef = doc(db, 'groups', userData.groupId, 'messages', noteToEdit.id);
+                    await updateDoc(messageRef, {
+                        text: messageText,
+                    });
+                } else {
+                    // Editing a personal note
+                    const noteRef = doc(db, 'users', userData.uid, 'notes', noteToEdit.id);
+                    await updateDoc(noteRef, {
+                        text: messageText,
+                        scripture: scripture,
+                        chapter: chapter,
+                        comment: comment
+                    });
+                }
                 toast.success("Note updated successfully!");
             } else {
                 // Creating a new note
