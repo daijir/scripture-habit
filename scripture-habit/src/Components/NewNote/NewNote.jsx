@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { db } from '../../firebase';
-import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment, query, where, getDocs } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { UilTrashAlt } from '@iconscout/react-unicons';
 import Select from 'react-select';
@@ -108,6 +108,21 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     await updateDoc(messageRef, {
                         text: messageText,
                     });
+
+                    // Try to sync back to personal note if linked
+                    if (noteToEdit.originalNoteId) {
+                        try {
+                            const noteRef = doc(db, 'users', userData.uid, 'notes', noteToEdit.originalNoteId);
+                            await updateDoc(noteRef, {
+                                text: messageText,
+                                scripture: scripture,
+                                chapter: chapter,
+                                comment: comment
+                            });
+                        } catch (err) {
+                            console.log("Could not sync back to personal note:", err);
+                        }
+                    }
                 } else {
                     // Editing a personal note
                     const noteRef = doc(db, 'users', userData.uid, 'notes', noteToEdit.id);
@@ -117,6 +132,87 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         chapter: chapter,
                         comment: comment
                     });
+
+                    // SYNC TO GROUPS
+                    // 1. Get the list of groups this note was shared with
+                    let sharedMessageIds = noteToEdit.sharedMessageIds || {};
+                    const groupsToCheck = noteToEdit.sharedWithGroups || [];
+                    let idsUpdated = false;
+
+                    for (const groupId of groupsToCheck) {
+                        let messageId = sharedMessageIds[groupId];
+
+                        if (!messageId) {
+                            // Attempt to find the message in this group
+                            try {
+                                const messagesRef = collection(db, 'groups', groupId, 'messages');
+
+                                // Strategy A: Check by originalNoteId (for future notes)
+                                const qId = query(messagesRef, where('originalNoteId', '==', noteToEdit.id));
+                                const snapId = await getDocs(qId);
+
+                                if (!snapId.empty) {
+                                    messageId = snapId.docs[0].id;
+                                } else {
+                                    // Strategy B: Check by content match (for legacy notes)
+                                    // We look for a message by this user, that is a note, and has the OLD text
+                                    const qText = query(messagesRef,
+                                        where('senderId', '==', userData.uid),
+                                        where('isNote', '==', true),
+                                        where('text', '==', noteToEdit.text)
+                                    );
+                                    const snapText = await getDocs(qText);
+                                    if (!snapText.empty) {
+                                        messageId = snapText.docs[0].id;
+                                        // Also update the message with originalNoteId for future robustness
+                                        await updateDoc(doc(db, 'groups', groupId, 'messages', messageId), {
+                                            originalNoteId: noteToEdit.id
+                                        });
+                                    } else {
+                                        // Strategy C: Check by Timestamp (approximate match)
+                                        // Useful if text has been edited separately and they are out of sync
+                                        if (noteToEdit.createdAt) {
+                                            const noteTime = noteToEdit.createdAt.toDate ? noteToEdit.createdAt.toDate() : new Date(noteToEdit.createdAt.seconds * 1000);
+                                            const startTime = new Date(noteTime.getTime() - 60000); // -1 minute
+                                            const endTime = new Date(noteTime.getTime() + 60000); // +1 minute
+
+                                            const qTime = query(messagesRef,
+                                                where('senderId', '==', userData.uid),
+                                                where('isNote', '==', true),
+                                                where('createdAt', '>=', startTime),
+                                                where('createdAt', '<=', endTime)
+                                            );
+                                            const snapTime = await getDocs(qTime);
+                                            if (!snapTime.empty) {
+                                                messageId = snapTime.docs[0].id;
+                                                await updateDoc(doc(db, 'groups', groupId, 'messages', messageId), {
+                                                    originalNoteId: noteToEdit.id
+                                                });
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (err) {
+                                console.error(`Error finding message in group ${groupId}:`, err);
+                            }
+                        }
+
+                        if (messageId) {
+                            try {
+                                const msgRef = doc(db, 'groups', groupId, 'messages', messageId);
+                                await updateDoc(msgRef, { text: messageText });
+                                sharedMessageIds[groupId] = messageId;
+                                idsUpdated = true;
+                            } catch (err) {
+                                console.error(`Error updating message ${messageId} in group ${groupId}:`, err);
+                            }
+                        }
+                    }
+
+                    // Save the discovered IDs back to the note so we don't have to search next time
+                    if (idsUpdated) {
+                        await updateDoc(noteRef, { sharedMessageIds });
+                    }
                 }
                 toast.success("Note updated successfully!");
             } else {
@@ -206,31 +302,38 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     }
                 }
 
-                // Post to each target group
-                const postPromises = groupsToPostTo.map(gid => {
-                    const messagesRef = collection(db, 'groups', gid, 'messages');
-                    return addDoc(messagesRef, {
-                        text: messageText,
-                        senderId: userData.uid,
-                        senderNickname: userData.nickname,
-                        createdAt: serverTimestamp(),
-                        isNote: true
-                    });
-                });
-
-                // ALWAYS save to personal notes collection as well, regardless of sharing option
-                const personalNoteRef = collection(db, 'users', userData.uid, 'notes');
-                await addDoc(personalNoteRef, {
+                // 1. Create the Personal Note FIRST to get its ID
+                const personalNoteRef = await addDoc(collection(db, 'users', userData.uid, 'notes'), {
                     text: messageText,
                     createdAt: serverTimestamp(),
                     scripture: scripture,
                     chapter: chapter,
                     comment: comment,
                     shareOption: shareOption,
-                    sharedWithGroups: shareOption === 'specific' ? selectedShareGroups : (shareOption === 'all' ? userGroups.map(g => g.id) : (shareOption === 'current' ? (currentGroupId || userData.groupId ? [currentGroupId || userData.groupId] : []) : []))
+                    sharedWithGroups: groupsToPostTo // Store the array of group IDs
+                });
+
+                // 2. Post to each target group, linking back to the personal note
+                const sharedMessageIds = {};
+                const postPromises = groupsToPostTo.map(async (gid) => {
+                    const messagesRef = collection(db, 'groups', gid, 'messages');
+                    const msgRef = await addDoc(messagesRef, {
+                        text: messageText,
+                        senderId: userData.uid,
+                        senderNickname: userData.nickname,
+                        createdAt: serverTimestamp(),
+                        isNote: true,
+                        originalNoteId: personalNoteRef.id // Link to personal note
+                    });
+                    sharedMessageIds[gid] = msgRef.id;
                 });
 
                 await Promise.all(postPromises);
+
+                // 3. Update the Personal Note with the IDs of the shared messages
+                if (Object.keys(sharedMessageIds).length > 0) {
+                    await updateDoc(personalNoteRef, { sharedMessageIds });
+                }
 
                 toast.success("Note posted successfully!");
             }
