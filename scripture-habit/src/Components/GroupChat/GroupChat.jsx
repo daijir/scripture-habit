@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { db, auth } from '../../firebase';
 import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt } from '@iconscout/react-unicons';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, where, getDocs } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
@@ -220,9 +220,29 @@ const GroupChat = ({ groupId, userData }) => {
     }
   };
 
+  const [userGroups, setUserGroups] = useState([]);
+
+  useEffect(() => {
+    if (!userData || !userData.uid) return;
+
+    // Fetch user groups for the NewNote component
+    const fetchUserGroups = async () => {
+      try {
+        const q = query(collection(db, 'groups'), where('members', 'array-contains', userData.uid));
+        const querySnapshot = await getDocs(q);
+        const groups = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        setUserGroups(groups);
+      } catch (error) {
+        console.error("Error fetching user groups:", error);
+      }
+    };
+
+    fetchUserGroups();
+  }, [userData]);
+
   return (
     <div className="GroupChat">
-      <NewNote isOpen={isNewNoteOpen} onClose={() => setIsNewNoteOpen(false)} userData={userData} />
+      <NewNote isOpen={isNewNoteOpen} onClose={() => setIsNewNoteOpen(false)} userData={userData} isGroupContext={true} userGroups={userGroups} />
       <div className="chat-header">
         <h2>{groupData ? groupData.name : 'Group Chat'}</h2>
         {groupData && (

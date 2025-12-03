@@ -398,7 +398,7 @@ const Dashboard = () => {
           <GroupChat groupId={activeGroupId} userData={userData} />
         )}
 
-        <NewNote isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} />
+        <NewNote isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} userGroups={userGroups} />
       </div>
     </div>
   );

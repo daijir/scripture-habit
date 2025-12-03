@@ -86,3 +86,18 @@
 .create-card:hover h3 {
     color: #8e44ad;
 }
+
+.back-link {
+    margin-top: 2rem;
+    color: var(--gray);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+}
+
+.back-link:hover {
+    color: var(--black);
+    background: rgba(255, 255, 255, 0.5);
+}

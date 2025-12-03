@@ -166,7 +166,7 @@
 }
 
 .create-group-item {
-    color: var(--pink);
+    color: var(--gray);
     font-weight: 500;
 }
 
@@ -241,7 +241,7 @@
     align-items: center;
     gap: 0.5rem;
     padding: 1rem;
-    color: var(--pink);
+    color: var(--gray);
     font-weight: bold;
     cursor: pointer;
     justify-content: center;
