@@ -9,7 +9,7 @@ type Props = {
   onJoin?: (groupId: string, groupData?: any) => Promise<void> | void;
 };
 
-export default function GroupCard({ group, currentUser }: Props) {
+export default function GroupCard({ group, currentUser, onJoin }: Props) {
   const [joining, setJoining] = useState(false);
   const db = getFirestore(app);
 
