@@ -4,7 +4,17 @@ import { translations } from '../Data/Translations';
 const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
-    const [language, setLanguage] = useState('en'); // Default to English
+    // Load language from localStorage, default to 'en'
+    const [language, setLanguageState] = useState(() => {
+        const saved = localStorage.getItem('language');
+        return saved || 'en';
+    });
+
+    // Wrapper to save to localStorage when language changes
+    const setLanguage = (newLanguage) => {
+        localStorage.setItem('language', newLanguage);
+        setLanguageState(newLanguage);
+    };
 
     const t = (key) => {
         const keys = key.split('.');
