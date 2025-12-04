@@ -7,10 +7,10 @@ import Input from '../Input/Input';
 import Button from '../Button/Button';
 import Checkbox from '../Input/Checkbox';
 import { toast } from "react-toastify";
-
-
+import { useLanguage } from '../../Context/LanguageContext';
 
 export default function GroupForm() {
+  const { t } = useLanguage();
   const [groupName, setGroupName] = useState("");
   const [description, setDescription] = useState("");
   const [maxMembers, setMaxMembers] = useState(5);
@@ -24,7 +24,7 @@ export default function GroupForm() {
 
     const user = auth.currentUser;
     if (!user) {
-      setError("You must be logged in to create a group.");
+      setError(t('groupForm.errorLoggedIn'));
       return;
     }
 
@@ -57,41 +57,41 @@ export default function GroupForm() {
         groupId: newGroupId, // Set as active
       });
 
-      toast.success(`🎉 Group "${groupName}" created successfully!`);
+      toast.success(`🎉 ${t('groupForm.successCreated')}`);
       navigate('/dashboard');
 
     } catch (e) {
       console.error("Error creating group or updating user:", e);
-      setError("Failed to create group. Please try again.");
+      setError(t('groupForm.errorCreateFailed'));
     }
   }
 
   return (
     <div className="App GroupForm">
       <div className="AppGlass">
-        <h1>Create a Study Group</h1>
+        <h1>{t('groupForm.title')}</h1>
         <p className="subtitle">
-          Build a scripture study group and invite others to join.
+          {t('groupForm.subtitle')}
         </p>
 
         <form onSubmit={handleSubmit} className="group-form">
           <Input
-            label="Group Name"
+            label={t('groupForm.groupNameLabel')}
             type="text"
-            placeholder="Enter group name"
+            placeholder={t('groupForm.groupNamePlaceholder')}
             value={groupName}
             onChange={(e) => setGroupName(e.target.value)}
             required
           />
           <Input
-            label="Description (optional)"
+            label={t('groupForm.descriptionLabel')}
             as="textarea"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
 
           <Input
-            label="Max Members"
+            label={t('groupForm.maxMembersLabel')}
             value={maxMembers}
             onChange={(e) => setMaxMembers(e.target.value)}
             min="2"
@@ -99,21 +99,21 @@ export default function GroupForm() {
           />
 
           <Checkbox
-            label="Public Group"
+            label={t('groupForm.publicGroupLabel')}
             id="isPublic"
             checked={isPublic}
             onChange={(e) => setIsPublic(e.target.checked)}
           />
 
           <Button type="submit">
-            Create Group
+            {t('groupForm.createButton')}
           </Button>
         </form>
         {error && <p className="error-message">{error}</p>}
 
         <div className="join-group-cta">
-          <p>Looking for an existing group?</p>
-          <Link to="/join-group" className="join-group-link">Join a Group</Link>
+          <p>{t('groupForm.joinGroupCta')}</p>
+          <Link to="/join-group" className="join-group-link">{t('groupForm.joinGroupLink')}</Link>
         </div>
       </div>
     </div>

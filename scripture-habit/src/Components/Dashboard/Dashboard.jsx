@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import { auth, db } from '../../firebase';
 import { doc, onSnapshot, collection, query, where, orderBy, limit } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -13,7 +13,9 @@ import Button from '../Button/Button';
 import GalleryImages from '../GalleryImages/GalleryImages';
 import NewNote from '../NewNote/NewNote';
 import MyNotes from '../MyNotes/MyNotes';
+import Languages from '../Languages/Languages';
 import { getGospelLibraryUrl, getScriptureInfoFromText } from '../../Utils/gospelLibraryMapper';
+import { useLanguage } from '../../Context/LanguageContext.jsx';
 
 
 const Dashboard = () => {
@@ -26,9 +28,22 @@ const Dashboard = () => {
   const [personalNotesCount, setPersonalNotesCount] = useState(null);
   const [recentNotes, setRecentNotes] = useState([]);
   const [userGroups, setUserGroups] = useState([]);
-  const [activeGroupId, setActiveGroupId] = useState(null);
+
+  const location = useLocation();
+  // Initialize activeGroupId from location state if available, to avoid initial null state
+  const [activeGroupId, setActiveGroupId] = useState(location.state?.initialGroupId || null);
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const { t, language } = useLanguage();
+
+  useEffect(() => {
+    if (location.state?.initialView !== undefined) {
+      setSelectedView(location.state.initialView);
+    }
+    if (location.state?.initialGroupId) {
+      setActiveGroupId(location.state.initialGroupId);
+    }
+  }, [location.state]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -113,16 +128,34 @@ const Dashboard = () => {
     };
   }, [userData?.groupIds, userData?.groupId]);
 
-  // Update activeGroupId if the user leaves the current group
+  // Update activeGroupId if the user leaves the current group or if we need to validate the current selection
   useEffect(() => {
+    // IMPORTANT: Do not reset activeGroupId while initial data is loading
+    if (loading) return;
+
     if (userGroups.length > 0) {
-      if (!activeGroupId || !userGroups.find(g => g.id === activeGroupId)) {
-        setActiveGroupId(userGroups[0].id);
+      // Check if the currently active group is loaded in userGroups
+      const isActiveGroupLoaded = userGroups.find(g => g.id === activeGroupId);
+
+      if (!isActiveGroupLoaded) {
+        // If not loaded, check if it's at least in the user's group list (pending load)
+        // This prevents resetting activeGroupId while the specific group data is being fetched
+        const userGroupIds = userData?.groupIds || (userData?.groupId ? [userData.groupId] : []);
+        const isMemberOfActiveGroup = activeGroupId && userGroupIds.includes(activeGroupId);
+
+        if (!isMemberOfActiveGroup) {
+          // Only reset if the user is NOT a member of the active group
+          setActiveGroupId(userGroups[0].id);
+        }
       }
     } else {
-      setActiveGroupId(null);
+      // Only reset if user truly has no groups (avoid resetting during loading)
+      const hasGroups = userData && ((userData.groupIds && userData.groupIds.length > 0) || userData.groupId);
+      if (!hasGroups) {
+        setActiveGroupId(null);
+      }
     }
-  }, [userGroups]);
+  }, [userGroups, userData, activeGroupId, loading]);
 
   useEffect(() => {
     if (!userData || !userData.uid) return;
@@ -309,43 +342,43 @@ const Dashboard = () => {
           <div className="DashboardContent">
             <div className="dashboard-header">
               <div>
-                <h1>Dashboard Overview</h1>
-                <p className="welcome-text">Welcome back, <strong>{userData.nickname}</strong>!</p>
+                <h1>{t('dashboard.overview')}</h1>
+                <p className="welcome-text">{t('dashboard.welcomeBack')}, <strong>{userData.nickname}</strong>!</p>
               </div>
               <button className="new-note-btn" onClick={() => setIsModalOpen(true)}>
-                <UilPlus /> New Note
+                <UilPlus /> {t('dashboard.newNote')}
               </button>
             </div>
 
             <div className="dashboard-stats">
               <div className="stat-card streak-card">
-                <h3>Streak</h3>
+                <h3>{t('dashboard.streak')}</h3>
                 <div className="streak-value">
                   <span className="number">{userData.streakCount || 0}</span>
-                  <span className="label">days</span>
+                  <span className="label">{t('dashboard.days')}</span>
                 </div>
-                <p className="streak-subtext">Keep it up!</p>
+                <p className="streak-subtext">{t('dashboard.keepItUp')}</p>
               </div>
               <div className="stat-card">
-                <h3>Total Notes</h3>
+                <h3>{t('dashboard.totalNotes')}</h3>
                 <div className="streak-value">
                   <span className="number">
                     {personalNotesCount !== null ? personalNotesCount : (userData.totalNotes || 0)}
                   </span>
-                  <span className="label">notes</span>
+                  <span className="label">{t('dashboard.notes')}</span>
                 </div>
               </div>
             </div>
 
             <div className="dashboard-section">
               <div className="section-header">
-                <h3>Recent Notes</h3>
-                <Link to="#" className="see-all" onClick={(e) => { e.preventDefault(); setSelectedView(1); }}>See All</Link>
+                <h3>{t('dashboard.recentNotes')}</h3>
+                <Link to="#" className="see-all" onClick={(e) => { e.preventDefault(); setSelectedView(1); }}>{t('dashboard.seeAll')}</Link>
               </div>
               <div className="gallery-container">
                 <div className="recent-notes-grid">
                   {recentNotes.length === 0 ? (
-                    <p className="no-notes-dashboard">No recent notes.</p>
+                    <p className="no-notes-dashboard">{t('dashboard.noRecentNotes')}</p>
                   ) : (
                     recentNotes.map((note) => (
                       <div key={note.id} className="note-card dashboard-note-card">
@@ -357,9 +390,9 @@ const Dashboard = () => {
                             {formatNoteForDisplay(note.text)}
                           </ReactMarkdown>
                         </div>
-                        {getGospelLibraryUrl(note.scripture, note.chapter) && (
+                        {getGospelLibraryUrl(note.scripture, note.chapter, language) && (
                           <a
-                            href={getGospelLibraryUrl(note.scripture, note.chapter)}
+                            href={getGospelLibraryUrl(note.scripture, note.chapter, language)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="gospel-link"
@@ -372,7 +405,7 @@ const Dashboard = () => {
                               fontWeight: 'bold'
                             }}
                           >
-                            📖 Read in Gospel Library
+                            📖 {t('dashboard.readInGospelLibrary')}
                           </a>
                         )}
                       </div>
@@ -384,7 +417,7 @@ const Dashboard = () => {
 
             <div className="dashboard-section">
               <div className="section-header">
-                <h3>Randome Scripture Photo from Developer</h3>
+                <h3>{t('dashboard.randomPhoto')}</h3>
               </div>
               <div className="gallery-container">
                 <GalleryImages />
@@ -398,6 +431,9 @@ const Dashboard = () => {
         )}
         {selectedView === 2 && (
           <GroupChat groupId={activeGroupId} userData={userData} />
+        )}
+        {selectedView === 3 && (
+          <Languages />
         )}
 
         <NewNote isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} userGroups={userGroups} currentGroupId={activeGroupId} />

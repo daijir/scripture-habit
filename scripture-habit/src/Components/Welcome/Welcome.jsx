@@ -1,0 +1,70 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import Button from '../Button/Button';
+import { useLanguage } from '../../Context/LanguageContext';
+import './Welcome.css';
+
+const Welcome = () => {
+    const { t, setLanguage, language } = useLanguage();
+
+    return (
+        <div className="AppGlass welcome-container">
+            <h1>{t('welcome.title')}</h1>
+
+            <div className="language-selection">
+                <p className="language-instruction">
+                    {t('welcome.chooseLanguage')}
+                </p>
+                <div className="language-buttons">
+                    <button
+                        className={`lang-btn ${language === 'en' ? 'active' : ''}`}
+                        onClick={() => setLanguage('en')}
+                    >
+                        English
+                    </button>
+                    <button
+                        className={`lang-btn ${language === 'ja' ? 'active' : ''}`}
+                        onClick={() => setLanguage('ja')}
+                    >
+                        日本語
+                    </button>
+                    <button
+                        className={`lang-btn ${language === 'pt' ? 'active' : ''}`}
+                        onClick={() => setLanguage('pt')}
+                    >
+                        Português
+                    </button>
+                    <button
+                        className={`lang-btn ${language === 'zho' ? 'active' : ''}`}
+                        onClick={() => setLanguage('zho')}
+                    >
+                        繁體中文
+                    </button>
+                    <button
+                        className={`lang-btn ${language === 'es' ? 'active' : ''}`}
+                        onClick={() => setLanguage('es')}
+                    >
+                        Español
+                    </button>
+                    <button
+                        className={`lang-btn ${language === 'vi' ? 'active' : ''}`}
+                        onClick={() => setLanguage('vi')}
+                    >
+                        Tiếng Việt
+                    </button>
+                </div>
+            </div>
+
+            <div className="auth-buttons">
+                <Link to="/login">
+                    <Button>{t('welcome.login')}</Button>
+                </Link>
+                <Link to="/signup">
+                    <Button>{t('welcome.signup')}</Button>
+                </Link>
+            </div>
+        </div>
+    );
+};
+
+export default Welcome;

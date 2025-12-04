@@ -7,8 +7,10 @@ import Select from 'react-select';
 import { ScripturesOptions } from '../../Data/Data';
 import Input from '../Input/Input';
 import './NewNote.css';
+import { useLanguage } from '../../Context/LanguageContext.jsx';
 
 const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups = [], isGroupContext = false, currentGroupId = null }) => {
+    const { t } = useLanguage();
 
     const [chapter, setChapter] = useState('');
     const [scripture, setScripture] = useState('');
@@ -21,6 +23,22 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    const getTranslatedScriptureLabel = (value) => {
+        switch (value) {
+            case "Old Testament": return t('scriptures.oldTestament');
+            case "New Testament": return t('scriptures.newTestament');
+            case "Book of Mormon": return t('scriptures.bookOfMormon');
+            case "Doctrine and Convenants": return t('scriptures.doctrineAndCovenants');
+            case "Pearl of Great Price": return t('scriptures.pearlOfGreatPrice');
+            default: return value;
+        }
+    };
+
+    const translatedScripturesOptions = ScripturesOptions.map(option => ({
+        ...option,
+        label: getTranslatedScriptureLabel(option.value)
+    }));
 
     React.useEffect(() => {
         if (isOpen && noteToEdit) {
@@ -54,7 +72,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             setScripture(script);
             setComment(comm);
 
-            const option = ScripturesOptions.find(opt => opt.value.toLowerCase() === script.toLowerCase());
+            const option = translatedScripturesOptions.find(opt => opt.value.toLowerCase() === script.toLowerCase());
             setSelectedOption(option || null);
 
             setShareOption('none');
@@ -74,7 +92,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             }
             setSelectedShareGroups([]);
         }
-    }, [isOpen, noteToEdit, userGroups.length, isGroupContext]);
+    }, [isOpen, noteToEdit, userGroups.length, isGroupContext]); // Removed translatedScripturesOptions from dependency to avoid loop if not memoized, though t() change triggers re-render anyway.
 
     const handleGroupSelection = (groupId) => {
         setSelectedShareGroups(prev => {
@@ -90,7 +108,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
     const handleSubmit = async () => {
         if (!chapter || !scripture) {
-            setError("Please fill in the chapter and select a scripture.");
+            setError(t('newNote.errorMissingFields'));
             return;
         }
 
@@ -214,7 +232,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         await updateDoc(noteRef, { sharedMessageIds });
                     }
                 }
-                toast.success("Note updated successfully!");
+                toast.success(t('newNote.successUpdate'));
             } else {
                 // Creating a new note
                 const userRef = doc(db, 'users', userData.uid);
@@ -335,7 +353,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     await updateDoc(personalNoteRef, { sharedMessageIds });
                 }
 
-                toast.success("Note posted successfully!");
+                toast.success(t('newNote.successPost'));
             }
 
             setLoading(false);
@@ -346,7 +364,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
         } catch (e) {
             console.error("Error saving note:", e);
-            setError("Failed to save note. Please try again.");
+            setError(t('newNote.errorSave'));
             setLoading(false);
         }
     };
@@ -355,7 +373,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
         <div className="ModalOverlay" onClick={onClose}>
             <div className="ModalContent" onClick={(e) => e.stopPropagation()}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                    <h1 style={{ margin: 0 }}>{noteToEdit ? 'Edit Note' : 'New Note'}</h1>
+                    <h1 style={{ margin: 0 }}>{noteToEdit ? t('newNote.editTitle') : t('newNote.newTitle')}</h1>
                     {noteToEdit && (
                         <button
                             onClick={onDelete}
@@ -368,7 +386,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                                 alignItems: 'center',
                                 padding: '0.5rem'
                             }}
-                            title="Delete Note"
+                            title={t('newNote.deleteTitle')}
                         >
                             <UilTrashAlt size="24" />
                         </button>
@@ -376,15 +394,15 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 </div>
                 {error && <p className="error-message" style={{ color: 'red' }}>{error}</p>}
                 <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="scripture-select" style={{ display: 'block', marginBottom: '0.5rem', color: 'black' }}>Choose the scripture</label>
+                    <label htmlFor="scripture-select" style={{ display: 'block', marginBottom: '0.5rem', color: 'black' }}>{t('newNote.chooseScriptureLabel')}</label>
                     <Select
-                        options={ScripturesOptions}
+                        options={translatedScripturesOptions}
                         onChange={(option) => {
                             setSelectedOption(option);
                             setScripture(option?.value);
                         }}
                         value={selectedOption}
-                        placeholder="Please choose a scripture option"
+                        placeholder={t('newNote.chooseScripturePlaceholder')}
                         styles={{
                             control: (base) => ({
                                 ...base,
@@ -420,26 +438,26 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 </div>
 
                 <Input
-                    label="Chapter"
+                    label={t('newNote.chapterLabel')}
                     type="text"
                     value={chapter}
                     onChange={(e) => setChapter(e.target.value)}
                     required
-                    placeholder="Enter a chapter (e.g. Alma 5)"
+                    placeholder={t('newNote.chapterPlaceholder')}
                 />
 
                 <Input
-                    label="Comment"
+                    label={t('newNote.commentLabel')}
                     as="textarea"
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     required
-                    placeholder="Enter a comment (e.g. This chapter reminded me that true conversion begins in the heart.)"
+                    placeholder={t('newNote.commentPlaceholder')}
                 />
 
                 {!noteToEdit && (
                     <div className="sharing-options">
-                        <label className="sharing-label">Share with:</label>
+                        <label className="sharing-label">{t('newNote.shareLabel')}</label>
 
                         <div className="radio-group">
                             <label className="radio-option">
@@ -449,7 +467,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                                     checked={shareOption === 'all'}
                                     onChange={(e) => setShareOption(e.target.value)}
                                 />
-                                <span>All my groups</span>
+                                <span>{t('newNote.shareAll')}</span>
                             </label>
 
                             {isGroupContext && (currentGroupId || userData.groupId) && (
@@ -460,7 +478,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                                         checked={shareOption === 'current'}
                                         onChange={(e) => setShareOption(e.target.value)}
                                     />
-                                    <span>This Group</span>
+                                    <span>{t('newNote.shareCurrent')}</span>
                                 </label>
                             )}
 
@@ -471,7 +489,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                                     checked={shareOption === 'specific'}
                                     onChange={(e) => setShareOption(e.target.value)}
                                 />
-                                <span>Specific groups</span>
+                                <span>{t('newNote.shareSpecific')}</span>
                             </label>
 
                             <label className="radio-option">
@@ -481,7 +499,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                                     checked={shareOption === 'none'}
                                     onChange={(e) => setShareOption(e.target.value)}
                                 />
-                                <span>Do not share (Private)</span>
+                                <span>{t('newNote.shareNone')}</span>
                             </label>
                         </div>
 
@@ -489,7 +507,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                             <div className="group-selection-list">
                                 {userGroups.length === 0 && (
                                     <p style={{ color: 'var(--black)', fontStyle: 'italic', padding: '0.5rem' }}>
-                                        No groups found.
+                                        {t('newNote.noGroups')}
                                     </p>
                                 )}
                                 {userGroups.map(group => (
@@ -499,7 +517,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                                             checked={selectedShareGroups.includes(group.id)}
                                             onChange={() => handleGroupSelection(group.id)}
                                         />
-                                        <span>{group.name || 'Unnamed Group'}</span>
+                                        <span>{group.name || t('newNote.unnamedGroup')}</span>
                                     </label>
                                 ))}
                             </div>
@@ -508,9 +526,9 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 )}
 
                 <div className="modal-actions" style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                    <button onClick={onClose} className="cancel-btn" style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: '#ddd', cursor: 'pointer' }}>Cancel</button>
+                    <button onClick={onClose} className="cancel-btn" style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: '#ddd', cursor: 'pointer' }}>{t('newNote.cancel')}</button>
                     <button onClick={handleSubmit} disabled={loading} className="submit-btn" style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: 'var(--pink)', color: 'white', cursor: 'pointer' }}>
-                        {loading ? 'Saving...' : (noteToEdit ? 'Update Note' : 'Post Note')}
+                        {loading ? t('newNote.saving') : (noteToEdit ? t('newNote.update') : t('newNote.post'))}
                     </button>
                 </div>
             </div>

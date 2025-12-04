@@ -4,13 +4,17 @@ import { SidebarData } from '../../Data/Data';
 import { UilSignOutAlt, UilPlusCircle, UilUsersAlt } from '@iconscout/react-unicons';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase';
+import { useLanguage } from '../../Context/LanguageContext.jsx';
 
 const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setActiveGroupId }) => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [showGroupModal, setShowGroupModal] = useState(false);
+  const [showSignOutModal, setShowSignOutModal] = useState(false);
 
   const DashboardIcon = SidebarData[0].icon;
   const NotesIcon = SidebarData[1].icon;
+  const LanguagesIcon = SidebarData[2].icon;
 
   const handleGroupClick = (groupId) => {
     setActiveGroupId(groupId);
@@ -19,8 +23,13 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
   };
 
   const handleSignOut = () => {
+    setShowSignOutModal(true);
+  };
+
+  const confirmSignOut = () => {
     auth.signOut();
     navigate('/login');
+    setShowSignOutModal(false);
   };
 
   return (
@@ -35,7 +44,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
             onClick={() => setSelected(0)}
           >
             <DashboardIcon />
-            <span>{SidebarData[0].heading}</span>
+            <span>{t('sidebar.dashboard')}</span>
           </div>
 
           {/* My Notes */}
@@ -43,12 +52,20 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
             onClick={() => setSelected(1)}
           >
             <NotesIcon />
-            <span>{SidebarData[1].heading}</span>
+            <span>{t('sidebar.myNotes')}</span>
+          </div>
+
+          {/* Languages */}
+          <div className={selected === 3 ? 'menuItem active' : 'menuItem'}
+            onClick={() => setSelected(3)}
+          >
+            <LanguagesIcon />
+            <span>{t('sidebar.languages')}</span>
           </div>
 
           {/* Desktop Groups Section */}
           <div className="groups-section desktop-groups">
-            <div className="menu-header">My Groups</div>
+            <div className="menu-header">{t('sidebar.myGroups')}</div>
             {userGroups.map((group) => (
               <div
                 key={group.id}
@@ -63,7 +80,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
             {userGroups.length < 7 && (
               <div className="menuItem create-group-item" onClick={() => navigate('/group-options')}>
                 <UilPlusCircle />
-                <span>Join/Create Group</span>
+                <span>{t('sidebar.joinCreateGroup')}</span>
               </div>
             )}
           </div>
@@ -77,7 +94,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
 
           <div className="menuItem sign-out" onClick={handleSignOut}>
             <UilSignOutAlt />
-            <span>Sign Out</span>
+            <span>{t('sidebar.signOut')}</span>
           </div>
         </div>
       </div>
@@ -102,10 +119,42 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
             {userGroups.length < 7 && (
               <div className="modal-create-group" onClick={() => { navigate('/group-options'); setShowGroupModal(false); }}>
                 <UilPlusCircle />
-                <span>Join or Create New Group</span>
+                <span>{t('sidebar.joinCreateGroup')}</span>
               </div>
             )}
             <button className="close-modal-btn" onClick={() => setShowGroupModal(false)}>Close</button>
+          </div>
+        </div>
+      )}
+
+      {/* Sign Out Confirmation Modal */}
+      {showSignOutModal && (
+        <div className="group-modal-overlay" onClick={() => setShowSignOutModal(false)}>
+          <div className="group-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '300px', textAlign: 'center' }}>
+            <h3>{t('signOut.title')}</h3>
+            <p>{t('signOut.message')}</p>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}>
+              <button
+                className="close-modal-btn"
+                onClick={() => setShowSignOutModal(false)}
+                style={{ marginTop: 0, flex: 1 }}
+              >
+                {t('signOut.cancel')}
+              </button>
+              <button
+                className="close-modal-btn"
+                onClick={confirmSignOut}
+                style={{
+                  marginTop: 0,
+                  flex: 1,
+                  background: 'var(--pink)',
+                  color: 'white',
+                  border: 'none'
+                }}
+              >
+                {t('signOut.confirm')}
+              </button>
+            </div>
           </div>
         </div>
       )}

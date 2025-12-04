@@ -7,8 +7,10 @@ import NewNote from '../NewNote/NewNote';
 import { toast } from 'react-toastify';
 import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
 import './MyNotes.css';
+import { useLanguage } from '../../Context/LanguageContext.jsx';
 
 const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
+  const { language, t } = useLanguage();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedNote, setSelectedNote] = useState(null);
@@ -89,21 +91,21 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
     <div className="MyNotes DashboardContent">
       <div className="dashboard-header">
         <div>
-          <h1>My Notes</h1>
-          <p className="welcome-text">Your personal collection of study notes and reflections.</p>
+          <h1>{t('myNotes.title')}</h1>
+          <p className="welcome-text">{t('myNotes.description')}</p>
         </div>
         <button className="new-note-btn" onClick={() => setIsModalOpen(true)}>
-          <UilPlus /> New Note
+          <UilPlus /> {t('myNotes.newNote')}
         </button>
       </div>
 
       {loading ? (
-        <div className="loading-state">Loading notes...</div>
+        <div className="loading-state">{t('myNotes.loading')}</div>
       ) : notes.length === 0 ? (
         <div className="empty-state">
           <UilBookOpen size="60" color="#ccc" />
-          <h3>No notes yet</h3>
-          <p>Start your journey by creating your first study note.</p>
+          <h3>{t('myNotes.noNotesTitle')}</h3>
+          <p>{t('myNotes.noNotesDesc')}</p>
         </div>
       ) : (
         <div className="notes-grid">
@@ -123,9 +125,9 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
                   {formatNoteForDisplay(note.text)}
                 </ReactMarkdown>
               </div>
-              {getGospelLibraryUrl(note.scripture, note.chapter) && (
+              {getGospelLibraryUrl(note.scripture, note.chapter, language) && (
                 <a
-                  href={getGospelLibraryUrl(note.scripture, note.chapter)}
+                  href={getGospelLibraryUrl(note.scripture, note.chapter, language)}
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
@@ -138,7 +140,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
                     fontWeight: 'bold'
                   }}
                 >
-                  📖 Read in Gospel Library
+                  📖 {t('myNotes.readInGospelLibrary')}
                 </a>
               )}
             </div>
@@ -149,11 +151,11 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
       {isDeleteModalOpen && (
         <div className="ModalOverlay" onClick={() => setIsDeleteModalOpen(false)} style={{ zIndex: 1100 }}>
           <div className="ModalContent delete-modal" onClick={(e) => e.stopPropagation()}>
-            <h3>Delete Note?</h3>
-            <p>Are you sure you want to delete this note? This action cannot be undone.</p>
+            <h3>{t('myNotes.deleteTitle')}</h3>
+            <p>{t('myNotes.deleteConfirm')}</p>
             <div className="modal-actions">
-              <button className="cancel-btn" onClick={() => setIsDeleteModalOpen(false)}>Cancel</button>
-              <button className="delete-confirm-btn" onClick={confirmDelete}>Delete Note</button>
+              <button className="cancel-btn" onClick={() => setIsDeleteModalOpen(false)}>{t('myNotes.cancel')}</button>
+              <button className="delete-confirm-btn" onClick={confirmDelete}>{t('myNotes.delete')}</button>
             </div>
           </div>
         </div>

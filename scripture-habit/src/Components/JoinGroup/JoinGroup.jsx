@@ -8,13 +8,17 @@ import '../GroupForm/GroupForm.css';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 import GroupCard from '../../groups/GroupCard';
+import { useLanguage } from '../../Context/LanguageContext';
 
 export default function JoinGroup() {
+  const { t } = useLanguage();
   const [groupCode, setGroupCode] = useState("");
   const [error, setError] = useState("");
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [publicGroups, setPublicGroups] = useState([]);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -68,29 +72,29 @@ export default function JoinGroup() {
 
   const joinGroup = async (groupId, groupData) => {
     if (!user) {
-      setError("You must be logged in to join a group.");
+      setError(t('joinGroup.errorLoggedIn'));
       return;
     }
 
     const currentGroupIds = userData?.groupIds || (userData?.groupId ? [userData.groupId] : []);
 
     if (currentGroupIds.length >= 7) {
-      setError("You can only join up to 7 groups.");
+      setError(t('joinGroup.errorMaxGroups'));
       return;
     }
 
     if (currentGroupIds.includes(groupId)) {
-      setError("You are already a member of this group.");
+      setError(t('joinGroup.errorAlreadyMember'));
       return;
     }
 
     if (groupData.members && groupData.members.includes(user.uid)) {
-      setError("You are already a member of this group.");
+      setError(t('joinGroup.errorAlreadyMember'));
       return;
     }
 
     if (groupData.membersCount >= groupData.maxMembers) {
-      setError("This group is already full.");
+      setError(t('joinGroup.errorFull'));
       return;
     }
 
@@ -105,13 +109,13 @@ export default function JoinGroup() {
         body: JSON.stringify({ groupId })
       });
       if (resp.ok) {
-        alert(`Successfully joined group: ${groupData.name}`);
+        alert(`${t('joinGroup.successJoined')} ${groupData.name}`);
         navigate('/dashboard');
         return;
       }
       const errText = await resp.text();
       console.warn('Server join failed:', resp.status, errText);
-      setError(`Failed to join group: ${errText}`);
+      setError(`${t('joinGroup.errorJoinFailed')} ${errText}`);
     } catch (e) {
       console.warn('Server join failed, falling back to client update:', e);
       // Fallback logic
@@ -129,12 +133,25 @@ export default function JoinGroup() {
           groupId: groupId // Set as active
         });
         await batch.commit();
-        alert(`Successfully joined group: ${groupData.name}`);
+        alert(`${t('joinGroup.successJoined')} ${groupData.name}`);
         navigate('/dashboard');
       } catch (e) {
         console.error("Error joining group:", e);
-        setError("Failed to join group. Please try again.");
+        setError(t('joinGroup.errorJoinFailed'));
       }
+    }
+  };
+
+  const handleJoinClick = (groupId, groupData) => {
+    setSelectedGroup({ id: groupId, ...groupData });
+    setShowConfirmModal(true);
+  };
+
+  const confirmJoin = async () => {
+    if (selectedGroup) {
+      await joinGroup(selectedGroup.id, selectedGroup);
+      setShowConfirmModal(false);
+      setSelectedGroup(null);
     }
   };
 
@@ -143,7 +160,7 @@ export default function JoinGroup() {
     setError("");
 
     if (groupCode.trim() === "") {
-      setError("Please enter an Invite Code.");
+      setError(t('joinGroup.errorEnterCode'));
       return;
     }
 
@@ -152,18 +169,20 @@ export default function JoinGroup() {
     try {
       const querySnapshot = await getDocs(q);
       if (querySnapshot.empty) {
-        setError("Invalid invite code. Group not found.");
+        setError(t('joinGroup.errorInvalidCode'));
         return;
       }
 
       const groupDoc = querySnapshot.docs[0];
       const groupData = groupDoc.data();
 
+      // For invite code join, we can also show confirmation or just join directly.
+      // Assuming direct join for invite code is fine as user explicitly typed code.
       await joinGroup(groupDoc.id, groupData);
 
     } catch (e) {
       console.error("Error finding group:", e);
-      setError("Error searching for group.");
+      setError(t('joinGroup.errorSearch'));
     }
   }
 
@@ -172,16 +191,16 @@ export default function JoinGroup() {
       <div className="AppGlass join-group-container">
         <div className="group-card-section">
           <div className="section-header">
-            <h2>Have an Invite Code?</h2>
-            <p>Enter the code shared by your group leader to join directly.</p>
+            <h2>{t('joinGroup.inviteCodeTitle')}</h2>
+            <p>{t('joinGroup.inviteCodeDesc')}</p>
           </div>
 
           <form onSubmit={handleSubmit}>
             <Input
-              label="Invite Code"
+              label={t('joinGroup.inviteCodeLabel')}
               id="inviteCode"
               type="text"
-              placeholder="e.g. X9J2KL"
+              placeholder={t('joinGroup.inviteCodePlaceholder')}
               value={groupCode}
               onChange={(e) => setGroupCode(e.target.value.toUpperCase())}
               required
@@ -189,19 +208,19 @@ export default function JoinGroup() {
             {error && <p className="error">{error}</p>}
 
             <Button type="submit">
-              Join Group
+              {t('joinGroup.joinButton')}
             </Button>
           </form>
         </div>
 
         <div className="public-groups-section">
           <div className="section-header">
-            <h2>Explore Public Groups</h2>
-            <p>Find a community that matches your study goals.</p>
+            <h2>{t('joinGroup.publicGroupsTitle')}</h2>
+            <p>{t('joinGroup.publicGroupsDesc')}</p>
           </div>
 
           {publicGroups.length === 0 ? (
-            <p className="no-groups-message">No public groups available to join.</p>
+            <p className="no-groups-message">{t('joinGroup.noPublicGroups')}</p>
           ) : (
             <div className="groups-grid">
               {publicGroups.map((group) => (
@@ -209,7 +228,7 @@ export default function JoinGroup() {
                   key={group.id}
                   group={group}
                   currentUser={user}
-                  onJoin={async (groupId, groupData) => await joinGroup(groupId, groupData)}
+                  onJoin={() => handleJoinClick(group.id, group)}
                 />
               ))}
             </div>
@@ -217,11 +236,43 @@ export default function JoinGroup() {
         </div>
 
         <div className="create-group-cta">
-          <p>Want to start your own community?</p>
-          <Link to="/group-form" className="create-group-link">Create a Group</Link>
+          <p>{t('joinGroup.createGroupCta')}</p>
+          <Link to="/group-form" className="create-group-link">{t('joinGroup.createGroupLink')}</Link>
         </div>
 
       </div>
+
+      {/* Join Confirmation Modal */}
+      {showConfirmModal && (
+        <div className="group-modal-overlay" onClick={() => setShowConfirmModal(false)}>
+          <div className="group-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '300px', textAlign: 'center' }}>
+            <h3>{t('joinGroup.joinConfirmTitle')}</h3>
+            <p>{t('joinGroup.joinConfirmMessage')}</p>
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}>
+              <button
+                className="close-modal-btn"
+                onClick={() => setShowConfirmModal(false)}
+                style={{ marginTop: 0, flex: 1 }}
+              >
+                {t('joinGroup.cancelJoin')}
+              </button>
+              <button
+                className="close-modal-btn"
+                onClick={confirmJoin}
+                style={{
+                  marginTop: 0,
+                  flex: 1,
+                  background: 'var(--pink)',
+                  color: 'white',
+                  border: 'none'
+                }}
+              >
+                {t('joinGroup.confirmJoin')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
