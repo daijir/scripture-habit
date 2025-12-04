@@ -5,6 +5,10 @@
   align-items: center;
 }
 
+.LoginForm h2 {
+  color: var(--black);
+}
+
 .LoginForm form {
   display: flex;
   flex-direction: column;

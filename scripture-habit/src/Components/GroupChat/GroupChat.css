@@ -298,7 +298,7 @@
     padding: 0.8rem 1.2rem;
     border-radius: 1.2rem;
     font-size: 0.95rem;
-    line-height: 1.5;
+    line-height: 1.2;
     overflow-wrap: anywhere;
     word-break: break-word;
     width: fit-content;
@@ -338,7 +338,7 @@
 .entry-message-content>* {
     margin: 0;
     padding: 0;
-    line-height: 1.5;
+    line-height: 1.2;
 }
 
 .entry-message-content>*:not(:last-child) {
@@ -490,7 +490,7 @@
     min-height: 24px;
     max-height: 150px;
     overflow-y: auto;
-    line-height: 1.5;
+    line-height: 1.2;
 }
 
 .input-wrapper textarea::placeholder {

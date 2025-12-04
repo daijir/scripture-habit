@@ -1,7 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getFirestore, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { app, auth } from '../firebase';
 import './GroupCard.css';
+import { useLanguage } from '../Context/LanguageContext';
 
 type Props = {
   group: { id: string; name: string; description?: string; members?: string[] };
@@ -10,6 +12,8 @@ type Props = {
 };
 
 export default function GroupCard({ group, currentUser, onJoin }: Props) {
+  const { t } = useLanguage();
+  const navigate = useNavigate();
   const [joining, setJoining] = useState(false);
   const db = getFirestore(app);
 
@@ -17,7 +21,7 @@ export default function GroupCard({ group, currentUser, onJoin }: Props) {
 
   const handleJoin = async () => {
     if (!currentUser) {
-      alert('Sign in first to join groups');
+      alert(t('groupCard.signInFirst'));
       return;
     }
     if (isMember) return;
@@ -49,71 +53,17 @@ export default function GroupCard({ group, currentUser, onJoin }: Props) {
       }
     } catch (err) {
       console.error('Join failed', err);
-      alert('Unable to join group');
+      alert(t('groupCard.unableToJoin'));
     } finally {
       setJoining(false);
     }
   };
 
-  const [showDetails, setShowDetails] = useState(false);
-  const closeBtnRef = useRef<HTMLButtonElement | null>(null);
-  const modalRef = useRef<HTMLDivElement | null>(null);
-  const previousActiveElement = useRef<HTMLElement | null>(null);
-
-  useEffect(() => {
-    if (!showDetails) return;
-    // focus the close button when modal opens
-    closeBtnRef.current?.focus();
-
-    // save previously focused element to restore when modal closes
-    previousActiveElement.current = document.activeElement as HTMLElement | null;
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        setShowDetails(false);
-        return;
-      }
-      if (e.key === 'Tab') {
-        // implement focus trap
-        const container = modalRef.current;
-        if (!container) return;
-        const focusable = Array.from(
-          container.querySelectorAll<HTMLElement>(
-            'a[href], area[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), iframe, object, embed, [tabindex]:not([tabindex="-1"])'
-          )
-        ).filter((el) => el.offsetWidth > 0 || el.offsetHeight > 0 || el === document.activeElement);
-        if (focusable.length === 0) {
-          e.preventDefault();
-          return;
-        }
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if (e.shiftKey) {
-          if (document.activeElement === first || document.activeElement === modalRef.current) {
-            e.preventDefault();
-            last.focus();
-          }
-        } else {
-          if (document.activeElement === last) {
-            e.preventDefault();
-            first.focus();
-          }
-        }
-      }
-    };
-    window.addEventListener('keydown', onKey);
-    return () => {
-      window.removeEventListener('keydown', onKey);
-      // restore focus
-      if (previousActiveElement.current) previousActiveElement.current.focus();
-    };
-  }, [showDetails]);
-
   return (
     <div className="group-card" role="group" aria-label={`Group ${group.name}`}>
       <div className="group-card-header">
         <h4 className="group-title">{group.name}</h4>
-        <div className="member-badge">{group.members?.length ?? 0} members</div>
+        <div className="member-badge">{group.members?.length ?? 0} {t('groupCard.members')}</div>
       </div>
 
       {group.description && <p className="group-desc">{group.description}</p>}
@@ -122,67 +72,16 @@ export default function GroupCard({ group, currentUser, onJoin }: Props) {
         <button
           className="join-btn"
           onClick={() => {
-            if (isMember) setShowDetails(true);
+            if (isMember) {
+              navigate('/dashboard', { state: { initialView: 2, initialGroupId: group.id } });
+            }
             else handleJoin();
           }}
           disabled={joining}
         >
-          {isMember ? 'Open' : joining ? 'Joining...' : 'Join'}
-        </button>
-
-        <button className="details-btn" onClick={() => setShowDetails(true)}>
-          Details
+          {isMember ? t('groupCard.open') : joining ? t('groupCard.joining') : t('groupCard.join')}
         </button>
       </div>
-
-      {showDetails && (
-        <div
-          className="modal-overlay"
-          onClick={() => setShowDetails(false)}
-          role="presentation"
-        >
-          <div
-            className="modal"
-            onClick={(e) => e.stopPropagation()}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby={`group-${group.id}-title`}
-            aria-describedby={`group-${group.id}-desc`}
-            ref={modalRef}
-          >
-            <h3>{group.name}</h3>
-            {group.description ? (
-              <p id={`group-${group.id}-desc`}>{group.description}</p>
-            ) : (
-              <p id={`group-${group.id}-desc`}>No description.</p>
-            )}
-            <p>
-              <strong>Members:</strong> {group.members?.length ?? 0}
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 12 }}>
-              <button
-                className="details-btn"
-                onClick={() => setShowDetails(false)}
-                ref={closeBtnRef}
-                aria-label={`Close details for ${group.name}`}
-              >
-                Close
-              </button>
-              {!isMember && (
-                <button
-                  className="join-btn"
-                  onClick={async () => {
-                    await handleJoin();
-                    setShowDetails(false);
-                  }}
-                >
-                  Join
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

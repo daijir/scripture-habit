@@ -8,8 +8,10 @@ import ReactMarkdown from 'react-markdown';
 import NewNote from '../NewNote/NewNote';
 import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
 import './GroupChat.css';
+import { useLanguage } from '../../Context/LanguageContext.jsx';
 
 const GroupChat = ({ groupId, userData }) => {
+  const { language, t } = useLanguage();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [groupData, setGroupData] = useState(null);
@@ -245,12 +247,12 @@ const GroupChat = ({ groupId, userData }) => {
     <div className="GroupChat">
       <NewNote isOpen={isNewNoteOpen} onClose={() => setIsNewNoteOpen(false)} userData={userData} isGroupContext={true} userGroups={userGroups} currentGroupId={groupId} />
       <div className="chat-header">
-        <h2>{groupData ? groupData.name : 'Group Chat'}</h2>
+        <h2>{groupData ? groupData.name : t('groupChat.groupName')}</h2>
         {groupData && (
           <div className="header-right">
             {userData.uid === groupData.ownerUserId && (
               <div className="group-status-toggle">
-                <span className="status-label">{groupData.isPublic ? 'Public' : 'Private'}</span>
+                <span className="status-label">{groupData.isPublic ? t('groupChat.public') : t('groupChat.private')}</span>
                 <label className="switch">
                   <input
                     type="checkbox"
@@ -262,15 +264,15 @@ const GroupChat = ({ groupId, userData }) => {
               </div>
             )}
             <div className="invite-code-display" onClick={handleCopyInviteCode} title="Copy Invite Code">
-              <span>Invite Code: <strong>{groupData.inviteCode}</strong></span>
+              <span>{t('groupChat.inviteCode')}: <strong>{groupData.inviteCode}</strong></span>
               <UilCopy size="16" className="copy-icon" />
             </div>
             {userData.uid === groupData.ownerUserId ? (
-              <button className="leave-group-btn delete-group-btn" onClick={() => setShowDeleteModal(true)} title="Delete Group">
+              <button className="leave-group-btn delete-group-btn" onClick={() => setShowDeleteModal(true)} title={t('groupChat.deleteGroup')}>
                 <UilTrashAlt size="20" />
               </button>
             ) : (
-              <button className="leave-group-btn" onClick={() => setShowLeaveModal(true)} title="Leave Group">
+              <button className="leave-group-btn" onClick={() => setShowLeaveModal(true)} title={t('groupChat.leaveGroup')}>
                 <UilSignOutAlt size="20" />
               </button>
             )}
@@ -281,11 +283,11 @@ const GroupChat = ({ groupId, userData }) => {
       {showLeaveModal && (
         <div className="leave-modal-overlay">
           <div className="leave-modal-content">
-            <h3>Leave Group?</h3>
-            <p>Are you sure you want to leave this group? You will need to find and join another group to participate again.</p>
+            <h3>{t('groupChat.leaveGroup')}?</h3>
+            <p>{t('groupChat.leaveConfirmMessage')}</p>
             <div className="leave-modal-actions">
-              <button className="modal-btn cancel" onClick={() => setShowLeaveModal(false)}>Cancel</button>
-              <button className="modal-btn leave" onClick={handleLeaveGroup}>Leave Group</button>
+              <button className="modal-btn cancel" onClick={() => setShowLeaveModal(false)}>{t('groupChat.cancel')}</button>
+              <button className="modal-btn leave" onClick={handleLeaveGroup}>{t('groupChat.confirmLeave')}</button>
             </div>
           </div>
         </div>
@@ -294,7 +296,7 @@ const GroupChat = ({ groupId, userData }) => {
       {showDeleteModal && (
         <div className="leave-modal-overlay">
           <div className="leave-modal-content">
-            <h3 className="delete-modal-title">Delete Group?</h3>
+            <h3 className="delete-modal-title">{t('groupChat.deleteGroup')}?</h3>
             <p>This action cannot be undone. All messages and data will be permanently lost.</p>
             <p>Please type <strong>{groupData.name}</strong> to confirm.</p>
             <input
@@ -305,13 +307,13 @@ const GroupChat = ({ groupId, userData }) => {
               placeholder="Enter group name"
             />
             <div className="leave-modal-actions">
-              <button className="modal-btn cancel" onClick={() => { setShowDeleteModal(false); setDeleteConfirmationName(''); }}>Cancel</button>
+              <button className="modal-btn cancel" onClick={() => { setShowDeleteModal(false); setDeleteConfirmationName(''); }}>{t('groupChat.cancel')}</button>
               <button
                 className="modal-btn leave"
                 onClick={handleDeleteGroup}
                 disabled={deleteConfirmationName !== groupData?.name}
               >
-                Delete Group
+                {t('groupChat.confirmDelete')}
               </button>
             </div>
           </div>
@@ -366,7 +368,7 @@ const GroupChat = ({ groupId, userData }) => {
                               if (chapterMatch && scriptureMatch) {
                                 const scripture = scriptureMatch[1].trim();
                                 const chapter = chapterMatch[1].trim();
-                                const url = getGospelLibraryUrl(scripture, chapter);
+                                const url = getGospelLibraryUrl(scripture, chapter, language);
                                 if (url) {
                                   return (
                                     <a
@@ -383,7 +385,7 @@ const GroupChat = ({ groupId, userData }) => {
                                         fontWeight: 'bold'
                                       }}
                                     >
-                                      📖 Read in Gospel Library
+                                      {t('dashboard.readInGospelLibrary')}
                                     </a>
                                   );
                                 }
@@ -415,13 +417,13 @@ const GroupChat = ({ groupId, userData }) => {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Click + button to create a new note or type a message..."
+            placeholder={t('groupChat.typeMessage')}
             rows={1}
           />
           <div className="add-entry-btn" onClick={() => setIsNewNoteOpen(true)}>
             <UilPlus />
           </div>
-          <button type="submit">Send</button>
+          <button type="submit">{t('groupChat.send')}</button>
         </div>
       </form>
     </div>

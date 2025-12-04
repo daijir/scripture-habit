@@ -6,8 +6,10 @@ import { doc, setDoc } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import Input from '../Input/Input';
 import './SignupForm.css'
+import { useLanguage } from '../../Context/LanguageContext';
 
 export default function SignupForm() {
+  const { t } = useLanguage();
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -19,7 +21,7 @@ export default function SignupForm() {
     setError(null);
 
     if (!email.endsWith('@gmail.com')) {
-      setError('Please use a Gmail address.');
+      setError(t('signup.errorGmail'));
       return;
     }
 
@@ -34,11 +36,11 @@ export default function SignupForm() {
         email: user.email,
         groupId: "",
         joinedAt: now,
-        lastPostDate: "", 
+        lastPostDate: "",
         nickname: nickname,
         preferredCheckInTime: "00:00",
-        streakCount: 0, 
-        totalNotes: 0, 
+        streakCount: 0,
+        totalNotes: 0,
         timeZone: timeZone,
       };
 
@@ -46,8 +48,8 @@ export default function SignupForm() {
         await setDoc(doc(db, 'users', user.uid), userData);
       } catch (firestoreError) {
         console.error("Error writing user data to Firestore:", firestoreError);
-        setError("Failed to save user profile. Please contact support.");
-        return; 
+        setError(t('signup.errorSaveProfile'));
+        return;
       }
 
       navigate('/group-options');
@@ -55,7 +57,7 @@ export default function SignupForm() {
     } catch (authError) {
       console.error("Error creating user in Authentication:", authError);
       if (authError.code === 'auth/email-already-in-use') {
-        setError("This email address is already in use. Please log in or use a different email.");
+        setError(t('signup.errorEmailInUse'));
       } else {
         setError(authError.message);
       }
@@ -65,36 +67,36 @@ export default function SignupForm() {
   return (
     <div className="App SignupForm">
       <div className='AppGlass Form'>
-        <h2>Sign Up</h2>
+        <h2>{t('signup.title')}</h2>
         <form onSubmit={handleSubmit}>
           <Input
-            label="Nickname"
+            label={t('signup.nicknameLabel')}
             type="text"
             value={nickname}
             onChange={(e) => setNickname(e.target.value)}
             required
           />
           <Input
-            label="Gmail Address"
+            label={t('signup.emailLabel')}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required />
           <Input
-            label="Password"
+            label={t('signup.passwordLabel')}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
           <Button type="submit">
-            Sign Up
+            {t('signup.submitButton')}
           </Button>
         </form>
         {error && <p style={{ color: 'red', marginTop: 10 }}>{error}</p>}
 
         <div className="auth-switch">
-          <p>Already have an account? <Link to="/login" className="auth-link">Log In</Link></p>
+          <p>{t('signup.hasAccount')} <Link to="/login" className="auth-link">{t('signup.loginLink')}</Link></p>
         </div>
       </div>
     </div>

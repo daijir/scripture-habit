@@ -5,8 +5,10 @@ import Input from '../Input/Input';
 import { auth } from '../../firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { useNavigate, Link } from 'react-router-dom';
+import { useLanguage } from '../../Context/LanguageContext';
 
 export default function LoginForm() {
+  const { t } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -17,13 +19,13 @@ export default function LoginForm() {
     setError(null);
 
     if (!email.endsWith('@gmail.com')) {
-      setError('Please use a Gmail address.');
+      setError(t('login.errorGmail'));
       return;
     }
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      
+
 
       navigate('/dashboard');
     } catch (error) {
@@ -34,30 +36,30 @@ export default function LoginForm() {
   return (
     <div className='App LoginForm'>
       <div className='AppGlass'>
-        <h2>Log In</h2>
+        <h2>{t('login.title')}</h2>
         <form onSubmit={handleSubmit}>
           <Input
-            label="Gmail Address"
+            label={t('login.emailLabel')}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
           <Input
-            label="Password"
+            label={t('login.passwordLabel')}
             type='password'
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
           <Button type="submit">
-            Log In
+            {t('login.submitButton')}
           </Button>
         </form>
         {error && <p className='error'>{error}</p>}
 
         <div className="auth-switch">
-          <p>Don't have an account? <Link to="/signup" className="auth-link">Sign Up</Link></p>
+          <p>{t('login.noAccount')} <Link to="/signup" className="auth-link">{t('login.signupLink')}</Link></p>
         </div>
       </div>
     </div>

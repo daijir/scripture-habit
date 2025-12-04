@@ -1,0 +1,90 @@
+.welcome-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 3rem;
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.welcome-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--black);
+}
+
+.language-selection {
+    background: rgba(255, 255, 255, 0.5);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.language-instruction {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--black);
+}
+
+.language-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.lang-btn {
+    padding: 0.5rem 1.5rem;
+    border: 2px solid transparent;
+    border-radius: 0.5rem;
+    background: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    color: var(--black);
+}
+
+.lang-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.lang-btn.active {
+    background: var(--pink);
+    color: white;
+    border-color: var(--pink);
+}
+
+.auth-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .welcome-container {
+        padding: 1.5rem;
+        width: 90%;
+    }
+
+    .welcome-container h1 {
+        font-size: 1.8rem;
+    }
+
+    .auth-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .auth-buttons a {
+        width: 100%;
+    }
+
+    .auth-buttons button {
+        width: 100% !important;
+    }
+}
