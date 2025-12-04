@@ -183,6 +183,14 @@ export const translations = {
             signInFirst: "Sign in first to join groups",
             unableToJoin: "Unable to join group"
         },
+        noteLabels: {
+            scripture: "Scripture",
+            chapter: "Chapter",
+            title: "Title",
+            comment: "Comment",
+            newStudyNote: "New Study Note",
+            newStudyEntry: "New Study Entry"
+        },
         signOut: {
             title: "Sign Out",
             message: "Are you sure you want to sign out?",
@@ -374,6 +382,14 @@ export const translations = {
             signInFirst: "グループに参加するにはサインインしてください",
             unableToJoin: "グループに参加できませんでした"
         },
+        noteLabels: {
+            scripture: "聖典",
+            chapter: "章",
+            title: "タイトル",
+            comment: "コメント",
+            newStudyNote: "新しい学習ノート",
+            newStudyEntry: "新しい学習記録"
+        },
         signOut: {
             title: "サインアウト",
             message: "本当にサインアウトしますか？",
@@ -561,6 +577,14 @@ export const translations = {
             noDescription: "Sem descrição.",
             signInFirst: "Faça login primeiro para entrar",
             unableToJoin: "Não foi possível entrar no grupo"
+        },
+        noteLabels: {
+            scripture: "Escritura",
+            chapter: "Capítulo",
+            title: "Título",
+            comment: "Comentário",
+            newStudyNote: "Nova Nota de Estudo",
+            newStudyEntry: "Nova Entrada de Estudo"
         },
         signOut: {
             title: "Sair",
@@ -750,6 +774,14 @@ export const translations = {
             noDescription: "沒有描述。",
             signInFirst: "請先登入以加入群組",
             unableToJoin: "無法加入群組"
+        },
+        noteLabels: {
+            scripture: "經文",
+            chapter: "章節",
+            title: "標題",
+            comment: "心得",
+            newStudyNote: "新研讀筆記",
+            newStudyEntry: "新研讀記錄"
         },
         signOut: {
             title: "登出",
@@ -941,6 +973,14 @@ export const translations = {
             signInFirst: "Inicia sesión primero para unirte",
             unableToJoin: "No se pudo unir al grupo"
         },
+        noteLabels: {
+            scripture: "Escritura",
+            chapter: "Capítulo",
+            title: "Título",
+            comment: "Comentario",
+            newStudyNote: "Nueva Nota de Estudio",
+            newStudyEntry: "Nueva Entrada de Estudio"
+        },
         signOut: {
             title: "Cerrar Sesión",
             message: "¿Estás seguro de que quieres cerrar sesión?",
@@ -1131,6 +1171,14 @@ export const translations = {
             noDescription: "Không có mô tả.",
             signInFirst: "Đăng nhập trước để tham gia",
             unableToJoin: "Không thể tham gia nhóm"
+        },
+        noteLabels: {
+            scripture: "Thánh Thư",
+            chapter: "Chương",
+            title: "Tiêu đề",
+            comment: "Nhận xét",
+            newStudyNote: "Ghi chú học tập mới",
+            newStudyEntry: "Mục học tập mới"
         },
         signOut: {
             title: "Đăng xuất",
