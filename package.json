@@ -5,5 +5,8 @@
 		"frontend": "cd scripture-habit && npm run dev",
 		"backend:dev": "cd backend && npm run dev",
 		"backend:start": "cd backend && npm run serve"
+	},
+	"dependencies": {
+		"firebase-admin": "^13.6.0"
 	}
 }
