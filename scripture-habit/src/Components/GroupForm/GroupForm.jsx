@@ -42,6 +42,7 @@ export default function GroupForm() {
         isPublic: isPublic,
         maxMembers: Number(maxMembers),
         membersCount: 1,
+        messageCount: 0,
         ownerUserId: user.uid,
         members: [user.uid],
       };

@@ -227,6 +227,118 @@ app.get('/groups', async (req, res) => {
 });
 
 
+// Delete group - removes group from all members and cleans up data
+app.post('/delete-group', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  let idToken;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    idToken = authHeader.split('Bearer ')[1];
+  } else if (req.body.token) {
+    idToken = req.body.token;
+  } else {
+    return res.status(401).send('Unauthorized: No token provided.');
+  }
+
+  const { groupId } = req.body;
+  if (!groupId) return res.status(400).send('Group ID is required.');
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const uid = decodedToken.uid;
+    const db = admin.firestore();
+
+    // First, get the group and verify ownership
+    const groupRef = db.collection('groups').doc(groupId);
+    const groupDoc = await groupRef.get();
+
+    if (!groupDoc.exists) {
+      return res.status(404).send('Group not found.');
+    }
+
+    const groupData = groupDoc.data();
+
+    // Only the owner can delete the group
+    if (groupData.ownerUserId !== uid) {
+      return res.status(403).send('Only the group owner can delete the group.');
+    }
+
+    const members = groupData.members || [];
+    console.log(`Deleting group ${groupId} with ${members.length} members`);
+
+    // Step 1: Remove group from all members' groupIds and delete their groupStates
+    const batch = db.batch();
+
+    for (const memberId of members) {
+      const userRef = db.collection('users').doc(memberId);
+      const userDoc = await userRef.get();
+
+      if (userDoc.exists) {
+        const userData = userDoc.data();
+        const currentGroupIds = userData.groupIds || [];
+        const newGroupIds = currentGroupIds.filter(id => id !== groupId);
+
+        // Determine new primary groupId
+        let newPrimaryGroupId = userData.groupId;
+        if (userData.groupId === groupId) {
+          newPrimaryGroupId = newGroupIds.length > 0 ? newGroupIds[0] : '';
+        }
+
+        batch.update(userRef, {
+          groupIds: admin.firestore.FieldValue.arrayRemove(groupId),
+          groupId: newPrimaryGroupId
+        });
+
+        // Delete user's groupState for this group
+        const groupStateRef = db.collection('users').doc(memberId).collection('groupStates').doc(groupId);
+        batch.delete(groupStateRef);
+      }
+    }
+
+    await batch.commit();
+    console.log(`Removed group from ${members.length} members`);
+
+    // Step 2: Delete messages subcollection (in batches of 500)
+    const messagesRef = groupRef.collection('messages');
+    const messagesSnapshot = await messagesRef.get();
+
+    if (!messagesSnapshot.empty) {
+      const messageBatches = [];
+      let messageBatch = db.batch();
+      let count = 0;
+
+      messagesSnapshot.docs.forEach(doc => {
+        messageBatch.delete(doc.ref);
+        count++;
+
+        if (count >= 500) {
+          messageBatches.push(messageBatch);
+          messageBatch = db.batch();
+          count = 0;
+        }
+      });
+
+      if (count > 0) {
+        messageBatches.push(messageBatch);
+      }
+
+      for (const b of messageBatches) {
+        await b.commit();
+      }
+      console.log(`Deleted ${messagesSnapshot.size} messages`);
+    }
+
+    // Step 3: Delete the group document
+    await groupRef.delete();
+    console.log(`Group ${groupId} deleted successfully`);
+
+    res.status(200).send({ message: 'Group deleted successfully.' });
+  } catch (error) {
+    console.error('Error deleting group:', error);
+    res.status(500).send(error.message || 'Internal Server Error');
+  }
+});
+
+
 app.post('/migrate-data', async (req, res) => {
 
 

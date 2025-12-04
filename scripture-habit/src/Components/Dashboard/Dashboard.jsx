@@ -28,6 +28,8 @@ const Dashboard = () => {
   const [personalNotesCount, setPersonalNotesCount] = useState(null);
   const [recentNotes, setRecentNotes] = useState([]);
   const [userGroups, setUserGroups] = useState([]);
+  const [rawUserGroups, setRawUserGroups] = useState([]);
+  const [groupStates, setGroupStates] = useState({});
 
   const location = useLocation();
   // Initialize activeGroupId from location state if available, to avoid initial null state
@@ -87,7 +89,7 @@ const Dashboard = () => {
     const groupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
 
     if (groupIds.length === 0) {
-      setUserGroups([]);
+      setRawUserGroups([]);
       return;
     }
 
@@ -105,7 +107,7 @@ const Dashboard = () => {
           if (docSnap.exists()) {
             groupsData[gid] = { id: gid, ...docSnap.data() };
             // Update state with new data
-            setUserGroups(prev => {
+            setRawUserGroups(prev => {
               // Re-map based on groupIds order to keep consistency
               const newGroups = groupIds
                 .map(id => groupsData[id] || prev.find(g => g.id === id))
@@ -127,6 +129,38 @@ const Dashboard = () => {
       cleanupPromise.then(cleanup => cleanup && cleanup());
     };
   }, [userData?.groupIds, userData?.groupId]);
+
+  // Fetch user group states (read counts)
+  useEffect(() => {
+    if (!userData?.uid) return;
+
+    const groupStatesRef = collection(db, 'users', userData.uid, 'groupStates');
+    const unsubscribe = onSnapshot(groupStatesRef, (snapshot) => {
+      const states = {};
+      snapshot.forEach(doc => {
+        states[doc.id] = doc.data();
+      });
+      setGroupStates(states);
+    });
+
+    return () => unsubscribe();
+  }, [userData?.uid]);
+
+  // Combine raw groups with unread counts
+  useEffect(() => {
+    const combinedGroups = rawUserGroups.map(group => {
+      const state = groupStates[group.id];
+      const readCount = state?.readMessageCount || 0;
+      const totalCount = group.messageCount || 0;
+      const unreadCount = Math.max(0, totalCount - readCount);
+
+      return {
+        ...group,
+        unreadCount
+      };
+    });
+    setUserGroups(combinedGroups);
+  }, [rawUserGroups, groupStates]);
 
   // Update activeGroupId if the user leaves the current group or if we need to validate the current selection
   useEffect(() => {
@@ -430,7 +464,7 @@ const Dashboard = () => {
           <MyNotes userData={userData} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
         )}
         {selectedView === 2 && (
-          <GroupChat groupId={activeGroupId} userData={userData} />
+          <GroupChat groupId={activeGroupId} userData={userData} userGroups={userGroups} isActive={true} />
         )}
         {selectedView === 3 && (
           <Languages />
