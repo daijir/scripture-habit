@@ -2,17 +2,25 @@
 const admin = require('firebase-admin');
 
 // Initialize Firebase Admin if not already initialized
-if (!admin.apps.length) {
-    admin.initializeApp({
-        credential: admin.credential.cert({
-            projectId: process.env.FIREBASE_PROJECT_ID,
-            clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-            privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-        }),
-    });
+let db;
+try {
+    if (!admin.apps.length) {
+        const privateKey = process.env.FIREBASE_PRIVATE_KEY;
+        if (!privateKey) {
+            throw new Error('FIREBASE_PRIVATE_KEY is not set');
+        }
+        admin.initializeApp({
+            credential: admin.credential.cert({
+                projectId: process.env.FIREBASE_PROJECT_ID,
+                clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
+                privateKey: privateKey.replace(/\\n/g, '\n'),
+            }),
+        });
+    }
+    db = admin.firestore();
+} catch (initError) {
+    console.error('Firebase initialization error:', initError);
 }
-
-const db = admin.firestore();
 
 module.exports = async (req, res) => {
     // CORS headers
@@ -27,6 +35,11 @@ module.exports = async (req, res) => {
 
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
+    }
+
+    // Check if Firebase was initialized
+    if (!db) {
+        return res.status(500).json({ error: 'Firebase not initialized. Check environment variables.' });
     }
 
     try {
