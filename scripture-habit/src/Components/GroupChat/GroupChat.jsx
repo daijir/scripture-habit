@@ -186,22 +186,35 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
       return;
     }
 
+    // Verify ownership
+    if (groupData.ownerUserId !== userData.uid) {
+      toast.error("Only the group owner can delete this group.");
+      return;
+    }
+
     try {
-      const idToken = await auth.currentUser.getIdToken();
+      const members = groupData.members || [];
 
-      const response = await fetch('/api/delete-group', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`
-        },
-        body: JSON.stringify({ groupId })
-      });
+      // 1. Update all members' groupIds
+      for (const memberId of members) {
+        const userRef = doc(db, 'users', memberId);
+        const userSnap = await getDocs(query(collection(db, 'users'), where('__name__', '==', memberId)));
 
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(text || 'Failed to delete group');
+        if (!userSnap.empty) {
+          const memberData = userSnap.docs[0].data();
+          const updatedGroupIds = (memberData.groupIds || []).filter(id => id !== groupId);
+
+          const updates = { groupIds: updatedGroupIds };
+          if (memberData.groupId === groupId) {
+            updates.groupId = updatedGroupIds.length > 0 ? updatedGroupIds[0] : null;
+          }
+
+          await updateDoc(userRef, updates);
+        }
       }
+
+      // 2. Delete the group document (messages subcollection will remain but be orphaned)
+      await deleteDoc(doc(db, 'groups', groupId));
 
       toast.success("Group deleted successfully.");
       navigate('/dashboard');
