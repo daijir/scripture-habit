@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
 import NewNote from '../NewNote/NewNote';
 import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
+import { translateChapterField } from '../../Utils/bookNameTranslations';
 import './GroupChat.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 
@@ -222,31 +223,68 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
     }
   };
 
+  // Helper function to translate scripture names
+  const translateScriptureName = (scriptureName) => {
+    const scriptureMapping = {
+      'Old Testament': 'scriptures.oldTestament',
+      'New Testament': 'scriptures.newTestament',
+      'Book of Mormon': 'scriptures.bookOfMormon',
+      'Doctrine and Covenants': 'scriptures.doctrineAndCovenants',
+      'Doctrine and Convenants': 'scriptures.doctrineAndCovenants', // typo variant for legacy data
+      'Pearl of Great Price': 'scriptures.pearlOfGreatPrice',
+      // Also handle variations
+      '旧約聖書': 'scriptures.oldTestament',
+      '新約聖書': 'scriptures.newTestament',
+      'モルモン書': 'scriptures.bookOfMormon',
+      '教義と聖約': 'scriptures.doctrineAndCovenants',
+      '高価な真珠': 'scriptures.pearlOfGreatPrice',
+    };
+
+    const translationKey = scriptureMapping[scriptureName];
+    return translationKey ? t(translationKey) : scriptureName;
+  };
+
   const formatNoteForDisplay = (text) => {
     if (!text) return '';
     let content = text;
 
+    // Translate header
     const headerMatch = content.match(/^(📖 \*\*New Study Note\*\*\n+|📖 \*\*New Study Entry\*\*\n+)/);
-    const header = headerMatch ? headerMatch[0] : '';
+    let translatedHeader = '';
+    if (headerMatch) {
+      if (headerMatch[0].includes('New Study Note')) {
+        translatedHeader = `📖 **${t('noteLabels.newStudyNote')}**\n\n`;
+      } else {
+        translatedHeader = `📖 **${t('noteLabels.newStudyEntry')}**\n\n`;
+      }
+    }
 
     let body = content.replace(/^(📖 \*\*New Study Note\*\*\n+|📖 \*\*New Study Entry\*\*\n+)/, '');
 
-    const chapterMatch = body.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
-    const scriptureMatch = body.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
+    // Match both English and various language formats
+    const chapterMatch = body.match(/\*\*(?:Chapter|Title|章|タイトル|Capítulo|Título|章節|標題|Chương|Tiêu đề):\*\* (.*?)(?:\n|$)/);
+    const scriptureMatch = body.match(/\*\*(?:Scripture|聖典|Escritura|經文|Thánh Thư):\*\* (.*?)(?:\n|$)/);
 
     if (chapterMatch && scriptureMatch) {
-      const chapter = chapterMatch[1].trim();
-      const scripture = scriptureMatch[1].trim();
+      const rawChapter = chapterMatch[1].trim();
+      const chapter = translateChapterField(rawChapter, language);
+      const scripture = translateScriptureName(scriptureMatch[1].trim());
       const chapterEnd = chapterMatch.index + chapterMatch[0].length;
       const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
       const maxEnd = Math.max(chapterEnd, scriptureEnd);
 
       const comment = body.substring(maxEnd).trim();
 
-      return `${header}${scripture}\n${chapter}\n\n**Comment:**\n${comment}`;
+      return `${translatedHeader}**${t('noteLabels.scripture')}:** ${scripture}\n**${t('noteLabels.chapter')}:** ${chapter}\n\n**${t('noteLabels.comment')}:**\n${comment}`;
     }
 
-    return content;
+    // If no structured format found, just translate the labels in the raw text
+    return content
+      .replace(/\*\*Scripture:\*\*/g, `**${t('noteLabels.scripture')}:**`)
+      .replace(/\*\*Chapter:\*\*/g, `**${t('noteLabels.chapter')}:**`)
+      .replace(/\*\*Title:\*\*/g, `**${t('noteLabels.title')}:**`)
+      .replace(/📖 \*\*New Study Note\*\*/g, `📖 **${t('noteLabels.newStudyNote')}**`)
+      .replace(/📖 \*\*New Study Entry\*\*/g, `📖 **${t('noteLabels.newStudyEntry')}**`);
   };
 
   const togglePublicStatus = async () => {
@@ -482,4 +520,4 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
   );
 };
 
-export default GroupChat;
+export default GroupChat; 

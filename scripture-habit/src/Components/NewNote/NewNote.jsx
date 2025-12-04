@@ -29,7 +29,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             case "Old Testament": return t('scriptures.oldTestament');
             case "New Testament": return t('scriptures.newTestament');
             case "Book of Mormon": return t('scriptures.bookOfMormon');
-            case "Doctrine and Convenants": return t('scriptures.doctrineAndCovenants');
+            case "Doctrine and Covenants": return t('scriptures.doctrineAndCovenants');
             case "Pearl of Great Price": return t('scriptures.pearlOfGreatPrice');
             default: return value;
         }

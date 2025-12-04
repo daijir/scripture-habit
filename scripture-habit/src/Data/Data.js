@@ -53,8 +53,8 @@ export const ScripturesOptions = [
         value: "Book of Mormon",
         label: "Book of Mormon"
     }, {
-        value: "Doctrine and Convenants",
-        label: "Doctrine and Convenants"
+        value: "Doctrine and Covenants",
+        label: "Doctrine and Covenants"
     },
     {
         value: "Pearl of Great Price",

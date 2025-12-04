@@ -6,6 +6,7 @@ import { UilPlus, UilBookOpen } from '@iconscout/react-unicons';
 import NewNote from '../NewNote/NewNote';
 import { toast } from 'react-toastify';
 import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
+import { translateChapterField } from '../../Utils/bookNameTranslations';
 import './MyNotes.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 
@@ -73,15 +74,17 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
     const scriptureMatch = content.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
 
     if (chapterMatch && scriptureMatch) {
-      const chapter = chapterMatch[1].trim();
-      const scripture = scriptureMatch[1].trim();
+      const chapter = translateChapterField(chapterMatch[1].trim(), language);
+      const rawScripture = scriptureMatch[1].trim();
+      const scriptureMap = { 'Old Testament': 'scriptures.oldTestament', 'New Testament': 'scriptures.newTestament', 'Book of Mormon': 'scriptures.bookOfMormon', 'Doctrine and Covenants': 'scriptures.doctrineAndCovenants', 'Pearl of Great Price': 'scriptures.pearlOfGreatPrice' };
+      const scripture = scriptureMap[rawScripture] ? t(scriptureMap[rawScripture]) : rawScripture;
       const chapterEnd = chapterMatch.index + chapterMatch[0].length;
       const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
       const maxEnd = Math.max(chapterEnd, scriptureEnd);
 
       const comment = content.substring(maxEnd).trim();
 
-      return `**Scripture:** ${scripture}\n\n**Chapter:** ${chapter}\n\n${comment}`;
+      return `**${t('noteLabels.scripture')}:** ${scripture}\n\n**${t('noteLabels.chapter')}:** ${chapter}\n\n${comment}`;
     }
 
     return content;
