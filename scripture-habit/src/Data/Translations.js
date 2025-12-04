@@ -33,20 +33,6 @@ export const translations = {
             spanish: "Spanish (Spanish)",
             vietnamese: "Vietnamese (Vietnamese)"
         },
-        groupChat: {
-            send: "Send",
-            public: "Public",
-            private: "Private",
-            inviteCode: "Invite Code",
-            typeMessage: "Click + button to create a new note or type a message...",
-            leaveGroup: "Leave Group",
-            deleteGroup: "Delete Group",
-            cancel: "Cancel",
-            confirmDelete: "Delete Group",
-            confirmLeave: "Leave Group",
-            leaveConfirmMessage: "Are you sure you want to leave this group? You will need to find and join another group to participate again.",
-            groupName: "Group Chat"
-        },
         myNotes: {
             title: "My Notes",
             description: "Your personal collection of study notes and reflections.",
@@ -59,6 +45,23 @@ export const translations = {
             cancel: "Cancel",
             delete: "Delete Note",
             readInGospelLibrary: "Read in Gospel Library"
+        },
+        groupChat: {
+            send: "Send",
+            public: "Public",
+            private: "Private",
+            inviteCode: "Invite Code",
+            typeMessage: "Click + button to create a note or type a message...",
+            leaveGroup: "Leave Group",
+            deleteGroup: "Delete Group",
+            cancel: "Cancel",
+            confirmDelete: "Delete Group",
+            confirmLeave: "Leave Group",
+            leaveConfirmMessage: "Are you sure you want to leave this group? You will need to find and join another group to participate again.",
+            groupName: "Group Chat",
+            replyTo: "reply to",
+            replyingTo: "Replying to",
+            cancelReply: "Cancel reply"
         },
         newNote: {
             editTitle: "Edit Note",
@@ -233,7 +236,10 @@ export const translations = {
             confirmDelete: "グループを削除",
             confirmLeave: "グループを退会",
             leaveConfirmMessage: "本当にこのグループを退会しますか？再度参加するには、別のグループを見つけて参加する必要があります。",
-            groupName: "グループチャット"
+            groupName: "グループチャット",
+            replyTo: "返信先",
+            replyingTo: "返信中",
+            cancelReply: "返信をキャンセル"
         },
         myNotes: {
             title: "マイノート",
@@ -418,7 +424,10 @@ export const translations = {
             confirmDelete: "Excluir Grupo",
             confirmLeave: "Sair do Grupo",
             leaveConfirmMessage: "Tem certeza de que deseja sair deste grupo? Você precisará encontrar e entrar em outro grupo para participar novamente.",
-            groupName: "Chat do Grupo"
+            groupName: "Chat do Grupo",
+            replyTo: "responder a",
+            replyingTo: "Respondendo a",
+            cancelReply: "Cancelar resposta"
         },
         myNotes: {
             title: "Minhas Anotações",
@@ -604,7 +613,10 @@ export const translations = {
             confirmDelete: "刪除群組",
             confirmLeave: "退出群組",
             leaveConfirmMessage: "您確定要退出此群組嗎？您將需要尋找並加入另一個群組才能再次參與。",
-            groupName: "群組聊天"
+            groupName: "群組聊天",
+            replyTo: "回覆給",
+            replyingTo: "回覆中",
+            cancelReply: "取消回覆"
         },
         myNotes: {
             title: "我的筆記",
@@ -665,7 +677,7 @@ export const translations = {
             inviteCodeTitle: "有邀請碼嗎？",
             inviteCodeDesc: "輸入群組長分享的代碼直接加入。",
             inviteCodeLabel: "邀請碼",
-            inviteCodePlaceholder: "例如：X9J2KL",
+            inviteCodePlaceholder: "例如: X9J2KL",
             joinButton: "加入群組",
             publicGroupsTitle: "探索公開群組",
             publicGroupsDesc: "尋找符合您研讀目標的社群。",
@@ -791,7 +803,10 @@ export const translations = {
             confirmDelete: "Eliminar Grupo",
             confirmLeave: "Salir del Grupo",
             leaveConfirmMessage: "¿Estás seguro de que quieres salir de este grupo? Tendrás que buscar y unirte a otro grupo para participar de nuevo.",
-            groupName: "Chat del Grupo"
+            groupName: "Chat del Grupo",
+            replyTo: "responder a",
+            replyingTo: "Respondiendo a",
+            cancelReply: "Cancelar respuesta"
         },
         myNotes: {
             title: "Mis Notas",
@@ -979,7 +994,10 @@ export const translations = {
             confirmDelete: "Xóa nhóm",
             confirmLeave: "Rời nhóm",
             leaveConfirmMessage: "Bạn có chắc chắn muốn rời nhóm này không? Bạn sẽ cần tìm và tham gia lại nhóm khác để tham gia lại.",
-            groupName: "Trò chuyện nhóm"
+            groupName: "Trò chuyện nhóm",
+            replyTo: "trả lời",
+            replyingTo: "Đang trả lời",
+            cancelReply: "Hủy trả lời"
         },
         myNotes: {
             title: "Ghi chép của tôi",

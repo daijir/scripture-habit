@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { db, auth } from '../../firebase';
-import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt } from '@iconscout/react-unicons';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, where, getDocs } from 'firebase/firestore';
+import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes } from '@iconscout/react-unicons';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, where, getDocs, increment, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
@@ -10,12 +10,13 @@ import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
 import './GroupChat.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 
-const GroupChat = ({ groupId, userData }) => {
+const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
   const { language, t } = useLanguage();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [groupData, setGroupData] = useState(null);
   const [newMessage, setNewMessage] = useState('');
+  const [replyTo, setReplyTo] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isNewNoteOpen, setIsNewNoteOpen] = useState(false);
@@ -61,6 +62,27 @@ const GroupChat = ({ groupId, userData }) => {
     };
   }, [groupId]);
 
+  // Update read status when viewing the group (only when isActive)
+  useEffect(() => {
+    if (!isActive || !userData || !groupId || !groupData) return;
+
+    const updateReadStatus = async () => {
+      const currentCount = groupData.messageCount || 0;
+      const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', groupId);
+
+      try {
+        await setDoc(userGroupStateRef, {
+          readMessageCount: currentCount,
+          lastReadAt: serverTimestamp()
+        }, { merge: true });
+      } catch (error) {
+        console.error("Error updating read status:", error);
+      }
+    };
+
+    updateReadStatus();
+  }, [groupId, groupData, userData, isActive]);
+
   useEffect(() => {
     if (containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
@@ -80,15 +102,34 @@ const GroupChat = ({ groupId, userData }) => {
 
     const messagesRef = collection(db, 'groups', groupId, 'messages');
     try {
-      await addDoc(messagesRef, {
+      const messageData = {
         text: newMessage,
         createdAt: serverTimestamp(),
         senderId: userData.uid,
         senderNickname: userData.nickname,
         isNote: false,
         isEntry: false,
+      };
+
+      if (replyTo) {
+        messageData.replyTo = {
+          id: replyTo.id,
+          senderNickname: replyTo.senderNickname,
+          text: replyTo.text ? (replyTo.text.substring(0, 50) + (replyTo.text.length > 50 ? '...' : '')) : 'Image/Note'
+        };
+      }
+
+      await addDoc(messagesRef, messageData);
+
+      // Increment message count
+      const groupRef = doc(db, 'groups', groupId);
+      await updateDoc(groupRef, {
+        messageCount: increment(1),
+        lastMessageAt: serverTimestamp()
       });
+
       setNewMessage('');
+      setReplyTo(null);
 
       if (textareaRef.current) {
         textareaRef.current.style.height = 'auto';
@@ -96,6 +137,13 @@ const GroupChat = ({ groupId, userData }) => {
     } catch (e) {
       console.error("Error sending message:", e);
       toast.error(`Failed to send message: ${e.message || e}`);
+    }
+  };
+
+  const handleReply = (msg) => {
+    setReplyTo(msg);
+    if (textareaRef.current) {
+      textareaRef.current.focus();
     }
   };
 
@@ -138,22 +186,21 @@ const GroupChat = ({ groupId, userData }) => {
     }
 
     try {
-      const userRef = doc(db, 'users', userData.uid);
-      // Remove from groupIds and clear groupId if it matches
-      // Note: This only updates the owner. Other members will have a broken link until they try to access it.
-      // Ideally we would trigger a cloud function to clean up, but for now this is client-side.
+      const idToken = await auth.currentUser.getIdToken();
 
-      // We need to import arrayRemove at the top, but I can't easily add imports with replace_file_content if I don't target the top.
-      // I'll assume arrayRemove is imported or I'll add it.
-      // Wait, arrayRemove is NOT imported in the file currently (only arrayUnion in JoinGroup, but here?).
-      // Let's check imports.
-
-      await updateDoc(userRef, {
-        groupId: '', // Clear active group
-        groupIds: arrayRemove(groupId)
+      const response = await fetch('/api/delete-group', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ groupId })
       });
 
-      await deleteDoc(doc(db, 'groups', groupId));
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || 'Failed to delete group');
+      }
 
       toast.success("Group deleted successfully.");
       navigate('/dashboard');
@@ -222,26 +269,6 @@ const GroupChat = ({ groupId, userData }) => {
       toast.success("Invite code copied to clipboard!");
     }
   };
-
-  const [userGroups, setUserGroups] = useState([]);
-
-  useEffect(() => {
-    if (!userData || !userData.uid) return;
-
-    // Fetch user groups for the NewNote component
-    const fetchUserGroups = async () => {
-      try {
-        const q = query(collection(db, 'groups'), where('members', 'array-contains', userData.uid));
-        const querySnapshot = await getDocs(q);
-        const groups = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setUserGroups(groups);
-      } catch (error) {
-        console.error("Error fetching user groups:", error);
-      }
-    };
-
-    fetchUserGroups();
-  }, [userData]);
 
   return (
     <div className="GroupChat">
@@ -349,7 +376,11 @@ const GroupChat = ({ groupId, userData }) => {
                   </div>
                 </div>
               ) : (
-                <div className={`message ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}>
+                <div
+                  className={`message ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}
+                  onClick={() => handleReply(msg)}
+                  style={{ cursor: 'pointer' }}
+                >
                   <span className="sender-name">{msg.senderNickname}</span>
                   <div className="message-bubble-row" style={{ display: 'flex', alignItems: 'flex-end', gap: '5px' }}>
                     {msg.senderId === userData?.uid && (
@@ -357,46 +388,56 @@ const GroupChat = ({ groupId, userData }) => {
                         {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
                       </span>
                     )}
-                    <div className="message-content">
-                      {msg.text && (
-                        (msg.isNote || msg.isEntry) ? (
-                          <div className="entry-message-content">
-                            <ReactMarkdown>{formatNoteForDisplay(msg.text)}</ReactMarkdown>
-                            {(() => {
-                              const chapterMatch = msg.text.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
-                              const scriptureMatch = msg.text.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
-                              if (chapterMatch && scriptureMatch) {
-                                const scripture = scriptureMatch[1].trim();
-                                const chapter = chapterMatch[1].trim();
-                                const url = getGospelLibraryUrl(scripture, chapter, language);
-                                if (url) {
-                                  return (
-                                    <a
-                                      href={url}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      onClick={(e) => e.stopPropagation()}
-                                      style={{
-                                        display: 'inline-block',
-                                        marginTop: '5px',
-                                        fontSize: '0.75rem',
-                                        color: msg.senderId === userData?.uid ? 'white' : 'var(--gray)',
-                                        textDecoration: 'none',
-                                        fontWeight: 'bold'
-                                      }}
-                                    >
-                                      {t('dashboard.readInGospelLibrary')}
-                                    </a>
-                                  );
-                                }
-                              }
-                              return null;
-                            })()}
-                          </div>
-                        ) : (
-                          <p>{msg.text}</p>
-                        )
+                    <div className="message-bubble-column" style={{ display: 'flex', flexDirection: 'column', maxWidth: '100%', alignItems: msg.senderId === userData?.uid ? 'flex-end' : 'flex-start' }}>
+                      {msg.replyTo && (
+                        <div className="reply-context-label">
+                          <span className="reply-context-prefix">{t('groupChat.replyTo')} </span>
+                          <span className="reply-context-name">{msg.replyTo.senderNickname}</span>
+                          <span className="reply-context-separator">: </span>
+                          <span className="reply-context-text">{msg.replyTo.text}</span>
+                        </div>
                       )}
+                      <div className="message-content">
+                        {msg.text && (
+                          (msg.isNote || msg.isEntry) ? (
+                            <div className="entry-message-content">
+                              <ReactMarkdown>{formatNoteForDisplay(msg.text)}</ReactMarkdown>
+                              {(() => {
+                                const chapterMatch = msg.text.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
+                                const scriptureMatch = msg.text.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
+                                if (chapterMatch && scriptureMatch) {
+                                  const scripture = scriptureMatch[1].trim();
+                                  const chapter = chapterMatch[1].trim();
+                                  const url = getGospelLibraryUrl(scripture, chapter, language);
+                                  if (url) {
+                                    return (
+                                      <a
+                                        href={url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={(e) => e.stopPropagation()}
+                                        style={{
+                                          display: 'inline-block',
+                                          marginTop: '5px',
+                                          fontSize: '0.75rem',
+                                          color: msg.senderId === userData?.uid ? 'white' : 'var(--gray)',
+                                          textDecoration: 'none',
+                                          fontWeight: 'bold'
+                                        }}
+                                      >
+                                        {t('dashboard.readInGospelLibrary')}
+                                      </a>
+                                    );
+                                  }
+                                }
+                                return null;
+                              })()}
+                            </div>
+                          ) : (
+                            <p>{msg.text}</p>
+                          )
+                        )}
+                      </div>
                     </div>
                     {msg.senderId !== userData?.uid && (
                       <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', marginBottom: '2px', whiteSpace: 'nowrap' }}>
@@ -411,6 +452,17 @@ const GroupChat = ({ groupId, userData }) => {
         })}
       </div>
       <form onSubmit={handleSendMessage} className="send-message-form">
+        {replyTo && (
+          <div className="reply-preview">
+            <div className="reply-info">
+              <span className="replying-to">{t('groupChat.replyingTo')} <strong>{replyTo.senderNickname}</strong></span>
+              <p className="reply-text-preview">{replyTo.text ? (replyTo.text.substring(0, 50) + (replyTo.text.length > 50 ? '...' : '')) : 'Image/Note'}</p>
+            </div>
+            <div className="cancel-reply" onClick={() => setReplyTo(null)}>
+              <UilTimes size="16" />
+            </div>
+          </div>
+        )}
         <div className="input-wrapper">
           <textarea
             ref={textareaRef}

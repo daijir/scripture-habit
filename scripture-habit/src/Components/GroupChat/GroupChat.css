@@ -654,3 +654,117 @@ input:checked+.slider:before {
     font-weight: 500;
     border: 1px solid rgba(0, 0, 0, 0.05);
 }
+
+/* Reply Feature Styles */
+.reply-preview {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0.8rem 1rem;
+    border-radius: 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid var(--pink);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    animation: slideUp 0.2s ease;
+}
+
+.reply-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    flex: 1;
+    overflow: hidden;
+}
+
+.replying-to {
+    font-size: 0.8rem;
+    color: var(--pink);
+    font-weight: 600;
+}
+
+.reply-text-preview {
+    font-size: 0.9rem;
+    color: var(--gray);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cancel-reply {
+    cursor: pointer;
+    color: var(--gray);
+    padding: 0.2rem;
+    border-radius: 50%;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cancel-reply:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--black);
+}
+
+.reply-context-label {
+    font-size: 0.75rem;
+    color: var(--gray);
+    margin-bottom: 4px;
+    max-width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    opacity: 0.9;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 12px;
+    border-left: 3px solid var(--pink);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.03);
+    transition: all 0.2s ease;
+}
+
+.reply-context-label:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.reply-context-prefix {
+    font-size: 0.7rem;
+    color: #888;
+    font-style: italic;
+}
+
+.reply-context-name {
+    font-weight: 700;
+    color: var(--black);
+}
+
+.reply-context-separator {
+    color: #ccc;
+    margin: 0 2px;
+}
+
+.reply-context-text {
+    color: #666;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.message.sent .reply-context-label {
+    align-self: flex-start;
+    text-align: left;
+}
+
+.message.received .reply-context-label {
+    align-self: flex-end;
+    text-align: right;
+    border-left-color: var(--gray);
+}
