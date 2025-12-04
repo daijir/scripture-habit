@@ -116,11 +116,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
             <div key={note.id} className="note-card" onClick={() => handleNoteClick(note)} style={{ cursor: 'pointer' }}>
               <div className="note-header">
                 <span className="note-date">
-                  {note.createdAt?.toDate().toLocaleDateString(undefined, {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                  })}
+                  {note.createdAt?.toDate().toLocaleDateString('en-CA')}
                 </span>
               </div>
               <div className="note-content-preview">
