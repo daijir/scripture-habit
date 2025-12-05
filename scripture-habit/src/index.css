@@ -106,6 +106,9 @@ h2 {
         rgba(254, 172, 94, 0.3) 29.63%,
         rgba(199, 121, 208, 0.3) 51.55%,
         rgba(75, 192, 200, 0.3) 90.85%);
+    background-color: white;
+    /* Ensure light background behind transparent gradient */
+    color: var(--black);
   }
 
   .AppGlass {
