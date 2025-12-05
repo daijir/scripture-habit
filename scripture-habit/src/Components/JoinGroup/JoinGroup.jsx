@@ -37,7 +37,7 @@ export default function JoinGroup() {
 
     const fetchPublicGroups = async () => {
       try {
-        const resp = await fetch('/api/groups?membersCountLt=5');
+        const resp = await fetch('/api/groups');
         if (resp.ok) {
           const groups = await resp.json();
           setPublicGroups(groups || []);
@@ -51,8 +51,7 @@ export default function JoinGroup() {
       try {
         const q = query(
           collection(db, 'groups'),
-          where('isPublic', '==', true),
-          where('membersCount', '<', 5)
+          where('isPublic', '==', true)
         );
         const querySnapshot = await getDocs(q);
         const groups = [];
@@ -238,6 +237,12 @@ export default function JoinGroup() {
         <div className="create-group-cta">
           <p>{t('joinGroup.createGroupCta')}</p>
           <Link to="/group-form" className="create-group-link">{t('joinGroup.createGroupLink')}</Link>
+        </div>
+
+        <div style={{ textAlign: 'center', marginTop: '1rem', width: '100%' }}>
+          <Link to="/dashboard" className="back-link">
+            {t('groupOptions.backToDashboard')}
+          </Link>
         </div>
 
       </div>
