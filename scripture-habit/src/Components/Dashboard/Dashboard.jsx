@@ -31,6 +31,7 @@ const Dashboard = () => {
   const [userGroups, setUserGroups] = useState([]);
   const [rawUserGroups, setRawUserGroups] = useState([]);
   const [groupStates, setGroupStates] = useState({});
+  const [loadingGroupStates, setLoadingGroupStates] = useState(true);
 
   const location = useLocation();
   // Initialize activeGroupId from location state if available, to avoid initial null state
@@ -135,6 +136,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (!userData?.uid) return;
 
+    setLoadingGroupStates(true);
     const groupStatesRef = collection(db, 'users', userData.uid, 'groupStates');
     const unsubscribe = onSnapshot(groupStatesRef, (snapshot) => {
       const states = {};
@@ -142,6 +144,7 @@ const Dashboard = () => {
         states[doc.id] = doc.data();
       });
       setGroupStates(states);
+      setLoadingGroupStates(false);
     });
 
     return () => unsubscribe();
@@ -151,7 +154,9 @@ const Dashboard = () => {
   useEffect(() => {
     const combinedGroups = rawUserGroups.map(group => {
       const state = groupStates[group.id];
-      const readCount = state?.readMessageCount || 0;
+      // If still loading states, assume everything is read to prevent flash of unread count
+      // If loaded and no state exists, then it's truly unread (readCount 0)
+      const readCount = loadingGroupStates ? (group.messageCount || 0) : (state?.readMessageCount || 0);
       const totalCount = group.messageCount || 0;
       const unreadCount = Math.max(0, totalCount - readCount);
 
@@ -161,7 +166,7 @@ const Dashboard = () => {
       };
     });
     setUserGroups(combinedGroups);
-  }, [rawUserGroups, groupStates]);
+  }, [rawUserGroups, groupStates, loadingGroupStates]);
 
   // Update activeGroupId if the user leaves the current group or if we need to validate the current selection
   useEffect(() => {
