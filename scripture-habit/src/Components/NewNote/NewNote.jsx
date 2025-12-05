@@ -415,29 +415,21 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
     return (
         <div className="ModalOverlay" onClick={onClose}>
             <div className="ModalContent" onClick={(e) => e.stopPropagation()}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-                    <h1 style={{ margin: 0 }}>{noteToEdit ? t('newNote.editTitle') : t('newNote.newTitle')}</h1>
+                <div className="modal-header">
+                    <h1>{noteToEdit ? t('newNote.editTitle') : t('newNote.newTitle')}</h1>
                     {noteToEdit && (
                         <button
+                            className="delete-btn"
                             onClick={onDelete}
-                            style={{
-                                background: 'none',
-                                border: 'none',
-                                cursor: 'pointer',
-                                color: '#ff3b30',
-                                display: 'flex',
-                                alignItems: 'center',
-                                padding: '0.5rem'
-                            }}
                             title={t('newNote.deleteTitle')}
                         >
                             <UilTrashAlt size="24" />
                         </button>
                     )}
                 </div>
-                {error && <p className="error-message" style={{ color: 'red' }}>{error}</p>}
+                {error && <p className="error-message">{error}</p>}
                 <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="scripture-select" style={{ display: 'block', marginBottom: '0.5rem', color: 'black' }}>{t('newNote.chooseScriptureLabel')}</label>
+                    <label htmlFor="scripture-select" className="modal-label">{t('newNote.chooseScriptureLabel')}</label>
                     <Select
                         options={translatedScripturesOptions}
                         onChange={(option) => {
@@ -568,9 +560,9 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     </div>
                 )}
 
-                <div className="modal-actions" style={{ marginTop: '20px', display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
-                    <button onClick={onClose} className="cancel-btn" style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: '#ddd', cursor: 'pointer' }}>{t('newNote.cancel')}</button>
-                    <button onClick={handleSubmit} disabled={loading} className="submit-btn" style={{ padding: '10px 20px', borderRadius: '8px', border: 'none', background: 'var(--pink)', color: 'white', cursor: 'pointer' }}>
+                <div className="modal-actions">
+                    <button onClick={onClose} className="cancel-btn">{t('newNote.cancel')}</button>
+                    <button onClick={handleSubmit} disabled={loading} className="submit-btn">
                         {loading ? t('newNote.saving') : (noteToEdit ? t('newNote.update') : t('newNote.post'))}
                     </button>
                 </div>
