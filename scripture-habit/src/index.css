@@ -3,9 +3,9 @@
   line-height: 1.2;
   font-weight: 400;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color-scheme: light;
+  color: #213547;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -82,19 +82,12 @@ h2 {
   font-weight: 700;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
+a:hover {
+  color: #747bff;
+}
 
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-  }
+button {
+  background-color: #f9f9f9;
 }
 
 @media screen and (max-width: 768px) {
@@ -120,24 +113,5 @@ h2 {
     background-color: rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(15px);
     -webkit-backdrop-filter: blur(15px);
-  }
-}
-
-@media screen and (max-width: 768px) and (prefers-color-scheme: dark) {
-  .App {
-    background: #121212;
-    background-color: #121212;
-    color: rgba(255, 255, 255, 0.87);
-  }
-
-  .AppGlass {
-    background-color: rgba(0, 0, 0, 0.4);
-  }
-
-  h1 {
-    background: white;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
   }
 }
