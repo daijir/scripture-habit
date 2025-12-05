@@ -370,6 +370,9 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
                 // Send streak announcement AFTER note is posted so it appears below the note
                 if (streakUpdated && newStreak > 0) {
+                    // Small delay to ensure note timestamps are fully written first
+                    await new Promise(resolve => setTimeout(resolve, 500));
+
                     const targetGroupIds = userGroups.map(g => g.id);
                     for (const gid of targetGroupIds) {
                         const messagesRef = collection(db, 'groups', gid, 'messages');
