@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../firebase';
-import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
+import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc, updateDoc, increment } from 'firebase/firestore';
 import ReactMarkdown from 'react-markdown';
 import { UilPlus, UilBookOpen } from '@iconscout/react-unicons';
 import NewNote from '../NewNote/NewNote';
@@ -54,6 +54,25 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
     if (!selectedNote || !userData.uid) return;
 
     try {
+      // If note was shared to groups, delete those messages too
+      if (selectedNote.sharedMessageIds && Object.keys(selectedNote.sharedMessageIds).length > 0) {
+        for (const [groupId, messageId] of Object.entries(selectedNote.sharedMessageIds)) {
+          try {
+            const messageRef = doc(db, 'groups', groupId, 'messages', messageId);
+            await deleteDoc(messageRef);
+
+            // Decrement message count
+            const groupRef = doc(db, 'groups', groupId);
+            await updateDoc(groupRef, {
+              messageCount: increment(-1)
+            });
+          } catch (err) {
+            console.log(`Could not delete message ${messageId} from group ${groupId}:`, err);
+          }
+        }
+      }
+
+      // Delete the personal note
       await deleteDoc(doc(db, 'users', userData.uid, 'notes', selectedNote.id));
       toast.success("Note deleted successfully");
       setIsDeleteModalOpen(false);
@@ -168,6 +187,11 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
           <div className="ModalContent delete-modal" onClick={(e) => e.stopPropagation()}>
             <h3>{t('myNotes.deleteTitle')}</h3>
             <p>{t('myNotes.deleteConfirm')}</p>
+            {selectedNote?.sharedMessageIds && Object.keys(selectedNote.sharedMessageIds).length > 0 && (
+              <p style={{ color: '#ff9800', fontSize: '0.9rem', margin: '0.5rem 0' }}>
+                ⚠️ {t('groupChat.deleteNoteWarning')}
+              </p>
+            )}
             <div className="modal-actions">
               <button className="cancel-btn" onClick={() => setIsDeleteModalOpen(false)}>{t('myNotes.cancel')}</button>
               <button className="delete-confirm-btn" onClick={confirmDelete}>{t('myNotes.delete')}</button>
