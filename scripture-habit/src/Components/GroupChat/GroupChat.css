@@ -841,3 +841,155 @@ input:checked+.slider:before {
 .message.sent .edited-indicator {
     color: rgba(255, 255, 255, 0.7);
 }
+
+/* Message Reactions */
+.message-reactions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-top: 4px;
+    width: fit-content;
+}
+
+.message-reactions:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.message-reactions.sent {
+    margin-left: 0;
+    margin-right: auto;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.message-reactions.sent:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.message-reactions.received {
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.reaction-emoji {
+    font-size: 0.9rem;
+}
+
+.reaction-count {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #555;
+}
+
+.message-reactions.sent .reaction-count {
+    color: white;
+}
+
+/* Reactions Modal */
+.reactions-modal .reactions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    margin: 16px 0;
+}
+
+.reaction-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #f5f5f5;
+    border-radius: 10px;
+}
+
+.reaction-user-emoji {
+    font-size: 1.2rem;
+}
+
+.reaction-user-name {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #333;
+}
+
+/* Message Wrapper for hover actions */
+.message-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.message-wrapper.sent {
+    justify-content: flex-end;
+}
+
+.message-wrapper.received {
+    justify-content: flex-start;
+}
+
+/* Hover Action Buttons */
+.message-hover-actions {
+    display: none;
+    align-items: center;
+    gap: 2px;
+    padding: 4px 6px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    position: absolute;
+    top: -8px;
+    z-index: 10;
+}
+
+.message-hover-actions.sent {
+    left: 0;
+}
+
+.message-hover-actions.received {
+    right: 0;
+}
+
+.message:hover .message-hover-actions {
+    display: flex;
+}
+
+.hover-action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: none;
+    background: transparent;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.hover-action-btn:hover {
+    background: #f0f0f0;
+    transform: scale(1.1);
+}
+
+.hover-action-btn.delete:hover {
+    background: #ffe0e0;
+}
+
+/* Mobile: hide hover actions, show on long press via context menu */
+@media screen and (max-width: 768px) {
+    .message-hover-actions {
+        display: none !important;
+    }
+
+    .message:hover .message-hover-actions {
+        display: none !important;
+    }
+}

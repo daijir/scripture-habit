@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { db, auth } from '../../firebase';
 import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes } from '@iconscout/react-unicons';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, where, getDocs, increment, setDoc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
@@ -31,6 +31,8 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
   const [showDeleteMessageModal, setShowDeleteMessageModal] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState(null);
   const [noteToEdit, setNoteToEdit] = useState(null);
+  const [showReactionsModal, setShowReactionsModal] = useState(false);
+  const [reactionsToShow, setReactionsToShow] = useState([]);
   const longPressTimer = useRef(null);
   const containerRef = useRef(null);
   const textareaRef = useRef(null);
@@ -269,7 +271,6 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
   };
 
   const handleLongPressStart = (msg) => {
-    if (msg.senderId !== userData?.uid) return; // Only for own messages
     longPressTimer.current = setTimeout(() => {
       setContextMenu({
         show: true,
@@ -388,6 +389,41 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
     }
   };
 
+  // Handle adding/removing reaction
+  const handleToggleReaction = async (msg) => {
+    if (!userData || !groupId) return;
+    closeContextMenu();
+
+    try {
+      const messageRef = doc(db, 'groups', groupId, 'messages', msg.id);
+      const reactions = msg.reactions || [];
+      const existingReaction = reactions.find(r => r.odU === userData.uid);
+
+      if (existingReaction) {
+        // Remove reaction
+        await updateDoc(messageRef, {
+          reactions: arrayRemove(existingReaction)
+        });
+      } else {
+        // Add reaction
+        await updateDoc(messageRef, {
+          reactions: arrayUnion({
+            odU: userData.uid,
+            nickname: userData.nickname,
+            emoji: '👍'
+          })
+        });
+      }
+    } catch (error) {
+      console.error('Error toggling reaction:', error);
+    }
+  };
+
+  // Show reactions modal
+  const handleShowReactions = (reactions) => {
+    setReactionsToShow(reactions || []);
+    setShowReactionsModal(true);
+  };
 
   // Helper function to translate scripture names
   const translateScriptureName = (scriptureName) => {
@@ -715,86 +751,144 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
                   </div>
                 </div>
               ) : (
-                <div
-                  className={`message ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}
-                  onClick={() => handleReply(msg)}
-                  onContextMenu={(e) => handleContextMenu(e, msg)}
-                  onTouchStart={() => handleLongPressStart(msg)}
-                  onTouchEnd={handleLongPressEnd}
-                  onTouchMove={handleLongPressEnd}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <span className="sender-name">{msg.senderNickname}{msg.isEdited && <span className="edited-indicator"> ({t('groupChat.messageEdited')})</span>}</span>
-                  <div className="message-bubble-row" style={{ display: 'flex', alignItems: 'flex-end', gap: '5px' }}>
-                    {msg.senderId === userData?.uid && (
-                      <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', marginBottom: '2px', whiteSpace: 'nowrap' }}>
-                        {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                      </span>
-                    )}
-                    <div className="message-bubble-column" style={{ display: 'flex', flexDirection: 'column', maxWidth: '100%', alignItems: msg.senderId === userData?.uid ? 'flex-end' : 'flex-start' }}>
-                      {msg.replyTo && (
-                        <div className="reply-context-label">
-                          <span className="reply-context-prefix">{t('groupChat.replyTo')} </span>
-                          <span className="reply-context-name">{msg.replyTo.senderNickname}</span>
-                          <span className="reply-context-separator">: </span>
-                          <span className="reply-context-text">
-                            {msg.replyTo.isNote || msg.replyTo.text?.startsWith('📖 **New Study') || msg.replyTo.text?.startsWith('**New Study')
-                              ? t('groupChat.studyNote')
-                              : msg.replyTo.text
-                            }
-                          </span>
-                        </div>
+                <div className={`message-wrapper ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}>
+                  <div
+                    className={`message ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}
+                    onTouchStart={() => handleLongPressStart(msg)}
+                    onTouchEnd={handleLongPressEnd}
+                    onTouchMove={handleLongPressEnd}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    {/* Hover action buttons */}
+                    <div className={`message-hover-actions ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}>
+                      {msg.senderId === userData?.uid ? (
+                        <>
+                          <button
+                            className="hover-action-btn"
+                            onClick={(e) => { e.stopPropagation(); handleEditMessage(msg); }}
+                            title="Edit"
+                          >
+                            ✏️
+                          </button>
+                          <button
+                            className="hover-action-btn delete"
+                            onClick={(e) => { e.stopPropagation(); handleDeleteMessageClick(msg); }}
+                            title="Delete"
+                          >
+                            🗑️
+                          </button>
+                          <button
+                            className="hover-action-btn"
+                            onClick={(e) => { e.stopPropagation(); handleReply(msg); }}
+                            title="Reply"
+                          >
+                            ↩️
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            className="hover-action-btn"
+                            onClick={(e) => { e.stopPropagation(); handleToggleReaction(msg); }}
+                            title={msg.reactions?.find(r => r.odU === userData?.uid) ? 'Unlike' : 'Like'}
+                          >
+                            {msg.reactions?.find(r => r.odU === userData?.uid) ? '👍' : '👍'}
+                          </button>
+                          <button
+                            className="hover-action-btn"
+                            onClick={(e) => { e.stopPropagation(); handleReply(msg); }}
+                            title="Reply"
+                          >
+                            ↩️
+                          </button>
+                        </>
                       )}
-                      <div className="message-content">
-                        {msg.text && (
-                          (msg.isNote || msg.isEntry) ? (
-                            <div className="entry-message-content">
-                              <ReactMarkdown>{formatNoteForDisplay(msg.text)}</ReactMarkdown>
-                              {(() => {
-                                const chapterMatch = msg.text.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
-                                const scriptureMatch = msg.text.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
-                                if (chapterMatch && scriptureMatch) {
-                                  const scripture = scriptureMatch[1].trim();
-                                  const chapter = chapterMatch[1].trim();
-                                  const url = getGospelLibraryUrl(scripture, chapter, language);
-                                  if (url) {
-                                    return (
-                                      <a
-                                        href={url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        onClick={(e) => e.stopPropagation()}
-                                        style={{
-                                          display: 'inline-block',
-                                          marginTop: '5px',
-                                          fontSize: '0.75rem',
-                                          color: msg.senderId === userData?.uid ? 'white' : 'var(--gray)',
-                                          textDecoration: 'none',
-                                          fontWeight: 'bold'
-                                        }}
-                                      >
-                                        {t('dashboard.readInGospelLibrary')}
-                                      </a>
-                                    );
-                                  }
-                                }
-                                return null;
-                              })()}
-                            </div>
-                          ) : (
-                            <p>{renderTextWithLinks(msg.text, msg.senderId === userData?.uid)}</p>
-                          )
-                        )}
-                        {/* Show link previews for regular messages with URLs */}
-                        {!msg.isNote && !msg.isEntry && extractUrls(msg.text).slice(0, 1).map((url, idx) => (
-                          <LinkPreview key={idx} url={url} isSent={msg.senderId === userData?.uid} />
-                        ))}
-                      </div>
                     </div>
-                    {msg.senderId !== userData?.uid && (
-                      <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', marginBottom: '2px', whiteSpace: 'nowrap' }}>
-                        {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                      </span>
+                    <span className="sender-name">{msg.senderNickname}{msg.isEdited && <span className="edited-indicator"> ({t('groupChat.messageEdited')})</span>}</span>
+                    <div className="message-bubble-row" style={{ display: 'flex', alignItems: 'flex-end', gap: '5px' }}>
+                      {msg.senderId === userData?.uid && (
+                        <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', marginBottom: '2px', whiteSpace: 'nowrap' }}>
+                          {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                        </span>
+                      )}
+                      <div className="message-bubble-column" style={{ display: 'flex', flexDirection: 'column', maxWidth: '100%', alignItems: msg.senderId === userData?.uid ? 'flex-end' : 'flex-start' }}>
+                        {msg.replyTo && (
+                          <div className="reply-context-label">
+                            <span className="reply-context-prefix">{t('groupChat.replyTo')} </span>
+                            <span className="reply-context-name">{msg.replyTo.senderNickname}</span>
+                            <span className="reply-context-separator">: </span>
+                            <span className="reply-context-text">
+                              {msg.replyTo.isNote || msg.replyTo.text?.startsWith('📖 **New Study') || msg.replyTo.text?.startsWith('**New Study')
+                                ? t('groupChat.studyNote')
+                                : msg.replyTo.text
+                              }
+                            </span>
+                          </div>
+                        )}
+                        <div className="message-content">
+                          {msg.text && (
+                            (msg.isNote || msg.isEntry) ? (
+                              <div className="entry-message-content">
+                                <ReactMarkdown>{formatNoteForDisplay(msg.text)}</ReactMarkdown>
+                                {(() => {
+                                  const chapterMatch = msg.text.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
+                                  const scriptureMatch = msg.text.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
+                                  if (chapterMatch && scriptureMatch) {
+                                    const scripture = scriptureMatch[1].trim();
+                                    const chapter = chapterMatch[1].trim();
+                                    const url = getGospelLibraryUrl(scripture, chapter, language);
+                                    if (url) {
+                                      return (
+                                        <a
+                                          href={url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          onClick={(e) => e.stopPropagation()}
+                                          style={{
+                                            display: 'inline-block',
+                                            marginTop: '5px',
+                                            fontSize: '0.75rem',
+                                            color: msg.senderId === userData?.uid ? 'white' : 'var(--gray)',
+                                            textDecoration: 'none',
+                                            fontWeight: 'bold'
+                                          }}
+                                        >
+                                          {t('dashboard.readInGospelLibrary')}
+                                        </a>
+                                      );
+                                    }
+                                  }
+                                  return null;
+                                })()}
+                              </div>
+                            ) : (
+                              <p>{renderTextWithLinks(msg.text, msg.senderId === userData?.uid)}</p>
+                            )
+                          )}
+                          {/* Show link previews for regular messages with URLs */}
+                          {!msg.isNote && !msg.isEntry && extractUrls(msg.text).slice(0, 1).map((url, idx) => (
+                            <LinkPreview key={idx} url={url} isSent={msg.senderId === userData?.uid} />
+                          ))}
+                        </div>
+                      </div>
+                      {msg.senderId !== userData?.uid && (
+                        <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', marginBottom: '2px', whiteSpace: 'nowrap' }}>
+                          {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                        </span>
+                      )}
+                    </div>
+                    {/* Reactions display */}
+                    {msg.reactions && msg.reactions.length > 0 && (
+                      <div
+                        className={`message-reactions ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleShowReactions(msg.reactions);
+                        }}
+                      >
+                        <span className="reaction-emoji">👍</span>
+                        <span className="reaction-count">{msg.reactions.length}</span>
+                      </div>
                     )}
                   </div>
                 </div>
@@ -804,7 +898,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
         })}
       </div>
 
-      {/* Context Menu for own messages */}
+      {/* Context Menu for messages */}
       {contextMenu.show && (
         <div
           className="message-context-menu"
@@ -816,59 +910,104 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <button onClick={() => handleEditMessage(contextMenu.message)}>
-            {t('groupChat.editMessage')}
-          </button>
-          <button onClick={() => handleDeleteMessageClick(contextMenu.message)} className="delete-option">
-            {t('groupChat.deleteMessage')}
-          </button>
+          {contextMenu.message?.senderId === userData?.uid ? (
+            <>
+              <button onClick={() => handleEditMessage(contextMenu.message)}>
+                ✏️ {t('groupChat.editMessage')}
+              </button>
+              <button onClick={() => handleDeleteMessageClick(contextMenu.message)} className="delete-option">
+                🗑️ {t('groupChat.deleteMessage')}
+              </button>
+              <button onClick={() => { handleReply(contextMenu.message); closeContextMenu(); }}>
+                ↩️ Reply
+              </button>
+            </>
+          ) : (
+            <>
+              <button onClick={() => handleToggleReaction(contextMenu.message)}>
+                {contextMenu.message?.reactions?.find(r => r.odU === userData?.uid) ? '👎 Unlike' : '👍 Like'}
+              </button>
+              <button onClick={() => { handleReply(contextMenu.message); closeContextMenu(); }}>
+                ↩️ Reply
+              </button>
+            </>
+          )}
         </div>
-      )}
+      )
+      }
 
       {/* Delete Message Confirmation Modal */}
-      {showDeleteMessageModal && (
-        <div className="leave-modal-overlay">
-          <div className="leave-modal-content" style={{ maxWidth: '360px' }}>
-            <h3>{t('groupChat.deleteMessageConfirm')}</h3>
-            {(messageToDelete?.isNote || messageToDelete?.isEntry) && messageToDelete?.originalNoteId && (
-              <p style={{ color: '#ff9800', fontSize: '0.9rem', margin: '0.5rem 0' }}>
-                ⚠️ {t('groupChat.deleteMessageWarning')}
-              </p>
-            )}
-            <div className="leave-modal-actions">
-              <button className="modal-btn cancel" onClick={() => { setShowDeleteMessageModal(false); setMessageToDelete(null); }}>
-                {t('groupChat.cancel')}
-              </button>
-              <button className="modal-btn leave" onClick={handleConfirmDeleteMessage}>
-                {t('groupChat.deleteMessage')}
-              </button>
+      {
+        showDeleteMessageModal && (
+          <div className="leave-modal-overlay">
+            <div className="leave-modal-content" style={{ maxWidth: '360px' }}>
+              <h3>{t('groupChat.deleteMessageConfirm')}</h3>
+              {(messageToDelete?.isNote || messageToDelete?.isEntry) && messageToDelete?.originalNoteId && (
+                <p style={{ color: '#ff9800', fontSize: '0.9rem', margin: '0.5rem 0' }}>
+                  ⚠️ {t('groupChat.deleteMessageWarning')}
+                </p>
+              )}
+              <div className="leave-modal-actions">
+                <button className="modal-btn cancel" onClick={() => { setShowDeleteMessageModal(false); setMessageToDelete(null); }}>
+                  {t('groupChat.cancel')}
+                </button>
+                <button className="modal-btn leave" onClick={handleConfirmDeleteMessage}>
+                  {t('groupChat.deleteMessage')}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
       {/* Edit Message Modal */}
-      {editingMessage && (
-        <div className="leave-modal-overlay">
-          <div className="leave-modal-content edit-message-modal">
-            <h3>{t('groupChat.editMessage')}</h3>
-            <textarea
-              className="edit-message-textarea"
-              value={editText}
-              onChange={(e) => setEditText(e.target.value)}
-              autoFocus
-            />
-            <div className="leave-modal-actions">
-              <button className="modal-btn cancel" onClick={handleCancelEdit}>
-                {t('groupChat.cancel')}
-              </button>
-              <button className="modal-btn leave" onClick={handleSaveEdit} style={{ background: 'var(--pink)' }}>
-                {t('groupChat.editMessage')}
-              </button>
+      {
+        editingMessage && (
+          <div className="leave-modal-overlay">
+            <div className="leave-modal-content edit-message-modal">
+              <h3>{t('groupChat.editMessage')}</h3>
+              <textarea
+                className="edit-message-textarea"
+                value={editText}
+                onChange={(e) => setEditText(e.target.value)}
+                autoFocus
+              />
+              <div className="leave-modal-actions">
+                <button className="modal-btn cancel" onClick={handleCancelEdit}>
+                  {t('groupChat.cancel')}
+                </button>
+                <button className="modal-btn leave" onClick={handleSaveEdit} style={{ background: 'var(--pink)' }}>
+                  {t('groupChat.editMessage')}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      }
+
+      {/* Reactions Modal */}
+      {
+        showReactionsModal && (
+          <div className="leave-modal-overlay" onClick={() => setShowReactionsModal(false)}>
+            <div className="leave-modal-content reactions-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '300px' }}>
+              <h3>👍 Reactions</h3>
+              <div className="reactions-list">
+                {reactionsToShow.map((reaction, idx) => (
+                  <div key={idx} className="reaction-user">
+                    <span className="reaction-user-emoji">👍</span>
+                    <span className="reaction-user-name">{reaction.nickname}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="leave-modal-actions">
+                <button className="modal-btn cancel" onClick={() => setShowReactionsModal(false)}>
+                  {t('groupChat.cancel')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      }
 
       <form onSubmit={handleSendMessage} className="send-message-form">
         {replyTo && (
