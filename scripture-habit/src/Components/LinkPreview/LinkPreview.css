@@ -16,11 +16,15 @@
 .link-preview.sent {
     background: rgba(255, 255, 255, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.2);
+    margin-left: 0;
+    margin-right: auto;
 }
 
 .link-preview.received {
     background: #f8f9fa;
     border: 1px solid #e9ecef;
+    margin-left: auto;
+    margin-right: 0;
 }
 
 .link-preview-image {
