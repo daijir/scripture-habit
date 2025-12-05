@@ -13,25 +13,27 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
     else if (language === 'vi') langParam = "?lang=vie";
     else if (language === 'th') langParam = "?lang=tha";
     else if (language === 'ko') langParam = "?lang=kor";
+    else if (language === 'tl') langParam = "?lang=tgl";
+    else if (language === 'sw') langParam = "?lang=swa";
 
     // Normalize volume to get the URL part
     let volumeUrlPart = "";
     const lowerVolume = volume.toLowerCase();
 
-    if (lowerVolume === "old testament" || volume === "旧約聖書" || volume === "Velho Testamento" || volume === "舊約" || volume === "Antiguo Testamento" || volume === "Cựu Ước" || volume === "พันธสัญญาเดิม" || volume === "구약전서") {
+    if (lowerVolume === "old testament" || volume === "旧約聖書" || volume === "Velho Testamento" || volume === "舊約" || volume === "Antiguo Testamento" || volume === "Cựu Ước" || volume === "พันธสัญญาเดิม" || volume === "구약전서" || volume === "Lumang Tipan" || volume === "Agano la Kale") {
         volumeUrlPart = "ot";
         // Vietnamese fallback for OT
         if (language === 'vi') langParam = "?lang=eng";
-    } else if (lowerVolume === "new testament" || volume === "新約聖書" || volume === "Novo Testamento" || volume === "新約" || volume === "Nuevo Testamento" || volume === "Tân Ước" || volume === "พันธสัญญาใหม่" || volume === "신약전서") {
+    } else if (lowerVolume === "new testament" || volume === "新約聖書" || volume === "Novo Testamento" || volume === "新約" || volume === "Nuevo Testamento" || volume === "Tân Ước" || volume === "พันธสัญญาใหม่" || volume === "신약전서" || volume === "Bagong Tipan" || volume === "Agano Jipya") {
         volumeUrlPart = "nt";
         // Vietnamese fallback for NT
         if (language === 'vi') langParam = "?lang=eng";
-    } else if (lowerVolume === "book of mormon" || volume === "モルモン書" || volume === "O Livro de Mórmon" || volume === "摩爾門經" || volume === "El Libro de Mormón" || volume === "Sách Mặc Môn" || volume === "พระคัมภีร์มอรมอน" || volume === "몰몬경") {
+    } else if (lowerVolume === "book of mormon" || volume === "モルモン書" || volume === "O Livro de Mórmon" || volume === "摩爾門經" || volume === "El Libro de Mormón" || volume === "Sách Mặc Môn" || volume === "พระคัมภีร์มอรมอน" || volume === "몰몬경" || volume === "Aklat ni Mormon" || volume === "Kitabu cha Mormoni") {
         volumeUrlPart = "bofm";
-    } else if (lowerVolume.includes("doctrine and") || volume === "教義と聖約" || volume === "Doutrina e Convênios" || volume === "教義和聖約" || volume === "Doctrina y Convenios" || volume === "Giáo Lý và Giao Ước" || volume === "หลักคำสอนและพันธสัญญา" || volume === "교리와 성약") {
+    } else if (lowerVolume.includes("doctrine and") || volume === "教義と聖約" || volume === "Doutrina e Convênios" || volume === "教義和聖約" || volume === "Doctrina y Convenios" || volume === "Giáo Lý và Giao Ước" || volume === "หลักคำสอนและพันธสัญญา" || volume === "교리와 성약" || volume === "Doktrina at mga Tipan" || volume === "Mafundisho na Maagano") {
         // Covers "Doctrine and Covenants", "Doctrine and Convenants" (typo), and Japanese/Portuguese/Chinese/Spanish/Vietnamese
         volumeUrlPart = "dc-testament";
-    } else if (lowerVolume === "pearl of great price" || volume === "高価な真珠" || volume === "Pérola de Grande Valor" || volume === "無價珍珠" || volume === "La Perla de Gran Precio" || volume === "Trân Châu Vô Giá" || volume === "ไข่มุกอันล้ำค่า" || volume === "값진 진주") {
+    } else if (lowerVolume === "pearl of great price" || volume === "高価な真珠" || volume === "Pérola de Grande Valor" || volume === "無價珍珠" || volume === "La Perla de Gran Precio" || volume === "Trân Châu Vô Giá" || volume === "ไข่มุกอันล้ำค่า" || volume === "값진 진주" || volume === "Mahalagang Perlas" || volume === "Lulu ya Thamani Kuu") {
         volumeUrlPart = "pgp";
     } else {
         return null;
@@ -691,7 +693,189 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         "아브라함서": "abr",
         "조셉 스미스—마태": "js-m",
         "조셉 스미스—역사": "js-h",
-        "신앙개조": "a-of-f"
+        "신앙개조": "a-of-f",
+
+        // Tagalog
+        "1 Nephi": "1-ne",
+        "2 Nephi": "2-ne",
+        "Jacob": "Jacob",
+        "Enos": "Enos",
+        "Jarom": "Jarom",
+        "Omni": "Omni",
+        "Words of Mormon": "Salita ni Mormon",
+        "Mosiah": "Mosiah",
+        "Alma": "Alma",
+        "Helaman": "Helaman",
+        "3 Nephi": "3 Nephi",
+        "4 Nephi": "4 Nephi",
+        "Mormon": "Mormon",
+        "Ether": "Eter",
+        "Moroni": "Moroni",
+        // Old Testament
+        "Genesis": "Genesis",
+        "Exodus": "Exodo",
+        "Leviticus": "Levitico",
+        "Numbers": "Mga Bilang",
+        "Deuteronomy": "Deuteronomio",
+        "Joshua": "Josue",
+        "Judges": "Mga Hukom",
+        "Ruth": "Ruth",
+        "1 Samuel": "1 Samuel",
+        "2 Samuel": "2 Samuel",
+        "1 Kings": "1 Mga Hari",
+        "2 Kings": "2 Mga Hari",
+        "1 Chronicles": "1 Mga Cronica",
+        "2 Chronicles": "2 Mga Cronica",
+        "Ezra": "Ezra",
+        "Nehemiah": "Nehemias",
+        "Esther": "Ester",
+        "Job": "Job",
+        "Psalms": "Mga Awit",
+        "Proverbs": "Mga Kawikaan",
+        "Ecclesiastes": "Eclesiastes",
+        "Song of Solomon": "Ang Awit ni Solomon",
+        "Isaiah": "Isaias",
+        "Jeremiah": "Jeremias",
+        "Lamentations": "Mga Panaghoy",
+        "Ezekiel": "Ezekiel",
+        "Daniel": "Daniel",
+        "Hosea": "Oseas",
+        "Joel": "Joel",
+        "Amos": "Amos",
+        "Obadiah": "Obadias",
+        "Jonah": "Jonas",
+        "Micah": "Mikas",
+        "Nahum": "Nahum",
+        "Habakkuk": "Habacuc",
+        "Zephaniah": "Zefanias",
+        "Haggai": "Hagai",
+        "Zechariah": "Zacarias",
+        "Malachi": "Malakias",
+        // New Testament
+        "Matthew": "Mateo",
+        "Mark": "Marcos",
+        "Luke": "Lucas",
+        "John": "Juan",
+        "Acts": "Mga Gawa",
+        "Romans": "Mga Taga-Roma",
+        "1 Corinthians": "1 Mga Taga-Corinto",
+        "2 Corinthians": "2 Mga Taga-Corinto",
+        "Galatians": "Mga Taga-Galacia",
+        "Ephesians": "Mga Taga-Efeso",
+        "Philippians": "Mga Taga-Filipos",
+        "Colossians": "Mga Taga-Colosas",
+        "1 Thessalonians": "1 Mga Taga-Tesalonica",
+        "2 Thessalonians": "2 Mga Taga-Tesalonica",
+        "1 Timothy": "1 Timoteo",
+        "2 Timothy": "2 Timoteo",
+        "Titus": "Tito",
+        "Philemon": "Filemon",
+        "Hebrews": "Mga Hebreo",
+        "James": "Santiago",
+        "1 Peter": "1 Pedro",
+        "2 Peter": "2 Pedro",
+        "1 John": "1 Juan",
+        "2 John": "2 Juan",
+        "3 John": "3 Juan",
+        "Jude": "Judas",
+        "Revelation": "Apocalipsis",
+        // Pearl of Great Price
+        "Moses": "Moises",
+        "Abraham": "Abraham",
+        "Joseph Smith-Matthew": "Joseph Smith—Mateo",
+        "Joseph Smith-History": "Joseph Smith—Kasaysayan",
+        "Articles of Faith": "Mga Saligan ng Pananampalataya",
+        // Swahili
+        // Book of Mormon
+        "1 Nephi": "1 Nefi",
+        "2 Nephi": "2 Nefi",
+        "Jacob": "Yakobo",
+        "Enos": "Enoshi",
+        "Jarom": "Yaromu",
+        "Omni": "Omni",
+        "Words of Mormon": "Maneno ya Mormoni",
+        "Mosiah": "Mosia",
+        "Alma": "Alma",
+        "Helaman": "Helamani",
+        "3 Nephi": "3 Nefi",
+        "4 Nephi": "4 Nefi",
+        "Mormon": "Mormoni",
+        "Ether": "Etheri",
+        "Moroni": "Moroni",
+        // Old Testament
+        "Genesis": "Mwanzo",
+        "Exodus": "Kutoka",
+        "Leviticus": "Mambo ya Walawi",
+        "Numbers": "Hesabu",
+        "Deuteronomy": "Kumbukumbu la Torati",
+        "Joshua": "Yoshua",
+        "Judges": "Waamuzi",
+        "Ruth": "Ruthi",
+        "1 Samuel": "1 Samweli",
+        "2 Samuel": "2 Samweli",
+        "1 Kings": "1 Wafalme",
+        "2 Kings": "2 Wafalme",
+        "1 Chronicles": "1 Mambo ya Nyakati",
+        "2 Chronicles": "2 Mambo ya Nyakati",
+        "Ezra": "Ezra",
+        "Nehemiah": "Nehemia",
+        "Esther": "Esta",
+        "Job": "Ayubu",
+        "Psalms": "Zaburi",
+        "Proverbs": "Mithali",
+        "Ecclesiastes": "Mhubiri",
+        "Song of Solomon": "Wimbo Ulio Bora",
+        "Isaiah": "Isaya",
+        "Jeremiah": "Yeremia",
+        "Lamentations": "Maombolezo",
+        "Ezekiel": "Ezekieli",
+        "Daniel": "Danieli",
+        "Hosea": "Hosea",
+        "Joel": "Yoeli",
+        "Amos": "Amosi",
+        "Obadiah": "Obadia",
+        "Jonah": "Yona",
+        "Micah": "Mika",
+        "Nahum": "Nahumu",
+        "Habakkuk": "Habakuki",
+        "Zephaniah": "Sefania",
+        "Haggai": "Hagai",
+        "Zechariah": "Zekaria",
+        "Malachi": "Malaki",
+        // New Testament
+        "Matthew": "Mathayo",
+        "Mark": "Marko",
+        "Luke": "Luka",
+        "John": "Yohana",
+        "Acts": "Matendo ya Mitume",
+        "Romans": "Warumi",
+        "1 Corinthians": "1 Wakorintho",
+        "2 Corinthians": "2 Wakorintho",
+        "Galatians": "Wagalatia",
+        "Ephesians": "Waefeso",
+        "Philippians": "Wafilipi",
+        "Colossians": "Wakolosai",
+        "1 Thessalonians": "1 Wathesalonike",
+        "2 Thessalonians": "2 Wathesalonike",
+        "1 Timothy": "1 Timotheo",
+        "2 Timothy": "2 Timotheo",
+        "Titus": "Tito",
+        "Philemon": "Filemoni",
+        "Hebrews": "Waebrania",
+        "James": "Yakobo",
+        "1 Peter": "1 Petro",
+        "2 Peter": "2 Petro",
+        "1 John": "1 Yohana",
+        "2 John": "2 Yohana",
+        "3 John": "3 Yohana",
+        "Jude": "Yuda",
+        "Revelation": "Ufunuo",
+        // Pearl of Great Price
+        "Moses": "Musa",
+        "Abraham": "Ibrahimu",
+        "Joseph Smith-Matthew": "Joseph Smith—Mathayo",
+        "Joseph Smith-History": "Joseph Smith—Historia",
+        "Articles of Faith": "Makala ya Imani",
     };
 
     const bookUrlPart = bookMappings[bookName];

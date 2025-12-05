@@ -64,6 +64,18 @@ const Welcome = () => {
                     >
                         한국어
                     </button>
+                    <button
+                        className={`lang-btn ${language === 'tl' ? 'active' : ''}`}
+                        onClick={() => setLanguage('tl')}
+                    >
+                        Tagalog
+                    </button>
+                    <button
+                        className={`lang-btn ${language === 'sw' ? 'active' : ''}`}
+                        onClick={() => setLanguage('sw')}
+                    >
+                        Swahili
+                    </button>
                 </div>
             </div>
 
