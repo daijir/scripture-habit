@@ -8,6 +8,8 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  height: 100%;
+  box-sizing: border-box;
 }
 
 .group-card:hover {
@@ -49,17 +51,27 @@
   display: flex;
   gap: 8px;
   align-items: center;
-  margin-top: 6px;
+  justify-content: center;
+  margin-top: auto;
+  padding-top: 10px;
 }
 
 .join-btn {
-  background: linear-gradient(180deg, #2563eb, #1e40af);
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border: none !important;
+  padding: 8px 24px;
+  border-radius: 12px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 600 !important;
+  box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4) !important;
+  transition: all 0.2s ease;
+}
+
+.join-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(118, 75, 162, 0.6) !important;
+  filter: brightness(1.1);
 }
 
 .join-btn[disabled] {

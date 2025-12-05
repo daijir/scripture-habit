@@ -101,3 +101,9 @@
     color: var(--black);
     background: rgba(255, 255, 255, 0.5);
 }
+
+@media screen and (max-width: 768px) {
+    .GroupOptions .options-container {
+        background-color: transparent !important;
+    }
+}

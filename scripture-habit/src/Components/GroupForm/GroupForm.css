@@ -11,6 +11,21 @@
   align-items: center;
 }
 
+.create-group-submit-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  border: none !important;
+  font-weight: 600 !important;
+  margin-top: 1rem;
+  box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4) !important;
+}
+
+.create-group-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(118, 75, 162, 0.6) !important;
+  filter: brightness(1.1);
+}
+
 
 .error {
   color: #d9534f;
@@ -48,4 +63,26 @@
   color: white;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(74, 108, 247, 0.3);
+}
+
+.back-link {
+  margin-top: 2rem;
+  color: var(--gray);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  display: inline-block;
+}
+
+.back-link:hover {
+  color: var(--black);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+@media screen and (max-width: 768px) {
+  .GroupForm .AppGlass {
+    background-color: transparent !important;
+  }
 }

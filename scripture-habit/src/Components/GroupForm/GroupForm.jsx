@@ -13,7 +13,7 @@ export default function GroupForm() {
   const { t } = useLanguage();
   const [groupName, setGroupName] = useState("");
   const [description, setDescription] = useState("");
-  const [maxMembers, setMaxMembers] = useState(5);
+  const [maxMembers, setMaxMembers] = useState(100000);
   const [isPublic, setIsPublic] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -91,13 +91,7 @@ export default function GroupForm() {
             onChange={(e) => setDescription(e.target.value)}
           />
 
-          <Input
-            label={t('groupForm.maxMembersLabel')}
-            value={maxMembers}
-            onChange={(e) => setMaxMembers(e.target.value)}
-            min="2"
-            required
-          />
+          {/* Max members input removed for unlimited members */}
 
           <Checkbox
             label={t('groupForm.publicGroupLabel')}
@@ -106,7 +100,7 @@ export default function GroupForm() {
             onChange={(e) => setIsPublic(e.target.checked)}
           />
 
-          <Button type="submit">
+          <Button type="submit" className="create-group-submit-btn">
             {t('groupForm.createButton')}
           </Button>
         </form>
@@ -116,6 +110,10 @@ export default function GroupForm() {
           <p>{t('groupForm.joinGroupCta')}</p>
           <Link to="/join-group" className="join-group-link">{t('groupForm.joinGroupLink')}</Link>
         </div>
+
+        <Link to="/dashboard" className="back-link">
+          {t('groupOptions.backToDashboard')}
+        </Link>
       </div>
     </div>
   );
