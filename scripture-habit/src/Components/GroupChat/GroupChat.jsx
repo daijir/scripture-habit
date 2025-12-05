@@ -8,6 +8,7 @@ import ReactMarkdown from 'react-markdown';
 import NewNote from '../NewNote/NewNote';
 import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
 import { translateChapterField } from '../../Utils/bookNameTranslations';
+import LinkPreview from '../LinkPreview/LinkPreview';
 import './GroupChat.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 
@@ -409,6 +410,48 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
     return translationKey ? t(translationKey) : scriptureName;
   };
 
+  // Helper function to extract URLs from text
+  const extractUrls = (text) => {
+    if (!text) return [];
+    const urlPattern = /(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/g;
+    const matches = text.match(urlPattern);
+    return matches || [];
+  };
+
+  // Helper function to render text with clickable links
+  const renderTextWithLinks = (text, isSent) => {
+    if (!text) return null;
+
+    // URL regex pattern
+    const urlPattern = /(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/g;
+
+    const parts = text.split(urlPattern);
+
+    return parts.map((part, index) => {
+      if (urlPattern.test(part)) {
+        // Reset the regex lastIndex
+        urlPattern.lastIndex = 0;
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              color: isSent ? 'white' : 'var(--pink)',
+              textDecoration: 'underline',
+              wordBreak: 'break-all'
+            }}
+          >
+            {part}
+          </a>
+        );
+      }
+      return part;
+    });
+  };
+
   const formatNoteForDisplay = (text) => {
     if (!text) return '';
     let content = text;
@@ -739,9 +782,13 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
                               })()}
                             </div>
                           ) : (
-                            <p>{msg.text}</p>
+                            <p>{renderTextWithLinks(msg.text, msg.senderId === userData?.uid)}</p>
                           )
                         )}
+                        {/* Show link previews for regular messages with URLs */}
+                        {!msg.isNote && !msg.isEntry && extractUrls(msg.text).slice(0, 1).map((url, idx) => (
+                          <LinkPreview key={idx} url={url} isSent={msg.senderId === userData?.uid} />
+                        ))}
                       </div>
                     </div>
                     {msg.senderId !== userData?.uid && (
