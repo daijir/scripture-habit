@@ -89,7 +89,7 @@ app.post('/api/join-group', async (req, res) => {
             const groupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
 
             if (groupIds.includes(groupId)) throw new Error('User already in this group.');
-            if (groupIds.length >= 7) throw new Error('You can only join up to 7 groups.');
+            if (groupIds.length >= 7) throw new Error('You can only join up to 12 groups.');
 
             const groupData = groupDoc.data();
             if (groupData.members && groupData.members.includes(uid)) throw new Error('User already in this group.');
@@ -114,7 +114,10 @@ app.post('/api/join-group', async (req, res) => {
                 createdAt: admin.firestore.FieldValue.serverTimestamp(),
                 senderId: 'system',
                 isSystemMessage: true,
-                type: 'join'
+                messageType: 'userJoined',
+                messageData: {
+                    nickname: userData.nickname || 'A user'
+                }
             });
         });
 
@@ -190,7 +193,10 @@ app.post('/api/leave-group', async (req, res) => {
                     createdAt: admin.firestore.FieldValue.serverTimestamp(),
                     senderId: 'system',
                     isSystemMessage: true,
-                    type: 'leave'
+                    messageType: 'userLeft',
+                    messageData: {
+                        nickname: userData.nickname || 'A user'
+                    }
                 });
             }
         });

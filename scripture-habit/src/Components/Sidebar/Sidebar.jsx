@@ -65,7 +65,9 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
 
           {/* Desktop Groups Section */}
           <div className="groups-section desktop-groups">
-            <div className="menu-header">{t('sidebar.myGroups')}</div>
+            <div className="menu-header">
+              {t('sidebar.myGroups')} <span style={{ fontSize: '1.2em' }}>({userGroups.length}/12)</span>
+            </div>
             {userGroups.map((group) => (
               <div
                 key={group.id}
@@ -80,7 +82,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
               </div>
             ))}
 
-            {userGroups.length < 7 && (
+            {userGroups.length < 12 && (
               <div className="menuItem create-group-item" onClick={() => navigate('/group-options')}>
                 <UilPlusCircle />
                 <span>{t('sidebar.joinCreateGroup')}</span>
@@ -106,7 +108,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
       {showGroupModal && (
         <div className="group-modal-overlay" onClick={() => setShowGroupModal(false)}>
           <div className="group-modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>Select Group</h3>
+            <h3>{t('sidebar.selectGroup')} <span style={{ fontSize: '1.2em'}}>({userGroups.length}/12)</span></h3>
             <div className="modal-group-list">
               {userGroups.map((group) => (
                 <div
@@ -122,13 +124,13 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
                 </div>
               ))}
             </div>
-            {userGroups.length < 7 && (
+            {userGroups.length < 12 && (
               <div className="modal-create-group" onClick={() => { navigate('/group-options'); setShowGroupModal(false); }}>
                 <UilPlusCircle />
                 <span>{t('sidebar.joinCreateGroup')}</span>
               </div>
             )}
-            <button className="close-modal-btn" onClick={() => setShowGroupModal(false)}>Close</button>
+            <button className="close-modal-btn" onClick={() => setShowGroupModal(false)}>{t('sidebar.close')}</button>
           </div>
         </div>
       )}

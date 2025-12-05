@@ -78,7 +78,7 @@ export default function JoinGroup() {
 
     const currentGroupIds = userData?.groupIds || (userData?.groupId ? [userData.groupId] : []);
 
-    if (currentGroupIds.length >= 7) {
+    if (currentGroupIds.length >= 12) {
       setError(t('joinGroup.errorMaxGroups'));
       return;
     }
