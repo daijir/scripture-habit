@@ -122,3 +122,22 @@ h2 {
     -webkit-backdrop-filter: blur(15px);
   }
 }
+
+@media screen and (max-width: 768px) and (prefers-color-scheme: dark) {
+  .App {
+    background: #121212;
+    background-color: #121212;
+    color: rgba(255, 255, 255, 0.87);
+  }
+
+  .AppGlass {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  h1 {
+    background: white;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
