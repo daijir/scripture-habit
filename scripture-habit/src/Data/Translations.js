@@ -6,7 +6,9 @@ export const translations = {
             languages: "Languages",
             myGroups: "My Groups",
             joinCreateGroup: "Join/Create Group",
-            signOut: "Sign Out"
+            signOut: "Sign Out",
+            selectGroup: "Select Group",
+            close: "Close"
         },
         dashboard: {
             overview: "Dashboard Overview",
@@ -21,7 +23,13 @@ export const translations = {
             seeAll: "See All",
             noRecentNotes: "No recent notes.",
             randomPhoto: "Random Scripture Photo from Developer",
-            readInGospelLibrary: "Read in Gospel Library"
+            readInGospelLibrary: "Read in Gospel Library",
+            inspirationTitle: "Our Mission",
+            inspirationQuote: "\"Wherefore, he that preacheth and he that receiveth, understand one another, and both are edified and rejoice together.\"",
+            inspirationSource: "— Jesus Christ (Doctrine and Covenants 50:22)",
+            inspirationMessage: "By sharing what we learn each day with the group, let us edify one another and share in joy!",
+            inspirationFrom: "— Developers of Scripture Habit",
+            shareLearningCall: "Would you like to share what you learned today?"
         },
         languages: {
             title: "Languages",
@@ -61,7 +69,13 @@ export const translations = {
             groupName: "Group Chat",
             replyTo: "reply to",
             replyingTo: "Replying to",
-            cancelReply: "Cancel reply"
+            cancelReply: "Cancel reply",
+            streakAnnouncement: "🎉🎉🎉 **{nickname} reached a {streak} day streak!!** 🎉🎉🎉\n\n**Let us edify one another in the group and share joy together!**",
+            userJoined: "👋 **{nickname}** joined the group!",
+            userLeft: "🚪 **{nickname}** left the group.",
+            deleteConfirmMessage: "This action cannot be undone. All messages and data will be permanently lost.",
+            typeToConfirm: "Please type **{groupName}** to confirm.",
+            enterGroupNamePlaceholder: "Enter group name"
         },
         newNote: {
             editTitle: "Edit Note",
@@ -117,7 +131,7 @@ export const translations = {
             createGroupCta: "Want to start your own community?",
             createGroupLink: "Create a Group",
             errorLoggedIn: "You must be logged in to join a group.",
-            errorMaxGroups: "You can only join up to 7 groups.",
+            errorMaxGroups: "You can only join up to 12 groups.",
             errorAlreadyMember: "You are already a member of this group.",
             errorFull: "This group is already full.",
             successJoined: "Successfully joined group:",
@@ -201,11 +215,13 @@ export const translations = {
     ja: {
         sidebar: {
             dashboard: "ダッシュボード",
-            myNotes: "マイノート",
+            myNotes: "私のノート",
             languages: "言語設定",
-            myGroups: "マイグループ",
+            myGroups: "私のグループ",
             joinCreateGroup: "グループに参加/作成",
-            signOut: "サインアウト"
+            signOut: "サインアウト",
+            selectGroup: "グループを選択",
+            close: "閉じる"
         },
         dashboard: {
             overview: "ダッシュボード概要",
@@ -220,7 +236,13 @@ export const translations = {
             seeAll: "すべて見る",
             noRecentNotes: "最近のノートはありません。",
             randomPhoto: "開発者からのランダムな聖句写真",
-            readInGospelLibrary: "福音ライブラリーで読む"
+            readInGospelLibrary: "福音ライブラリーで読む",
+            inspirationTitle: "私たちのミッション",
+            inspirationQuote: "「それゆえ、説く者と受ける者は互いに理解し合い、ともに教化されて、ともに喜ぶのである。」",
+            inspirationSource: "— イエス・キリスト (教義と聖約50:22)",
+            inspirationMessage: "毎日コツコツ学んだことをグループに分かち合うことで、互いに教化し合い、喜びを分かち合いましょう！",
+            inspirationFrom: "— Scripture Habit 開発チーム",
+            shareLearningCall: "あなたの今日の学びを共有しませんか？"
         },
         languages: {
             title: "言語設定",
@@ -247,10 +269,16 @@ export const translations = {
             groupName: "グループチャット",
             replyTo: "返信先",
             replyingTo: "返信中",
-            cancelReply: "返信をキャンセル"
+            cancelReply: "返信をキャンセル",
+            streakAnnouncement: "🎉🎉🎉 **{nickname}さんが{streak}日連続ストリークを達成しました！！** 🎉🎉🎉\n\n**グループで互いに教化し合い、喜びを分かち合いましょう！**",
+            userJoined: "👋 **{nickname}**さんがグループに参加しました！",
+            userLeft: "🚪 **{nickname}**さんがグループを退会しました。",
+            deleteConfirmMessage: "この操作は取り消せません。すべてのメッセージとデータが完全に失われます。",
+            typeToConfirm: "確認のため **{groupName}** と入力してください。",
+            enterGroupNamePlaceholder: "グループ名を入力"
         },
         myNotes: {
-            title: "マイノート",
+            title: "私のノート",
             description: "あなたの個人的な学習ノートと振り返りのコレクションです。",
             newNote: "新規ノート",
             loading: "ノートを読み込み中...",
@@ -404,7 +432,9 @@ export const translations = {
             languages: "Idiomas",
             myGroups: "Meus Grupos",
             joinCreateGroup: "Entrar/Criar Grupo",
-            signOut: "Sair"
+            signOut: "Sair",
+            selectGroup: "Selecionar Grupo",
+            close: "Fechar"
         },
         dashboard: {
             overview: "Visão Geral",
@@ -419,7 +449,13 @@ export const translations = {
             seeAll: "Ver Tudo",
             noRecentNotes: "Nenhuma anotação recente.",
             randomPhoto: "Foto Aleatória das Escrituras",
-            readInGospelLibrary: "Ler na Biblioteca do Evangelho"
+            readInGospelLibrary: "Ler na Biblioteca do Evangelho",
+            inspirationTitle: "Nossa Missão",
+            inspirationQuote: "\"Portanto, aquele que prega e aquele que recebe se compreendem um ao outro e ambos são edificados e juntos se regozijam\"",
+            inspirationSource: "— Jesus Cristo (Doutrina e Convênios 50:22)",
+            inspirationMessage: "Ao compartilhar diariamente o que aprendemos com o grupo, edifiquemo-nos mutuamente e compartilhemos alegria!",
+            inspirationFrom: "— Desenvolvedores do Scripture Habit",
+            shareLearningCall: "Gostaria de compartilhar o que aprendeu hoje?"
         },
         languages: {
             title: "Idiomas",
@@ -443,7 +479,13 @@ export const translations = {
             groupName: "Chat do Grupo",
             replyTo: "responder a",
             replyingTo: "Respondendo a",
-            cancelReply: "Cancelar resposta"
+            cancelReply: "Cancelar resposta",
+            streakAnnouncement: "🎉🎉🎉 **{nickname} alcançou uma ofensiva de {streak} dias!!** 🎉🎉🎉\n\n**Vamos nos edificar uns aos outros no grupo e compartilhar alegria juntos!**",
+            userJoined: "👋 **{nickname}** entrou no grupo!",
+            userLeft: "🚪 **{nickname}** saiu do grupo.",
+            deleteConfirmMessage: "Esta ação não pode ser desfeita. Todas as mensagens e dados serão perdidos permanentemente.",
+            typeToConfirm: "Por favor, digite **{groupName}** para confirmar.",
+            enterGroupNamePlaceholder: "Digite o nome do grupo"
         },
         myNotes: {
             title: "Minhas Anotações",
@@ -512,7 +554,7 @@ export const translations = {
             createGroupCta: "Quer começar sua própria comunidade?",
             createGroupLink: "Criar um Grupo",
             errorLoggedIn: "Você deve estar logado para entrar em um grupo.",
-            errorMaxGroups: "Você só pode entrar em até 7 grupos.",
+            errorMaxGroups: "Você só pode entrar em até 12 grupos.",
             errorAlreadyMember: "Você já é membro deste grupo.",
             errorFull: "Este grupo já está cheio.",
             successJoined: "Entrou com sucesso no grupo:",
@@ -600,7 +642,9 @@ export const translations = {
             languages: "語言",
             myGroups: "我的群組",
             joinCreateGroup: "加入/建立群組",
-            signOut: "登出"
+            signOut: "登出",
+            selectGroup: "選擇群組",
+            close: "關閉"
         },
         dashboard: {
             overview: "儀表板總覽",
@@ -615,7 +659,13 @@ export const translations = {
             seeAll: "查看全部",
             noRecentNotes: "最近沒有筆記。",
             randomPhoto: "來自開發者的隨機經文照片",
-            readInGospelLibrary: "在福音圖書館閱讀"
+            readInGospelLibrary: "在福音圖書館閱讀",
+            inspirationTitle: "我們的使命",
+            inspirationQuote: "「因此，那宣講的和接受的，彼此了解，雙方都被啟發，並一起快樂。」",
+            inspirationSource: "— 耶穌基督(教義和聖約50:22)",
+            inspirationMessage: "每天持續地與群組分享我們所學到的，讓我們互相建立，一起分享喜悅！",
+            inspirationFrom: "— Scripture Habit 開發團隊",
+            shareLearningCall: "您想分享今天所學到的嗎？"
         },
         languages: {
             title: "語言",
@@ -640,7 +690,13 @@ export const translations = {
             groupName: "群組聊天",
             replyTo: "回覆給",
             replyingTo: "回覆中",
-            cancelReply: "取消回覆"
+            cancelReply: "取消回覆",
+            streakAnnouncement: "🎉🎉🎉 **{nickname} 達成了 {streak} 天連續紀錄！！** 🎉🎉🎉\n\n**讓我們在群組中互相建立，一起分享喜悅！**",
+            userJoined: "👋 **{nickname}** 加入了群組！",
+            userLeft: "🚪 **{nickname}** 離開了群組。",
+            deleteConfirmMessage: "此動作無法復原。所有訊息和資料將永久遺失。",
+            typeToConfirm: "請輸入 **{groupName}** 以確認。",
+            enterGroupNamePlaceholder: "輸入群組名稱"
         },
         myNotes: {
             title: "我的筆記",
@@ -709,7 +765,7 @@ export const translations = {
             createGroupCta: "想建立自己的社群嗎？",
             createGroupLink: "建立群組",
             errorLoggedIn: "您必須登入才能加入群組。",
-            errorMaxGroups: "您最多只能加入 7 個群組。",
+            errorMaxGroups: "您最多只能加入 12 個群組。",
             errorAlreadyMember: "您已經是此群組的成員。",
             errorFull: "此群組已滿。",
             successJoined: "成功加入群組：",
@@ -797,7 +853,9 @@ export const translations = {
             languages: "Idiomas",
             myGroups: "Mis Grupos",
             joinCreateGroup: "Unirse/Crear Grupo",
-            signOut: "Cerrar Sesión"
+            signOut: "Cerrar Sesión",
+            selectGroup: "Seleccionar Grupo",
+            close: "Cerrar"
         },
         dashboard: {
             overview: "Resumen del Tablero",
@@ -812,7 +870,13 @@ export const translations = {
             seeAll: "Ver Todo",
             noRecentNotes: "No hay notas recientes.",
             randomPhoto: "Foto Aleatoria de las Escrituras",
-            readInGospelLibrary: "Leer en Biblioteca del Evangelio"
+            readInGospelLibrary: "Leer en Biblioteca del Evangelio",
+            inspirationTitle: "Nuestra Misión",
+            inspirationQuote: "\"“De manera que, el que la predica y el que la recibe se comprenden el uno al otro, y ambos son edificados y se regocijan juntamente.\"",
+            inspirationSource: "— Jesucristo (Doctrina y Convenios 50:22)",
+            inspirationMessage: "Al compartir constantemente lo que aprendemos cada día con el grupo, ¡edifiquémonos mutuamente y compartamos alegría!",
+            inspirationFrom: "— Desarrolladores de Scripture Habit",
+            shareLearningCall: "¿Te gustaría compartir lo que aprendiste hoy?"
         },
         languages: {
             title: "Idiomas",
@@ -838,7 +902,13 @@ export const translations = {
             groupName: "Chat del Grupo",
             replyTo: "responder a",
             replyingTo: "Respondiendo a",
-            cancelReply: "Cancelar respuesta"
+            cancelReply: "Cancelar respuesta",
+            streakAnnouncement: "🎉🎉🎉 **¡{nickname} alcanzó una racha de {streak} días!** 🎉🎉🎉\n\n**¡Edifiquémonos unos a otros en el grupo y compartamos alegría juntos!**",
+            userJoined: "👋 **{nickname}** se unió al grupo!",
+            userLeft: "🚪 **{nickname}** salió del grupo.",
+            deleteConfirmMessage: "Esta acción no se puede deshacer. Todos los mensajes y datos se perderán permanentemente.",
+            typeToConfirm: "Por favor, escribe **{groupName}** para confirmar.",
+            enterGroupNamePlaceholder: "Ingresa el nombre del grupo"
         },
         myNotes: {
             title: "Mis Notas",
@@ -907,7 +977,7 @@ export const translations = {
             createGroupCta: "¿Quieres iniciar tu propia comunidad?",
             createGroupLink: "Crear un Grupo",
             errorLoggedIn: "Debes iniciar sesión para unirte a un grupo.",
-            errorMaxGroups: "Solo puedes unirte a hasta 7 grupos.",
+            errorMaxGroups: "Solo puedes unirte a hasta 12 grupos.",
             errorAlreadyMember: "Ya eres miembro de este grupo.",
             errorFull: "Este grupo ya está lleno.",
             successJoined: "Te has unido al grupo con éxito:",
@@ -995,7 +1065,9 @@ export const translations = {
             languages: "Ngôn ngữ",
             myGroups: "Nhóm của tôi",
             joinCreateGroup: "Tham gia/Tạo nhóm",
-            signOut: "Đăng xuất"
+            signOut: "Đăng xuất",
+            selectGroup: "Chọn Nhóm",
+            close: "Đóng"
         },
         dashboard: {
             overview: "Tổng quan",
@@ -1010,7 +1082,13 @@ export const translations = {
             seeAll: "Xem tất cả",
             noRecentNotes: "Không có ghi chép gần đây.",
             randomPhoto: "Ảnh thánh thư ngẫu nhiên",
-            readInGospelLibrary: "Đọc trong Thư viện Phúc âm"
+            readInGospelLibrary: "Đọc trong Thư viện Phúc âm",
+            inspirationTitle: "Sứ mệnh của chúng tôi",
+            inspirationQuote: "\"Vậy nên, người thuyết giảng và người nhận hiểu được nhau, và cả hai được gây dựng và cùng nhau vui vẻ.\"",
+            inspirationSource: "— Chúa Giê Su Ky Tô (Giáo Lý và Giao Ước 50:22)",
+            inspirationMessage: "Bằng cách liên tục chia sẻ những gì chúng ta học được mỗi ngày với nhóm, hãy cùng nhau gây dựng và chia sẻ niềm vui!",
+            inspirationFrom: "— Đội ngũ phát triển Scripture Habit",
+            shareLearningCall: "Bạn có muốn chia sẻ những gì bạn đã học hôm nay không?"
         },
         languages: {
             title: "Ngôn ngữ",
@@ -1037,7 +1115,13 @@ export const translations = {
             groupName: "Trò chuyện nhóm",
             replyTo: "trả lời",
             replyingTo: "Đang trả lời",
-            cancelReply: "Hủy trả lời"
+            cancelReply: "Hủy trả lời",
+            streakAnnouncement: "🎉🎉🎉 **{nickname} đã đạt chuỗi {streak} ngày!!** 🎉🎉🎉\n\n**Hãy cùng nhau xây dựng đức tin trong nhóm và chia sẻ niềm vui!**",
+            userJoined: "👋 **{nickname}** đã tham gia nhóm!",
+            userLeft: "🚪 **{nickname}** đã rời nhóm.",
+            deleteConfirmMessage: "Hành động này không thể hoàn tác. Tất cả tin nhắn và dữ liệu sẽ bị mất vĩnh viễn.",
+            typeToConfirm: "Vui lòng nhập **{groupName}** để xác nhận.",
+            enterGroupNamePlaceholder: "Nhập tên nhóm"
         },
         myNotes: {
             title: "Ghi chép của tôi",
@@ -1106,7 +1190,7 @@ export const translations = {
             createGroupCta: "Muốn bắt đầu cộng đồng riêng của bạn?",
             createGroupLink: "Tạo nhóm",
             errorLoggedIn: "Bạn phải đăng nhập để tham gia nhóm.",
-            errorMaxGroups: "Bạn chỉ có thể tham gia tối đa 7 nhóm.",
+            errorMaxGroups: "Bạn chỉ có thể tham gia tối đa 12 nhóm.",
             errorAlreadyMember: "Bạn đã là thành viên của nhóm này.",
             errorFull: "Nhóm này đã đầy.",
             successJoined: "Đã tham gia nhóm thành công:",

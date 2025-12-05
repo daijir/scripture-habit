@@ -285,21 +285,6 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         lastPostDate: serverTimestamp(),
                         totalNotes: increment(1)
                     });
-
-                    const targetGroupIds = userGroups.map(g => g.id);
-
-                    if (newStreak > 0) {
-                        for (const gid of targetGroupIds) {
-                            const messagesRef = collection(db, 'groups', gid, 'messages');
-                            await addDoc(messagesRef, {
-                                text: `🎉🎉🎉 **${userData.nickname} reached a ${newStreak} day streak! Way to go!!** 🎉🎉🎉`,
-                                senderId: 'system',
-                                senderNickname: 'Scripture Habit Bot',
-                                createdAt: serverTimestamp(),
-                                isSystemMessage: true
-                            });
-                        }
-                    }
                 } else {
                     await updateDoc(userRef, {
                         lastPostDate: serverTimestamp(),
@@ -351,6 +336,26 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 // 3. Update the Personal Note with the IDs of the shared messages
                 if (Object.keys(sharedMessageIds).length > 0) {
                     await updateDoc(personalNoteRef, { sharedMessageIds });
+                }
+
+                // Send streak announcement AFTER note is posted so it appears below the note
+                if (streakUpdated && newStreak > 0) {
+                    const targetGroupIds = userGroups.map(g => g.id);
+                    for (const gid of targetGroupIds) {
+                        const messagesRef = collection(db, 'groups', gid, 'messages');
+                        await addDoc(messagesRef, {
+                            text: `🎉🎉🎉 **${userData.nickname} reached a ${newStreak} day streak!!** 🎉🎉🎉\n\n**Let us edify one another in the group and share joy together!**`,
+                            senderId: 'system',
+                            senderNickname: 'Scripture Habit Bot',
+                            createdAt: serverTimestamp(),
+                            isSystemMessage: true,
+                            messageType: 'streakAnnouncement',
+                            messageData: {
+                                nickname: userData.nickname,
+                                streak: newStreak
+                            }
+                        });
+                    }
                 }
 
                 toast.success(t('newNote.successPost'));

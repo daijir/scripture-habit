@@ -70,7 +70,7 @@ app.post('/join-group', async (req, res) => {
       const groupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
 
       if (groupIds.includes(groupId)) throw new Error('User already in this group.');
-      if (groupIds.length >= 7) throw new Error('You can only join up to 7 groups.');
+      if (groupIds.length >= 7) throw new Error('You can only join up to 12 groups.');
 
       const groupData = groupDoc.data();
 

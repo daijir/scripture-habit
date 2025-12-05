@@ -97,8 +97,24 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
           <h1>{t('myNotes.title')}</h1>
           <p className="welcome-text">{t('myNotes.description')}</p>
         </div>
-        <button className="new-note-btn" onClick={() => setIsModalOpen(true)}>
-          <UilPlus /> {t('myNotes.newNote')}
+      </div>
+
+      <div className="inspiration-section" style={{ marginBottom: '2rem' }}>
+        <div className="inspiration-card">
+          <h3 className="inspiration-title">{t('dashboard.inspirationTitle')}</h3>
+          <blockquote className="inspiration-quote">
+            {t('dashboard.inspirationQuote')}
+          </blockquote>
+          <p className="inspiration-source">{t('dashboard.inspirationSource')}</p>
+          <p className="inspiration-message">{t('dashboard.inspirationMessage')}</p>
+          <p className="inspiration-from">{t('dashboard.inspirationFrom')}</p>
+        </div>
+      </div>
+
+      <div className="share-learning-cta" style={{ marginBottom: '2rem' }}>
+        <p>{t('dashboard.shareLearningCall')}</p>
+        <button className="new-note-btn cta-btn" onClick={() => setIsModalOpen(true)}>
+          <UilPlus /> {t('dashboard.newNote')}
         </button>
       </div>
 

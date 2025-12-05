@@ -101,6 +101,11 @@ h2 {
   .App {
     padding: 0;
     align-items: stretch;
+    /* Softer gradient for mobile */
+    background: linear-gradient(106.37deg,
+        rgba(254, 172, 94, 0.3) 29.63%,
+        rgba(199, 121, 208, 0.3) 51.55%,
+        rgba(75, 192, 200, 0.3) 90.85%);
   }
 
   .AppGlass {
@@ -108,5 +113,9 @@ h2 {
     min-height: 100vh;
     border-radius: 0;
     padding-top: 0;
+    /* Frosted glass effect */
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
   }
 }

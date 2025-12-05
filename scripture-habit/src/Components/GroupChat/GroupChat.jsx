@@ -375,14 +375,18 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
         <div className="leave-modal-overlay">
           <div className="leave-modal-content">
             <h3 className="delete-modal-title">{t('groupChat.deleteGroup')}?</h3>
-            <p>This action cannot be undone. All messages and data will be permanently lost.</p>
-            <p>Please type <strong>{groupData.name}</strong> to confirm.</p>
+            <p>{t('groupChat.deleteConfirmMessage')}</p>
+            <div style={{ marginBottom: '1rem' }}>
+              <ReactMarkdown components={{ p: 'span' }}>
+                {t('groupChat.typeToConfirm').replace('{groupName}', groupData.name)}
+              </ReactMarkdown>
+            </div>
             <input
               type="text"
               className="delete-confirmation-input"
               value={deleteConfirmationName}
               onChange={(e) => setDeleteConfirmationName(e.target.value)}
-              placeholder="Enter group name"
+              placeholder={t('groupChat.enterGroupNamePlaceholder')}
             />
             <div className="leave-modal-actions">
               <button className="modal-btn cancel" onClick={() => { setShowDeleteModal(false); setDeleteConfirmationName(''); }}>{t('groupChat.cancel')}</button>
@@ -423,7 +427,85 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
               {msg.senderId === 'system' || msg.isSystemMessage ? (
                 <div className="message system-message">
                   <div className="message-content">
-                    <ReactMarkdown>{msg.text}</ReactMarkdown>
+                    <ReactMarkdown>
+                      {(() => {
+                        // New format: has messageType and messageData
+                        if (msg.messageType === 'streakAnnouncement' && msg.messageData) {
+                          return t('groupChat.streakAnnouncement')
+                            .replace('{nickname}', msg.messageData.nickname)
+                            .replace('{streak}', msg.messageData.streak);
+                        }
+
+                        if (msg.messageType === 'userJoined' && msg.messageData) {
+                          return t('groupChat.userJoined')
+                            .replace('{nickname}', msg.messageData.nickname);
+                        }
+
+                        if (msg.messageType === 'userLeft' && msg.messageData) {
+                          return t('groupChat.userLeft')
+                            .replace('{nickname}', msg.messageData.nickname);
+                        }
+
+                        // Legacy format: parse from text
+                        // Streak patterns for various languages:
+                        const streakPatterns = [
+                          /\*\*(.+?) reached a (\d+) day streak/,           // English
+                          /\*\*(.+?)さんが(\d+)日連続ストリーク/,            // Japanese
+                          /\*\*(.+?) alcançou uma ofensiva de (\d+) dias/, // Portuguese
+                          /\*\*(.+?) 達成了 (\d+) 天連續紀錄/,              // Chinese
+                          /\*\*(.+?) alcanzó una racha de (\d+) días/,     // Spanish
+                          /\*\*(.+?) đã đạt chuỗi (\d+) ngày/,             // Vietnamese
+                        ];
+
+                        for (const pattern of streakPatterns) {
+                          const match = msg.text?.match(pattern);
+                          if (match) {
+                            const nickname = match[1];
+                            const streak = match[2];
+                            return t('groupChat.streakAnnouncement')
+                              .replace('{nickname}', nickname)
+                              .replace('{streak}', streak);
+                          }
+                        }
+
+                        // Legacy join patterns
+                        const joinPatterns = [
+                          /\*\*(.+?)\*\* joined the group/,      // English
+                          /\*\*(.+?)\*\*さんがグループに参加/,    // Japanese
+                          /\*\*(.+?)\*\* entrou no grupo/,       // Portuguese
+                          /\*\*(.+?)\*\* 加入了群組/,            // Chinese
+                          /\*\*(.+?)\*\* se unió al grupo/,      // Spanish
+                          /\*\*(.+?)\*\* đã tham gia nhóm/,      // Vietnamese
+                        ];
+
+                        for (const pattern of joinPatterns) {
+                          const match = msg.text?.match(pattern);
+                          if (match) {
+                            return t('groupChat.userJoined').replace('{nickname}', match[1]);
+                          }
+                        }
+
+                        // Legacy leave patterns
+                        const leavePatterns = [
+                          /\*\*(.+?)\*\* left the group/,        // English
+                          /\*\*(.+?)\*\*さんがグループを退会/,    // Japanese
+                          /\*\*(.+?)\*\* saiu do grupo/,         // Portuguese
+                          /\*\*(.+?)\*\* 離開了群組/,            // Chinese
+                          /\*\*(.+?)\*\* salió del grupo/,       // Spanish
+                          /\*\*(.+?)\*\* đã rời nhóm/,           // Vietnamese
+                        ];
+
+                        for (const pattern of leavePatterns) {
+                          const match = msg.text?.match(pattern);
+                          if (match) {
+                            return t('groupChat.userLeft').replace('{nickname}', match[1]);
+                          }
+                        }
+
+                        // No match found, return original text
+                        return msg.text;
+                      })()}
+                    </ReactMarkdown>
                   </div>
                 </div>
               ) : (
