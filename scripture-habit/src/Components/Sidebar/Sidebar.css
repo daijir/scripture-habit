@@ -142,6 +142,22 @@
     }
 }
 
+@media screen and (max-width: 768px) and (prefers-color-scheme: dark) {
+    .Sidebar {
+        background: rgba(36, 45, 73, 0.95);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .menuItem {
+        color: white;
+    }
+
+    .active {
+        background: var(--pink);
+        color: white;
+    }
+}
+
 .groups-section {
     display: flex;
     flex-direction: column;
