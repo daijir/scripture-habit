@@ -117,6 +117,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  align-items: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -149,12 +150,7 @@
   color: var(--gray);
 }
 
-.streak-subtext {
-  margin: 0.5rem 0 0 0;
-  font-size: 0.85rem;
-  color: #4bc0c8;
-  font-weight: 500;
-}
+
 
 /* Inspiration Section */
 .inspiration-section {
@@ -355,5 +351,25 @@
 
   .recent-entries-grid {
     grid-template-columns: 1fr;
+  }
+
+  .dashboard-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .stat-card {
+    min-width: unset;
+    padding: 1rem;
+  }
+
+  .stat-card h3 {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .streak-value .number {
+    font-size: 2rem;
   }
 }
