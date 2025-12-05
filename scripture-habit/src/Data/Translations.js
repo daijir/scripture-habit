@@ -41,7 +41,9 @@ export const translations = {
             spanish: "Spanish (Spanish)",
             vietnamese: "Vietnamese (Vietnamese)",
             thai: "Thai (Thai)",
-            korean: "Korean (Korean)"
+            korean: "Korean (Korean)",
+            tagalog: "Tagalog (Tagalog)",
+            swahili: "Swahili (Swahili)"
         },
         myNotes: {
             title: "My Notes",
@@ -256,7 +258,9 @@ export const translations = {
             spanish: "スペイン語 (Spanish)",
             vietnamese: "ベトナム語 (Vietnamese)",
             thai: "タイ語 (Thai)",
-            korean: "韓国語 (Korean)"
+            korean: "韓国語 (Korean)",
+            tagalog: "タガログ語 (Tagalog)",
+            swahili: "スワヒリ語 (Swahili)"
         },
         groupChat: {
             send: "送信",
@@ -471,7 +475,9 @@ export const translations = {
             spanish: "Espanhol (Spanish)",
             vietnamese: "Vietnamita (Vietnamese)",
             thai: "Tailandês (Thai)",
-            korean: "Coreano (Korean)"
+            korean: "Coreano (Korean)",
+            tagalog: "Tagalo (Tagalog)",
+            swahili: "Suaíli (Swahili)"
         },
         groupChat: {
             send: "Enviar",
@@ -686,7 +692,9 @@ export const translations = {
             spanish: "西班牙文 (Spanish)",
             vietnamese: "越南文 (Vietnamese)",
             thai: "泰文 (Thai)",
-            korean: "韓文 (Korean)"
+            korean: "韓文 (Korean)",
+            tagalog: "塔加洛文 (Tagalog)",
+            swahili: "斯瓦希里文 (Swahili)"
         },
         groupChat: {
             send: "發送",
@@ -901,7 +909,9 @@ export const translations = {
             spanish: "Español (Spanish)",
             vietnamese: "Vietnamita (Vietnamese)",
             thai: "Tailandés (Thai)",
-            korean: "Coreano (Korean)"
+            korean: "Coreano (Korean)",
+            tagalog: "Tagalo (Tagalog)",
+            swahili: "Suajili (Swahili)"
         },
         groupChat: {
             send: "Enviar",
@@ -1116,7 +1126,9 @@ export const translations = {
             spanish: "Tiếng Tây Ban Nha (Spanish)",
             vietnamese: "Tiếng Việt (Vietnamese)",
             thai: "Tiếng Thái (Thai)",
-            korean: "Tiếng Hàn (Korean)"
+            korean: "Tiếng Hàn (Korean)",
+            tagalog: "Tiếng Tagalog (Tagalog)",
+            swahili: "Tiếng Swahili (Swahili)"
         },
         groupChat: {
             send: "Gửi",
@@ -1331,7 +1343,9 @@ export const translations = {
             spanish: "สเปน (Spanish)",
             vietnamese: "เวียดนาม (Vietnamese)",
             thai: "ไทย (Thai)",
-            korean: "เกาหลี (Korean)"
+            korean: "เกาหลี (Korean)",
+            tagalog: "ตากาล็อก (Tagalog)",
+            swahili: "สวาฮีลี (Swahili)"
         },
         groupChat: {
             send: "ส่ง",
@@ -1546,7 +1560,9 @@ export const translations = {
             spanish: "스페인어 (Spanish)",
             vietnamese: "베트남어 (Vietnamese)",
             thai: "태국어 (Thai)",
-            korean: "한국어 (Korean)"
+            korean: "한국어 (Korean)",
+            tagalog: "타갈로그어 (Tagalog)",
+            swahili: "스와힐리어 (Swahili)"
         },
         groupChat: {
             send: "전송",
@@ -1717,6 +1733,440 @@ export const translations = {
             message: "정말로 로그아웃하시겠습니까?",
             confirm: "로그아웃",
             cancel: "취소"
+        }
+    },
+    tl: {
+        sidebar: {
+            dashboard: "Dashboard",
+            myNotes: "Aking mga Tala",
+            languages: "Mga Wika",
+            myGroups: "Aking mga Grupo",
+            joinCreateGroup: "Sumali/Lumikha ng Grupo",
+            signOut: "Mag-sign Out",
+            selectGroup: "Pumili ng Grupo",
+            close: "Isara"
+        },
+        dashboard: {
+            overview: "Pangkalahatang-ideya ng Dashboard",
+            welcomeBack: "Maligayang pagbabalik",
+            newNote: "Bagong Tala",
+            streak: "Sunod-sunod",
+            days: "araw",
+            keepItUp: "Ipagpatuloy mo!",
+            totalNotes: "Kabuuang mga Tala",
+            notes: "mga tala",
+            recentNotes: "Kamakailang mga Tala",
+            seeAll: "Tingnan Lahat",
+            noRecentNotes: "Walang kamakailang mga tala.",
+            randomPhoto: "Random na Larawan ng Banal na Kasulatan mula sa Developer",
+            readInGospelLibrary: "Basahin sa Gospel Library",
+            inspirationTitle: "Ang Aming Misyon",
+            inspirationQuote: "\"Samakatwid, siya na nangangaral at siya na nakatatanggap ay nauunawaan ang isa't isa, at sila ay kapwa pinabuti at nagsasaya nang magkasama.\"",
+            inspirationSource: "— Jesucristo (Doktrina at mga Tipan 50:22)",
+            inspirationMessage: "Sa pamamagitan ng pagbabahagi ng ating natutunan araw-araw sa grupo, patibayin natin ang isa't isa at magbahagi ng kagalakan!",
+            inspirationFrom: "— Mga Developer ng Scripture Habit",
+            shareLearningCall: "Gusto mo bang ibahagi ang natutunan mo ngayon?"
+        },
+        languages: {
+            title: "Mga Wika",
+            description: "Piliin ang iyong ginustong wika.",
+            english: "Ingles (English)",
+            japanese: "Hapon (Japanese)",
+            portuguese: "Portuges (Portuguese)",
+            chinese: "Tradisyonal na Tsino (Traditional Chinese)",
+            spanish: "Kastila (Spanish)",
+            vietnamese: "Vietnamese (Vietnamese)",
+            thai: "Thai (Thai)",
+            korean: "Koreano (Korean)",
+            tagalog: "Tagalog (Tagalog)",
+            swahili: "Swahili (Swahili)"
+        },
+        groupChat: {
+            send: "Ipadala",
+            public: "Pampubliko",
+            private: "Pribado",
+            inviteCode: "Invite Code",
+            typeMessage: "I-click ang + button para gumawa ng tala o mag-type ng mensahe...",
+            leaveGroup: "Umalis sa Grupo",
+            deleteGroup: "Tanggalin ang Grupo",
+            cancel: "Kanselahin",
+            confirmDelete: "Tanggalin ang Grupo",
+            confirmLeave: "Umalis sa Grupo",
+            leaveConfirmMessage: "Sigurado ka bang gusto mong umalis sa grupong ito? Kakailanganin mong maghanap at sumali sa ibang grupo para makasali ulit.",
+            groupName: "Group Chat",
+            replyTo: "tumugon sa",
+            replyingTo: "Tumutugon sa",
+            cancelReply: "Kanselahin ang tugon",
+            streakAnnouncement: "🎉🎉🎉 **Naabot ni {nickname} ang {streak} araw na sunod-sunod!!** 🎉🎉🎉\n\n**Patibayin natin ang isa't isa sa grupo at magbahagi ng kagalakan!**",
+            userJoined: "👋 **{nickname}** sumali sa grupo!",
+            userLeft: "🚪 **{nickname}** umalis sa grupo.",
+            deleteConfirmMessage: "Hindi na mababawi ang aksyong ito. Ang lahat ng mensahe at data ay permanenteng mawawala.",
+            typeToConfirm: "Pakitype ang **{groupName}** para kumpirmahin.",
+            enterGroupNamePlaceholder: "Ilagay ang pangalan ng grupo"
+        },
+        myNotes: {
+            title: "Aking mga Tala",
+            description: "Ang iyong personal na koleksyon ng mga tala sa pag-aaral at pagninilay.",
+            newNote: "Bagong Tala",
+            loading: "Naglo-load ng mga tala...",
+            noNotesTitle: "Wala pang mga tala",
+            noNotesDesc: "Simulan ang iyong paglalakbay sa pamamagitan ng paggawa ng iyong unang tala sa pag-aaral.",
+            deleteTitle: "Tanggalin ang Tala?",
+            deleteConfirm: "Sigurado ka bang gusto mong tanggalin ang talang ito? Hindi na ito mababawi.",
+            cancel: "Kanselahin",
+            delete: "Tanggalin ang Tala",
+            readInGospelLibrary: "Basahin sa Gospel Library"
+        },
+        newNote: {
+            editTitle: "I-edit ang Tala",
+            newTitle: "Bagong Tala",
+            deleteTitle: "Tanggalin ang Tala",
+            errorMissingFields: "Pakipunan ang kabanata at pumili ng banal na kasulatan.",
+            chooseScriptureLabel: "Piliin ang banal na kasulatan",
+            chooseScripturePlaceholder: "Mangyaring pumili ng opsyon sa banal na kasulatan",
+            chapterLabel: "Kabanata",
+            chapterPlaceholder: "hal. Alma 5, Isaias 9:6",
+            commentLabel: "Komento",
+            commentPlaceholder: "hal. Kahit na wala akong masyadong oras ngayon, nagbasa ako mula sa Pumarito Ka, Sumunod Ka sa Akin, at naging magandang sandali ito para alalahanin ang Pagbabayad-sala ni Cristo. Talagang nakakapagpalakas.",
+            shareLabel: "Ibahagi sa:",
+            shareAll: "Lahat ng aking grupo",
+            shareCurrent: "Ang Grupong Ito",
+            shareSpecific: "Mga partikular na grupo",
+            shareNone: "Huwag ibahagi (Pribado)",
+            noGroups: "Walang natagpuang grupo.",
+            unnamedGroup: "Walang Pangalang Grupo",
+            cancel: "Kanselahin",
+            saving: "Nagsesave...",
+            update: "I-update ang Tala",
+            post: "I-post ang Tala",
+            successUpdate: "Matagumpay na na-update ang tala!",
+            successPost: "Matagumpay na nai-post ang tala!",
+            errorSave: "Nabigong i-save ang tala. Pakisubukan muli."
+        },
+        scriptures: {
+            oldTestament: "Lumang Tipan",
+            newTestament: "Bagong Tipan",
+            bookOfMormon: "Aklat ni Mormon",
+            doctrineAndCovenants: "Doktrina at mga Tipan",
+            pearlOfGreatPrice: "Mahalagang Perlas"
+        },
+        groupOptions: {
+            title: "Hanapin ang Iyong Komunidad",
+            subtitle: "Piliin kung paano mo gustong kumonekta sa iba.",
+            joinGroupTitle: "Sumali sa Grupo",
+            joinGroupDesc: "Humanap ng umiiral na grupo para makapag-aral nang sabay.",
+            createGroupTitle: "Lumikha ng Grupo",
+            createGroupDesc: "Simulan ang iyong sariling grupo at mag-imbita ng mga kaibigan.",
+            backToDashboard: "Bumalik sa Dashboard"
+        },
+        joinGroup: {
+            inviteCodeTitle: "May Invite Code?",
+            inviteCodeDesc: "Ilagay ang code na ibinahagi ng iyong group leader para direktang sumali.",
+            inviteCodeLabel: "Invite Code",
+            inviteCodePlaceholder: "hal. X9J2KL",
+            joinButton: "Sumali sa Grupo",
+            publicGroupsTitle: "Tuklasin ang mga Pampublikong Grupo",
+            publicGroupsDesc: "Humanap ng komunidad na tumutugma sa iyong mga layunin sa pag-aaral.",
+            noPublicGroups: "Walang pampublikong grupo na maaaring salihan.",
+            createGroupCta: "Gusto mo bang simulan ang iyong sariling komunidad?",
+            createGroupLink: "Lumikha ng Grupo",
+            errorLoggedIn: "Kailangan mong mag-log in para sumali sa isang grupo.",
+            errorMaxGroups: "Maaari ka lamang sumali sa hanggang 12 grupo.",
+            errorAlreadyMember: "Miyembro ka na ng grupong ito.",
+            errorFull: "Puno na ang grupong ito.",
+            successJoined: "Matagumpay na nakasali sa grupo:",
+            errorJoinFailed: "Nabigong sumali sa grupo:",
+            errorEnterCode: "Pakilagay ang Invite Code.",
+            errorInvalidCode: "Hindi wastong invite code. Hindi natagpuan ang grupo.",
+            errorSearch: "Error sa paghahanap ng grupo.",
+            joinConfirmTitle: "Sumali sa Grupo",
+            joinConfirmMessage: "Sigurado ka bang gusto mong sumali sa grupong ito?",
+            confirmJoin: "Sumali",
+            cancelJoin: "Kanselahin"
+        },
+        groupForm: {
+            title: "Lumikha ng Study Group",
+            subtitle: "Bumuo ng scripture study group at mag-imbita ng iba na sumali.",
+            groupNameLabel: "Pangalan ng Grupo",
+            groupNamePlaceholder: "Ilagay ang pangalan ng grupo",
+            descriptionLabel: "Paglalarawan (opsyonal)",
+            maxMembersLabel: "Max na Miyembro",
+            publicGroupLabel: "Pampublikong Grupo",
+            createButton: "Lumikha ng Grupo",
+            joinGroupCta: "Naghahanap ng umiiral na grupo?",
+            joinGroupLink: "Sumali sa Grupo",
+            errorLoggedIn: "Kailangan mong mag-log in para lumikha ng grupo.",
+            successCreated: "Matagumpay na nalikha ang grupo!",
+            errorCreateFailed: "Nabigong lumikha ng grupo. Pakisubukan muli."
+        },
+        welcome: {
+            title: "Maligayang pagdating sa Scripture Habit",
+            chooseLanguage: "Piliin ang iyong wika (maaari mo itong baguhin mamaya).",
+            login: "Mag-log In",
+            signup: "Mag-sign Up"
+        },
+        login: {
+            title: "Mag-log In",
+            emailLabel: "Gmail Address",
+            passwordLabel: "Password",
+            submitButton: "Mag-log In",
+            errorGmail: "Pakigamit ang Gmail address.",
+            noAccount: "Wala pang account?",
+            signupLink: "Mag-sign Up"
+        },
+        signup: {
+            title: "Mag-sign Up",
+            nicknameLabel: "Palayaw",
+            emailLabel: "Gmail Address",
+            passwordLabel: "Password",
+            submitButton: "Mag-sign Up",
+            errorGmail: "Pakigamit ang Gmail address.",
+            errorSaveProfile: "Nabigong i-save ang profile. Makipag-ugnayan sa suporta.",
+            errorEmailInUse: "Ginagamit na ang email na ito. Mag-log in o gumamit ng ibang email.",
+            hasAccount: "May account na?",
+            loginLink: "Mag-log In"
+        },
+        groupCard: {
+            members: "miyembro",
+            open: "Buksan",
+            joining: "Sumasali...",
+            join: "Sumali",
+            details: "Detalye",
+            close: "Isara",
+            noDescription: "Walang paglalarawan.",
+            signInFirst: "Mag-sign in muna para makasali",
+            unableToJoin: "Hindi makasali sa grupo"
+        },
+        noteLabels: {
+            scripture: "Banal na Kasulatan",
+            chapter: "Kabanata",
+            title: "Pamagat",
+            comment: "Komento",
+            newStudyNote: "Bagong Tala sa Pag-aaral",
+            newStudyEntry: "Bagong Entry sa Pag-aaral"
+        },
+        signOut: {
+            title: "Mag-sign Out",
+            message: "Sigurado ka bang gusto mong mag-sign out?",
+            confirm: "Mag-sign Out",
+            cancel: "Kanselahin"
+        }
+    },
+    sw: {
+        sidebar: {
+            dashboard: "Dashibodi",
+            myNotes: "Maelezo Yangu",
+            languages: "Lugha",
+            myGroups: "Vikundi Vyangu",
+            joinCreateGroup: "Jiunge/Unda Kikundi",
+            signOut: "Ondoka",
+            selectGroup: "Chagua Kikundi",
+            close: "Funga"
+        },
+        dashboard: {
+            overview: "Muhtasari wa Dashibodi",
+            welcomeBack: "Karibu tena",
+            newNote: "Ujumbe Mpya",
+            streak: "Mfululizo",
+            days: "siku",
+            keepItUp: "Endelea hivyo!",
+            totalNotes: "Jumla ya Maelezo",
+            notes: "maelezo",
+            recentNotes: "Maelezo ya Hivi Karibuni",
+            seeAll: "Ona Yote",
+            noRecentNotes: "Hakuna maelezo ya hivi karibuni.",
+            randomPhoto: "Picha ya Maandiko ya Kubahatisha kutoka kwa Msanidi",
+            readInGospelLibrary: "Soma katika Gospel Library",
+            inspirationTitle: "Dhumuni Letu",
+            inspirationQuote: "\"Kwa sababu hiyo, yule ambaye huhubiri na yule apokeaye, huelewana, na wote hujengana na kufurahi kwa pamoja.\"",
+            inspirationSource: "— Yesu Kristo (Mafundisho na Maagano 50:22)",
+            inspirationMessage: "Kwa kushiriki kile tunachojifunza kila siku na kikundi, hebu tujengane na kushiriki furaha!",
+            inspirationFrom: "— Waendelezaji wa Scripture Habit",
+            shareLearningCall: "Je, ungependa kushiriki ulichojifunza leo?"
+        },
+        languages: {
+            title: "Lugha",
+            description: "Chagua lugha unayopendelea.",
+            english: "Kiingereza (English)",
+            japanese: "Kijapani (Japanese)",
+            portuguese: "Kireno (Portuguese)",
+            chinese: "Kichina cha Jadi (Traditional Chinese)",
+            spanish: "Kihispania (Spanish)",
+            vietnamese: "Kivietinamu (Vietnamese)",
+            thai: "Kithai (Thai)",
+            korean: "Kikorea (Korean)",
+            tagalog: "Kitagalog (Tagalog)",
+            swahili: "Kiswahili (Swahili)"
+        },
+        groupChat: {
+            send: "Tuma",
+            public: "Umma",
+            private: "Binafsi",
+            inviteCode: "Msimbo wa Kualika",
+            typeMessage: "Bofya kitufe cha + kuunda ujumbe au andika ujumbe...",
+            leaveGroup: "Ondoka Kwenye Kikundi",
+            deleteGroup: "Futa Kikundi",
+            cancel: "Ghairi",
+            confirmDelete: "Futa Kikundi",
+            confirmLeave: "Ondoka Kwenye Kikundi",
+            leaveConfirmMessage: "Je, una uhakika unataka kuondoka kwenye kikundi hiki? Utahitaji kutafuta na kujiunga na kikundi kingine ili kushiriki tena.",
+            groupName: "Mazungumzo ya Kikundi",
+            replyTo: "jibu kwa",
+            replyingTo: "Inajibu kwa",
+            cancelReply: "Ghairi jibu",
+            streakAnnouncement: "🎉🎉🎉 **{nickname} amefikisha mfululizo wa siku {streak}!!** 🎉🎉🎉\n\n**Hebu tujengane katika kikundi na kushiriki furaha pamoja!**",
+            userJoined: "👋 **{nickname}** amejiunga na kikundi!",
+            userLeft: "🚪 **{nickname}** ameondoka kwenye kikundi.",
+            deleteConfirmMessage: "Hatua hii haiwezi kubatilishwa. Ujumbe na data zote zitapotea kabisa.",
+            typeToConfirm: "Tafadhali andika **{groupName}** ili kuthibitisha.",
+            enterGroupNamePlaceholder: "Ingiza jina la kikundi"
+        },
+        myNotes: {
+            title: "Maelezo Yangu",
+            description: "Mkusanyiko wako binafsi wa maelezo ya kujifunza na tafakari.",
+            newNote: "Ujumbe Mpya",
+            loading: "Inapakia maelezo...",
+            noNotesTitle: "Hakuna maelezo bado",
+            noNotesDesc: "Anza safari yako kwa kuunda ujumbe wako wa kwanza wa kujifunza.",
+            deleteTitle: "Futa Ujumbe?",
+            deleteConfirm: "Je, una uhakika unataka kufuta ujumbe huu? Hatua hii haiwezi kubatilishwa.",
+            cancel: "Ghairi",
+            delete: "Futa Ujumbe",
+            readInGospelLibrary: "Soma katika Gospel Library"
+        },
+        newNote: {
+            editTitle: "Hariri Ujumbe",
+            newTitle: "Ujumbe Mpya",
+            deleteTitle: "Futa Ujumbe",
+            errorMissingFields: "Tafadhali jaza sura na uchague andiko.",
+            chooseScriptureLabel: "Chagua andiko",
+            chooseScripturePlaceholder: "Tafadhali chagua chaguo la andiko",
+            chapterLabel: "Sura",
+            chapterPlaceholder: "mf. Alma 5, Isaya 9:6",
+            commentLabel: "Maoni",
+            commentPlaceholder: "mf. Ingawa sikuwa na muda mwingi leo, nilisoma kutoka Njoo, Unifuate, na ilikuwa wakati mzuri wa kukumbuka Upatanisho wa Kristo. Ilikuwa ya kuinua kweli.",
+            shareLabel: "Shiriki na:",
+            shareAll: "Vikundi vyangu vyote",
+            shareCurrent: "Kikundi Hiki",
+            shareSpecific: "Vikundi maalum",
+            shareNone: "Usishiriki (Binafsi)",
+            noGroups: "Hakuna vikundi vilivyopatikana.",
+            unnamedGroup: "Kikundi kisicho na jina",
+            cancel: "Ghairi",
+            saving: "Inahifadhi...",
+            update: "Sasisha Ujumbe",
+            post: "Chapisha Ujumbe",
+            successUpdate: "Ujumbe umesasishwa kikamilifu!",
+            successPost: "Ujumbe umechapishwa kikamilifu!",
+            errorSave: "Imeshindwa kuhifadhi ujumbe. Tafadhali jaribu tena."
+        },
+        scriptures: {
+            oldTestament: "Agano la Kale",
+            newTestament: "Agano Jipya",
+            bookOfMormon: "Kitabu cha Mormoni",
+            doctrineAndCovenants: "Mafundisho na Maagano",
+            pearlOfGreatPrice: "Lulu ya Thamani Kuu"
+        },
+        groupOptions: {
+            title: "Tafuta Jumuiya Yako",
+            subtitle: "Chagua jinsi unavyotaka kuungana na wengine.",
+            joinGroupTitle: "Jiunge na Kikundi",
+            joinGroupDesc: "Tafuta kikundi kilichopo ili kujifunza pamoja.",
+            createGroupTitle: "Unda Kikundi",
+            createGroupDesc: "Anzisha kikundi chako mwenyewe na ualike marafiki.",
+            backToDashboard: "Rudi kwenye Dashibodi"
+        },
+        joinGroup: {
+            inviteCodeTitle: "Una Msimbo wa Kualika?",
+            inviteCodeDesc: "Ingiza msimbo ulioshirikiwa na kiongozi wa kikundi chako ili kujiunga moja kwa moja.",
+            inviteCodeLabel: "Msimbo wa Kualika",
+            inviteCodePlaceholder: "mf. X9J2KL",
+            joinButton: "Jiunge na Kikundi",
+            publicGroupsTitle: "Gundua Vikundi vya Umma",
+            publicGroupsDesc: "Tafuta jumuiya inayolingana na malengo yako ya kujifunza.",
+            noPublicGroups: "Hakuna vikundi vya umma vinavyopatikana kujiunga.",
+            createGroupCta: "Unataka kuanzisha jumuiya yako mwenyewe?",
+            createGroupLink: "Unda Kikundi",
+            errorLoggedIn: "Lazima uingie ili kujiunga na kikundi.",
+            errorMaxGroups: "Unaweza kujiunga na vikundi hadi 12 pekee.",
+            errorAlreadyMember: "Wewe tayari ni mwanachama wa kikundi hiki.",
+            errorFull: "Kikundi hiki kimejaa tayari.",
+            successJoined: "Umejiunga na kikundi kikamilifu:",
+            errorJoinFailed: "Imeshindwa kujiunga na kikundi:",
+            errorEnterCode: "Tafadhali ingiza Msimbo wa Kualika.",
+            errorInvalidCode: "Msimbo wa kualika si sahihi. Kikundi hakikupatikana.",
+            errorSearch: "Hitilafu katika kutafuta kikundi.",
+            joinConfirmTitle: "Jiunge na Kikundi",
+            joinConfirmMessage: "Je, una uhakika unataka kujiunga na kikundi hiki?",
+            confirmJoin: "Jiunge",
+            cancelJoin: "Ghairi"
+        },
+        groupForm: {
+            title: "Unda Kikundi cha Kujifunza",
+            subtitle: "Jenga kikundi cha kujifunza maandiko na ualike wengine kujiunga.",
+            groupNameLabel: "Jina la Kikundi",
+            groupNamePlaceholder: "Ingiza jina la kikundi",
+            descriptionLabel: "Maelezo (hiari)",
+            maxMembersLabel: "Wanachama Wa Juu",
+            publicGroupLabel: "Kikundi cha Umma",
+            createButton: "Unda Kikundi",
+            joinGroupCta: "Unatafuta kikundi kilichopo?",
+            joinGroupLink: "Jiunge na Kikundi",
+            errorLoggedIn: "Lazima uingie ili kuunda kikundi.",
+            successCreated: "Kikundi kimeundwa kikamilifu!",
+            errorCreateFailed: "Imeshindwa kuunda kikundi. Tafadhali jaribu tena."
+        },
+        welcome: {
+            title: "Karibu kwenye Scripture Habit",
+            chooseLanguage: "Chagua lugha yako (unaweza kubadilisha baadaye).",
+            login: "Ingia",
+            signup: "Jisajili"
+        },
+        login: {
+            title: "Ingia",
+            emailLabel: "Anwani ya Gmail",
+            passwordLabel: "Nenosiri",
+            submitButton: "Ingia",
+            errorGmail: "Tafadhali tumia anwani ya Gmail.",
+            noAccount: "Huna akaunti?",
+            signupLink: "Jisajili"
+        },
+        signup: {
+            title: "Jisajili",
+            nicknameLabel: "Jina la Utani",
+            emailLabel: "Anwani ya Gmail",
+            passwordLabel: "Nenosiri",
+            submitButton: "Jisajili",
+            errorGmail: "Tafadhali tumia anwani ya Gmail.",
+            errorSaveProfile: "Imeshindwa kuhifadhi wasifu. Wasiliana na usaidizi.",
+            errorEmailInUse: "Anwani hii ya barua pepe tayari inatumika. Tafadhali ingia au tumia barua pepe nyingine.",
+            hasAccount: "Tayari una akaunti?",
+            loginLink: "Ingia"
+        },
+        groupCard: {
+            members: "wanachama",
+            open: "Fungua",
+            joining: "Inajiunga...",
+            join: "Jiunge",
+            details: "Maelezo",
+            close: "Funga",
+            noDescription: "Hakuna maelezo.",
+            signInFirst: "Ingia kwanza ili kujiunga",
+            unableToJoin: "Imeshindwa kujiunga na kikundi"
+        },
+        noteLabels: {
+            scripture: "Andiko",
+            chapter: "Sura",
+            title: "Kichwa",
+            comment: "Maoni",
+            newStudyNote: "Ujumbe Mpya wa Kujifunza",
+            newStudyEntry: "Ingizo Jipya la Kujifunza"
+        },
+        signOut: {
+            title: "Ondoka",
+            message: "Je, una uhakika unataka kuondoka?",
+            confirm: "Ondoka",
+            cancel: "Ghairi"
         }
     }
 };
