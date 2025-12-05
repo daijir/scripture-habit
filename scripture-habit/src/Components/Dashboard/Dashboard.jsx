@@ -396,7 +396,7 @@ const Dashboard = () => {
                   <span className="number">{userData.streakCount || 0}</span>
                   <span className="label">{t('dashboard.days')}</span>
                 </div>
-                <p className="streak-subtext">{t('dashboard.keepItUp')}</p>
+
               </div>
               <div className="stat-card">
                 <h3>{t('dashboard.totalNotes')}</h3>
