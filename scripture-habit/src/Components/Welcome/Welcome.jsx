@@ -52,6 +52,18 @@ const Welcome = () => {
                     >
                         Tiếng Việt
                     </button>
+                    <button
+                        className={`lang-btn ${language === 'th' ? 'active' : ''}`}
+                        onClick={() => setLanguage('th')}
+                    >
+                        ไทย
+                    </button>
+                    <button
+                        className={`lang-btn ${language === 'ko' ? 'active' : ''}`}
+                        onClick={() => setLanguage('ko')}
+                    >
+                        한국어
+                    </button>
                 </div>
             </div>
 

@@ -55,6 +55,20 @@ const Languages = () => {
                         <span className="lang-flag">🇻🇳</span>
                         <span className="lang-name">{t('languages.vietnamese')}</span>
                     </div>
+                    <div
+                        className={`language-option ${language === 'th' ? 'active' : ''}`}
+                        onClick={() => setLanguage('th')}
+                    >
+                        <span className="lang-flag">🇹🇭</span>
+                        <span className="lang-name">{t('languages.thai')}</span>
+                    </div>
+                    <div
+                        className={`language-option ${language === 'ko' ? 'active' : ''}`}
+                        onClick={() => setLanguage('ko')}
+                    >
+                        <span className="lang-flag">🇰🇷</span>
+                        <span className="lang-name">{t('languages.korean')}</span>
+                    </div>
                 </div>
             </div>
         </div>
