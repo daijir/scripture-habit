@@ -11,25 +11,27 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
     else if (language === 'zho') langParam = "?lang=zho";
     else if (language === 'es') langParam = "?lang=spa";
     else if (language === 'vi') langParam = "?lang=vie";
+    else if (language === 'th') langParam = "?lang=tha";
+    else if (language === 'ko') langParam = "?lang=kor";
 
     // Normalize volume to get the URL part
     let volumeUrlPart = "";
     const lowerVolume = volume.toLowerCase();
 
-    if (lowerVolume === "old testament" || volume === "旧約聖書" || volume === "Velho Testamento" || volume === "舊約" || volume === "Antiguo Testamento" || volume === "Cựu Ước") {
+    if (lowerVolume === "old testament" || volume === "旧約聖書" || volume === "Velho Testamento" || volume === "舊約" || volume === "Antiguo Testamento" || volume === "Cựu Ước" || volume === "พันธสัญญาเดิม" || volume === "구약전서") {
         volumeUrlPart = "ot";
         // Vietnamese fallback for OT
         if (language === 'vi') langParam = "?lang=eng";
-    } else if (lowerVolume === "new testament" || volume === "新約聖書" || volume === "Novo Testamento" || volume === "新約" || volume === "Nuevo Testamento" || volume === "Tân Ước") {
+    } else if (lowerVolume === "new testament" || volume === "新約聖書" || volume === "Novo Testamento" || volume === "新約" || volume === "Nuevo Testamento" || volume === "Tân Ước" || volume === "พันธสัญญาใหม่" || volume === "신약전서") {
         volumeUrlPart = "nt";
         // Vietnamese fallback for NT
         if (language === 'vi') langParam = "?lang=eng";
-    } else if (lowerVolume === "book of mormon" || volume === "モルモン書" || volume === "O Livro de Mórmon" || volume === "摩爾門經" || volume === "El Libro de Mormón" || volume === "Sách Mặc Môn") {
+    } else if (lowerVolume === "book of mormon" || volume === "モルモン書" || volume === "O Livro de Mórmon" || volume === "摩爾門經" || volume === "El Libro de Mormón" || volume === "Sách Mặc Môn" || volume === "พระคัมภีร์มอรมอน" || volume === "몰몬경") {
         volumeUrlPart = "bofm";
-    } else if (lowerVolume.includes("doctrine and") || volume === "教義と聖約" || volume === "Doutrina e Convênios" || volume === "教義和聖約" || volume === "Doctrina y Convenios" || volume === "Giáo Lý và Giao Ước") {
+    } else if (lowerVolume.includes("doctrine and") || volume === "教義と聖約" || volume === "Doutrina e Convênios" || volume === "教義和聖約" || volume === "Doctrina y Convenios" || volume === "Giáo Lý và Giao Ước" || volume === "หลักคำสอนและพันธสัญญา" || volume === "교리와 성약") {
         // Covers "Doctrine and Covenants", "Doctrine and Convenants" (typo), and Japanese/Portuguese/Chinese/Spanish/Vietnamese
         volumeUrlPart = "dc-testament";
-    } else if (lowerVolume === "pearl of great price" || volume === "高価な真珠" || volume === "Pérola de Grande Valor" || volume === "無價珍珠" || volume === "La Perla de Gran Precio" || volume === "Trân Châu Vô Giá") {
+    } else if (lowerVolume === "pearl of great price" || volume === "高価な真珠" || volume === "Pérola de Grande Valor" || volume === "無價珍珠" || volume === "La Perla de Gran Precio" || volume === "Trân Châu Vô Giá" || volume === "ไข่มุกอันล้ำค่า" || volume === "값진 진주") {
         volumeUrlPart = "pgp";
     } else {
         return null;
@@ -501,7 +503,195 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         "áp ra ham": "abr", "ap ra ham": "abr",
         "giô sép smith—ma thi ơ": "js-m", "gio sep smith ma thi o": "js-m",
         "giô sép smith—lịch sử": "js-h", "gio sep smith lich su": "js-h",
-        "những tín điều": "a-of-f", "nhung tin dieu": "a-of-f"
+        "những tín điều": "a-of-f", "nhung tin dieu": "a-of-f",
+
+        // Thai Book of Mormon
+        "1 นีไฟ": "1-ne",
+        "2 นีไฟ": "2-ne",
+        "ยาคอบ": "jacob",
+        "อีนัส": "enos",
+        "จารอม": "jarom",
+        "ออมไน": "omni",
+        "ถ้อยคำของมอรมอน": "w-of-m",
+        "โมไซยาห์": "mosiah",
+        "แอลมา": "alma",
+        "ฮีลามัน": "hel",
+        "3 นีไฟ": "3-ne",
+        "4 นีไฟ": "4-ne",
+        "มอรมอน": "morm",
+        "อีเธอร์": "eth",
+        "โมโรไน": "moro",
+
+        // Thai Old Testament
+        "ปฐมกาล": "gen",
+        "อพยพ": "ex",
+        "เลวีนิติ": "lev",
+        "กันดารวิถี": "num",
+        "เฉลยธรรมบัญญัติ": "deut",
+        "โยชูวา": "josh",
+        "ผู้วินิจฉัย": "judg",
+        "นางรูธ": "ruth",
+        "1 ซามูเอล": "1-sam",
+        "2 ซามูเอล": "2-sam",
+        "1 พงศ์กษัตริย์": "1-kgs",
+        "2 พงศ์กษัตริย์": "2-kgs",
+        "1 พงศาวดาร": "1-chr",
+        "2 พงศาวดาร": "2-chr",
+        "เอสรา": "ezra",
+        "เนหะมีย์": "neh",
+        "เอสเธอร์": "esth",
+        "โยบ": "job",
+        "สดุดี": "ps",
+        "สุภาษิต": "prov",
+        "ปัญญาจารย์": "eccl",
+        "เพลงไพเราะ": "song",
+        "อิสยาห์": "isa",
+        "เยเรมีย์": "jer",
+        "เพลงคร่ำครวญ": "lam",
+        "เอเสเคียล": "ezek",
+        "ดาเนียล": "dan",
+        "โฮเชยา": "hosea",
+        "โยเอล": "joel",
+        "อาโมส": "amos",
+        "โอบาดีห์": "obad",
+        "โยนาห์": "jonah",
+        "มีคาห์": "micah",
+        "นาฮูม": "nahum",
+        "ฮาบากุก": "hab",
+        "เศฟันยาห์": "zeph",
+        "ฮักกัย": "hag",
+        "เศคาริยาห์": "zech",
+        "มาลาคี": "mal",
+
+        // Thai New Testament
+        "มัทธิว": "matt",
+        "มาระโก": "mark",
+        "ลูกา": "luke",
+        "ยอห์น": "john",
+        "กิจการ": "acts",
+        "โรม": "rom",
+        "1 โครินธ์": "1-cor",
+        "2 โครินธ์": "2-cor",
+        "กาลาเทีย": "gal",
+        "เอเฟซัส": "eph",
+        "ฟิลิปปี": "philip",
+        "โคโลสี": "col",
+        "1 เธสะโลนิกา": "1-thes",
+        "2 เธสะโลนิกา": "2-thes",
+        "1 ทิโมธี": "1-tim",
+        "2 ทิโมธี": "2-tim",
+        "ทิตัส": "titus",
+        "ฟีเลโมน": "philem",
+        "ฮีบรู": "heb",
+        "ยากอบ": "jas",
+        "1 เปโตร": "1-pet",
+        "2 เปโตร": "2-pet",
+        "1 ยอห์น": "1-jn",
+        "2 ยอห์น": "2-jn",
+        "3 ยอห์น": "3-jn",
+        "ยูดา": "jude",
+        "วิวรณ์": "rev",
+
+        // Thai Pearl of Great Price
+        "โมเสส": "moses",
+        "อับราฮัม": "abr",
+        "โจเซฟ สมิธ—มัทธิว": "js-m",
+        "โจเซฟ สมิธ—ประวัติ": "js-h",
+        "หลักแห่งความเชื่อ": "a-of-f",
+
+        // Korean Book of Mormon
+        "니파이전서": "1-ne",
+        "니파이후서": "2-ne",
+        "야곱서": "jacob",
+        "이노스서": "enos",
+        "예이롬서": "jarom",
+        "옴나이서": "omni",
+        "몰몬의 말씀": "w-of-m",
+        "모사이야서": "mosiah",
+        "앨마서": "alma",
+        "힐라맨서": "hel",
+        "제3니파이": "3-ne",
+        "제4니파이": "4-ne",
+        "몰몬서": "morm",
+        "이더서": "eth",
+        "모로나이서": "moro",
+
+        // Korean Old Testament
+        "창세기": "gen",
+        "출애굽기": "ex",
+        "레위기": "lev",
+        "민수기": "num",
+        "신명기": "deut",
+        "여호수아": "josh",
+        "사사기": "judg",
+        "룻기": "ruth",
+        "사무엘상": "1-sam",
+        "사무엘하": "2-sam",
+        "열왕기상": "1-kgs",
+        "열왕기하": "2-kgs",
+        "역대상": "1-chr",
+        "역대하": "2-chr",
+        "에스라": "ezra",
+        "느헤미야": "neh",
+        "에스더": "esth",
+        "욥기": "job",
+        "시편": "ps",
+        "잠언": "prov",
+        "전도서": "eccl",
+        "아가": "song",
+        "이사야": "isa",
+        "예레미야": "jer",
+        "예레미야애가": "lam",
+        "에스겔": "ezek",
+        "다니엘": "dan",
+        "호세아": "hosea",
+        "요엘": "joel",
+        "아모스": "amos",
+        "오바댜": "obad",
+        "요나": "jonah",
+        "미가": "micah",
+        "나훔": "nahum",
+        "하박국": "hab",
+        "스바냐": "zeph",
+        "학개": "hag",
+        "스가랴": "zech",
+        "말라기": "mal",
+
+        // Korean New Testament
+        "마태복음": "matt",
+        "마가복음": "mark",
+        "누가복음": "luke",
+        "요한복음": "john",
+        "사도행전": "acts",
+        "로마서": "rom",
+        "고린도전서": "1-cor",
+        "고린도후서": "2-cor",
+        "갈라디아서": "gal",
+        "에베소서": "eph",
+        "빌립보서": "philip",
+        "골로새서": "col",
+        "데살로니가전서": "1-thes",
+        "데살로니가후서": "2-thes",
+        "디모데전서": "1-tim",
+        "디모데후서": "2-tim",
+        "디도서": "titus",
+        "빌레몬서": "philem",
+        "히브리서": "heb",
+        "야고보서": "jas",
+        "베드로전서": "1-pet",
+        "베드로후서": "2-pet",
+        "요한1서": "1-jn",
+        "요한2서": "2-jn",
+        "요한3서": "3-jn",
+        "유다서": "jude",
+        "요한계시록": "rev",
+
+        // Korean Pearl of Great Price
+        "모세서": "moses",
+        "아브라함서": "abr",
+        "조셉 스미스—마태": "js-m",
+        "조셉 스미스—역사": "js-h",
+        "신앙개조": "a-of-f"
     };
 
     const bookUrlPart = bookMappings[bookName];
