@@ -768,3 +768,76 @@ input:checked+.slider:before {
     text-align: right;
     border-left-color: var(--gray);
 }
+
+/* Message Context Menu (Edit/Delete) */
+.message-context-menu {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    overflow: hidden;
+    min-width: 140px;
+    animation: scaleIn 0.15s ease;
+}
+
+.message-context-menu button {
+    display: block;
+    width: 100%;
+    padding: 14px 20px;
+    border: none;
+    background: white;
+    text-align: left;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    color: var(--black);
+    font-weight: 500;
+}
+
+.message-context-menu button:hover {
+    background: #f5f5f5;
+}
+
+.message-context-menu button.delete-option {
+    color: #ff3b30;
+}
+
+.message-context-menu button.delete-option:hover {
+    background: #fff5f5;
+}
+
+/* Edit Message Modal */
+.edit-message-modal {
+    max-width: 400px;
+}
+
+.edit-message-textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 12px;
+    border: 2px solid #eee;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+    color: var(--black);
+}
+
+.edit-message-textarea:focus {
+    border-color: var(--pink);
+}
+
+/* Edited Indicator */
+.edited-indicator {
+    font-size: 0.65rem;
+    color: #999;
+    font-style: italic;
+    font-weight: 400;
+}
+
+.message.sent .edited-indicator {
+    color: rgba(255, 255, 255, 0.7);
+}

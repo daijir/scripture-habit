@@ -78,7 +78,15 @@ export const translations = {
             userLeft: "🚪 **{nickname}** left the group.",
             deleteConfirmMessage: "This action cannot be undone. All messages and data will be permanently lost.",
             typeToConfirm: "Please type **{groupName}** to confirm.",
-            enterGroupNamePlaceholder: "Enter group name"
+            enterGroupNamePlaceholder: "Enter group name",
+            editMessage: "Edit",
+            deleteMessage: "Delete",
+            deleteMessageConfirm: "Delete this message?",
+            messageDeleted: "Message deleted",
+            messageEdited: "edited",
+            studyNote: "📖 Study Note",
+            deleteNoteWarning: "This note will also be deleted from all groups it was shared to.",
+            deleteMessageWarning: "This will also delete the note from My Notes."
         },
         newNote: {
             editTitle: "Edit Note",
@@ -280,7 +288,15 @@ export const translations = {
             userLeft: "🚪 **{nickname}**さんがグループを退会しました。",
             deleteConfirmMessage: "この操作は取り消せません。すべてのメッセージとデータが完全に失われます。",
             typeToConfirm: "確認のため **{groupName}** と入力してください。",
-            enterGroupNamePlaceholder: "グループ名を入力"
+            enterGroupNamePlaceholder: "グループ名を入力",
+            editMessage: "編集",
+            deleteMessage: "削除",
+            deleteMessageConfirm: "このメッセージを削除しますか？",
+            messageDeleted: "メッセージが削除されました",
+            messageEdited: "編集済み",
+            studyNote: "📖 スタディノート",
+            deleteNoteWarning: "このノートは共有されているすべてのグループからも削除されます。",
+            deleteMessageWarning: "このノートは「私のノート」からも削除されます。"
         },
         myNotes: {
             title: "私のノート",
@@ -495,7 +511,15 @@ export const translations = {
             userLeft: "🚪 **{nickname}** saiu do grupo.",
             deleteConfirmMessage: "Esta ação não pode ser desfeita. Todas as mensagens e dados serão perdidos permanentemente.",
             typeToConfirm: "Por favor, digite **{groupName}** para confirmar.",
-            enterGroupNamePlaceholder: "Digite o nome do grupo"
+            enterGroupNamePlaceholder: "Digite o nome do grupo",
+            editMessage: "Editar",
+            deleteMessage: "Excluir",
+            deleteMessageConfirm: "Excluir esta mensagem?",
+            messageDeleted: "Mensagem excluída",
+            messageEdited: "editado",
+            studyNote: "📖 Nota de Estudo",
+            deleteNoteWarning: "Esta nota também será excluída de todos os grupos em que foi compartilhada.",
+            deleteMessageWarning: "Isso também excluirá a nota de Minhas Anotações."
         },
         myNotes: {
             title: "Minhas Anotações",
@@ -710,7 +734,15 @@ export const translations = {
             userLeft: "🚪 **{nickname}** 離開了群組。",
             deleteConfirmMessage: "此動作無法復原。所有訊息和資料將永久遺失。",
             typeToConfirm: "請輸入 **{groupName}** 以確認。",
-            enterGroupNamePlaceholder: "輸入群組名稱"
+            enterGroupNamePlaceholder: "輸入群組名稱",
+            editMessage: "編輯",
+            deleteMessage: "刪除",
+            deleteMessageConfirm: "刪除此訊息？",
+            messageDeleted: "訊息已刪除",
+            messageEdited: "已編輯",
+            studyNote: "📖 研讀筆記",
+            deleteNoteWarning: "此筆記也將從所有分享的群組中刪除。",
+            deleteMessageWarning: "此操作也會從「我的筆記」中刪除此筆記。"
         },
         myNotes: {
             title: "我的筆記",
@@ -925,7 +957,15 @@ export const translations = {
             userLeft: "🚪 **{nickname}** salió del grupo.",
             deleteConfirmMessage: "Esta acción no se puede deshacer. Todos los mensajes y datos se perderán permanentemente.",
             typeToConfirm: "Por favor, escribe **{groupName}** para confirmar.",
-            enterGroupNamePlaceholder: "Ingresa el nombre del grupo"
+            enterGroupNamePlaceholder: "Ingresa el nombre del grupo",
+            editMessage: "Editar",
+            deleteMessage: "Eliminar",
+            deleteMessageConfirm: "¿Eliminar este mensaje?",
+            messageDeleted: "Mensaje eliminado",
+            messageEdited: "editado",
+            studyNote: "📖 Nota de Estudio",
+            deleteNoteWarning: "Esta nota también se eliminará de todos los grupos donde fue compartida.",
+            deleteMessageWarning: "Esto también eliminará la nota de Mis Notas."
         },
         myNotes: {
             title: "Mis Notas",
@@ -1140,7 +1180,15 @@ export const translations = {
             userLeft: "🚪 **{nickname}** đã rời nhóm.",
             deleteConfirmMessage: "Hành động này không thể hoàn tác. Tất cả tin nhắn và dữ liệu sẽ bị mất vĩnh viễn.",
             typeToConfirm: "Vui lòng nhập **{groupName}** để xác nhận.",
-            enterGroupNamePlaceholder: "Nhập tên nhóm"
+            enterGroupNamePlaceholder: "Nhập tên nhóm",
+            editMessage: "Chỉnh sửa",
+            deleteMessage: "Xóa",
+            deleteMessageConfirm: "Xóa tin nhắn này?",
+            messageDeleted: "Đã xóa tin nhắn",
+            messageEdited: "đã chỉnh sửa",
+            studyNote: "📖 Ghi chép Học tập",
+            deleteNoteWarning: "Ghi chép này cũng sẽ bị xóa khỏi tất cả các nhóm đã được chia sẻ.",
+            deleteMessageWarning: "Điều này cũng sẽ xóa ghi chép khỏi Ghi chép của tôi."
         },
         myNotes: {
             title: "Ghi chép của tôi",
@@ -1355,7 +1403,15 @@ export const translations = {
             userLeft: "🚪 **{nickname}** ออกจากกลุ่มแล้ว",
             deleteConfirmMessage: "การดำเนินการนี้ไม่สามารถย้อนกลับได้ ข้อความและข้อมูลทั้งหมดจะสูญหายอย่างถาวร",
             typeToConfirm: "กรุณาพิมพ์ **{groupName}** เพื่อยืนยัน",
-            enterGroupNamePlaceholder: "ป้อนชื่อกลุ่ม"
+            enterGroupNamePlaceholder: "ป้อนชื่อกลุ่ม",
+            editMessage: "แก้ไข",
+            deleteMessage: "ลบ",
+            deleteMessageConfirm: "ลบข้อความนี้?",
+            messageDeleted: "ลบข้อความแล้ว",
+            messageEdited: "แก้ไขแล้ว",
+            studyNote: "📖 บันทึกการศึกษา",
+            deleteNoteWarning: "บันทึกนี้จะถูกลบออกจากกลุ่มทั้งหมดที่แชร์ไว้ด้วย",
+            deleteMessageWarning: "การดำเนินการนี้จะลบบันทึกจาก บันทึกของฉัน ด้วย"
         },
         myNotes: {
             title: "บันทึกของฉัน",
@@ -1570,7 +1626,15 @@ export const translations = {
             userLeft: "🚪 **{nickname}**님이 그룹을 나갔습니다.",
             deleteConfirmMessage: "이 작업은 취소할 수 없습니다. 모든 메시지와 데이터가 영구적으로 손실됩니다.",
             typeToConfirm: "확인을 위해 **{groupName}**을(를) 입력하세요.",
-            enterGroupNamePlaceholder: "그룹 이름 입력"
+            enterGroupNamePlaceholder: "그룹 이름 입력",
+            editMessage: "편집",
+            deleteMessage: "삭제",
+            deleteMessageConfirm: "이 메시지를 삭제하시겠습니까?",
+            messageDeleted: "메시지가 삭제되었습니다",
+            messageEdited: "수정됨",
+            studyNote: "📖 학습 노트",
+            deleteNoteWarning: "이 노트는 공유된 모든 그룹에서도 삭제됩니다.",
+            deleteMessageWarning: "이 작업은 내 노트에서도 해당 노트를 삭제합니다."
         },
         myNotes: {
             title: "내 노트",
@@ -1785,7 +1849,15 @@ export const translations = {
             userLeft: "🚪 **{nickname}** umalis sa grupo.",
             deleteConfirmMessage: "Hindi na mababawi ang aksyong ito. Ang lahat ng mensahe at data ay permanenteng mawawala.",
             typeToConfirm: "Pakitype ang **{groupName}** para kumpirmahin.",
-            enterGroupNamePlaceholder: "Ilagay ang pangalan ng grupo"
+            enterGroupNamePlaceholder: "Ilagay ang pangalan ng grupo",
+            editMessage: "I-edit",
+            deleteMessage: "Tanggalin",
+            deleteMessageConfirm: "Tanggalin ang mensaheng ito?",
+            messageDeleted: "Tinanggal ang mensahe",
+            messageEdited: "na-edit",
+            studyNote: "📖 Tala sa Pag-aaral",
+            deleteNoteWarning: "Ang talang ito ay tatanggalin din sa lahat ng grupong pinag-share-an nito.",
+            deleteMessageWarning: "Tatanggalin din nito ang tala mula sa Aking mga Tala."
         },
         myNotes: {
             title: "Aking mga Tala",
@@ -2000,7 +2072,15 @@ export const translations = {
             userLeft: "🚪 **{nickname}** ameondoka kwenye kikundi.",
             deleteConfirmMessage: "Hatua hii haiwezi kubatilishwa. Ujumbe na data zote zitapotea kabisa.",
             typeToConfirm: "Tafadhali andika **{groupName}** ili kuthibitisha.",
-            enterGroupNamePlaceholder: "Ingiza jina la kikundi"
+            enterGroupNamePlaceholder: "Ingiza jina la kikundi",
+            editMessage: "Hariri",
+            deleteMessage: "Futa",
+            deleteMessageConfirm: "Futa ujumbe huu?",
+            messageDeleted: "Ujumbe umefutwa",
+            messageEdited: "imehaririwa",
+            studyNote: "📖 Maelezo ya Kujifunza",
+            deleteNoteWarning: "Maelezo haya pia yatafutwa kutoka vikundi vyote viliposhirikiwa.",
+            deleteMessageWarning: "Hii pia itafuta maelezo kutoka Maelezo Yangu."
         },
         myNotes: {
             title: "Maelezo Yangu",

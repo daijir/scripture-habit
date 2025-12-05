@@ -119,7 +119,37 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             const messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Chapter:** ${chapter}\n\n${comment}`;
 
             if (noteToEdit) {
-                if (isGroupContext) {
+                if (noteToEdit.groupMessageId && noteToEdit.groupId) {
+                    // Editing a message directly from group chat
+                    const messageRef = doc(db, 'groups', noteToEdit.groupId, 'messages', noteToEdit.groupMessageId);
+
+                    // First get the message to check for originalNoteId
+                    const messageSnap = await getDoc(messageRef);
+                    const messageData = messageSnap.exists() ? messageSnap.data() : null;
+
+                    await updateDoc(messageRef, {
+                        text: messageText,
+                        scripture: scripture,
+                        chapter: chapter,
+                        editedAt: serverTimestamp(),
+                        isEdited: true
+                    });
+
+                    // Sync to personal note if linked
+                    if (messageData?.originalNoteId) {
+                        try {
+                            const noteRef = doc(db, 'users', userData.uid, 'notes', messageData.originalNoteId);
+                            await updateDoc(noteRef, {
+                                text: messageText,
+                                scripture: scripture,
+                                chapter: chapter,
+                                comment: comment
+                            });
+                        } catch (err) {
+                            console.log("Could not sync back to personal note:", err);
+                        }
+                    }
+                } else if (isGroupContext) {
                     // Editing an existing note (which is a message in a specific group)
                     const targetGroupId = currentGroupId || userData.groupId;
                     const messageRef = doc(db, 'groups', targetGroupId, 'messages', noteToEdit.id);

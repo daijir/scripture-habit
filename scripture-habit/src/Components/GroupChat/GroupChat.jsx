@@ -24,6 +24,13 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteConfirmationName, setDeleteConfirmationName] = useState('');
+  const [contextMenu, setContextMenu] = useState({ show: false, x: 0, y: 0, messageId: null });
+  const [editingMessage, setEditingMessage] = useState(null);
+  const [editText, setEditText] = useState('');
+  const [showDeleteMessageModal, setShowDeleteMessageModal] = useState(false);
+  const [messageToDelete, setMessageToDelete] = useState(null);
+  const [noteToEdit, setNoteToEdit] = useState(null);
+  const longPressTimer = useRef(null);
   const containerRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -113,10 +120,21 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
       };
 
       if (replyTo) {
+        // For notes/entries, show a clean label instead of raw markdown
+        let replyText;
+        if (replyTo.isNote || replyTo.isEntry) {
+          replyText = t('groupChat.studyNote');
+        } else if (replyTo.text) {
+          replyText = replyTo.text.substring(0, 50) + (replyTo.text.length > 50 ? '...' : '');
+        } else {
+          replyText = 'Image/Note';
+        }
+
         messageData.replyTo = {
           id: replyTo.id,
           senderNickname: replyTo.senderNickname,
-          text: replyTo.text ? (replyTo.text.substring(0, 50) + (replyTo.text.length > 50 ? '...' : '')) : 'Image/Note'
+          text: replyText,
+          isNote: replyTo.isNote || replyTo.isEntry
         };
       }
 
@@ -236,6 +254,140 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
     }
   };
 
+  // Context menu handlers for own messages
+  const handleContextMenu = (e, msg) => {
+    if (msg.senderId !== userData?.uid) return; // Only for own messages
+    e.preventDefault();
+    setContextMenu({
+      show: true,
+      x: e.clientX,
+      y: e.clientY,
+      messageId: msg.id,
+      message: msg
+    });
+  };
+
+  const handleLongPressStart = (msg) => {
+    if (msg.senderId !== userData?.uid) return; // Only for own messages
+    longPressTimer.current = setTimeout(() => {
+      setContextMenu({
+        show: true,
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2,
+        messageId: msg.id,
+        message: msg
+      });
+    }, 700); // 700ms long press
+  };
+
+  const handleLongPressEnd = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      longPressTimer.current = null;
+    }
+  };
+
+  const closeContextMenu = () => {
+    setContextMenu({ show: false, x: 0, y: 0, messageId: null, message: null });
+  };
+
+  // Close context menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (contextMenu.show) {
+        closeContextMenu();
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [contextMenu.show]);
+
+  const handleEditMessage = (msg) => {
+    if (msg.isNote || msg.isEntry) {
+      // For notes/entries, open NewNote modal in edit mode
+      // We need to convert the message to a note-like object for NewNote
+      setNoteToEdit({
+        id: msg.id,
+        text: msg.text,
+        scripture: msg.scripture,
+        chapter: msg.chapter,
+        groupMessageId: msg.id, // Mark this as coming from group chat
+        groupId: groupId
+      });
+      closeContextMenu();
+    } else {
+      // For regular messages, use the simple edit modal
+      setEditingMessage(msg);
+      setEditText(msg.text || '');
+      closeContextMenu();
+    }
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingMessage || !editText.trim()) return;
+
+    try {
+      const messageRef = doc(db, 'groups', groupId, 'messages', editingMessage.id);
+      await updateDoc(messageRef, {
+        text: editText,
+        editedAt: serverTimestamp(),
+        isEdited: true
+      });
+      toast.success(t('groupChat.messageEdited'));
+      setEditingMessage(null);
+      setEditText('');
+    } catch (error) {
+      console.error('Error editing message:', error);
+      toast.error('Failed to edit message');
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingMessage(null);
+    setEditText('');
+  };
+
+  const handleDeleteMessageClick = (msg) => {
+    setMessageToDelete(msg);
+    setShowDeleteMessageModal(true);
+    closeContextMenu();
+  };
+
+  const handleConfirmDeleteMessage = async () => {
+    if (!messageToDelete) return;
+
+    try {
+      const messageRef = doc(db, 'groups', groupId, 'messages', messageToDelete.id);
+
+      // If this is a note with originalNoteId, also delete the personal note
+      if ((messageToDelete.isNote || messageToDelete.isEntry) && messageToDelete.originalNoteId) {
+        try {
+          const noteRef = doc(db, 'users', userData.uid, 'notes', messageToDelete.originalNoteId);
+          await deleteDoc(noteRef);
+        } catch (err) {
+          console.log("Could not delete personal note:", err);
+        }
+      }
+
+      await deleteDoc(messageRef);
+
+      // Decrement message count
+      const groupRef = doc(db, 'groups', groupId);
+      await updateDoc(groupRef, {
+        messageCount: increment(-1)
+      });
+
+      toast.success(t('groupChat.messageDeleted'));
+    } catch (error) {
+      console.error('Error deleting message:', error);
+      toast.error('Failed to delete message');
+    } finally {
+      setMessageToDelete(null);
+      setShowDeleteMessageModal(false);
+    }
+  };
+
+
   // Helper function to translate scripture names
   const translateScriptureName = (scriptureName) => {
     const scriptureMapping = {
@@ -323,7 +475,18 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
 
   return (
     <div className="GroupChat">
-      <NewNote isOpen={isNewNoteOpen} onClose={() => setIsNewNoteOpen(false)} userData={userData} isGroupContext={true} userGroups={userGroups} currentGroupId={groupId} />
+      <NewNote
+        isOpen={isNewNoteOpen || noteToEdit !== null}
+        onClose={() => {
+          setIsNewNoteOpen(false);
+          setNoteToEdit(null);
+        }}
+        userData={userData}
+        isGroupContext={true}
+        userGroups={userGroups}
+        currentGroupId={groupId}
+        noteToEdit={noteToEdit}
+      />
       <div className="chat-header">
         <h2>{groupData ? groupData.name : t('groupChat.groupName')}</h2>
         {groupData && (
@@ -512,9 +675,13 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
                 <div
                   className={`message ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}
                   onClick={() => handleReply(msg)}
+                  onContextMenu={(e) => handleContextMenu(e, msg)}
+                  onTouchStart={() => handleLongPressStart(msg)}
+                  onTouchEnd={handleLongPressEnd}
+                  onTouchMove={handleLongPressEnd}
                   style={{ cursor: 'pointer' }}
                 >
-                  <span className="sender-name">{msg.senderNickname}</span>
+                  <span className="sender-name">{msg.senderNickname}{msg.isEdited && <span className="edited-indicator"> ({t('groupChat.messageEdited')})</span>}</span>
                   <div className="message-bubble-row" style={{ display: 'flex', alignItems: 'flex-end', gap: '5px' }}>
                     {msg.senderId === userData?.uid && (
                       <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', marginBottom: '2px', whiteSpace: 'nowrap' }}>
@@ -527,7 +694,12 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
                           <span className="reply-context-prefix">{t('groupChat.replyTo')} </span>
                           <span className="reply-context-name">{msg.replyTo.senderNickname}</span>
                           <span className="reply-context-separator">: </span>
-                          <span className="reply-context-text">{msg.replyTo.text}</span>
+                          <span className="reply-context-text">
+                            {msg.replyTo.isNote || msg.replyTo.text?.startsWith('📖 **New Study') || msg.replyTo.text?.startsWith('**New Study')
+                              ? t('groupChat.studyNote')
+                              : msg.replyTo.text
+                            }
+                          </span>
                         </div>
                       )}
                       <div className="message-content">
@@ -584,12 +756,84 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
           );
         })}
       </div>
+
+      {/* Context Menu for own messages */}
+      {contextMenu.show && (
+        <div
+          className="message-context-menu"
+          style={{
+            position: 'fixed',
+            top: contextMenu.y,
+            left: contextMenu.x,
+            transform: 'translate(-50%, -50%)'
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button onClick={() => handleEditMessage(contextMenu.message)}>
+            {t('groupChat.editMessage')}
+          </button>
+          <button onClick={() => handleDeleteMessageClick(contextMenu.message)} className="delete-option">
+            {t('groupChat.deleteMessage')}
+          </button>
+        </div>
+      )}
+
+      {/* Delete Message Confirmation Modal */}
+      {showDeleteMessageModal && (
+        <div className="leave-modal-overlay">
+          <div className="leave-modal-content" style={{ maxWidth: '360px' }}>
+            <h3>{t('groupChat.deleteMessageConfirm')}</h3>
+            {(messageToDelete?.isNote || messageToDelete?.isEntry) && messageToDelete?.originalNoteId && (
+              <p style={{ color: '#ff9800', fontSize: '0.9rem', margin: '0.5rem 0' }}>
+                ⚠️ {t('groupChat.deleteMessageWarning')}
+              </p>
+            )}
+            <div className="leave-modal-actions">
+              <button className="modal-btn cancel" onClick={() => { setShowDeleteMessageModal(false); setMessageToDelete(null); }}>
+                {t('groupChat.cancel')}
+              </button>
+              <button className="modal-btn leave" onClick={handleConfirmDeleteMessage}>
+                {t('groupChat.deleteMessage')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Message Modal */}
+      {editingMessage && (
+        <div className="leave-modal-overlay">
+          <div className="leave-modal-content edit-message-modal">
+            <h3>{t('groupChat.editMessage')}</h3>
+            <textarea
+              className="edit-message-textarea"
+              value={editText}
+              onChange={(e) => setEditText(e.target.value)}
+              autoFocus
+            />
+            <div className="leave-modal-actions">
+              <button className="modal-btn cancel" onClick={handleCancelEdit}>
+                {t('groupChat.cancel')}
+              </button>
+              <button className="modal-btn leave" onClick={handleSaveEdit} style={{ background: 'var(--pink)' }}>
+                {t('groupChat.editMessage')}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <form onSubmit={handleSendMessage} className="send-message-form">
         {replyTo && (
           <div className="reply-preview">
             <div className="reply-info">
               <span className="replying-to">{t('groupChat.replyingTo')} <strong>{replyTo.senderNickname}</strong></span>
-              <p className="reply-text-preview">{replyTo.text ? (replyTo.text.substring(0, 50) + (replyTo.text.length > 50 ? '...' : '')) : 'Image/Note'}</p>
+              <p className="reply-text-preview">
+                {replyTo.isNote || replyTo.isEntry
+                  ? t('groupChat.studyNote')
+                  : (replyTo.text ? (replyTo.text.substring(0, 50) + (replyTo.text.length > 50 ? '...' : '')) : 'Image/Note')
+                }
+              </p>
             </div>
             <div className="cancel-reply" onClick={() => setReplyTo(null)}>
               <UilTimes size="16" />
