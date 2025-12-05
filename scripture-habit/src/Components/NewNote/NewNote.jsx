@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { db } from '../../firebase';
-import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment, query, where, getDocs } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { UilTrashAlt } from '@iconscout/react-unicons';
 import Select from 'react-select';
@@ -348,13 +348,17 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
                 // 2. Post to each target group, linking back to the personal note
                 const sharedMessageIds = {};
+
+                // Use explicit timestamp for notes to ensure consistent ordering
+                const noteTimestamp = Timestamp.now();
+
                 const postPromises = groupsToPostTo.map(async (gid) => {
                     const messagesRef = collection(db, 'groups', gid, 'messages');
                     const msgRef = await addDoc(messagesRef, {
                         text: messageText,
                         senderId: userData.uid,
                         senderNickname: userData.nickname,
-                        createdAt: serverTimestamp(),
+                        createdAt: noteTimestamp, // Use explicit timestamp
                         isNote: true,
                         originalNoteId: personalNoteRef.id // Link to personal note
                     });
@@ -368,10 +372,11 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     await updateDoc(personalNoteRef, { sharedMessageIds });
                 }
 
-                // Send streak announcement AFTER note is posted so it appears below the note
+                // Send streak announcement AFTER note is posted
+                // Use explicit timestamp that is 2 seconds AFTER the note timestamp
                 if (streakUpdated && newStreak > 0) {
-                    // Small delay to ensure note timestamps are fully written first
-                    await new Promise(resolve => setTimeout(resolve, 500));
+                    // Create announcement timestamp 2 seconds after note
+                    const announcementTimestamp = Timestamp.fromMillis(noteTimestamp.toMillis() + 2000);
 
                     const targetGroupIds = userGroups.map(g => g.id);
                     for (const gid of targetGroupIds) {
@@ -380,7 +385,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                             text: `🎉🎉🎉 **${userData.nickname} reached a ${newStreak} day streak!!** 🎉🎉🎉\n\n**Let us edify one another in the group and share joy together!**`,
                             senderId: 'system',
                             senderNickname: 'Scripture Habit Bot',
-                            createdAt: serverTimestamp(),
+                            createdAt: announcementTimestamp, // Explicit timestamp 2 seconds after note
                             isSystemMessage: true,
                             messageType: 'streakAnnouncement',
                             messageData: {

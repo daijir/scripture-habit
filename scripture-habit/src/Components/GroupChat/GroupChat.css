@@ -766,7 +766,8 @@ input:checked+.slider:before {
 .message.received .reply-context-label {
     align-self: flex-end;
     text-align: right;
-    border-left-color: var(--gray);
+    border-left: none;
+    border-right: 3px solid var(--gray);
 }
 
 /* Message Context Menu (Edit/Delete) */
