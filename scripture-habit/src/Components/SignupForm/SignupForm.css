@@ -40,3 +40,27 @@
   color: #3251d4;
   text-decoration: underline;
 }
+
+@media screen and (max-width: 768px) {
+  .SignupForm {
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  .SignupForm .AppGlass {
+    width: 90%;
+    min-height: auto;
+    height: auto;
+    border-radius: 1.5rem;
+    background-color: rgba(255, 255, 255, 0.6);
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
