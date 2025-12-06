@@ -206,7 +206,7 @@ export default function JoinGroup() {
             />
             {error && <p className="error">{error}</p>}
 
-            <Button type="submit">
+            <Button type="submit" className="invite-join-btn">
               {t('joinGroup.joinButton')}
             </Button>
           </form>

@@ -188,8 +188,64 @@
   background: rgba(255, 255, 255, 0.5);
 }
 
+.invite-join-btn {
+  background: linear-gradient(135deg, #8E9EFA 0%, #B088D9 100%) !important;
+  color: white !important;
+  border: none !important;
+  font-weight: 600 !important;
+  width: 100%;
+  /* Make full width to center effectively in form context or set max-width */
+  max-width: 200px;
+  /* Limit width like other buttons */
+  margin: 1rem auto 0 auto !important;
+  /* Center horizontally */
+  box-shadow: 0 4px 15px rgba(118, 75, 162, 0.2) !important;
+  display: block !important;
+}
+
+.invite-join-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(118, 75, 162, 0.3) !important;
+  filter: brightness(1.05);
+}
+
 @media screen and (max-width: 768px) {
   .join-group-container {
     background-color: transparent !important;
+  }
+
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    text-align: center;
+  }
+
+  .section-header h2 {
+    margin-bottom: 0;
+  }
+
+  .join-group-container form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .join-group-container .GlassInputContainer {
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .join-group-container .GlassInputContainer label {
+    text-align: center;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .join-group-container .GlassInput {
+    text-align: center;
   }
 }

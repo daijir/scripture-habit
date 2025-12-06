@@ -59,32 +59,109 @@
     border-color: var(--pink);
 }
 
+/* Button Styles matching other auth pages */
+/* Shared Button Styles */
+.welcome-container .auth-buttons button {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+/* Login Button (Primary) */
+.welcome-container .auth-buttons .login-btn {
+    background: linear-gradient(135deg, #8E9EFA 0%, #B088D9 100%) !important;
+    color: white !important;
+    border: none !important;
+    box-shadow: 0 4px 15px rgba(118, 75, 162, 0.2) !important;
+}
+
+.welcome-container .auth-buttons .login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(118, 75, 162, 0.3) !important;
+    filter: brightness(1.05);
+}
+
+/* Signup Button (Secondary) */
+.welcome-container .auth-buttons .signup-btn {
+    background: transparent !important;
+    border: 2px solid #764ba2 !important;
+    color: #764ba2 !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+}
+
+.welcome-container .auth-buttons .signup-btn:hover {
+    background: rgba(118, 75, 162, 0.05) !important;
+    transform: translateY(-2px);
+}
+
 .auth-buttons {
     display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     gap: 1rem;
     margin-top: 1rem;
+    width: 100%;
+}
+
+.auth-buttons a {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    text-decoration: none;
+    max-width: 200px;
 }
 
 @media (max-width: 768px) {
-    .welcome-container {
-        padding: 1.5rem;
-        width: 90%;
+    .AppGlass.welcome-container {
+        width: 100%;
+        min-height: 100vh;
+        border-radius: 0;
+        background-color: transparent;
+        border: none;
+        box-shadow: none;
+        backdrop-filter: none;
+        padding: 1rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin: 0;
+        gap: 1rem;
     }
 
     .welcome-container h1 {
         font-size: 1.8rem;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .language-selection {
+        background: rgba(255, 255, 255, 0.25);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        margin-bottom: 0.5rem;
     }
 
     .auth-buttons {
-        flex-direction: column;
-        width: 100%;
+        margin-bottom: 2rem;
+        gap: 1rem;
+        flex-direction: row;
+        /* Ensure row on mobile */
     }
 
     .auth-buttons a {
-        width: 100%;
+        width: auto;
+        /* Removing display: block override from previous steps if any, keeping flex behavior */
     }
 
     .auth-buttons button {
         width: 100% !important;
+        margin: 0 !important;
     }
 }

@@ -183,7 +183,15 @@ export const translations = {
             submitButton: "Log In",
             errorGmail: "Please use a Gmail address.",
             noAccount: "Don't have an account?",
-            signupLink: "Sign Up"
+            signupLink: "Sign Up",
+            forgotPassword: "Forgot your password?"
+        },
+        forgotPasswordPage: {
+            title: "Reset Your Password",
+            emailLabel: "Enter your email",
+            submitButton: "Send Reset Link",
+            successMessage: "Password reset link has been sent to your email.",
+            backToLogin: "Back to Login"
         },
         signup: {
             title: "Sign Up",
@@ -407,7 +415,15 @@ export const translations = {
             submitButton: "ログイン",
             errorGmail: "Gmailアドレスを使用してください。",
             noAccount: "アカウントをお持ちでないですか？",
-            signupLink: "サインアップ"
+            signupLink: "サインアップ",
+            forgotPassword: "パスワードをお忘れですか？"
+        },
+        forgotPasswordPage: {
+            title: "パスワードをリセット",
+            emailLabel: "メールアドレスを入力",
+            submitButton: "リセットリンクを送信",
+            successMessage: "パスワード再設定リンクをメールに送信しました。",
+            backToLogin: "ログインに戻る"
         },
         signup: {
             title: "サインアップ",
@@ -631,7 +647,15 @@ export const translations = {
             submitButton: "Entrar",
             errorGmail: "Por favor, use um endereço Gmail.",
             noAccount: "Não tem uma conta?",
-            signupLink: "Inscrever-se"
+            signupLink: "Inscrever-se",
+            forgotPassword: "Esqueceu sua senha?"
+        },
+        forgotPasswordPage: {
+            title: "Redefinir sua senha",
+            emailLabel: "Digite seu e-mail",
+            submitButton: "Enviar link de redefinição",
+            successMessage: "O link de redefinição de senha foi enviado para seu e-mail.",
+            backToLogin: "Voltar ao Login"
         },
         signup: {
             title: "Inscrever-se",
@@ -855,7 +879,15 @@ export const translations = {
             submitButton: "登入",
             errorGmail: "請使用 Gmail 地址。",
             noAccount: "還沒有帳號？",
-            signupLink: "註冊"
+            signupLink: "註冊",
+            forgotPassword: "忘記密碼了嗎？"
+        },
+        forgotPasswordPage: {
+            title: "重設您的密碼",
+            emailLabel: "輸入您的電子郵件",
+            submitButton: "發送重設連結",
+            successMessage: "密碼重設連結已發送至您的電子郵件。",
+            backToLogin: "返回登入"
         },
         signup: {
             title: "註冊",
@@ -1079,7 +1111,15 @@ export const translations = {
             submitButton: "Iniciar Sesión",
             errorGmail: "Por favor, usa una dirección de Gmail.",
             noAccount: "¿No tienes una cuenta?",
-            signupLink: "Registrarse"
+            signupLink: "Registrarse",
+            forgotPassword: "¿Olvidaste tu contraseña?"
+        },
+        forgotPasswordPage: {
+            title: "Restablecer tu contraseña",
+            emailLabel: "Ingresa tu correo electrónico",
+            submitButton: "Enviar enlace de restablecimiento",
+            successMessage: "Se ha enviado un enlace para restablecer la contraseña a tu correo.",
+            backToLogin: "Volver al inicio de sesión"
         },
         signup: {
             title: "Registrarse",
@@ -1303,7 +1343,15 @@ export const translations = {
             submitButton: "Đăng nhập",
             errorGmail: "Vui lòng sử dụng địa chỉ Gmail.",
             noAccount: "Chưa có tài khoản?",
-            signupLink: "Đăng ký"
+            signupLink: "Đăng ký",
+            forgotPassword: "Bạn quên mật khẩu?"
+        },
+        forgotPasswordPage: {
+            title: "Đặt lại mật khẩu của bạn",
+            emailLabel: "Nhập email của bạn",
+            submitButton: "Gửi liên kết đặt lại",
+            successMessage: "Liên kết đặt lại mật khẩu đã được gửi đến email của bạn.",
+            backToLogin: "Quay lại Đăng nhập"
         },
         signup: {
             title: "Đăng ký",
@@ -1527,7 +1575,15 @@ export const translations = {
             submitButton: "เข้าสู่ระบบ",
             errorGmail: "กรุณาใช้ที่อยู่ Gmail",
             noAccount: "ยังไม่มีบัญชี?",
-            signupLink: "ลงทะเบียน"
+            signupLink: "ลงทะเบียน",
+            forgotPassword: "ลืมรหัสผ่าน?"
+        },
+        forgotPasswordPage: {
+            title: "รีเซ็ตรหัสผ่านของคุณ",
+            emailLabel: "ป้อนอีเมลของคุณ",
+            submitButton: "ส่งลิงก์รีเซ็ต",
+            successMessage: "ส่งลิงก์รีเซ็ตรหัสผ่านไปยังอีเมลของคุณแล้ว",
+            backToLogin: "กลับไปเข้าสู่ระบบ"
         },
         signup: {
             title: "ลงทะเบียน",
@@ -1751,7 +1807,15 @@ export const translations = {
             submitButton: "로그인",
             errorGmail: "Gmail 주소를 사용해주세요.",
             noAccount: "계정이 없으신가요?",
-            signupLink: "회원가입"
+            signupLink: "회원가입",
+            forgotPassword: "비밀번호를 잊으셨나요?"
+        },
+        forgotPasswordPage: {
+            title: "비밀번호 재설정",
+            emailLabel: "이메일 입력",
+            submitButton: "재설정 링크 보내기",
+            successMessage: "비밀번호 재설정 링크가 이메일로 전송되었습니다.",
+            backToLogin: "로그인으로 돌아가기"
         },
         signup: {
             title: "회원가입",
@@ -1975,7 +2039,15 @@ export const translations = {
             submitButton: "Mag-log In",
             errorGmail: "Pakigamit ang Gmail address.",
             noAccount: "Wala pang account?",
-            signupLink: "Mag-sign Up"
+            signupLink: "Mag-sign Up",
+            forgotPassword: "Nakalimutan ang password?"
+        },
+        forgotPasswordPage: {
+            title: "I-reset ang Iyong Password",
+            emailLabel: "Ilagay ang iyong email",
+            submitButton: "Ipadala ang Reset Link",
+            successMessage: "Ang link sa pag-reset ng password ay naipadala na sa iyong email.",
+            backToLogin: "Bumalik sa Login"
         },
         signup: {
             title: "Mag-sign Up",
@@ -2199,7 +2271,15 @@ export const translations = {
             submitButton: "Ingia",
             errorGmail: "Tafadhali tumia anwani ya Gmail.",
             noAccount: "Huna akaunti?",
-            signupLink: "Jisajili"
+            signupLink: "Jisajili",
+            forgotPassword: "Umesahau nenosiri?"
+        },
+        forgotPasswordPage: {
+            title: "Weka Upya Nenosiri Lako",
+            emailLabel: "Ingiza barua pepe yako",
+            submitButton: "Tuma Kiungo cha Kuweka Upya",
+            successMessage: "Kiungo cha kuweka upya nenosiri kimetumwa kwa barua pepe yako.",
+            backToLogin: "Rudi kwenye Login"
         },
         signup: {
             title: "Jisajili",
