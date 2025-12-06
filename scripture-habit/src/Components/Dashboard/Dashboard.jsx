@@ -496,6 +496,8 @@ const Dashboard = () => {
             userGroups={userGroups}
             isActive={true}
             onInputFocusChange={setIsInputFocused}
+            onBack={() => setSelectedView(0)}
+            onGroupSelect={setActiveGroupId}
           />
         )}
         {selectedView === 3 && (

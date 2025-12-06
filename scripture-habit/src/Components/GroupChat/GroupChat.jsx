@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { db, auth } from '../../firebase';
-import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes } from '@iconscout/react-unicons';
+import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft } from '@iconscout/react-unicons';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -12,7 +12,7 @@ import LinkPreview from '../LinkPreview/LinkPreview';
 import './GroupChat.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 
-const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFocusChange }) => {
+const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFocusChange, onBack, onGroupSelect }) => {
   const { language, t } = useLanguage();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
@@ -714,7 +714,14 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         noteToEdit={noteToEdit}
       />
       <div className="chat-header">
-        <h2>{groupData ? groupData.name : t('groupChat.groupName')}</h2>
+        <div className="header-left">
+          {onBack && (
+            <div className="back-button" onClick={onBack}>
+              <UilArrowLeft size="24" />
+            </div>
+          )}
+          <h2>{groupData ? groupData.name : t('groupChat.groupName')}</h2>
+        </div>
         {groupData && (
           <>
             {/* Desktop header - hidden on mobile */}
@@ -827,6 +834,45 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                   <span className="menu-item-label">{t('groupChat.leaveGroup')}</span>
                 </div>
               )}
+
+              {/* Group List Section */}
+              <div className="mobile-menu-divider"></div>
+              <div className="mobile-menu-section-title" style={{ padding: '0.5rem 1.25rem', fontSize: '0.85rem', color: 'var(--gray)', fontWeight: '600' }}>
+                My Groups
+              </div>
+              <div className="mobile-groups-list">
+                {userGroups.map((group) => (
+                  <div
+                    key={group.id}
+                    className={`mobile-menu-item ${group.id === groupId ? 'active' : ''}`}
+                    onClick={() => {
+                      onGroupSelect && onGroupSelect(group.id);
+                      setShowMobileMenu(false);
+                    }}
+                    style={group.id === groupId ? { background: 'rgba(255, 145, 157, 0.1)', color: 'var(--pink)' } : {}}
+                  >
+                    <div className="menu-item-icon" style={group.id === groupId ? { color: 'var(--pink)' } : {}}>
+                      <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>#</span>
+                    </div>
+                    <span className="menu-item-label" style={group.id === groupId ? { fontWeight: 'bold' } : {}}>{group.name}</span>
+                    {group.unreadCount > 0 && (
+                      <span style={{
+                        background: 'var(--pink)',
+                        color: 'white',
+                        borderRadius: '50%',
+                        padding: '0.2rem 0.5rem',
+                        fontSize: '0.75rem',
+                        fontWeight: 'bold',
+                        marginLeft: 'auto',
+                        minWidth: '20px',
+                        textAlign: 'center'
+                      }}>
+                        {group.unreadCount > 99 ? '99+' : group.unreadCount}
+                      </span>
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
