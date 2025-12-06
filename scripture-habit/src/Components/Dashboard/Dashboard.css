@@ -57,8 +57,9 @@
 
 .dashboard-header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
 
 .dashboard-header h1 {

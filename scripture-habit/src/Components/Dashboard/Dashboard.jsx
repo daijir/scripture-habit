@@ -38,6 +38,7 @@ const Dashboard = () => {
   const [activeGroupId, setActiveGroupId] = useState(location.state?.initialGroupId || null);
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isInputFocused, setIsInputFocused] = useState(false);
   const { t, language } = useLanguage();
 
   useEffect(() => {
@@ -379,12 +380,13 @@ const Dashboard = () => {
           userGroups={userGroups}
           activeGroupId={activeGroupId}
           setActiveGroupId={setActiveGroupId}
+          hideMobile={isInputFocused}
         />
         {selectedView === 0 && (
           <div className="DashboardContent">
             <div className="dashboard-header">
               <div>
-                <h1>{t('dashboard.overview')}</h1>
+                <h1>Scripture Habit</h1>
                 <p className="welcome-text">{t('dashboard.welcomeBack')}, <strong>{userData.nickname}</strong>!</p>
               </div>
             </div>
@@ -488,7 +490,13 @@ const Dashboard = () => {
           <MyNotes userData={userData} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
         )}
         {selectedView === 2 && (
-          <GroupChat groupId={activeGroupId} userData={userData} userGroups={userGroups} isActive={true} />
+          <GroupChat
+            groupId={activeGroupId}
+            userData={userData}
+            userGroups={userGroups}
+            isActive={true}
+            onInputFocusChange={setIsInputFocused}
+          />
         )}
         {selectedView === 3 && (
           <Languages />

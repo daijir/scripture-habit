@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 
-const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setActiveGroupId }) => {
+const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setActiveGroupId, hideMobile = false }) => {
   const navigate = useNavigate();
   const { t } = useLanguage();
   const [showGroupModal, setShowGroupModal] = useState(false);
@@ -34,7 +34,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
 
   return (
     <>
-      <div className="Sidebar">
+      <div className={`Sidebar ${hideMobile ? 'hide-mobile' : ''}`}>
         <div className='logo'>
           Scripture Habit
         </div>
@@ -95,6 +95,9 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
             onClick={() => setShowGroupModal(true)}
           >
             <UilUsersAlt />
+            {userGroups.some(g => g.unreadCount > 0) && (
+              <span className="unread-dot"></span>
+            )}
           </div>
 
           <div className="menuItem sign-out" onClick={handleSignOut}>
@@ -108,7 +111,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
       {showGroupModal && (
         <div className="group-modal-overlay" onClick={() => setShowGroupModal(false)}>
           <div className="group-modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>{t('sidebar.selectGroup')} <span style={{ fontSize: '1.2em'}}>({userGroups.length}/12)</span></h3>
+            <h3>{t('sidebar.selectGroup')} <span style={{ fontSize: '1.2em' }}>({userGroups.length}/12)</span></h3>
             <div className="modal-group-list">
               {userGroups.map((group) => (
                 <div
