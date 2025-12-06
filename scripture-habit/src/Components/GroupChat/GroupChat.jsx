@@ -1148,12 +1148,14 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                                           rel="noopener noreferrer"
                                           onClick={(e) => e.stopPropagation()}
                                           style={{
-                                            display: 'inline-block',
-                                            marginTop: '5px',
+                                            display: 'block',
+                                            marginTop: '10px',
                                             fontSize: '0.75rem',
                                             color: msg.senderId === userData?.uid ? 'white' : 'var(--gray)',
                                             textDecoration: 'none',
-                                            fontWeight: 'bold'
+                                            fontWeight: 'bold',
+                                            textAlign: 'center',
+                                            width: '100%'
                                           }}
                                         >
                                           {t('dashboard.readInGospelLibrary')}
