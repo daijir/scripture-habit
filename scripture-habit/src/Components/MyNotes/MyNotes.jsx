@@ -118,17 +118,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
         </div>
       </div>
 
-      <div className="inspiration-section" style={{ marginBottom: '2rem' }}>
-        <div className="inspiration-card">
-          <h3 className="inspiration-title">{t('dashboard.inspirationTitle')}</h3>
-          <blockquote className="inspiration-quote">
-            {t('dashboard.inspirationQuote')}
-          </blockquote>
-          <p className="inspiration-source">{t('dashboard.inspirationSource')}</p>
-          <p className="inspiration-message">{t('dashboard.inspirationMessage')}</p>
-          <p className="inspiration-from">{t('dashboard.inspirationFrom')}</p>
-        </div>
-      </div>
+
 
       <div className="share-learning-cta" style={{ marginBottom: '2rem' }}>
         <p>{t('dashboard.shareLearningCall')}</p>

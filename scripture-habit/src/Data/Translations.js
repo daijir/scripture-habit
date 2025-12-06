@@ -22,11 +22,8 @@ export const translations = {
             noRecentNotes: "No recent notes.",
             randomPhoto: "Random Scripture Photo from Developer",
             readInGospelLibrary: "Read in Gospel Library",
-            inspirationTitle: "Our Mission",
             inspirationQuote: "\"Wherefore, he that preacheth and he that receiveth, understand one another, and both are edified and rejoice together.\"",
             inspirationSource: "— Jesus Christ (Doctrine and Covenants 50:22)",
-            inspirationMessage: "By sharing what we learn each day with the group, let us edify one another and share in joy!",
-            inspirationFrom: "— Developers of Scripture Habit",
             shareLearningCall: "Would you like to share what you learned today?"
         },
         languages: {
@@ -254,11 +251,8 @@ export const translations = {
             noRecentNotes: "最近のノートはありません。",
             randomPhoto: "開発者からのランダムな聖句写真",
             readInGospelLibrary: "福音ライブラリーで読む",
-            inspirationTitle: "私たちのミッション",
             inspirationQuote: "「それゆえ、説く者と受ける者は互いに理解し合い、ともに教化されて、ともに喜ぶのである。」",
             inspirationSource: "— イエス・キリスト (教義と聖約50:22)",
-            inspirationMessage: "毎日コツコツ学んだことをグループに分かち合うことで、互いに教化し合い、喜びを分かち合いましょう！",
-            inspirationFrom: "— Scripture Habit 開発チーム",
             shareLearningCall: "あなたの今日の学びを共有しませんか？"
         },
         languages: {
@@ -291,7 +285,7 @@ export const translations = {
             replyTo: "返信先",
             replyingTo: "返信中",
             cancelReply: "返信をキャンセル",
-            streakAnnouncement: "🎉🎉🎉 **{nickname}さんが{streak}日連続ストリークを達成しました！！** 🎉🎉🎉\n\n**グループで互いに教化し合い、喜びを分かち合いましょう！**",
+            streakAnnouncement: "🎉🎉🎉 **{nickname}さんが{streak}日連続投稿達成しました！！** 🎉🎉🎉\n\n**グループで互いに教化し合い、喜びを分かち合いましょう！**",
             userJoined: "👋 **{nickname}**さんがグループに参加しました！",
             userLeft: "🚪 **{nickname}**さんがグループを退会しました。",
             deleteConfirmMessage: "この操作は取り消せません。すべてのメッセージとデータが完全に失われます。",
@@ -486,11 +480,8 @@ export const translations = {
             noRecentNotes: "Nenhuma anotação recente.",
             randomPhoto: "Foto Aleatória das Escrituras",
             readInGospelLibrary: "Ler na Biblioteca do Evangelho",
-            inspirationTitle: "Nossa Missão",
             inspirationQuote: "\"Portanto, aquele que prega e aquele que recebe se compreendem um ao outro e ambos são edificados e juntos se regozijam\"",
             inspirationSource: "— Jesus Cristo (Doutrina e Convênios 50:22)",
-            inspirationMessage: "Ao compartilhar diariamente o que aprendemos com o grupo, edifiquemo-nos mutuamente e compartilhemos alegria!",
-            inspirationFrom: "— Desenvolvedores do Scripture Habit",
             shareLearningCall: "Gostaria de compartilhar o que aprendeu hoje?"
         },
         languages: {
@@ -718,11 +709,8 @@ export const translations = {
             noRecentNotes: "最近沒有筆記。",
             randomPhoto: "來自開發者的隨機經文照片",
             readInGospelLibrary: "在福音圖書館閱讀",
-            inspirationTitle: "我們的使命",
             inspirationQuote: "「因此，那宣講的和接受的，彼此了解，雙方都被啟發，並一起快樂。」",
             inspirationSource: "— 耶穌基督(教義和聖約50:22)",
-            inspirationMessage: "每天持續地與群組分享我們所學到的，讓我們互相建立，一起分享喜悅！",
-            inspirationFrom: "— Scripture Habit 開發團隊",
             shareLearningCall: "您想分享今天所學到的嗎？"
         },
         languages: {
@@ -950,11 +938,8 @@ export const translations = {
             noRecentNotes: "No hay notas recientes.",
             randomPhoto: "Foto Aleatoria de las Escrituras",
             readInGospelLibrary: "Leer en Biblioteca del Evangelio",
-            inspirationTitle: "Nuestra Misión",
             inspirationQuote: "\"“De manera que, el que la predica y el que la recibe se comprenden el uno al otro, y ambos son edificados y se regocijan juntamente.\"",
             inspirationSource: "— Jesucristo (Doctrina y Convenios 50:22)",
-            inspirationMessage: "Al compartir constantemente lo que aprendemos cada día con el grupo, ¡edifiquémonos mutuamente y compartamos alegría!",
-            inspirationFrom: "— Desarrolladores de Scripture Habit",
             shareLearningCall: "¿Te gustaría compartir lo que aprendiste hoy?"
         },
         languages: {
@@ -1182,11 +1167,8 @@ export const translations = {
             noRecentNotes: "Không có ghi chép gần đây.",
             randomPhoto: "Ảnh thánh thư ngẫu nhiên",
             readInGospelLibrary: "Đọc trong Thư viện Phúc âm",
-            inspirationTitle: "Sứ mệnh của chúng tôi",
             inspirationQuote: "\"Vậy nên, người thuyết giảng và người nhận hiểu được nhau, và cả hai được gây dựng và cùng nhau vui vẻ.\"",
             inspirationSource: "— Chúa Giê Su Ky Tô (Giáo Lý và Giao Ước 50:22)",
-            inspirationMessage: "Bằng cách liên tục chia sẻ những gì chúng ta học được mỗi ngày với nhóm, hãy cùng nhau gây dựng và chia sẻ niềm vui!",
-            inspirationFrom: "— Đội ngũ phát triển Scripture Habit",
             shareLearningCall: "Bạn có muốn chia sẻ những gì bạn đã học hôm nay không?"
         },
         languages: {
@@ -1414,11 +1396,8 @@ export const translations = {
             noRecentNotes: "ไม่มีบันทึกล่าสุด",
             randomPhoto: "รูปภาพพระคัมภีร์สุ่มจากผู้พัฒนา",
             readInGospelLibrary: "อ่านในคลังค้นคว้าพระกิตติคุณ",
-            inspirationTitle: "พันธกิจของเรา",
             inspirationQuote: "\"ดังนั้น, คนที่สั่งสอนและคนที่รับ, เข้าใจกัน, และทั้งสองได้รับการจรรโลงใจและชื่นชมยินดีด้วยกัน.\"",
             inspirationSource: "— พระเยซูคริสต์ (หลักคำสอนและพันธสัญญา 50:22)",
-            inspirationMessage: "โดยการแบ่งปันสิ่งที่เราเรียนรู้ในแต่ละวันกับกลุ่ม ขอให้เราจรรโลงใจซึ่งกันและกันและแบ่งปันความสุขด้วยกัน!",
-            inspirationFrom: "— ผู้พัฒนา Scripture Habit",
             shareLearningCall: "คุณต้องการแบ่งปันสิ่งที่คุณเรียนรู้วันนี้หรือไม่?"
         },
         languages: {
@@ -1646,11 +1625,8 @@ export const translations = {
             noRecentNotes: "최근 노트가 없습니다.",
             randomPhoto: "개발자의 랜덤 경전 사진",
             readInGospelLibrary: "복음 자료실에서 읽기",
-            inspirationTitle: "우리의 사명",
             inspirationQuote: "\"그런즉 전도하는 자와 받는 자는 서로를 이해하고 둘 다 교화되며, 함께 기뻐하느니라.\"",
             inspirationSource: "— 예수 그리스도 (교리와 성약 50:22)",
-            inspirationMessage: "매일 배운 것을 그룹과 공유함으로써 서로를 교화하고 기쁨을 함께 나눕시다!",
-            inspirationFrom: "— Scripture Habit 개발자",
             shareLearningCall: "오늘 배운 것을 공유하시겠습니까?"
         },
         languages: {
@@ -1878,11 +1854,8 @@ export const translations = {
             noRecentNotes: "Walang kamakailang mga tala.",
             randomPhoto: "Random na Larawan ng Banal na Kasulatan mula sa Developer",
             readInGospelLibrary: "Basahin sa Gospel Library",
-            inspirationTitle: "Ang Aming Misyon",
             inspirationQuote: "\"Samakatwid, siya na nangangaral at siya na nakatatanggap ay nauunawaan ang isa't isa, at sila ay kapwa pinabuti at nagsasaya nang magkasama.\"",
             inspirationSource: "— Jesucristo (Doktrina at mga Tipan 50:22)",
-            inspirationMessage: "Sa pamamagitan ng pagbabahagi ng ating natutunan araw-araw sa grupo, patibayin natin ang isa't isa at magbahagi ng kagalakan!",
-            inspirationFrom: "— Mga Developer ng Scripture Habit",
             shareLearningCall: "Gusto mo bang ibahagi ang natutunan mo ngayon?"
         },
         languages: {
@@ -2110,11 +2083,8 @@ export const translations = {
             noRecentNotes: "Hakuna maelezo ya hivi karibuni.",
             randomPhoto: "Picha ya Maandiko ya Kubahatisha kutoka kwa Msanidi",
             readInGospelLibrary: "Soma katika Gospel Library",
-            inspirationTitle: "Dhumuni Letu",
             inspirationQuote: "\"Kwa sababu hiyo, yule ambaye huhubiri na yule apokeaye, huelewana, na wote hujengana na kufurahi kwa pamoja.\"",
             inspirationSource: "— Yesu Kristo (Mafundisho na Maagano 50:22)",
-            inspirationMessage: "Kwa kushiriki kile tunachojifunza kila siku na kikundi, hebu tujengane na kushiriki furaha!",
-            inspirationFrom: "— Waendelezaji wa Scripture Habit",
             shareLearningCall: "Je, ungependa kushiriki ulichojifunza leo?"
         },
         languages: {

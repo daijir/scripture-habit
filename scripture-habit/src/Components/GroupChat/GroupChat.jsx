@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { db, auth } from '../../firebase';
-import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft } from '@iconscout/react-unicons';
+import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle } from '@iconscout/react-unicons';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -873,6 +873,23 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                   </div>
                 ))}
               </div>
+              {userGroups.length < 12 && (
+                <>
+                  <div className="mobile-menu-divider"></div>
+                  <div
+                    className="mobile-menu-item"
+                    onClick={() => {
+                      navigate('/group-options');
+                      setShowMobileMenu(false);
+                    }}
+                  >
+                    <div className="menu-item-icon">
+                      <UilPlusCircle size="20" />
+                    </div>
+                    <span className="menu-item-label">{t('sidebar.joinCreateGroup')}</span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
