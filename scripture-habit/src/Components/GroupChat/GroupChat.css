@@ -1106,7 +1106,7 @@ input:checked+.slider:before {
 }
 
 .mobile-only {
-    display: none;
+    display: none !important;
 }
 
 @media screen and (max-width: 768px) {
@@ -1353,6 +1353,6 @@ input:checked+.slider:before {
 
     /* Add padding to messages container so content isn't hidden behind fixed input */
     .messages-container {
-        padding-bottom:50px;
+        padding-bottom: 50px;
     }
 }
