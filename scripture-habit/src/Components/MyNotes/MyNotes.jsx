@@ -113,7 +113,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
     <div className="MyNotes DashboardContent">
       <div className="dashboard-header">
         <div>
-          <h1>{t('myNotes.title')}</h1>
+          <h1>Scripture Habit</h1>
           <p className="welcome-text">{t('myNotes.description')}</p>
         </div>
       </div>
@@ -166,12 +166,14 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
                   style={{
-                    display: 'inline-block',
+                    display: 'block',
                     marginTop: '10px',
                     fontSize: '0.8rem',
                     color: 'var(--gray)',
                     textDecoration: 'none',
-                    fontWeight: 'bold'
+                    fontWeight: 'bold',
+                    textAlign: 'center',
+                    width: '100%'
                   }}
                 >
                   📖 {t('myNotes.readInGospelLibrary')}

@@ -154,6 +154,27 @@
     /* Show mobile groups trigger */
     .mobile-groups-trigger {
         display: flex !important;
+        position: relative;
+    }
+
+    /* Pink dot for unread messages */
+    .mobile-groups-trigger .unread-dot {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 10px;
+        height: 10px;
+        background-color: var(--pink);
+        border-radius: 50%;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Hide sidebar when input is focused */
+    .Sidebar.hide-mobile {
+        transform: translateY(100%);
+        opacity: 0;
+        pointer-events: none;
     }
 }
 

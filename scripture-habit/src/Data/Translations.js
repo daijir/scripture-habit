@@ -11,7 +11,6 @@ export const translations = {
             close: "Close"
         },
         dashboard: {
-            overview: "Dashboard Overview",
             welcomeBack: "Welcome back",
             newNote: "New Note",
             streak: "Streak",
@@ -45,8 +44,7 @@ export const translations = {
             swahili: "Swahili (Swahili)"
         },
         myNotes: {
-            title: "My Notes",
-            description: "Your personal collection of study notes and reflections.",
+            description: "Note Collection",
             newNote: "New Note",
             loading: "Loading notes...",
             noNotesTitle: "No notes yet",
@@ -86,7 +84,10 @@ export const translations = {
             messageEdited: "edited",
             studyNote: "📖 Study Note",
             deleteNoteWarning: "This note will also be deleted from all groups it was shared to.",
-            deleteMessageWarning: "This will also delete the note from My Notes."
+            deleteMessageWarning: "This will also delete the note from My Notes.",
+            reply: "Reply",
+            like: "Like",
+            unlike: "Unlike"
         },
         newNote: {
             editTitle: "Edit Note",
@@ -234,10 +235,9 @@ export const translations = {
             close: "閉じる"
         },
         dashboard: {
-            overview: "ダッシュボード概要",
             welcomeBack: "おかえりなさい",
             newNote: "新規ノート",
-            streak: "ストリーク",
+            streak: "連続達成日数",
             days: "日",
             totalNotes: "総ノート数",
             notes: "ノート",
@@ -296,11 +296,13 @@ export const translations = {
             messageEdited: "編集済み",
             studyNote: "📖 スタディノート",
             deleteNoteWarning: "このノートは共有されているすべてのグループからも削除されます。",
-            deleteMessageWarning: "このノートは「私のノート」からも削除されます。"
+            deleteMessageWarning: "このノートは「私のノート」からも削除されます。",
+            reply: "返信",
+            like: "いいね",
+            unlike: "いいね解除"
         },
         myNotes: {
-            title: "私のノート",
-            description: "あなたの個人的な学習ノートと振り返りのコレクションです。",
+            description: "ノートコレクション",
             newNote: "新規ノート",
             loading: "ノートを読み込み中...",
             noNotesTitle: "まだノートがありません",
@@ -457,7 +459,6 @@ export const translations = {
             close: "Fechar"
         },
         dashboard: {
-            overview: "Visão Geral",
             welcomeBack: "Bem-vindo de volta",
             newNote: "Nova Anotação",
             streak: "Ofensiva",
@@ -519,11 +520,13 @@ export const translations = {
             messageEdited: "editado",
             studyNote: "📖 Nota de Estudo",
             deleteNoteWarning: "Esta nota também será excluída de todos os grupos em que foi compartilhada.",
-            deleteMessageWarning: "Isso também excluirá a nota de Minhas Anotações."
+            deleteMessageWarning: "Isso também excluirá a nota de Minhas Anotações.",
+            reply: "Responder",
+            like: "Curtir",
+            unlike: "Descurtir"
         },
         myNotes: {
-            title: "Minhas Anotações",
-            description: "Sua coleção pessoal de anotações de estudo e reflexões.",
+            description: "Coleção de Notas",
             newNote: "Nova Anotação",
             loading: "Carregando anotações...",
             noNotesTitle: "Nenhuma anotação ainda",
@@ -680,7 +683,6 @@ export const translations = {
             close: "關閉"
         },
         dashboard: {
-            overview: "儀表板總覽",
             welcomeBack: "歡迎回來",
             newNote: "新增筆記",
             streak: "連續紀錄",
@@ -742,11 +744,13 @@ export const translations = {
             messageEdited: "已編輯",
             studyNote: "📖 研讀筆記",
             deleteNoteWarning: "此筆記也將從所有分享的群組中刪除。",
-            deleteMessageWarning: "此操作也會從「我的筆記」中刪除此筆記。"
+            deleteMessageWarning: "此操作也會從「我的筆記」中刪除此筆記。",
+            reply: "回覆",
+            like: "讚",
+            unlike: "收回讚"
         },
         myNotes: {
-            title: "我的筆記",
-            description: "您的個人研讀筆記和心得。",
+            description: "筆記收藏",
             newNote: "新增筆記",
             loading: "載入筆記中...",
             noNotesTitle: "尚無筆記",
@@ -903,7 +907,6 @@ export const translations = {
             close: "Cerrar"
         },
         dashboard: {
-            overview: "Resumen del Tablero",
             welcomeBack: "Bienvenido de nuevo",
             newNote: "Nueva Nota",
             streak: "Racha",
@@ -965,11 +968,13 @@ export const translations = {
             messageEdited: "editado",
             studyNote: "📖 Nota de Estudio",
             deleteNoteWarning: "Esta nota también se eliminará de todos los grupos donde fue compartida.",
-            deleteMessageWarning: "Esto también eliminará la nota de Mis Notas."
+            deleteMessageWarning: "Esto también eliminará la nota de Mis Notas.",
+            reply: "Responder",
+            like: "Me gusta",
+            unlike: "Ya no me gusta"
         },
         myNotes: {
-            title: "Mis Notas",
-            description: "Tu colección personal de notas de estudio y reflexiones.",
+            description: "Colección de Notas",
             newNote: "Nueva Nota",
             loading: "Cargando notas...",
             noNotesTitle: "Aún no hay notas",
@@ -1126,7 +1131,6 @@ export const translations = {
             close: "Đóng"
         },
         dashboard: {
-            overview: "Tổng quan",
             welcomeBack: "Chào mừng trở lại",
             newNote: "Ghi chép mới",
             streak: "Chuỗi",
@@ -1188,11 +1192,13 @@ export const translations = {
             messageEdited: "đã chỉnh sửa",
             studyNote: "📖 Ghi chép Học tập",
             deleteNoteWarning: "Ghi chép này cũng sẽ bị xóa khỏi tất cả các nhóm đã được chia sẻ.",
-            deleteMessageWarning: "Điều này cũng sẽ xóa ghi chép khỏi Ghi chép của tôi."
+            deleteMessageWarning: "Điều này cũng sẽ xóa ghi chép khỏi Ghi chép của tôi.",
+            reply: "Trả lời",
+            like: "Thích",
+            unlike: "Bỏ thích"
         },
         myNotes: {
-            title: "Ghi chép của tôi",
-            description: "Bộ sưu tập ghi chép nghiên cứu và suy ngẫm cá nhân của bạn.",
+            description: "Bộ Sưu Tập Ghi Chép",
             newNote: "Ghi chép mới",
             loading: "Đang tải ghi chép...",
             noNotesTitle: "Chưa có ghi chép nào",
@@ -1349,7 +1355,6 @@ export const translations = {
             close: "ปิด"
         },
         dashboard: {
-            overview: "ภาพรวมแผงควบคุม",
             welcomeBack: "ยินดีต้อนรับกลับ",
             newNote: "บันทึกใหม่",
             streak: "ต่อเนื่อง",
@@ -1411,11 +1416,13 @@ export const translations = {
             messageEdited: "แก้ไขแล้ว",
             studyNote: "📖 บันทึกการศึกษา",
             deleteNoteWarning: "บันทึกนี้จะถูกลบออกจากกลุ่มทั้งหมดที่แชร์ไว้ด้วย",
-            deleteMessageWarning: "การดำเนินการนี้จะลบบันทึกจาก บันทึกของฉัน ด้วย"
+            deleteMessageWarning: "การดำเนินการนี้จะลบบันทึกจาก บันทึกของฉัน ด้วย",
+            reply: "ตอบกลับ",
+            like: "ถูกใจ",
+            unlike: "เลิกถูกใจ"
         },
         myNotes: {
-            title: "บันทึกของฉัน",
-            description: "คอลเลกชันบันทึกการศึกษาและข้อคิดส่วนตัวของคุณ",
+            description: "คลังบันทึก",
             newNote: "บันทึกใหม่",
             loading: "กำลังโหลดบันทึก...",
             noNotesTitle: "ยังไม่มีบันทึก",
@@ -1572,7 +1579,6 @@ export const translations = {
             close: "닫기"
         },
         dashboard: {
-            overview: "대시보드 개요",
             welcomeBack: "환영합니다",
             newNote: "새 노트",
             streak: "연속",
@@ -1634,11 +1640,13 @@ export const translations = {
             messageEdited: "수정됨",
             studyNote: "📖 학습 노트",
             deleteNoteWarning: "이 노트는 공유된 모든 그룹에서도 삭제됩니다.",
-            deleteMessageWarning: "이 작업은 내 노트에서도 해당 노트를 삭제합니다."
+            deleteMessageWarning: "이 작업은 내 노트에서도 해당 노트를 삭제합니다.",
+            reply: "답장",
+            like: "좋아요",
+            unlike: "좋아요 취소"
         },
         myNotes: {
-            title: "내 노트",
-            description: "개인 학습 노트 및 성찰 모음입니다.",
+            description: "노트 컬렉션",
             newNote: "새 노트",
             loading: "노트 로드 중...",
             noNotesTitle: "아직 노트가 없습니다",
@@ -1795,7 +1803,6 @@ export const translations = {
             close: "Isara"
         },
         dashboard: {
-            overview: "Pangkalahatang-ideya ng Dashboard",
             welcomeBack: "Maligayang pagbabalik",
             newNote: "Bagong Tala",
             streak: "Sunod-sunod",
@@ -1857,11 +1864,13 @@ export const translations = {
             messageEdited: "na-edit",
             studyNote: "📖 Tala sa Pag-aaral",
             deleteNoteWarning: "Ang talang ito ay tatanggalin din sa lahat ng grupong pinag-share-an nito.",
-            deleteMessageWarning: "Tatanggalin din nito ang tala mula sa Aking mga Tala."
+            deleteMessageWarning: "Tatanggalin din nito ang tala mula sa Aking mga Tala.",
+            reply: "Sumagot",
+            like: "Like",
+            unlike: "Unlike"
         },
         myNotes: {
-            title: "Aking mga Tala",
-            description: "Ang iyong personal na koleksyon ng mga tala sa pag-aaral at pagninilay.",
+            description: "Koleksyon ng mga Tala",
             newNote: "Bagong Tala",
             loading: "Naglo-load ng mga tala...",
             noNotesTitle: "Wala pang mga tala",
@@ -2018,7 +2027,6 @@ export const translations = {
             close: "Funga"
         },
         dashboard: {
-            overview: "Muhtasari wa Dashibodi",
             welcomeBack: "Karibu tena",
             newNote: "Ujumbe Mpya",
             streak: "Mfululizo",
@@ -2080,11 +2088,13 @@ export const translations = {
             messageEdited: "imehaririwa",
             studyNote: "📖 Maelezo ya Kujifunza",
             deleteNoteWarning: "Maelezo haya pia yatafutwa kutoka vikundi vyote viliposhirikiwa.",
-            deleteMessageWarning: "Hii pia itafuta maelezo kutoka Maelezo Yangu."
+            deleteMessageWarning: "Hii pia itafuta maelezo kutoka Maelezo Yangu.",
+            reply: "Jibu",
+            like: "Penda",
+            unlike: "Ondoa upendo"
         },
         myNotes: {
-            title: "Maelezo Yangu",
-            description: "Mkusanyiko wako binafsi wa maelezo ya kujifunza na tafakari.",
+            description: "Mkusanyiko wa Maelezo",
             newNote: "Ujumbe Mpya",
             loading: "Inapakia maelezo...",
             noNotesTitle: "Hakuna maelezo bado",

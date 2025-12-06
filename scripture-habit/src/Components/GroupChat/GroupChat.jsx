@@ -12,7 +12,7 @@ import LinkPreview from '../LinkPreview/LinkPreview';
 import './GroupChat.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 
-const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
+const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFocusChange }) => {
   const { language, t } = useLanguage();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
@@ -33,9 +33,13 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
   const [noteToEdit, setNoteToEdit] = useState(null);
   const [showReactionsModal, setShowReactionsModal] = useState(false);
   const [reactionsToShow, setReactionsToShow] = useState([]);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [userReadCount, setUserReadCount] = useState(null);
+  const [initialScrollDone, setInitialScrollDone] = useState(false);
   const longPressTimer = useRef(null);
   const containerRef = useRef(null);
   const textareaRef = useRef(null);
+  const firstUnreadRef = useRef(null);
 
   useEffect(() => {
     if (!groupId) return;
@@ -73,9 +77,34 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
     };
   }, [groupId]);
 
-  // Update read status when viewing the group (only when isActive)
+  // Fetch user's read count when entering the group
   useEffect(() => {
-    if (!isActive || !userData || !groupId || !groupData) return;
+    if (!groupId || !userData?.uid) return;
+
+    const fetchReadCount = async () => {
+      try {
+        const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', groupId);
+        const { getDoc } = await import('firebase/firestore');
+        const stateSnap = await getDoc(userGroupStateRef);
+        if (stateSnap.exists()) {
+          setUserReadCount(stateSnap.data().readMessageCount || 0);
+        } else {
+          setUserReadCount(0);
+        }
+      } catch (error) {
+        console.error("Error fetching read count:", error);
+        setUserReadCount(0);
+      }
+    };
+
+    // Reset scroll state when group changes
+    setInitialScrollDone(false);
+    fetchReadCount();
+  }, [groupId, userData?.uid]);
+
+  // Update read status when viewing the group (only when isActive and after initial scroll)
+  useEffect(() => {
+    if (!isActive || !userData || !groupId || !groupData || !initialScrollDone) return;
 
     const updateReadStatus = async () => {
       const currentCount = groupData.messageCount || 0;
@@ -92,13 +121,46 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
     };
 
     updateReadStatus();
-  }, [groupId, groupData, userData, isActive]);
+  }, [groupId, groupData, userData, isActive, initialScrollDone]);
 
+  // Track previous message count to only auto-scroll on new messages, not updates
+  const prevMessageCountRef = useRef(0);
+
+  // Handle initial scroll to first unread message, then scroll to bottom for new messages
   useEffect(() => {
-    if (containerRef.current) {
+    if (!containerRef.current || messages.length === 0 || userReadCount === null || loading) return;
+
+    // Initial scroll - go to first unread message
+    if (!initialScrollDone) {
+      // If there are unread messages
+      if (userReadCount < messages.length) {
+        // Find the first unread message element and scroll to it
+        const firstUnreadIndex = userReadCount;
+        const messageElements = containerRef.current.querySelectorAll('.message-wrapper, .message.system-message');
+
+        if (messageElements[firstUnreadIndex]) {
+          messageElements[firstUnreadIndex].scrollIntoView({ behavior: 'auto', block: 'start' });
+          // Add some offset for the fixed header
+          containerRef.current.scrollTop = containerRef.current.scrollTop - 80;
+        } else {
+          // If can't find the element, scroll to bottom
+          containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        }
+      } else {
+        // No unread messages, scroll to bottom
+        containerRef.current.scrollTop = containerRef.current.scrollHeight;
+      }
+      setInitialScrollDone(true);
+      prevMessageCountRef.current = messages.length;
+      return;
+    }
+
+    // After initial scroll, only scroll to bottom when new messages are added
+    if (messages.length > prevMessageCountRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
-  }, [messages]);
+    prevMessageCountRef.current = messages.length;
+  }, [messages, userReadCount, loading, initialScrollDone]);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -569,36 +631,121 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
       <div className="chat-header">
         <h2>{groupData ? groupData.name : t('groupChat.groupName')}</h2>
         {groupData && (
-          <div className="header-right">
-            {userData.uid === groupData.ownerUserId && (
-              <div className="group-status-toggle">
-                <span className="status-label">{groupData.isPublic ? t('groupChat.public') : t('groupChat.private')}</span>
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    checked={groupData.isPublic || false}
-                    onChange={togglePublicStatus}
-                  />
-                  <span className="slider round"></span>
-                </label>
+          <>
+            {/* Desktop header - hidden on mobile */}
+            <div className="header-right desktop-only">
+              {userData.uid === groupData.ownerUserId && (
+                <div className="group-status-toggle">
+                  <span className="status-label">{groupData.isPublic ? t('groupChat.public') : t('groupChat.private')}</span>
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={groupData.isPublic || false}
+                      onChange={togglePublicStatus}
+                    />
+                    <span className="slider round"></span>
+                  </label>
+                </div>
+              )}
+              <div className="invite-code-display" onClick={handleCopyInviteCode} title="Copy Invite Code">
+                <span>{t('groupChat.inviteCode')}: <strong>{groupData.inviteCode}</strong></span>
+                <UilCopy size="16" className="copy-icon" />
               </div>
-            )}
-            <div className="invite-code-display" onClick={handleCopyInviteCode} title="Copy Invite Code">
-              <span>{t('groupChat.inviteCode')}: <strong>{groupData.inviteCode}</strong></span>
-              <UilCopy size="16" className="copy-icon" />
+              {userData.uid === groupData.ownerUserId ? (
+                <button className="leave-group-btn delete-group-btn" onClick={() => setShowDeleteModal(true)} title={t('groupChat.deleteGroup')}>
+                  <UilTrashAlt size="20" />
+                </button>
+              ) : (
+                <button className="leave-group-btn" onClick={() => setShowLeaveModal(true)} title={t('groupChat.leaveGroup')}>
+                  <UilSignOutAlt size="20" />
+                </button>
+              )}
             </div>
-            {userData.uid === groupData.ownerUserId ? (
-              <button className="leave-group-btn delete-group-btn" onClick={() => setShowDeleteModal(true)} title={t('groupChat.deleteGroup')}>
-                <UilTrashAlt size="20" />
-              </button>
-            ) : (
-              <button className="leave-group-btn" onClick={() => setShowLeaveModal(true)} title={t('groupChat.leaveGroup')}>
-                <UilSignOutAlt size="20" />
-              </button>
-            )}
-          </div>
+
+            {/* Mobile hamburger menu button */}
+            <button
+              className="hamburger-btn mobile-only"
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              aria-label="Menu"
+            >
+              <span className={`hamburger-icon ${showMobileMenu ? 'open' : ''}`}>
+                <span></span>
+                <span></span>
+                <span></span>
+              </span>
+            </button>
+          </>
         )}
       </div>
+
+      {/* Mobile menu overlay - placed outside chat-header for proper positioning */}
+      {showMobileMenu && groupData && (
+        <div className="mobile-menu-overlay" onClick={() => setShowMobileMenu(false)}>
+          <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
+            <div className="mobile-menu-header">
+              <h3>{groupData.name}</h3>
+              <button className="close-menu-btn" onClick={() => setShowMobileMenu(false)}>
+                <UilTimes size="24" />
+              </button>
+            </div>
+
+            <div className="mobile-menu-content">
+              {/* Invite Code Section */}
+              <div className="mobile-menu-item invite-section" onClick={() => { handleCopyInviteCode(); setShowMobileMenu(false); }}>
+                <div className="menu-item-icon">
+                  <UilCopy size="20" />
+                </div>
+                <div className="menu-item-content">
+                  <span className="menu-item-label">{t('groupChat.inviteCode')}</span>
+                  <span className="menu-item-value">{groupData.inviteCode}</span>
+                </div>
+              </div>
+
+              {/* Public/Private Toggle (Owner only) */}
+              {userData.uid === groupData.ownerUserId && (
+                <div className="mobile-menu-item toggle-section">
+                  <div className="menu-item-content">
+                    <span className="menu-item-label">{groupData.isPublic ? t('groupChat.public') : t('groupChat.private')}</span>
+                  </div>
+                  <label className="switch">
+                    <input
+                      type="checkbox"
+                      checked={groupData.isPublic || false}
+                      onChange={() => { togglePublicStatus(); }}
+                    />
+                    <span className="slider round"></span>
+                  </label>
+                </div>
+              )}
+
+              <div className="mobile-menu-divider"></div>
+
+              {/* Leave/Delete Group */}
+              {userData.uid === groupData.ownerUserId ? (
+                <div
+                  className="mobile-menu-item danger"
+                  onClick={() => { setShowMobileMenu(false); setShowDeleteModal(true); }}
+                >
+                  <div className="menu-item-icon">
+                    <UilTrashAlt size="20" />
+                  </div>
+                  <span className="menu-item-label">{t('groupChat.deleteGroup')}</span>
+                </div>
+              ) : (
+                <div
+                  className="mobile-menu-item danger"
+                  onClick={() => { setShowMobileMenu(false); setShowLeaveModal(true); }}
+                >
+                  <div className="menu-item-icon">
+                    <UilSignOutAlt size="20" />
+                  </div>
+                  <span className="menu-item-label">{t('groupChat.leaveGroup')}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {showLeaveModal && (
         <div className="leave-modal-overlay">
@@ -766,21 +913,21 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
                           <button
                             className="hover-action-btn"
                             onClick={(e) => { e.stopPropagation(); handleEditMessage(msg); }}
-                            title="Edit"
+                            title={t('groupChat.editMessage')}
                           >
                             ✏️
                           </button>
                           <button
                             className="hover-action-btn delete"
                             onClick={(e) => { e.stopPropagation(); handleDeleteMessageClick(msg); }}
-                            title="Delete"
+                            title={t('groupChat.deleteMessage')}
                           >
                             🗑️
                           </button>
                           <button
                             className="hover-action-btn"
                             onClick={(e) => { e.stopPropagation(); handleReply(msg); }}
-                            title="Reply"
+                            title={t('groupChat.reply')}
                           >
                             ↩️
                           </button>
@@ -790,14 +937,14 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
                           <button
                             className="hover-action-btn"
                             onClick={(e) => { e.stopPropagation(); handleToggleReaction(msg); }}
-                            title={msg.reactions?.find(r => r.odU === userData?.uid) ? 'Unlike' : 'Like'}
+                            title={msg.reactions?.find(r => r.odU === userData?.uid) ? t('groupChat.unlike') : t('groupChat.like')}
                           >
                             {msg.reactions?.find(r => r.odU === userData?.uid) ? '👍' : '👍'}
                           </button>
                           <button
                             className="hover-action-btn"
                             onClick={(e) => { e.stopPropagation(); handleReply(msg); }}
-                            title="Reply"
+                            title={t('groupChat.reply')}
                           >
                             ↩️
                           </button>
@@ -1032,6 +1179,16 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false }) => {
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={handleKeyDown}
+            onFocus={() => {
+              onInputFocusChange && onInputFocusChange(true);
+              // Scroll to bottom when keyboard appears on mobile
+              if (containerRef.current && window.innerWidth <= 768) {
+                setTimeout(() => {
+                  containerRef.current.scrollTop = containerRef.current.scrollHeight;
+                }, 300);
+              }
+            }}
+            onBlur={() => onInputFocusChange && onInputFocusChange(false)}
             placeholder={t('groupChat.typeMessage')}
             rows={1}
           />
