@@ -1353,6 +1353,6 @@ input:checked+.slider:before {
 
     /* Add padding to messages container so content isn't hidden behind fixed input */
     .messages-container {
-        padding-bottom: 100px;
+        padding-bottom:50px;
     }
 }
