@@ -34,6 +34,28 @@
     font-weight: 700;
 }
 
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.back-button {
+    display: none;
+    cursor: pointer;
+    color: var(--black);
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+}
+
+.back-button:active {
+    background: rgba(0, 0, 0, 0.05);
+}
+
 .header-right {
     display: flex;
     align-items: center;
@@ -326,33 +348,34 @@
 
 
 
+
 .message-reactions {
     display: inline-flex;
     align-items: center;
     gap: 4px;
     padding: 2px 8px;
     border-radius: 12px;
-    background: #f0f0f0;
-    color: var(--black);
+    background: white;
+    color: var(--gray);
     font-size: 0.8rem;
     margin-top: -8px;
     margin-bottom: 4px;
-    border: 2px solid white;
+    border: 1px solid rgba(0, 0, 0, 0.05);
     cursor: pointer;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     z-index: 2;
     width: fit-content;
 }
 
 .message.sent .message-reactions {
     align-self: flex-end;
-    background: #f0f0f0;
+    background: white;
     margin-right: 0.5rem;
 }
 
 .message.received .message-reactions {
     align-self: flex-start;
-    background: #f0f0f0;
+    background: white;
     margin-left: 0.5rem;
 }
 
@@ -361,6 +384,11 @@
     font-size: 0.75rem;
     color: var(--gray);
 }
+
+.message.sent .reaction-count {
+    color: var(--black) !important;
+}
+
 
 
 .message-content>p {
@@ -569,6 +597,10 @@
         height: 50px;
         z-index: 100;
         background: rgba(255, 255, 255, 0.95);
+    }
+
+    .back-button {
+        display: flex;
     }
 
     .chat-header h2 {
