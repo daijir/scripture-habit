@@ -876,7 +876,15 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         </div>
       )}
 
-      <div className="messages-container" ref={containerRef}>
+      <div
+        className="messages-container"
+        ref={containerRef}
+        onClick={() => {
+          if (textareaRef.current) {
+            textareaRef.current.blur();
+          }
+        }}
+      >
         {loading && <p>Loading messages...</p>}
         {error && <p className="error-message">{error}</p>}
         {messages.map((msg, index) => {
