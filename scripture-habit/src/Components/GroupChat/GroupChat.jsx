@@ -699,6 +699,8 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     }
   };
 
+  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal;
+
   return (
     <div className="GroupChat">
       <NewNote
@@ -1316,7 +1318,11 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         )
       }
 
-      <form onSubmit={handleSendMessage} className="send-message-form">
+      <form
+        onSubmit={handleSendMessage}
+        className="send-message-form"
+        style={window.innerWidth <= 768 && isAnyModalOpen ? { display: 'none' } : {}}
+      >
         {replyTo && (
           <div className="reply-preview">
             <div className="reply-info">
