@@ -24,9 +24,7 @@ export default function LoginForm() {
     }
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-
-
+      await signInWithEmailAndPassword(auth, email, password);
       navigate('/dashboard');
     } catch (error) {
       setError(error.message);
@@ -37,6 +35,7 @@ export default function LoginForm() {
     <div className='App LoginForm'>
       <div className='AppGlass'>
         <h2>{t('login.title')}</h2>
+
         <form onSubmit={handleSubmit}>
           <Input
             label={t('login.emailLabel')}
@@ -45,6 +44,7 @@ export default function LoginForm() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+
           <Input
             label={t('login.passwordLabel')}
             type='password'
@@ -52,17 +52,27 @@ export default function LoginForm() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+
           <Button type="submit">
             {t('login.submitButton')}
           </Button>
         </form>
+
+        {/* Error message */}
         {error && <p className='error'>{error}</p>}
 
+        {/* Forgot Password */}
+        <div className="auth-switch">
+          <Link to="/forgot-password" className="auth-link">
+            {t('forgotPassword') || "Forgot Password?"}
+          </Link>
+        </div>
+
+        {/* Switch to Sign Up */}
         <div className="auth-switch">
           <p>{t('login.noAccount')} <Link to="/signup" className="auth-link">{t('login.signupLink')}</Link></p>
         </div>
       </div>
     </div>
-
   );
 }

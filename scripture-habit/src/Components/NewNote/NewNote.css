@@ -27,6 +27,39 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 
+/* Modal header */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.modal-header h1 {
+  margin: 0;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ff3b30;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+}
+/* --- */
+/* Error message */
+.error-message {
+  color:red
+}
+
+.modal-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: black;
+}
+
 .ModalActions {
   display: flex;
   justify-content: flex-end;
@@ -114,4 +147,28 @@
 
 .group-checkbox-item input[type="checkbox"] {
   accent-color: var(--pink);
+}
+
+.modal-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.modal-actions .cancel-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background: #ddd;
+  cursor: pointer;
+}
+
+.modal-actions .submit-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background: var(--pink);
+  color: white;
+  cursor: pointer;
 }

@@ -13,6 +13,8 @@ import GroupDetails from "./Components/GroupDetails/GroupDetails";
 import GroupOptions from './Components/GroupOptions/GroupOptions';
 import Welcome from './Components/Welcome/Welcome';
 import { LanguageProvider } from './Context/LanguageContext.jsx';
+import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
+
 
 const App = () => {
 
@@ -36,6 +38,8 @@ const App = () => {
 
           <Route path="/group-options" element={<GroupOptions />} />
           <Route path="/group/:id" element={<GroupDetails />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+
         </Routes>
         <ToastContainer position="top-right" autoClose={3000} />
       </div>
