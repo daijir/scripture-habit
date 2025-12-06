@@ -162,12 +162,14 @@
         position: absolute;
         top: 5px;
         right: 5px;
-        width: 10px;
-        height: 10px;
+        width: 12px;
+        height: 12px;
         background-color: var(--pink);
         border-radius: 50%;
         border: 2px solid white;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        z-index: 100;
+        display: block;
     }
 
     /* Hide sidebar when input is focused */
@@ -206,7 +208,7 @@
 }
 
 .unread-badge {
-    background-color: #ff3b30;
+    background-color: var(--pink);
     color: white;
     font-size: 0.7rem;
     font-weight: bold;
