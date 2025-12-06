@@ -596,15 +596,27 @@
         border-radius: 0;
         height: 50px;
         z-index: 100;
-        background: rgba(255, 255, 255, 0.95);
+        background: linear-gradient(135deg, #FF919D 0%, #fc6777 100%) !important;
+        backdrop-filter: blur(10px);
+        border-bottom: none;
+        box-shadow: 0 4px 20px rgba(255, 145, 157, 0.4);
+        border-bottom-left-radius: 0.5rem;
+        border-bottom-right-radius: 0.5rem;
     }
 
     .back-button {
         display: flex;
+        color: white !important;
     }
 
     .chat-header h2 {
         font-size: 1rem;
+        color: white !important;
+    }
+
+    /* Change hamburger menu color to white on mobile */
+    .hamburger-icon span {
+        background: white !important;
     }
 
     .invite-code-display {
