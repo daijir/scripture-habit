@@ -53,6 +53,12 @@ export default function LoginForm() {
             required
           />
 
+          <div className="forgot-password-container">
+            <Link to="/forgot-password" className="forgot-password-link">
+              {t('login.forgotPassword')}
+            </Link>
+          </div>
+
           <Button type="submit">
             {t('login.submitButton')}
           </Button>
@@ -60,13 +66,6 @@ export default function LoginForm() {
 
         {/* Error message */}
         {error && <p className='error'>{error}</p>}
-
-        {/* Forgot Password */}
-        <div className="auth-switch">
-          <Link to="/forgot-password" className="auth-link">
-            {t('forgotPassword') || "Forgot Password?"}
-          </Link>
-        </div>
 
         {/* Switch to Sign Up */}
         <div className="auth-switch">

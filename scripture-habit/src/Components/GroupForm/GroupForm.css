@@ -12,18 +12,18 @@
 }
 
 .create-group-submit-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  background: linear-gradient(135deg, #8E9EFA 0%, #B088D9 100%) !important;
   color: white !important;
   border: none !important;
   font-weight: 600 !important;
   margin-top: 1rem;
-  box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4) !important;
+  box-shadow: 0 4px 15px rgba(118, 75, 162, 0.2) !important;
 }
 
 .create-group-submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(118, 75, 162, 0.6) !important;
-  filter: brightness(1.1);
+  box-shadow: 0 6px 20px rgba(118, 75, 162, 0.3) !important;
+  filter: brightness(1.05);
 }
 
 

@@ -81,10 +81,10 @@ const Welcome = () => {
 
             <div className="auth-buttons">
                 <Link to="/login">
-                    <Button>{t('welcome.login')}</Button>
+                    <Button className="login-btn">{t('welcome.login')}</Button>
                 </Link>
                 <Link to="/signup">
-                    <Button>{t('welcome.signup')}</Button>
+                    <Button className="signup-btn">{t('welcome.signup')}</Button>
                 </Link>
             </div>
         </div>

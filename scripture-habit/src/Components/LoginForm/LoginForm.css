@@ -21,6 +21,44 @@
   color: var(--gray);
 }
 
+.forgot-password-container {
+  width: 100%;
+  text-align: right;
+  margin-top: -12px;
+  margin-bottom: 15px;
+  padding-right: 5px;
+}
+
+.forgot-password-link {
+  color: var(--gray);
+  font-size: 0.85rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.forgot-password-link:hover {
+  color: #4a6cf7;
+  text-decoration: none;
+}
+
+.LoginForm form button {
+  background: linear-gradient(135deg, #8E9EFA 0%, #B088D9 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(118, 75, 162, 0.2);
+  font-weight: 600;
+}
+
+.LoginForm form button:hover {
+  background: linear-gradient(135deg, #8E9EFA 0%, #B088D9 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(118, 75, 162, 0.3);
+  filter: brightness(1.05);
+  opacity: 1;
+}
+
 .auth-link {
   color: #4a6cf7;
   text-decoration: none;
