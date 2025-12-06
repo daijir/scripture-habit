@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { db, auth } from '../../firebase';
 import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes } from '@iconscout/react-unicons';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc } from 'firebase/firestore';
@@ -40,16 +40,28 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const containerRef = useRef(null);
   const textareaRef = useRef(null);
   const firstUnreadRef = useRef(null);
+  const messagesEndRef = useRef(null);
+  const currentGroupIdRef = useRef(groupId);
 
   useEffect(() => {
     if (!groupId) return;
 
+    // Update ref FIRST - this is the source of truth for current group
+    currentGroupIdRef.current = groupId;
+
+    // Reset all states when group changes
     setLoading(true);
+    setMessages([]);
+    setGroupData(null);
+    setInitialScrollDone(false);
+    setUserReadCount(null);
+    prevMessageCountRef.current = 0;
 
     const groupRef = doc(db, 'groups', groupId);
     const unsubscribeGroup = onSnapshot(groupRef, (docSnap) => {
       if (docSnap.exists()) {
-        setGroupData(docSnap.data());
+        // Include groupId with the data so we can validate it later
+        setGroupData({ ...docSnap.data(), _groupId: groupId });
       }
     });
 
@@ -81,86 +93,159 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   useEffect(() => {
     if (!groupId || !userData?.uid) return;
 
+    let cancelled = false;
+    const currentGroupId = groupId; // Capture current groupId
+
     const fetchReadCount = async () => {
       try {
-        const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', groupId);
-        const { getDoc } = await import('firebase/firestore');
-        const stateSnap = await getDoc(userGroupStateRef);
+        const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', currentGroupId);
+        // Use getDocFromServer to bypass cache
+        const { getDocFromServer } = await import('firebase/firestore');
+        const stateSnap = await getDocFromServer(userGroupStateRef);
+
+        // Check if this request is still valid (groupId hasn't changed)
+        if (cancelled) {
+          return;
+        }
+
         if (stateSnap.exists()) {
-          setUserReadCount(stateSnap.data().readMessageCount || 0);
+          const data = stateSnap.data();
+          setUserReadCount(data.readMessageCount || 0);
         } else {
           setUserReadCount(0);
         }
       } catch (error) {
-        console.error("Error fetching read count:", error);
-        setUserReadCount(0);
+        if (!cancelled) {
+          console.error("Error fetching read count:", error);
+          setUserReadCount(0);
+        }
       }
     };
 
-    // Reset scroll state when group changes
-    setInitialScrollDone(false);
     fetchReadCount();
+
+    return () => {
+      cancelled = true;
+    };
   }, [groupId, userData?.uid]);
 
   // Update read status when viewing the group (only when isActive and after initial scroll)
   useEffect(() => {
     if (!isActive || !userData || !groupId || !groupData || !initialScrollDone) return;
 
+    // CRITICAL: Validate that groupData belongs to the current groupId
+    if (groupData._groupId !== groupId) {
+      return;
+    }
+
+    // Validate that groupData matches current messages (they should be in sync)
+    const expectedCount = groupData.messageCount || 0;
+    if (messages.length !== expectedCount) {
+      return;
+    }
+
+    // Check if this is still the current group
+    if (groupId !== currentGroupIdRef.current) {
+      return;
+    }
+
+    // Cache values at effect start to prevent stale closures
+    const cachedGroupId = groupId;
+    const cachedMessageCount = messages.length; // Use messages.length - this is what we actually loaded
+    let cancelled = false;
+
     const updateReadStatus = async () => {
-      const currentCount = groupData.messageCount || 0;
-      const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', groupId);
+      // Double check that groupId hasn't changed using ref
+      if (cancelled || cachedGroupId !== currentGroupIdRef.current) {
+        return;
+      }
+
+      const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', cachedGroupId);
 
       try {
         await setDoc(userGroupStateRef, {
-          readMessageCount: currentCount,
+          readMessageCount: cachedMessageCount,
           lastReadAt: serverTimestamp()
         }, { merge: true });
       } catch (error) {
-        console.error("Error updating read status:", error);
+        if (!cancelled) {
+          console.error("Error updating read status:", error);
+        }
       }
     };
 
     updateReadStatus();
-  }, [groupId, groupData, userData, isActive, initialScrollDone]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [groupId, groupData, userData, isActive, initialScrollDone, messages.length]);
 
   // Track previous message count to only auto-scroll on new messages, not updates
   const prevMessageCountRef = useRef(0);
 
-  // Handle initial scroll to first unread message, then scroll to bottom for new messages
-  useEffect(() => {
-    if (!containerRef.current || messages.length === 0 || userReadCount === null || loading) return;
+  // Scroll to bottom using the end ref
+  const scrollToBottom = () => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
+    } else {
+      // Fallback: try to scroll container directly
+      const container = document.querySelector('.GroupChat');
+      if (container) {
+        container.scrollTop = container.scrollHeight;
+      }
+    }
+  };
 
-    // Initial scroll - go to first unread message
+  // Scroll to first unread message
+  const scrollToFirstUnread = (firstUnreadIndex) => {
+    if (!containerRef.current) return false;
+    const messageElements = containerRef.current.querySelectorAll('.message-wrapper, .message.system-message');
+
+    if (messageElements[firstUnreadIndex]) {
+      messageElements[firstUnreadIndex].scrollIntoView({ behavior: 'auto', block: 'start' });
+      // Add some offset for the fixed header
+      if (containerRef.current) {
+        containerRef.current.scrollTop = Math.max(0, containerRef.current.scrollTop - 80);
+      }
+      return true;
+    }
+    return false;
+  };
+
+  // Handle initial scroll - use useLayoutEffect for synchronous execution after DOM updates
+  useLayoutEffect(() => {
+    // Wait until we have all messages loaded (compare with groupData.messageCount)
+    const expectedMessageCount = groupData?.messageCount || 0;
+    const allMessagesLoaded = messages.length >= expectedMessageCount || (messages.length > 0 && expectedMessageCount === 0);
+
+    if (messages.length === 0 || userReadCount === null || loading || !allMessagesLoaded) return;
+
+    // Initial scroll - go to first unread message or bottom
     if (!initialScrollDone) {
       // If there are unread messages
       if (userReadCount < messages.length) {
-        // Find the first unread message element and scroll to it
-        const firstUnreadIndex = userReadCount;
-        const messageElements = containerRef.current.querySelectorAll('.message-wrapper, .message.system-message');
-
-        if (messageElements[firstUnreadIndex]) {
-          messageElements[firstUnreadIndex].scrollIntoView({ behavior: 'auto', block: 'start' });
-          // Add some offset for the fixed header
-          containerRef.current.scrollTop = containerRef.current.scrollTop - 80;
-        } else {
-          // If can't find the element, scroll to bottom
-          containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        const scrolled = scrollToFirstUnread(userReadCount);
+        if (!scrolled) {
+          scrollToBottom();
         }
       } else {
         // No unread messages, scroll to bottom
-        containerRef.current.scrollTop = containerRef.current.scrollHeight;
+        scrollToBottom();
       }
+
       setInitialScrollDone(true);
       prevMessageCountRef.current = messages.length;
-      return;
     }
+  }, [messages, userReadCount, loading, initialScrollDone, groupData?.messageCount]);
 
-    // After initial scroll, only scroll to bottom when new messages are added
-    if (messages.length > prevMessageCountRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+  // Handle new messages - scroll to bottom
+  useEffect(() => {
+    if (initialScrollDone && messages.length > prevMessageCountRef.current) {
+      scrollToBottom();
     }
     prevMessageCountRef.current = messages.length;
-  }, [messages, userReadCount, loading, initialScrollDone]);
+  }, [messages.length, initialScrollDone]);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -1043,6 +1128,8 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
             </React.Fragment>
           );
         })}
+        {/* Scroll target at the end of messages */}
+        <div ref={messagesEndRef} />
       </div>
 
       {/* Context Menu for messages */}
