@@ -60,4 +60,8 @@ export const ScripturesOptions = [
         value: "Pearl of Great Price",
         label: "Pearl of Great Price"
     },
+    {
+        value: "General Conference",
+        label: "General Conference"
+    },
 ]

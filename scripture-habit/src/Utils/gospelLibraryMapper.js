@@ -35,8 +35,32 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         volumeUrlPart = "dc-testament";
     } else if (lowerVolume === "pearl of great price" || volume === "高価な真珠" || volume === "Pérola de Grande Valor" || volume === "無價珍珠" || volume === "La Perla de Gran Precio" || volume === "Trân Châu Vô Giá" || volume === "ไข่มุกอันล้ำค่า" || volume === "값진 진주" || volume === "Mahalagang Perlas" || volume === "Lulu ya Thamani Kuu") {
         volumeUrlPart = "pgp";
+    } else if (lowerVolume === "general conference" || volume === "総大会" || volume === "Conferência Geral" || volume === "總會大會" || volume === "Conferencia General" || volume === "Đại Hội Trung Ương" || volume === "การประชุมใหญ่สามัญ" || volume === "연차 대회" || volume === "Pangkalahatang Kumperensya" || volume === "Mkutano Mkuu") {
+        volumeUrlPart = "general-conference";
     } else {
         return null;
+    }
+
+
+
+    // Special handling for General Conference
+    if (volumeUrlPart === "general-conference") {
+        // If the user pasted a full URL, return it directly
+        if (chapterInput.includes("churchofjesuschrist.org")) {
+            return chapterInput;
+        }
+
+        // Handle "YYYY/MM/slug" format (e.g., "2025/10/15eyre")
+        if (/^\d{4}\/\d{2}\/.+/.test(chapterInput)) {
+            const gcBaseUrl = "https://www.churchofjesuschrist.org/study/general-conference";
+            return `${gcBaseUrl}/${chapterInput}${langParam}`;
+        }
+
+        // Handle "YYYY/MM" format (e.g., "2023/10")
+        if (/^\d{4}\/\d{2}$/.test(chapterInput)) {
+            const gcBaseUrl = "https://www.churchofjesuschrist.org/study/general-conference";
+            return `${gcBaseUrl}/${chapterInput}${langParam}`;
+        }
     }
 
     // Parse chapterInput to separate Book and Chapter

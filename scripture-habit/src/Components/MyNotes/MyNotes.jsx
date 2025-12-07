@@ -95,7 +95,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
     if (chapterMatch && scriptureMatch) {
       const chapter = translateChapterField(chapterMatch[1].trim(), language);
       const rawScripture = scriptureMatch[1].trim();
-      const scriptureMap = { 'Old Testament': 'scriptures.oldTestament', 'New Testament': 'scriptures.newTestament', 'Book of Mormon': 'scriptures.bookOfMormon', 'Doctrine and Covenants': 'scriptures.doctrineAndCovenants', 'Pearl of Great Price': 'scriptures.pearlOfGreatPrice' };
+      const scriptureMap = { 'Old Testament': 'scriptures.oldTestament', 'New Testament': 'scriptures.newTestament', 'Book of Mormon': 'scriptures.bookOfMormon', 'Doctrine and Covenants': 'scriptures.doctrineAndCovenants', 'Pearl of Great Price': 'scriptures.pearlOfGreatPrice', 'General Conference': 'scriptures.generalConference' };
       const scripture = scriptureMap[rawScripture] ? t(scriptureMap[rawScripture]) : rawScripture;
       const chapterEnd = chapterMatch.index + chapterMatch[0].length;
       const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
