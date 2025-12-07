@@ -880,8 +880,63 @@ export const translateBookName = (bookName, language) => {
 };
 
 // Function to translate chapter field (e.g., "Alma 7" -> "アルマ書 7")
+import { getSpeakerName, getTalkTitle } from './generalConferenceMapping';
+
 export const translateChapterField = (chapterText, language) => {
     if (!chapterText || !language) return chapterText;
+
+    // Special handling for General Conference URLs/Shortcodes
+    if (chapterText.includes('general-conference') || /^\d{4}\/\d{2}/.test(chapterText)) {
+        let year, month, slug;
+
+        // Helper to formatting the final string consistently
+        const formatGcEntry = (y, m, s) => {
+            const speaker = getSpeakerName(s, language);
+            const title = getTalkTitle(y, m, s, language);
+
+            if (title) {
+                if (language === 'ja') {
+                    return `${y}/${m}: ${title} (${speaker})`;
+                }
+                return `${y}/${m}: "${title}" (${speaker})`;
+            }
+            return `${y}/${m} (${speaker})`;
+        };
+
+        // 1. Full URL with slug
+        const urlMatch = chapterText.match(/general-conference\/(\d{4})\/(\d{2})\/([^?#]+)/);
+        if (urlMatch) {
+            year = urlMatch[1];
+            month = urlMatch[2];
+            slug = urlMatch[3];
+            return formatGcEntry(year, month, slug);
+        }
+
+        // 2. Full URL (Table of Contents) - No slug, no title
+        const urlTocMatch = chapterText.match(/general-conference\/(\d{4})\/(\d{2})(?:[?#]|$)/);
+        if (urlTocMatch) {
+            year = urlTocMatch[1];
+            month = urlTocMatch[2];
+            return `${year}/${month}`;
+        }
+
+        // 3. Shortcode YYYY/MM/slug
+        const shortSlugMatch = chapterText.match(/^(\d{4})\/(\d{2})\/(.+)$/);
+        if (shortSlugMatch) {
+            year = shortSlugMatch[1];
+            month = shortSlugMatch[2];
+            slug = shortSlugMatch[3];
+            return formatGcEntry(year, month, slug);
+        }
+
+        // 4. Shortcode YYYY/MM
+        const shortTocMatch = chapterText.match(/^(\d{4})\/(\d{2})$/);
+        if (shortTocMatch) {
+            year = shortTocMatch[1];
+            month = shortTocMatch[2];
+            return `${year}/${month}`;
+        }
+    }
 
     // Parse the chapter field to separate book name and chapter/verse
     // Matches: "Alma 7", "1 Nephi 3:7", "Isaiah 40:31", "Alma 5:12-14"

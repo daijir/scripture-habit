@@ -587,6 +587,16 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       'モルモン書': 'scriptures.bookOfMormon',
       '教義と聖約': 'scriptures.doctrineAndCovenants',
       '高価な真珠': 'scriptures.pearlOfGreatPrice',
+      'General Conference': 'scriptures.generalConference',
+      '総大会': 'scriptures.generalConference',
+      'Conferência Geral': 'scriptures.generalConference',
+      '總會大會': 'scriptures.generalConference',
+      'Conferencia General': 'scriptures.generalConference',
+      'Đại Hội Trung Ương': 'scriptures.generalConference',
+      'การประชุมใหญ่สามัญ': 'scriptures.generalConference',
+      '연차 대회': 'scriptures.generalConference',
+      'Pangkalahatang Kumperensya': 'scriptures.generalConference',
+      'Mkutano Mkuu': 'scriptures.generalConference',
     };
 
     const translationKey = scriptureMapping[scriptureName];
@@ -702,7 +712,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal;
 
   return (
-    <div className="GroupChat">
+    <div className="GroupChat" >
       <NewNote
         isOpen={isNewNoteOpen || noteToEdit !== null}
         onClose={() => {
@@ -895,51 +905,56 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
             </div>
           </div>
         </div>
-      )}
+      )
+      }
 
-      {showLeaveModal && (
-        <div className="leave-modal-overlay">
-          <div className="leave-modal-content">
-            <h3>{t('groupChat.leaveGroup')}?</h3>
-            <p>{t('groupChat.leaveConfirmMessage')}</p>
-            <div className="leave-modal-actions">
-              <button className="modal-btn cancel" onClick={() => setShowLeaveModal(false)}>{t('groupChat.cancel')}</button>
-              <button className="modal-btn leave" onClick={handleLeaveGroup}>{t('groupChat.confirmLeave')}</button>
+      {
+        showLeaveModal && (
+          <div className="leave-modal-overlay">
+            <div className="leave-modal-content">
+              <h3>{t('groupChat.leaveGroup')}?</h3>
+              <p>{t('groupChat.leaveConfirmMessage')}</p>
+              <div className="leave-modal-actions">
+                <button className="modal-btn cancel" onClick={() => setShowLeaveModal(false)}>{t('groupChat.cancel')}</button>
+                <button className="modal-btn leave" onClick={handleLeaveGroup}>{t('groupChat.confirmLeave')}</button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
-      {showDeleteModal && (
-        <div className="leave-modal-overlay">
-          <div className="leave-modal-content">
-            <h3 className="delete-modal-title">{t('groupChat.deleteGroup')}?</h3>
-            <p>{t('groupChat.deleteConfirmMessage')}</p>
-            <div style={{ marginBottom: '1rem' }}>
-              <ReactMarkdown components={{ p: 'span' }}>
-                {t('groupChat.typeToConfirm').replace('{groupName}', groupData.name)}
-              </ReactMarkdown>
-            </div>
-            <input
-              type="text"
-              className="delete-confirmation-input"
-              value={deleteConfirmationName}
-              onChange={(e) => setDeleteConfirmationName(e.target.value)}
-              placeholder={t('groupChat.enterGroupNamePlaceholder')}
-            />
-            <div className="leave-modal-actions">
-              <button className="modal-btn cancel" onClick={() => { setShowDeleteModal(false); setDeleteConfirmationName(''); }}>{t('groupChat.cancel')}</button>
-              <button
-                className="modal-btn leave"
-                onClick={handleDeleteGroup}
-                disabled={deleteConfirmationName !== groupData?.name}
-              >
-                {t('groupChat.confirmDelete')}
-              </button>
+      {
+        showDeleteModal && (
+          <div className="leave-modal-overlay">
+            <div className="leave-modal-content">
+              <h3 className="delete-modal-title">{t('groupChat.deleteGroup')}?</h3>
+              <p>{t('groupChat.deleteConfirmMessage')}</p>
+              <div style={{ marginBottom: '1rem' }}>
+                <ReactMarkdown components={{ p: 'span' }}>
+                  {t('groupChat.typeToConfirm').replace('{groupName}', groupData.name)}
+                </ReactMarkdown>
+              </div>
+              <input
+                type="text"
+                className="delete-confirmation-input"
+                value={deleteConfirmationName}
+                onChange={(e) => setDeleteConfirmationName(e.target.value)}
+                placeholder={t('groupChat.enterGroupNamePlaceholder')}
+              />
+              <div className="leave-modal-actions">
+                <button className="modal-btn cancel" onClick={() => { setShowDeleteModal(false); setDeleteConfirmationName(''); }}>{t('groupChat.cancel')}</button>
+                <button
+                  className="modal-btn leave"
+                  onClick={handleDeleteGroup}
+                  disabled={deleteConfirmationName !== groupData?.name}
+                >
+                  {t('groupChat.confirmDelete')}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
       <div
         className="messages-container"
@@ -1208,41 +1223,42 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       </div>
 
       {/* Context Menu for messages */}
-      {contextMenu.show && (
-        <div
-          className="message-context-menu"
-          style={{
-            position: 'fixed',
-            top: contextMenu.y,
-            left: contextMenu.x,
-            transform: 'translate(-50%, -50%)'
-          }}
-          onClick={(e) => e.stopPropagation()}
-        >
-          {contextMenu.message?.senderId === userData?.uid ? (
-            <>
-              <button onClick={() => handleEditMessage(contextMenu.message)}>
-                ✏️ {t('groupChat.editMessage')}
-              </button>
-              <button onClick={() => handleDeleteMessageClick(contextMenu.message)} className="delete-option">
-                🗑️ {t('groupChat.deleteMessage')}
-              </button>
-              <button onClick={() => { handleReply(contextMenu.message); closeContextMenu(); }}>
-                ↩️ Reply
-              </button>
-            </>
-          ) : (
-            <>
-              <button onClick={() => handleToggleReaction(contextMenu.message)}>
-                {contextMenu.message?.reactions?.find(r => r.odU === userData?.uid) ? '👎 Unlike' : '👍 Like'}
-              </button>
-              <button onClick={() => { handleReply(contextMenu.message); closeContextMenu(); }}>
-                ↩️ Reply
-              </button>
-            </>
-          )}
-        </div>
-      )
+      {
+        contextMenu.show && (
+          <div
+            className="message-context-menu"
+            style={{
+              position: 'fixed',
+              top: contextMenu.y,
+              left: contextMenu.x,
+              transform: 'translate(-50%, -50%)'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {contextMenu.message?.senderId === userData?.uid ? (
+              <>
+                <button onClick={() => handleEditMessage(contextMenu.message)}>
+                  ✏️ {t('groupChat.editMessage')}
+                </button>
+                <button onClick={() => handleDeleteMessageClick(contextMenu.message)} className="delete-option">
+                  🗑️ {t('groupChat.deleteMessage')}
+                </button>
+                <button onClick={() => { handleReply(contextMenu.message); closeContextMenu(); }}>
+                  ↩️ Reply
+                </button>
+              </>
+            ) : (
+              <>
+                <button onClick={() => handleToggleReaction(contextMenu.message)}>
+                  {contextMenu.message?.reactions?.find(r => r.odU === userData?.uid) ? '👎 Unlike' : '👍 Like'}
+                </button>
+                <button onClick={() => { handleReply(contextMenu.message); closeContextMenu(); }}>
+                  ↩️ Reply
+                </button>
+              </>
+            )}
+          </div>
+        )
       }
 
       {/* Delete Message Confirmation Modal */}
@@ -1364,7 +1380,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
           <button type="submit">{t('groupChat.send')}</button>
         </div>
       </form>
-    </div>
+    </div >
   );
 };
 

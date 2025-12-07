@@ -10,7 +10,7 @@ import './NewNote.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 
 const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups = [], isGroupContext = false, currentGroupId = null }) => {
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
 
     const [chapter, setChapter] = useState('');
     const [scripture, setScripture] = useState('');
@@ -31,11 +31,17 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             case "Book of Mormon": return t('scriptures.bookOfMormon');
             case "Doctrine and Covenants": return t('scriptures.doctrineAndCovenants');
             case "Pearl of Great Price": return t('scriptures.pearlOfGreatPrice');
+            case "General Conference": return t('scriptures.generalConference');
             default: return value;
         }
     };
 
-    const translatedScripturesOptions = ScripturesOptions.map(option => ({
+    const translatedScripturesOptions = ScripturesOptions.filter(option => {
+        if (option.value === "General Conference") {
+            return language === 'en' || language === 'ja';
+        }
+        return true;
+    }).map(option => ({
         ...option,
         label: getTranslatedScriptureLabel(option.value)
     }));
@@ -473,12 +479,15 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 </div>
 
                 <Input
-                    label={t('newNote.chapterLabel')}
+                    label={scripture === "General Conference" ? t('newNote.urlLabel') : t('newNote.chapterLabel')}
                     type="text"
                     value={chapter}
-                    onChange={(e) => setChapter(e.target.value)}
+                    onChange={(e) => {
+                        let val = e.target.value;
+                        setChapter(val);
+                    }}
                     required
-                    placeholder={t('newNote.chapterPlaceholder')}
+                    placeholder={scripture === "General Conference" ? t('newNote.urlPlaceholder') : t('newNote.chapterPlaceholder')}
                 />
 
                 <Input
