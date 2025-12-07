@@ -103,7 +103,10 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
 
       const comment = content.substring(maxEnd).trim();
 
-      return `**${t('noteLabels.scripture')}:** ${scripture}\n\n**${t('noteLabels.chapter')}:** ${chapter}\n\n${comment}`;
+      const gcVariants = ['General Conference', '総大会', 'Conferência Geral', '總會大會', 'Conferencia General', 'Đại Hội Trung Ương', 'การประชุมใหญ่สามัญ', '연차 대회', 'Pangkalahatang Kumperensya', 'Mkutano Mkuu'];
+      const chapterLabel = gcVariants.includes(rawScripture) ? t('noteLabels.talk') : t('noteLabels.chapter');
+
+      return `**${t('noteLabels.scripture')}:** ${scripture}\n\n**${chapterLabel}:** ${chapter}\n\n${comment}`;
     }
 
     return content;

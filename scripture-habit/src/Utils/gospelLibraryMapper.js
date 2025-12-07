@@ -47,7 +47,19 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
     if (volumeUrlPart === "general-conference") {
         // If the user pasted a full URL, return it directly
         if (chapterInput.includes("churchofjesuschrist.org")) {
-            return chapterInput;
+            try {
+                let urlStr = chapterInput.trim();
+                // Ensure protocol
+                if (!urlStr.startsWith('http')) {
+                    urlStr = 'https://' + urlStr;
+                }
+                const url = new URL(urlStr);
+                const targetLang = langParam.split('=')[1]; // Extract 'jpn', 'eng', etc.
+                url.searchParams.set('lang', targetLang);
+                return url.toString();
+            } catch (e) {
+                return chapterInput;
+            }
         }
 
         // Handle "YYYY/MM/slug" format (e.g., "2025/10/15eyre")
