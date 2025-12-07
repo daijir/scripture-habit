@@ -138,12 +138,6 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       return;
     }
 
-    // Validate that groupData matches current messages (they should be in sync)
-    const expectedCount = groupData.messageCount || 0;
-    if (messages.length !== expectedCount) {
-      return;
-    }
-
     // Check if this is still the current group
     if (groupId !== currentGroupIdRef.current) {
       return;
@@ -151,7 +145,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
 
     // Cache values at effect start to prevent stale closures
     const cachedGroupId = groupId;
-    const cachedMessageCount = messages.length; // Use messages.length - this is what we actually loaded
+    const cachedMessageCount = groupData?.messageCount || messages.length; // Use group total count to ensure unread badge clears even if count is desynced
     let cancelled = false;
 
     const updateReadStatus = async () => {
@@ -203,11 +197,15 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     const messageElements = containerRef.current.querySelectorAll('.message-wrapper, .message.system-message');
 
     if (messageElements[firstUnreadIndex]) {
-      messageElements[firstUnreadIndex].scrollIntoView({ behavior: 'auto', block: 'start' });
-      // Add some offset for the fixed header
-      if (containerRef.current) {
-        containerRef.current.scrollTop = Math.max(0, containerRef.current.scrollTop - 80);
-      }
+      const element = messageElements[firstUnreadIndex];
+      // Calculate position relative to container
+      const container = containerRef.current;
+      const elementTop = element.offsetTop;
+
+      // Scroll exactly to that position minus header offset
+      // Assuming container is positioned relative or simply scrolling content
+      container.scrollTop = elementTop - 100; // 100px buffer for header
+
       return true;
     }
     return false;
@@ -217,9 +215,11 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   useLayoutEffect(() => {
     // Wait until we have all messages loaded (compare with groupData.messageCount)
     const expectedMessageCount = groupData?.messageCount || 0;
-    const allMessagesLoaded = messages.length >= expectedMessageCount || (messages.length > 0 && expectedMessageCount === 0);
+    // If loading is finished and we have messages (or it's empty group), proceed.
+    // Do NOT block on expectedMessageCount mismatch, as that causes deadlocks if counts are out of sync.
+    if (userReadCount === null || loading) return;
+    if (messages.length === 0 && expectedMessageCount > 0) return; // Still loading messages?
 
-    if (messages.length === 0 || userReadCount === null || loading || !allMessagesLoaded) return;
 
     // Initial scroll - go to first unread message or bottom
     if (!initialScrollDone) {
