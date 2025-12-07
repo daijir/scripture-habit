@@ -222,7 +222,8 @@ export const translations = {
             title: "Title",
             comment: "Comment",
             newStudyNote: "New Study Note",
-            newStudyEntry: "New Study Entry"
+            newStudyEntry: "New Study Entry",
+            talk: "Talk"
         },
         signOut: {
             title: "Sign Out",
@@ -453,7 +454,8 @@ export const translations = {
             title: "タイトル",
             comment: "コメント",
             newStudyNote: "新しい学習ノート",
-            newStudyEntry: "新しい学習記録"
+            newStudyEntry: "新しい学習記録",
+            talk: "お話"
         },
         signOut: {
             title: "サインアウト",

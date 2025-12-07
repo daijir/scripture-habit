@@ -668,15 +668,22 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
 
     if (chapterMatch && scriptureMatch) {
       const rawChapter = chapterMatch[1].trim();
+      const rawScripture = scriptureMatch[1].trim();
       const chapter = translateChapterField(rawChapter, language);
-      const scripture = translateScriptureName(scriptureMatch[1].trim());
+      const scripture = translateScriptureName(rawScripture);
+
+      // Check if scripture is General Conference to use appropriate label
+      const gcVariants = ['General Conference', '総大会', 'Conferência Geral', '總會大會', 'Conferencia General', 'Đại Hội Trung Ương', 'การประชุมใหญ่สามัญ', '연차 대회', 'Pangkalahatang Kumperensya', 'Mkutano Mkuu'];
+      const isGC = gcVariants.includes(rawScripture);
+      const chapterLabel = isGC ? t('noteLabels.talk') : t('noteLabels.chapter');
+
       const chapterEnd = chapterMatch.index + chapterMatch[0].length;
       const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
       const maxEnd = Math.max(chapterEnd, scriptureEnd);
 
       const comment = body.substring(maxEnd).trim();
 
-      return `${translatedHeader}**${t('noteLabels.scripture')}:** ${scripture}\n**${t('noteLabels.chapter')}:** ${chapter}\n\n**${t('noteLabels.comment')}:**\n${comment}`;
+      return `${translatedHeader}**${t('noteLabels.scripture')}:** ${scripture}\n**${chapterLabel}:** ${chapter}\n\n**${t('noteLabels.comment')}:**\n${comment}`;
     }
 
     // If no structured format found, just translate the labels in the raw text
@@ -709,7 +716,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     }
   };
 
-  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal;
+  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit;
 
   return (
     <div className="GroupChat" >
