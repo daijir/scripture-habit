@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { db, auth } from '../../firebase';
-import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle } from '@iconscout/react-unicons';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc } from 'firebase/firestore';
+import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle, UilUsersAlt } from '@iconscout/react-unicons';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
@@ -24,6 +24,9 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const [isNewNoteOpen, setIsNewNoteOpen] = useState(false);
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showMembersModal, setShowMembersModal] = useState(false);
+  const [membersList, setMembersList] = useState([]);
+  const [membersLoading, setMembersLoading] = useState(false);
   const [deleteConfirmationName, setDeleteConfirmationName] = useState('');
   const [contextMenu, setContextMenu] = useState({ show: false, x: 0, y: 0, messageId: null });
   const [editingMessage, setEditingMessage] = useState(null);
@@ -274,6 +277,36 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
     }
   }, [newMessage]);
+
+  const handleShowMembers = async () => {
+    setShowMobileMenu(false);
+    setShowMembersModal(true);
+
+    if (!groupData || !groupData.members || groupData.members.length === 0) {
+      setMembersList([]);
+      return;
+    }
+
+    setMembersLoading(true);
+    try {
+      const memberPromises = groupData.members.map(userId => getDoc(doc(db, 'users', userId)));
+      const memberSnapshots = await Promise.all(memberPromises);
+
+      const members = memberSnapshots.map(snap => {
+        if (snap.exists()) {
+          return { id: snap.id, ...snap.data() };
+        }
+        return { id: snap.id, nickname: 'Unknown User' };
+      });
+
+      setMembersList(members);
+    } catch (error) {
+      console.error("Error fetching members:", error);
+      toast.error("Failed to load members list");
+    } finally {
+      setMembersLoading(false);
+    }
+  };
 
   const handleScroll = () => {
     // Do not save scroll position if we are still initializing
@@ -798,7 +831,10 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
               <UilArrowLeft size="24" />
             </div>
           )}
-          <h2>{groupData ? groupData.name : t('groupChat.groupName')}</h2>
+          <h2 style={{ display: 'flex', alignItems: 'center' }}>
+            {groupData ? groupData.name : t('groupChat.groupName')}
+            {groupData?.members && <span className="member-count-badge">({groupData.members.length})</span>}
+          </h2>
         </div>
         {groupData && (
           <>
@@ -821,6 +857,12 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                 <span>{t('groupChat.inviteCode')}: <strong>{groupData.inviteCode}</strong></span>
                 <UilCopy size="16" className="copy-icon" />
               </div>
+
+              <div className="invite-code-display members-btn-desktop" onClick={handleShowMembers} title={t('groupChat.members')}>
+                <UilUsersAlt size="16" className="copy-icon" />
+                <span className="desktop-members-label">{t('groupChat.members')}</span>
+              </div>
+
               {userData.uid === groupData.ownerUserId ? (
                 <button className="leave-group-btn delete-group-btn" onClick={() => setShowDeleteModal(true)} title={t('groupChat.deleteGroup')}>
                   <UilTrashAlt size="20" />
@@ -888,6 +930,16 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                 </div>
               )}
 
+              {/* Members List Item */}
+              <div className="mobile-menu-item" onClick={handleShowMembers}>
+                <div className="menu-item-icon">
+                  <UilUsersAlt size="20" />
+                </div>
+                <div className="menu-item-content">
+                  <span className="menu-item-label">{t('groupChat.members')}</span>
+                </div>
+              </div>
+
               <div className="mobile-menu-divider"></div>
 
               {/* Leave/Delete Group */}
@@ -932,7 +984,9 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                     <div className="menu-item-icon" style={group.id === groupId ? { color: 'var(--pink)' } : {}}>
                       <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>#</span>
                     </div>
-                    <span className="menu-item-label" style={group.id === groupId ? { fontWeight: 'bold' } : {}}>{group.name}</span>
+                    <span className="menu-item-label" style={group.id === groupId ? { fontWeight: 'bold' } : {}}>
+                      {group.name} {group.members && <span style={{ fontSize: '0.85em', color: group.id === groupId ? 'var(--pink)' : 'var(--gray)', opacity: 0.8, fontWeight: 'normal', marginLeft: '4px' }}>({group.members.length})</span>}
+                    </span>
                     {group.unreadCount > 0 && (
                       <span style={{
                         background: 'var(--pink)',
@@ -1395,6 +1449,46 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                 <button className="modal-btn cancel" onClick={() => setShowReactionsModal(false)}>
                   {t('groupChat.cancel')}
                 </button>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
+
+
+      {/* Members List Modal */}
+      {
+        showMembersModal && (
+          <div className="leave-modal-overlay" onClick={() => setShowMembersModal(false)}>
+            <div className="leave-modal-content members-modal" onClick={(e) => e.stopPropagation()} style={{ maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
+              <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                <h3>{t('groupChat.groupMembers')} ({membersList.length})</h3>
+                <button className="close-menu-btn" onClick={() => setShowMembersModal(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}>
+                  <UilTimes size="24" />
+                </button>
+              </div>
+
+              <div className="members-list-container" style={{ overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                {membersLoading ? (
+                  <p style={{ textAlign: 'center', padding: '1rem', color: 'var(--gray)' }}>Loading members...</p>
+                ) : (
+                  membersList.map((member) => (
+                    <div key={member.id} className="member-item" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.5rem', borderRadius: '8px', background: 'var(--glass)' }}>
+                      <div className="member-avatar" style={{
+                        width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg, #FF919D 0%, #fc6777 100%)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.2rem'
+                      }}>
+                        {member.nickname ? member.nickname.substring(0, 1).toUpperCase() : '?'}
+                      </div>
+                      <span style={{ fontWeight: '500', color: 'var(--black)' }}>
+                        {member.nickname || 'Unknown User'}
+                        {member.id === groupData.ownerUserId && <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', background: '#ffe0e3', color: 'var(--pink)', padding: '2px 6px', borderRadius: '4px' }}>Owner</span>}
+                        {member.id === userData.uid && <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', background: '#e0e0e0', color: 'var(--gray)', padding: '2px 6px', borderRadius: '4px' }}>You</span>}
+                      </span>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
