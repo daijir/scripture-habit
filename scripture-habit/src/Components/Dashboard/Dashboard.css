@@ -320,6 +320,17 @@
   -webkit-box-orient: vertical;
 }
 
+.gospel-link {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: var(--gray);
+  text-decoration: none;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+}
+
 .no-notes-dashboard {
   color: var(--gray);
   font-style: italic;

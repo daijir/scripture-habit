@@ -458,14 +458,6 @@ const Dashboard = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             className="gospel-link"
-                            style={{
-                              display: 'inline-block',
-                              marginTop: '10px',
-                              fontSize: '0.8rem',
-                              color: 'var(--gray)',
-                              textDecoration: 'none',
-                              fontWeight: 'bold'
-                            }}
                           >
                             📖 {t('dashboard.readInGospelLibrary')}
                           </a>
