@@ -40,6 +40,13 @@
     gap: 0.8rem;
 }
 
+.member-count-badge {
+    margin-left: 8px;
+    font-size: 0.9em;
+    color: var(--black);
+    font-weight: bold;
+}
+
 .back-button {
     display: none;
     cursor: pointer;
@@ -611,8 +618,13 @@
     }
 
     .chat-header h2 {
-        font-size: 1rem;
+        font-size: 1.15rem;
         color: white !important;
+    }
+
+    .member-count-badge {
+        color: white !important;
+        font-size: 1rem;
     }
 
     /* Change hamburger menu color to white on mobile */

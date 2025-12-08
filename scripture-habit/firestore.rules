@@ -8,8 +8,8 @@ service cloud.firestore {
       // A user can create their own document upon signup.
       allow create: if request.auth != null && request.auth.uid == userId;
 
-      // A user can read their own document.
-      allow read: if request.auth != null && request.auth.uid == userId;
+      // A user can read any user document (needed for group members list).
+      allow read: if request.auth != null;
 
       // A user can update their own document.
       allow update: if request.auth != null && request.auth.uid == userId;

@@ -211,7 +211,6 @@ app.get('/groups', async (req, res) => {
 
     const snapshot = await groupsRef
       .where('isPublic', '==', true)
-      .where('membersCount', '<', 5)
       .get();
 
     const groups = [];
@@ -219,7 +218,11 @@ app.get('/groups', async (req, res) => {
       groups.push({ id: doc.id, ...doc.data() });
     });
 
-    res.status(200).json(groups);
+    // Sort by membersCount ascending (handle missing count as 0)
+    groups.sort((a, b) => (a.membersCount || 0) - (b.membersCount || 0));
+
+    // Return top 20
+    res.status(200).json(groups.slice(0, 20));
   } catch (error) {
     console.error('Error fetching groups:', error);
     res.status(500).send('Error fetching groups.');

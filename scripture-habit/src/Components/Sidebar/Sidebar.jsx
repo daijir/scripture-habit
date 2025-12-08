@@ -120,7 +120,10 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
                   onClick={() => handleGroupClick(group.id)}
                 >
                   <UilUsersAlt />
-                  <span>{group.name}</span>
+                  <span>
+                    {group.name}
+                    {group.members && <span style={{ fontSize: '0.85em', color: 'var(--gray)', fontWeight: 'normal', marginLeft: '4px' }}>({group.members.length})</span>}
+                  </span>
                   {group.unreadCount > 0 && (
                     <span className="unread-badge" style={{ marginLeft: 'auto' }}>{group.unreadCount > 99 ? '99+' : group.unreadCount}</span>
                   )}
