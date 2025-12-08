@@ -252,7 +252,8 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    scroll-behavior: smooth;
+    position: relative;
+    /* Essential for accurate offsetTop calculations */
 }
 
 .messages-container::-webkit-scrollbar {
@@ -630,7 +631,7 @@
 
     .send-message-form {
         position: fixed;
-        bottom: 70px;
+        bottom: 0;
         left: 0;
         right: 0;
         border-radius: 0;
@@ -638,6 +639,8 @@
         box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
         background-color: #f0f2f5;
         backdrop-filter: none;
+        z-index: 1001;
+        /* Ensure it covers the sidebar (z-index 999) */
     }
 
     .input-wrapper {
@@ -664,7 +667,8 @@
 
     .messages-container {
         padding-top: 70px;
-        padding-bottom: 180px;
+        padding-bottom: 120px;
+        /* Clear fixed input */
     }
 
     /* Disable text selection on messages for long-press context menu */
@@ -1330,29 +1334,4 @@ input:checked+.slider:before {
     background: #fff5f6;
     margin: 0 0.5rem;
     border-radius: 12px;
-}
-
-@media screen and (max-width: 768px) {
-    .GroupChat {
-        /* Ensure container takes full height on mobile */
-        height: 100vh;
-        border-radius: 0;
-    }
-
-    .send-message-form {
-        position: fixed;
-        bottom: 0 !important;
-        left: 0;
-        width: 100%;
-        margin: 0;
-        border-radius: 1.5rem 1.5rem 0 0;
-        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
-        z-index: 1000;
-        box-sizing: border-box;
-    }
-
-    /* Add padding to messages container so content isn't hidden behind fixed input */
-    .messages-container {
-        padding-bottom: 50px;
-    }
 }

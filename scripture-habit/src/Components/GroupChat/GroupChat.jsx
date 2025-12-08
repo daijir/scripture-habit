@@ -42,6 +42,8 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const firstUnreadRef = useRef(null);
   const messagesEndRef = useRef(null);
   const currentGroupIdRef = useRef(groupId);
+  const scrollDebounceRef = useRef(null);
+
 
   useEffect(() => {
     if (!groupId) return;
@@ -223,21 +225,40 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
 
     // Initial scroll - go to first unread message or bottom
     if (!initialScrollDone) {
-      // If there are unread messages
-      if (userReadCount < messages.length) {
-        const scrolled = scrollToFirstUnread(userReadCount);
-        if (!scrolled) {
-          scrollToBottom();
+      let scrolled = false;
+
+      // 1. Try to restore last viewed position from LocalStorage
+      if (userData?.uid) {
+        const lastViewedMsgId = localStorage.getItem(`last_viewed_msg_${groupId}_${userData.uid}`);
+        if (lastViewedMsgId) {
+          const targetEl = containerRef.current?.querySelector(`#message-${lastViewedMsgId}`);
+          if (targetEl) {
+            // Scroll to this element with a slight offset for context. 
+            // We use 'auto' behavior for instant jump on load.
+            const offset = 20;
+            containerRef.current.scrollTop = targetEl.offsetTop - offset;
+            scrolled = true;
+          }
         }
-      } else {
-        // No unread messages, scroll to bottom
+      }
+
+      // 2. If no saved position, try unread messages
+      if (!scrolled) {
+        // If there are unread messages
+        if (userReadCount < messages.length) {
+          scrolled = scrollToFirstUnread(userReadCount);
+        }
+      }
+
+      // 3. Fallback to bottom
+      if (!scrolled) {
         scrollToBottom();
       }
 
       setInitialScrollDone(true);
       prevMessageCountRef.current = messages.length;
     }
-  }, [messages, userReadCount, loading, initialScrollDone, groupData?.messageCount]);
+  }, [messages, userReadCount, loading, initialScrollDone, groupData?.messageCount, groupId, userData?.uid]);
 
   // Handle new messages - scroll to bottom
   useEffect(() => {
@@ -253,6 +274,37 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
     }
   }, [newMessage]);
+
+  const handleScroll = () => {
+    // Do not save scroll position if we are still initializing
+    if (!initialScrollDone) return;
+
+    if (scrollDebounceRef.current) clearTimeout(scrollDebounceRef.current);
+
+    scrollDebounceRef.current = setTimeout(() => {
+      if (!containerRef.current || !userData) return;
+      const container = containerRef.current;
+      const scrollTop = container.scrollTop;
+
+      // Find the top-most visible message
+      const messageElements = container.querySelectorAll('[id^="message-"]');
+      let topMessageId = null;
+
+      // We want to find the first message that is essentially "at the top" of the view
+      // A message is at the top if its offsetTop is >= scrollTop
+      for (const el of messageElements) {
+        // 50px buffer to allow for partially scrolled messages
+        if (el.offsetTop >= scrollTop - 50) {
+          topMessageId = el.id.replace('message-', '');
+          break;
+        }
+      }
+
+      if (topMessageId) {
+        localStorage.setItem(`last_viewed_msg_${groupId}_${userData.uid}`, topMessageId);
+      }
+    }, 200); // 200ms debounce
+  };
 
   const handleSendMessage = async (e) => {
     if (e) e.preventDefault();
@@ -299,6 +351,13 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
 
       setNewMessage('');
       setReplyTo(null);
+
+      // Clear saved scroll position so next load goes to bottom (since we just sent a message, we are 'current')
+      // OR keeps user preference. Usually standard chat apps jump to bottom on send.
+      // We will clear it to force "catch up" behavior if they reload? 
+      // Actually, if we send a message, we auto-scroll to bottom via useEffect.
+      // It might be nice to clear the "bookmark" so next visit starts fresh or at bottom?
+      // No, let the scroll listener update naturally.
 
       if (textareaRef.current) {
         textareaRef.current.style.height = 'auto';
@@ -966,6 +1025,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       <div
         className="messages-container"
         ref={containerRef}
+        onScroll={handleScroll}
         onClick={() => {
           if (textareaRef.current) {
             textareaRef.current.blur();
@@ -994,7 +1054,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                 </div>
               )}
               {msg.senderId === 'system' || msg.isSystemMessage ? (
-                <div className="message system-message">
+                <div id={`message-${msg.id}`} className="message system-message">
                   <div className="message-content">
                     <ReactMarkdown>
                       {(() => {
@@ -1078,7 +1138,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                   </div>
                 </div>
               ) : (
-                <div className={`message-wrapper ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}>
+                <div id={`message-${msg.id}`} className={`message-wrapper ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}>
                   <div
                     className={`message ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}
                     onTouchStart={() => handleLongPressStart(msg)}
