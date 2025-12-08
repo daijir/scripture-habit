@@ -23,10 +23,9 @@
 
 .forgot-password-container {
   width: 100%;
-  text-align: right;
+  text-align: center;
   margin-top: -12px;
   margin-bottom: 15px;
-  padding-right: 5px;
 }
 
 .forgot-password-link {
