@@ -262,14 +262,11 @@ export default function JoinGroup() {
                 {t('joinGroup.cancelJoin')}
               </button>
               <button
-                className="close-modal-btn"
+                className="close-modal-btn confirm-join-btn"
                 onClick={confirmJoin}
                 style={{
                   marginTop: 0,
-                  flex: 1,
-                  background: 'var(--pink)',
-                  color: 'white',
-                  border: 'none'
+                  flex: 1
                 }}
               >
                 {t('joinGroup.confirmJoin')}
