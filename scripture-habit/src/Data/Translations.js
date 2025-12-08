@@ -184,7 +184,8 @@ export const translations = {
             errorGmail: "Please use a Gmail address.",
             noAccount: "Don't have an account?",
             signupLink: "Sign Up",
-            forgotPassword: "Forgot your password?"
+            forgotPassword: "Forgot your password?",
+            googleButton: "Log in with Google"
         },
         forgotPasswordPage: {
             title: "Reset Your Password",
@@ -203,7 +204,11 @@ export const translations = {
             errorSaveProfile: "Failed to save user profile. Please contact support.",
             errorEmailInUse: "This email address is already in use. Please log in or use a different email.",
             hasAccount: "Already have an account?",
-            loginLink: "Log In"
+            loginLink: "Log In",
+            googleButton: "Sign up with Google",
+            verificationSent: "Verification email sent! Please check your inbox.",
+            completeProfile: "Complete Your Profile",
+            finishSignup: "Finish Sign Up"
         },
         groupCard: {
             members: "members",
@@ -416,7 +421,8 @@ export const translations = {
             errorGmail: "Gmailアドレスを使用してください。",
             noAccount: "アカウントをお持ちでないですか？",
             signupLink: "サインアップ",
-            forgotPassword: "パスワードをお忘れですか？"
+            forgotPassword: "パスワードをお忘れですか？",
+            googleButton: "Googleでログイン"
         },
         forgotPasswordPage: {
             title: "パスワードをリセット",
@@ -435,7 +441,11 @@ export const translations = {
             errorSaveProfile: "プロフィールの保存に失敗しました。サポートにお問い合わせください。",
             errorEmailInUse: "このメールアドレスは既に使用されています。ログインするか、別のメールアドレスを使用してください。",
             hasAccount: "すでにアカウントをお持ちですか？",
-            loginLink: "ログイン"
+            loginLink: "ログイン",
+            googleButton: "Googleで登録",
+            verificationSent: "確認メールを送信しました！受信トレイを確認してください。",
+            completeProfile: "プロフィールを完成させる",
+            finishSignup: "登録を完了する"
         },
         groupCard: {
             members: "メンバー",
@@ -646,7 +656,8 @@ export const translations = {
             errorGmail: "Por favor, use um endereço Gmail.",
             noAccount: "Não tem uma conta?",
             signupLink: "Inscrever-se",
-            forgotPassword: "Esqueceu sua senha?"
+            forgotPassword: "Esqueceu sua senha?",
+            googleButton: "Entrar com o Google"
         },
         forgotPasswordPage: {
             title: "Redefinir sua senha",
@@ -665,7 +676,11 @@ export const translations = {
             errorSaveProfile: "Falha ao salvar perfil. Contate o suporte.",
             errorEmailInUse: "E-mail já em uso. Faça login ou use outro.",
             hasAccount: "Já tem uma conta?",
-            loginLink: "Entrar"
+            loginLink: "Entrar",
+            googleButton: "Inscrever-se com o Google",
+            verificationSent: "E-mail de verificação enviado! Por favor, verifique sua caixa de entrada.",
+            completeProfile: "Complete Seu Perfil",
+            finishSignup: "Concluir Inscrição"
         },
         groupCard: {
             members: "membros",

@@ -72,6 +72,55 @@
   text-decoration: underline;
 }
 
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20rem;
+  max-width: 90%;
+  padding: 0.8rem 1.5rem;
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  cursor: pointer;
+  margin: 0 auto;
+  font-weight: 600;
+  color: #555;
+  gap: 10px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.google-btn:hover {
+  background-color: #f8f9fa;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  width: 20rem;
+  max-width: 90%;
+  margin: 0 auto 1.5rem auto;
+  color: var(--gray);
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.separator::before,
+.separator::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.separator span {
+  padding: 0 10px;
+}
+
 @media screen and (max-width: 768px) {
   .LoginForm {
     align-items: center;
