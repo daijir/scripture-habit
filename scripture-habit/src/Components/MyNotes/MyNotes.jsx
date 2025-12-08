@@ -158,16 +158,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  style={{
-                    display: 'block',
-                    marginTop: '10px',
-                    fontSize: '0.8rem',
-                    color: 'var(--gray)',
-                    textDecoration: 'none',
-                    fontWeight: 'bold',
-                    textAlign: 'center',
-                    width: '100%'
-                  }}
+                  className="gospel-link"
                 >
                   📖 {t('myNotes.readInGospelLibrary')}
                 </a>
@@ -175,25 +166,28 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
             </div>
           ))}
         </div>
-      )}
+      )
+      }
 
-      {isDeleteModalOpen && (
-        <div className="ModalOverlay" onClick={() => setIsDeleteModalOpen(false)} style={{ zIndex: 1100 }}>
-          <div className="ModalContent delete-modal" onClick={(e) => e.stopPropagation()}>
-            <h3>{t('myNotes.deleteTitle')}</h3>
-            <p>{t('myNotes.deleteConfirm')}</p>
-            {selectedNote?.sharedMessageIds && Object.keys(selectedNote.sharedMessageIds).length > 0 && (
-              <p style={{ color: '#ff9800', fontSize: '0.9rem', margin: '0.5rem 0' }}>
-                ⚠️ {t('groupChat.deleteNoteWarning')}
-              </p>
-            )}
-            <div className="modal-actions">
-              <button className="cancel-btn" onClick={() => setIsDeleteModalOpen(false)}>{t('myNotes.cancel')}</button>
-              <button className="delete-confirm-btn" onClick={confirmDelete}>{t('myNotes.delete')}</button>
+      {
+        isDeleteModalOpen && (
+          <div className="ModalOverlay" onClick={() => setIsDeleteModalOpen(false)} style={{ zIndex: 1100 }}>
+            <div className="ModalContent delete-modal" onClick={(e) => e.stopPropagation()}>
+              <h3>{t('myNotes.deleteTitle')}</h3>
+              <p>{t('myNotes.deleteConfirm')}</p>
+              {selectedNote?.sharedMessageIds && Object.keys(selectedNote.sharedMessageIds).length > 0 && (
+                <p style={{ color: '#ff9800', fontSize: '0.9rem', margin: '0.5rem 0' }}>
+                  ⚠️ {t('groupChat.deleteNoteWarning')}
+                </p>
+              )}
+              <div className="modal-actions">
+                <button className="cancel-btn" onClick={() => setIsDeleteModalOpen(false)}>{t('myNotes.cancel')}</button>
+                <button className="delete-confirm-btn" onClick={confirmDelete}>{t('myNotes.delete')}</button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
+        )
+      }
 
       <NewNote
         isOpen={isEditModalOpen}
@@ -205,7 +199,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
         noteToEdit={selectedNote}
         onDelete={() => setIsDeleteModalOpen(true)}
       />
-    </div>
+    </div >
   );
 };
 

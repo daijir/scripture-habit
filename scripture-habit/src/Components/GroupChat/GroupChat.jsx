@@ -729,7 +729,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
             style={{
-              color: isSent ? 'white' : 'var(--pink)',
+              color: isSent ? 'white' : '#0056b3',
               textDecoration: 'underline',
               wordBreak: 'break-all'
             }}
@@ -1292,16 +1292,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                                           target="_blank"
                                           rel="noopener noreferrer"
                                           onClick={(e) => e.stopPropagation()}
-                                          style={{
-                                            display: 'block',
-                                            marginTop: '10px',
-                                            fontSize: '0.75rem',
-                                            color: msg.senderId === userData?.uid ? 'white' : 'var(--gray)',
-                                            textDecoration: 'none',
-                                            fontWeight: 'bold',
-                                            textAlign: 'center',
-                                            width: '100%'
-                                          }}
+                                          className={`gospel-link ${msg.senderId === userData?.uid ? 'sent' : ''}`}
                                         >
                                           {t('dashboard.readInGospelLibrary')}
                                         </a>
