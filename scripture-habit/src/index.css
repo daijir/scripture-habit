@@ -113,3 +113,51 @@ button {
     background-color: rgba(255, 255, 255, 0.95);
   }
 }
+
+.gospel-link {
+  display: block;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: var(--gray);
+  text-decoration: none;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+  transition: color 0.2s;
+}
+
+.gospel-link:hover {
+  color: #747bff !important;
+  /* Matches global a:hover but ensures specificity/override */
+  text-decoration: underline;
+}
+
+.gospel-link.sent {
+  color: white;
+}
+
+.gospel-link.sent:hover {
+  color: white !important;
+  /* Keep white on hover for sent messages (pink background) for readability, or use purple if requested? User said "change to purple". */
+  /* If I use purple on pink it might be bad. But user asked for it. 
+     "recent note ... link changes to purple ... I want ... My notes and group chat ... to also change to purple"
+     Recent note is white background.
+     GroupChat Sent is Pink background.
+     GroupChat Received is White background.
+     
+     If I really want to follow the user "change to purple", I should let it change.
+     But purple on pink (#feac5e -> #c779d0 gradient) might be hard to read.
+     However, let's respect the user's explicit request for "purple".
+     
+     Wait, actually, I will default to purple (#747bff) for all.
+     If it looks terrible, the user will complain.
+     But wait, for .sent, the text is white. 
+     If I make it purple on hover, it's a distinct change.
+     
+     Let's try to make .sent hover also purple to be consistent with the request "change to purple".
+  */
+  color: #747bff !important;
+  background: rgba(255, 255, 255, 0.2);
+  /* Add a little background to make it readable? */
+  border-radius: 4px;
+}
