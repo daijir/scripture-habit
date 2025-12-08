@@ -23,6 +23,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const [error, setError] = useState(null);
   const [isNewNoteOpen, setIsNewNoteOpen] = useState(false);
   const [showLeaveModal, setShowLeaveModal] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showMembersModal, setShowMembersModal] = useState(false);
   const [membersList, setMembersList] = useState([]);
@@ -410,6 +411,9 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
 
   const handleLeaveGroup = async () => {
     if (!userData || !groupId) return;
+    if (isLeaving) return;
+
+    setIsLeaving(true);
 
     try {
       const idToken = await auth.currentUser.getIdToken();
@@ -435,6 +439,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       toast.error(`Failed to leave group: ${error.message}`);
     } finally {
       setShowLeaveModal(false);
+      setIsLeaving(false);
     }
   };
 
@@ -1035,8 +1040,10 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
               <h3>{t('groupChat.leaveGroup')}?</h3>
               <p>{t('groupChat.leaveConfirmMessage')}</p>
               <div className="leave-modal-actions">
-                <button className="modal-btn cancel" onClick={() => setShowLeaveModal(false)}>{t('groupChat.cancel')}</button>
-                <button className="modal-btn leave" onClick={handleLeaveGroup}>{t('groupChat.confirmLeave')}</button>
+                <button className="modal-btn cancel" onClick={() => setShowLeaveModal(false)} disabled={isLeaving}>{t('groupChat.cancel')}</button>
+                <button className="modal-btn leave" onClick={handleLeaveGroup} disabled={isLeaving}>
+                  {isLeaving ? '...' : t('groupChat.confirmLeave')}
+                </button>
               </div>
             </div>
           </div>
