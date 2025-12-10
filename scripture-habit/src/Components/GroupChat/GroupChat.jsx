@@ -492,12 +492,23 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
+    // User requested: Enter = Newline, Send = Click only (for Desktop)
+    // Simply do nothing on Enter key, allowing default behavior (newline)
+    // We can still support Shift+Enter for newline (default) or just Enter for newline (default)
 
-      if (window.innerWidth > 768) {
-        e.preventDefault();
-        handleSendMessage();
-      }
+    // If we want to strictly follow "Send ONLY on click", we just remove the keydown handler's submit logic.
+    // However, usually "Enter" sends. The user specifically asked:
+    // "desktop-viewの時Enterを押したら改行にするようにしてほしい。送信は送信ボタンをクリックしたときのみどうさするようにしてほしい"
+    // (In desktop view, I want Enter to start a new line. I want sending to work ONLY when the send button is clicked.)
+
+    // So we just don't handle submission here anymore. 
+    // We might want to stop propagation if there was some existing form submission behavior, 
+    // but since this is presumably a textarea, Enter naturally creates a newline.
+    // We can just leave this empty or remove the block. 
+    // But to be safe and explicit about the change:
+    if (e.key === 'Enter') {
+      // Allow default behavior (newline)
+      e.stopPropagation();
     }
   };
 
@@ -760,8 +771,16 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     let body = content.replace(/^(📖 \*\*New Study Note\*\*\n+|📖 \*\*New Study Entry\*\*\n+)/, '');
 
     // Match both English and various language formats
-    const chapterMatch = body.match(/\*\*(?:Chapter|Title|章|タイトル|Capítulo|Título|章節|標題|Chương|Tiêu đề):\*\* (.*?)(?:\n|$)/);
+    const chapterMatch = body.match(/\*\*(?:Chapter|Title|Speech|章|タイトル|スピーチ|Capítulo|Título|章節|標題|Chương|Tiêu đề):\*\* (.*?)(?:\n|$)/);
     const scriptureMatch = body.match(/\*\*(?:Scripture|聖典|Escritura|經文|Thánh Thư):\*\* (.*?)(?:\n|$)/);
+
+    // Handle "Other" category - no chapter field
+    if (scriptureMatch && (scriptureMatch[1].trim() === 'Other' || scriptureMatch[1].trim() === 'その他')) {
+      const scripture = t('scriptures.other');
+      const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
+      const comment = body.substring(scriptureEnd).trim();
+      return `${translatedHeader}**${t('noteLabels.scripture')}:** ${scripture}\n\n**${t('noteLabels.comment')}:**\n${comment}`;
+    }
 
     if (chapterMatch && scriptureMatch) {
       const rawChapter = chapterMatch[1].trim();
@@ -772,7 +791,13 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       // Check if scripture is General Conference to use appropriate label
       const gcVariants = ['General Conference', '総大会', 'Conferência Geral', '總會大會', 'Conferencia General', 'Đại Hội Trung Ương', 'การประชุมใหญ่สามัญ', '연차 대회', 'Pangkalahatang Kumperensya', 'Mkutano Mkuu'];
       const isGC = gcVariants.includes(rawScripture);
-      const chapterLabel = isGC ? t('noteLabels.talk') : t('noteLabels.chapter');
+      let chapterLabel = isGC ? t('noteLabels.talk') : t('noteLabels.chapter');
+
+      if (rawScripture === 'BYU Speeches') {
+        chapterLabel = t('noteLabels.speech');
+      } else if (chapterMatch[0].includes('Title')) {
+        chapterLabel = t('noteLabels.title');
+      }
 
       const chapterEnd = chapterMatch.index + chapterMatch[0].length;
       const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
@@ -787,6 +812,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     return content
       .replace(/\*\*Scripture:\*\*/g, `**${t('noteLabels.scripture')}:**`)
       .replace(/\*\*Chapter:\*\*/g, `**${t('noteLabels.chapter')}:**`)
+      .replace(/\*\*Speech:\*\*/g, `**${t('noteLabels.speech')}:**`)
       .replace(/\*\*Title:\*\*/g, `**${t('noteLabels.title')}:**`)
       .replace(/📖 \*\*New Study Note\*\*/g, `📖 **${t('noteLabels.newStudyNote')}**`)
       .replace(/📖 \*\*New Study Entry\*\*/g, `📖 **${t('noteLabels.newStudyEntry')}**`);
@@ -1278,9 +1304,30 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                             (msg.isNote || msg.isEntry) ? (
                               <div className="entry-message-content">
                                 <ReactMarkdown>{formatNoteForDisplay(msg.text)}</ReactMarkdown>
+                                <div style={{ marginTop: '0.2rem' }}></div>
                                 {(() => {
-                                  const chapterMatch = msg.text.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
+                                  // Update regex to find chapter OR title OR speech
+                                  const chapterMatch = msg.text.match(/\*\*(?:Chapter|Title|Speech):\*\* (.*?)(?:\n|$)/);
                                   const scriptureMatch = msg.text.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
+
+                                  // Handle "Other" category - use stored chapter as URL
+                                  if (scriptureMatch) {
+                                    const scripture = scriptureMatch[1].trim();
+                                    if (scripture === 'Other' && msg.chapter) {
+                                      return (
+                                        <a
+                                          href={msg.chapter}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                          onClick={(e) => e.stopPropagation()}
+                                          className={`gospel-link ${msg.senderId === userData?.uid ? 'sent' : ''}`}
+                                        >
+                                          {t('dashboard.readStudyMaterial')}
+                                        </a>
+                                      );
+                                    }
+                                  }
+
                                   if (chapterMatch && scriptureMatch) {
                                     const scripture = scriptureMatch[1].trim();
                                     const chapter = chapterMatch[1].trim();
@@ -1294,7 +1341,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                                           onClick={(e) => e.stopPropagation()}
                                           className={`gospel-link ${msg.senderId === userData?.uid ? 'sent' : ''}`}
                                         >
-                                          {t('dashboard.readInGospelLibrary')}
+                                          {scripture === 'BYU Speeches' ? t('dashboard.goToByuSpeech') : t('dashboard.readInGospelLibrary')}
                                         </a>
                                       );
                                     }

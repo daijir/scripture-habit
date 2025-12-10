@@ -37,7 +37,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
     };
 
     const translatedScripturesOptions = ScripturesOptions.filter(option => {
-        if (option.value === "General Conference") {
+        if (option.value === "General Conference" || option.value === "BYU Speeches") {
             return language === 'en' || language === 'ja';
         }
         return true;
@@ -52,7 +52,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             text = text.replace(/📖 \*\*New Study Note\*\*\n+/, '');
             text = text.replace(/📖 \*\*New Study Entry\*\*\n+/, '');
 
-            const chapterMatch = text.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
+            const chapterMatch = text.match(/\*\*(?:Chapter|Title|Speech):\*\* (.*?)(?:\n|$)/);
             const chap = chapterMatch ? chapterMatch[1].trim() : '';
 
             const scriptureMatch = text.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
@@ -122,7 +122,17 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
         setError(null);
 
         try {
-            const messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Chapter:** ${chapter}\n\n${comment}`;
+            let messageText;
+            if (scripture === "Other") {
+                // For "Other" category, don't include Chapter/URL in the display text
+                messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n${comment}`;
+            } else {
+                let label = "Chapter";
+                if (scripture === "BYU Speeches") {
+                    label = "Speech";
+                }
+                messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**${label}:** ${chapter}\n\n${comment}`;
+            }
 
             if (noteToEdit) {
                 if (noteToEdit.groupMessageId && noteToEdit.groupId) {
@@ -479,7 +489,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 </div>
 
                 <Input
-                    label={scripture === "General Conference" ? t('newNote.urlLabel') : t('newNote.chapterLabel')}
+                    label={scripture === "General Conference" ? t('newNote.urlLabel') : (scripture === "BYU Speeches" ? t('newNote.byuUrlLabel') : (scripture === "Other" ? t('newNote.otherUrlLabel') : t('newNote.chapterLabel')))}
                     type="text"
                     value={chapter}
                     onChange={(e) => {
@@ -487,7 +497,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         setChapter(val);
                     }}
                     required
-                    placeholder={scripture === "General Conference" ? t('newNote.urlPlaceholder') : t('newNote.chapterPlaceholder')}
+                    placeholder={scripture === "General Conference" ? t('newNote.urlPlaceholder') : (scripture === "BYU Speeches" ? t('newNote.byuUrlPlaceholder') : (scripture === "Other" ? t('newNote.otherUrlPlaceholder') : t('newNote.chapterPlaceholder')))}
                 />
 
                 <Input

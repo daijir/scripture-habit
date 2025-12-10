@@ -938,6 +938,33 @@ export const translateChapterField = (chapterText, language) => {
         }
     }
 
+    // Special handling for BYU Speeches
+    if (chapterText.includes('speeches.byu.edu')) {
+        const byuMatch = chapterText.match(/speeches\.byu\.edu\/talks\/([^\/]+)\/([^\/]+)/);
+        if (byuMatch) {
+            const speakerSlug = byuMatch[1];
+            const titleSlug = byuMatch[2];
+
+            const formatSlug = (slug) => {
+                return slug.split('-').map(word => {
+                    return word.charAt(0).toUpperCase() + word.slice(1);
+                }).join(' ');
+            };
+
+            const formatSpeaker = (slug) => {
+                return slug.split('-').map(word => {
+                    if (word.length === 1) return word.toUpperCase() + '.';
+                    return word.charAt(0).toUpperCase() + word.slice(1);
+                }).join(' ');
+            };
+
+            const speaker = formatSpeaker(speakerSlug);
+            const title = formatSlug(titleSlug);
+
+            return `${title} (${speaker})`;
+        }
+    }
+
     // Parse the chapter field to separate book name and chapter/verse
     // Matches: "Alma 7", "1 Nephi 3:7", "Isaiah 40:31", "Alma 5:12-14"
     // Also handles numbered books like "1 Nephi", "2 Kings"

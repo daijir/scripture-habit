@@ -349,13 +349,22 @@ const Dashboard = () => {
     let content = text.replace(/📖 \*\*New Study Note\*\*\n+/, '')
       .replace(/📖 \*\*New Study Entry\*\*\n+/, '');
 
-    const chapterMatch = content.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
+    const chapterMatch = content.match(/\*\*(?:Chapter|Title|Speech):\*\* (.*?)(?:\n|$)/);
     const scriptureMatch = content.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
+
+    // Handle "Other" category - no chapter field
+    if (scriptureMatch && scriptureMatch[1].trim() === 'Other') {
+      const rawScripture = scriptureMatch[1].trim();
+      const scripture = t('scriptures.other');
+      const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
+      const comment = content.substring(scriptureEnd).trim();
+      return `**${t('noteLabels.scripture')}:** ${scripture}\n\n${comment}`;
+    }
 
     if (chapterMatch && scriptureMatch) {
       const chapter = translateChapterField(chapterMatch[1].trim(), language);
       const rawScripture = scriptureMatch[1].trim();
-      const scriptureMap = { 'Old Testament': 'scriptures.oldTestament', 'New Testament': 'scriptures.newTestament', 'Book of Mormon': 'scriptures.bookOfMormon', 'Doctrine and Covenants': 'scriptures.doctrineAndCovenants', 'Pearl of Great Price': 'scriptures.pearlOfGreatPrice', 'General Conference': 'scriptures.generalConference' };
+      const scriptureMap = { 'Old Testament': 'scriptures.oldTestament', 'New Testament': 'scriptures.newTestament', 'Book of Mormon': 'scriptures.bookOfMormon', 'Doctrine and Covenants': 'scriptures.doctrineAndCovenants', 'Pearl of Great Price': 'scriptures.pearlOfGreatPrice', 'General Conference': 'scriptures.generalConference', 'BYU Speeches': 'scriptures.byuSpeeches' };
       const scripture = scriptureMap[rawScripture] ? t(scriptureMap[rawScripture]) : rawScripture;
 
       const chapterEnd = chapterMatch.index + chapterMatch[0].length;
@@ -365,10 +374,17 @@ const Dashboard = () => {
       const comment = content.substring(maxEnd).trim();
 
       const gcVariants = ['General Conference', '総大会', 'Conferência Geral', '總會大會', 'Conferencia General', 'Đại Hội Trung Ương', 'การประชุมใหญ่สามัญ', '연차 대회', 'Pangkalahatang Kumperensya', 'Mkutano Mkuu'];
-      const chapterLabel = gcVariants.includes(rawScripture) ? t('noteLabels.talk') : t('noteLabels.chapter');
+      let chapterLabel = gcVariants.includes(rawScripture) ? t('noteLabels.talk') : t('noteLabels.chapter');
+
+      if (rawScripture === 'BYU Speeches') {
+        chapterLabel = t('noteLabels.speech');
+      } else if (chapterMatch[0].includes('Title')) {
+        chapterLabel = t('noteLabels.title');
+      }
 
       return `**${t('noteLabels.scripture')}:** ${scripture}\n\n**${chapterLabel}:** ${chapter}\n\n${comment}`;
     }
+
 
     return content;
   };
@@ -452,14 +468,23 @@ const Dashboard = () => {
                             {formatNoteForDisplay(note.text)}
                           </ReactMarkdown>
                         </div>
-                        {getGospelLibraryUrl(note.scripture, note.chapter, language) && (
+                        {note.scripture === 'Other' && note.chapter ? (
+                          <a
+                            href={note.chapter}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="gospel-link"
+                          >
+                            📖 {t('dashboard.readStudyMaterial')}
+                          </a>
+                        ) : getGospelLibraryUrl(note.scripture, note.chapter, language) && (
                           <a
                             href={getGospelLibraryUrl(note.scripture, note.chapter, language)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="gospel-link"
                           >
-                            📖 {t('dashboard.readInGospelLibrary')}
+                            📖 {note.scripture === 'BYU Speeches' ? t('dashboard.goToByuSpeech') : t('dashboard.readInGospelLibrary')}
                           </a>
                         )}
                       </div>

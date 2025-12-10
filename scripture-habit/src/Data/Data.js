@@ -64,4 +64,12 @@ export const ScripturesOptions = [
         value: "General Conference",
         label: "General Conference"
     },
+    {
+        value: "BYU Speeches",
+        label: "BYU Speeches"
+    },
+    {
+        value: "Other",
+        label: "Other"
+    },
 ]
