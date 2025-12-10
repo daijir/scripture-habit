@@ -18,6 +18,13 @@ export default function LoginForm() {
   const [pendingGoogleUser, setPendingGoogleUser] = useState(null);
   const navigate = useNavigate();
 
+  const isInApp = () => {
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    return /(Line|Instagram|FBAN|FBAV|Daum|Kakao|Snapchat)/i.test(ua);
+  };
+
+  const showInAppWarning = isInApp();
+
   const handleGoogleLogin = async () => {
     const provider = new GoogleAuthProvider();
     try {
@@ -116,6 +123,20 @@ export default function LoginForm() {
     <div className='App LoginForm'>
       <div className='AppGlass'>
         <h2>{t('login.title')}</h2>
+
+        {showInAppWarning && (
+          <div style={{
+            backgroundColor: '#fff3cd',
+            color: '#856404',
+            padding: '10px',
+            borderRadius: '5px',
+            marginBottom: '15px',
+            fontSize: '0.9rem',
+            lineHeight: '1.4'
+          }}>
+            {t('login.inAppBrowserWarning')}
+          </div>
+        )}
 
         <button
           onClick={handleGoogleLogin}

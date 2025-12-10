@@ -24,7 +24,9 @@ export const translations = {
             readInGospelLibrary: "Read in Gospel Library",
             inspirationQuote: "\"Wherefore, he that preacheth and he that receiveth, understand one another, and both are edified and rejoice together.\"",
             inspirationSource: "— Jesus Christ (Doctrine and Covenants 50:22)",
-            shareLearningCall: "Would you like to share what you learned today?"
+            shareLearningCall: "Would you like to share what you learned today?",
+            goToByuSpeech: "Go to BYU Speech",
+            readStudyMaterial: "Read The Study Material"
         },
         languages: {
             title: "Languages",
@@ -50,7 +52,11 @@ export const translations = {
             deleteConfirm: "Are you sure you want to delete this note? This action cannot be undone.",
             cancel: "Cancel",
             delete: "Delete Note",
-            readInGospelLibrary: "Read in Gospel Library"
+            cancel: "Cancel",
+            delete: "Delete Note",
+            readInGospelLibrary: "Read in Gospel Library",
+            goToByuSpeech: "Go to BYU Speech",
+            readStudyMaterial: "Read The Study Material"
         },
         groupChat: {
             send: "Send",
@@ -114,7 +120,11 @@ export const translations = {
             successUpdate: "Note updated successfully!",
             successPost: "Note posted successfully!",
             errorSave: "Failed to save note. Please try again.",
-            urlLabel: "URL / Session (Supports past 10 years)"
+            urlLabel: "URL / Session (Supports past 10 years)",
+            byuUrlLabel: "URL",
+            byuUrlPlaceholder: "https://speeches.byu.edu/talks/john-a-mccune/the-gift-of-revelation/",
+            otherUrlLabel: "URL",
+            otherUrlPlaceholder: "https://example.com/study-material"
         },
         scriptures: {
             oldTestament: "Old Testament",
@@ -122,7 +132,9 @@ export const translations = {
             bookOfMormon: "Book of Mormon",
             doctrineAndCovenants: "Doctrine and Covenants",
             pearlOfGreatPrice: "Pearl of Great Price",
-            generalConference: "General Conference"
+            generalConference: "General Conference",
+            byuSpeeches: "BYU Speeches",
+            other: "Other"
         },
         groupOptions: {
             title: "Find Your Community",
@@ -187,7 +199,8 @@ export const translations = {
             noAccount: "Don't have an account?",
             signupLink: "Sign Up",
             forgotPassword: "Forgot your password?",
-            googleButton: "Log in with Google"
+            googleButton: "Log in with Google",
+            inAppBrowserWarning: "Google Login is not supported in this in-app browser. Please open in Chrome or Safari."
         },
         forgotPasswordPage: {
             title: "Reset Your Password",
@@ -230,7 +243,8 @@ export const translations = {
             comment: "Comment",
             newStudyNote: "New Study Note",
             newStudyEntry: "New Study Entry",
-            talk: "Talk"
+            talk: "Talk",
+            speech: "Speech"
         },
         signOut: {
             title: "Sign Out",
@@ -264,7 +278,9 @@ export const translations = {
             readInGospelLibrary: "福音ライブラリーで読む",
             inspirationQuote: "「それゆえ、説く者と受ける者は互いに理解し合い、ともに教化されて、ともに喜ぶのである。」",
             inspirationSource: "— イエス・キリスト (教義と聖約50:22)",
-            shareLearningCall: "あなたの今日の学びを共有しませんか？"
+            shareLearningCall: "あなたの今日の学びを共有しませんか？",
+            goToByuSpeech: "BYUスピーチへ移動",
+            readStudyMaterial: "学習資料を読む"
         },
         languages: {
             title: "言語設定",
@@ -326,7 +342,10 @@ export const translations = {
             deleteConfirm: "本当にこのノートを削除しますか？この操作は取り消せません。",
             cancel: "キャンセル",
             delete: "ノートを削除",
-            readInGospelLibrary: "福音ライブラリーで読む"
+            delete: "ノートを削除",
+            readInGospelLibrary: "福音ライブラリーで読む",
+            goToByuSpeech: "BYUスピーチへ移動",
+            readStudyMaterial: "学習資料を読む"
         },
         newNote: {
             editTitle: "ノートを編集",
@@ -353,7 +372,11 @@ export const translations = {
             successUpdate: "ノートが更新されました！",
             successPost: "ノートが投稿されました！",
             errorSave: "ノートの保存に失敗しました。もう一度お試しください。",
-            urlLabel: "URL / 部会 (過去10年分の総大会に対応)"
+            urlLabel: "URL / 部会 (過去10年分の総大会に対応)",
+            byuUrlLabel: "URL",
+            byuUrlPlaceholder: "https://speeches.byu.edu/talks/john-a-mccune/the-gift-of-revelation/",
+            otherUrlLabel: "URL",
+            otherUrlPlaceholder: "https://example.com/study-material"
         },
         scriptures: {
             oldTestament: "旧約聖書",
@@ -361,7 +384,9 @@ export const translations = {
             bookOfMormon: "モルモン書",
             doctrineAndCovenants: "教義と聖約",
             pearlOfGreatPrice: "高価な真珠",
-            generalConference: "総大会"
+            generalConference: "総大会",
+            byuSpeeches: "BYU Speeches",
+            other: "その他"
         },
         groupOptions: {
             title: "コミュニティを見つける",
@@ -426,7 +451,8 @@ export const translations = {
             noAccount: "アカウントをお持ちでないですか？",
             signupLink: "サインアップ",
             forgotPassword: "パスワードをお忘れですか？",
-            googleButton: "Googleでログイン"
+            googleButton: "Googleでログイン",
+            inAppBrowserWarning: "このアプリ内ブラウザではGoogleログインが利用できません。右上のメニュー等からChromeやSafariで開いてください。"
         },
         forgotPasswordPage: {
             title: "パスワードをリセット",
@@ -469,7 +495,8 @@ export const translations = {
             comment: "コメント",
             newStudyNote: "新しい学習ノート",
             newStudyEntry: "新しい学習記録",
-            talk: "お話"
+            talk: "お話",
+            speech: "スピーチ"
         },
         signOut: {
             title: "サインアウト",
@@ -661,7 +688,8 @@ export const translations = {
             noAccount: "Não tem uma conta?",
             signupLink: "Inscrever-se",
             forgotPassword: "Esqueceu sua senha?",
-            googleButton: "Entrar com o Google"
+            googleButton: "Entrar com o Google",
+            inAppBrowserWarning: "O login do Google não é suportado neste navegador no aplicativo. Abra no Chrome ou Safari."
         },
         forgotPasswordPage: {
             title: "Redefinir sua senha",
@@ -894,7 +922,9 @@ export const translations = {
             errorGmail: "請使用 Gmail 地址。",
             noAccount: "還沒有帳號？",
             signupLink: "註冊",
-            forgotPassword: "忘記密碼了嗎？"
+            forgotPassword: "忘記密碼了嗎？",
+            googleButton: "使用 Google 登入",
+            inAppBrowserWarning: "此應用程式內瀏覽器不支援 Google 登入。請在 Chrome 或 Safari 中開啟。"
         },
         forgotPasswordPage: {
             title: "重設您的密碼",
@@ -1123,7 +1153,9 @@ export const translations = {
             errorGmail: "Por favor, usa una dirección de Gmail.",
             noAccount: "¿No tienes una cuenta?",
             signupLink: "Registrarse",
-            forgotPassword: "¿Olvidaste tu contraseña?"
+            forgotPassword: "¿Olvidaste tu contraseña?",
+            googleButton: "Iniciar sesión con Google",
+            inAppBrowserWarning: "El inicio de sesión con Google no es compatible en este navegador de la aplicación. Por favor, ábrelo en Chrome o Safari."
         },
         forgotPasswordPage: {
             title: "Restablecer tu contraseña",
@@ -1352,7 +1384,9 @@ export const translations = {
             errorGmail: "Vui lòng sử dụng địa chỉ Gmail.",
             noAccount: "Chưa có tài khoản?",
             signupLink: "Đăng ký",
-            forgotPassword: "Bạn quên mật khẩu?"
+            forgotPassword: "Bạn quên mật khẩu?",
+            googleButton: "Đăng nhập bằng Google",
+            inAppBrowserWarning: "Đăng nhập Google không được hỗ trợ trong trình duyệt ứng dụng này. Vui lòng mở trong Chrome hoặc Safari."
         },
         forgotPasswordPage: {
             title: "Đặt lại mật khẩu của bạn",
@@ -1581,7 +1615,9 @@ export const translations = {
             errorGmail: "กรุณาใช้ที่อยู่ Gmail",
             noAccount: "ยังไม่มีบัญชี?",
             signupLink: "ลงทะเบียน",
-            forgotPassword: "ลืมรหัสผ่าน?"
+            forgotPassword: "ลืมรหัสผ่าน?",
+            googleButton: "เข้าสู่ระบบด้วย Google",
+            inAppBrowserWarning: "การเข้าสู่ระบบด้วย Google ไม่รองรับในเบราว์เซอร์ในแอปนี้ กรุณาเปิดใน Chrome หรือ Safari"
         },
         forgotPasswordPage: {
             title: "รีเซ็ตรหัสผ่านของคุณ",
@@ -1810,7 +1846,9 @@ export const translations = {
             errorGmail: "Gmail 주소를 사용해주세요.",
             noAccount: "계정이 없으신가요?",
             signupLink: "회원가입",
-            forgotPassword: "비밀번호를 잊으셨나요?"
+            forgotPassword: "비밀번호를 잊으셨나요?",
+            googleButton: "Google로 로그인",
+            inAppBrowserWarning: "Google 로그인은 이 인앱 브라우저에서 지원되지 않습니다. Chrome 또는 Safari에서 열어주세요."
         },
         forgotPasswordPage: {
             title: "비밀번호 재설정",
@@ -2039,7 +2077,9 @@ export const translations = {
             errorGmail: "Pakigamit ang Gmail address.",
             noAccount: "Wala pang account?",
             signupLink: "Mag-sign Up",
-            forgotPassword: "Nakalimutan ang password?"
+            forgotPassword: "Nakalimutan ang password?",
+            googleButton: "Mag-log in gamit ang Google",
+            inAppBrowserWarning: "Hindi suportado ang Google Login sa in-app browser na ito. Pakibuksan sa Chrome o Safari."
         },
         forgotPasswordPage: {
             title: "I-reset ang Iyong Password",
@@ -2268,7 +2308,9 @@ export const translations = {
             errorGmail: "Tafadhali tumia anwani ya Gmail.",
             noAccount: "Huna akaunti?",
             signupLink: "Jisajili",
-            forgotPassword: "Umesahau nenosiri?"
+            forgotPassword: "Umesahau nenosiri?",
+            googleButton: "Ingia na Google",
+            inAppBrowserWarning: "Kuingia kwa Google hakutumiki katika kivinjari hiki cha ndani ya programu. Tafadhali fungua kwenye Chrome au Safari."
         },
         forgotPasswordPage: {
             title: "Weka Upya Nenosiri Lako",

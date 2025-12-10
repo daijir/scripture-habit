@@ -37,6 +37,8 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         volumeUrlPart = "pgp";
     } else if (lowerVolume === "general conference" || volume === "総大会" || volume === "Conferência Geral" || volume === "總會大會" || volume === "Conferencia General" || volume === "Đại Hội Trung Ương" || volume === "การประชุมใหญ่สามัญ" || volume === "연차 대회" || volume === "Pangkalahatang Kumperensya" || volume === "Mkutano Mkuu") {
         volumeUrlPart = "general-conference";
+    } else if (lowerVolume === "byu speeches" || volume === "BYU Speeches") {
+        volumeUrlPart = "byu-speeches";
     } else {
         return null;
     }
@@ -75,28 +77,46 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         }
     }
 
+    // Special handling for BYU Speeches
+    if (volumeUrlPart === "byu-speeches") {
+        // Return URL directly
+        return chapterInput;
+    }
+
     // Parse chapterInput to separate Book and Chapter
-    // Remove "章" (chapter) for Japanese inputs to handle "ニーファイ第一書 3章"
-    const cleanChapterInput = chapterInput.replace(/章/g, '');
+    let cleanChapterInput = chapterInput;
+
+    // Normalize Full-width characters to Half-width (Numbers, Colon, Comma)
+    cleanChapterInput = cleanChapterInput.replace(/[０-９]/g, s => String.fromCharCode(s.charCodeAt(0) - 0xFEE0));
+    cleanChapterInput = cleanChapterInput.replace(/：/g, ':').replace(/，/g, ',').replace(/、/g, ',');
+
+    // Handle "章" (Chapter) separator
+    // If "章" is followed by a digit (verse), treat it as a colon separator (e.g. "18章11" -> "18:11")
+    cleanChapterInput = cleanChapterInput.replace(/章\s*(?=\d)/g, ':');
+    // Otherwise remove "章" (e.g. "18章" -> "18")
+    cleanChapterInput = cleanChapterInput.replace(/章/g, '');
+
+    // Remove "節" (Verse)
+    cleanChapterInput = cleanChapterInput.replace(/節/g, '');
 
     // Regex to find the last number in the string, possibly followed by verses
-    // Matches: "Alma 7", "Alma 7:11", "Alma 7:11-13", "138", "ニーファイ第一書 3"
-    // Group 1: Book name (e.g. "Alma" or "")
-    // Group 2: Chapter number (e.g. "7")
-    // Group 3: Verses (optional, e.g. ":11" or ":11-13")
-    const match = cleanChapterInput.match(/(.*?)\s*(\d+)(?::(\d+(?:-\d+)?))?\s*$/);
+    // Matches: "Alma 7", "Alma 7:11", "Alma 7:11-13", "138", "ニーファイ第一書 3", "Matt 18:11,14"
+    // Group 1: Book name
+    // Group 2: Chapter number
+    // Group 3: Verses (optional, allows digits, hyphens, commas)
+    const match = cleanChapterInput.match(/(.*?)\s*(\d+)(?::([\d\s,\-]+))?\s*$/);
 
     if (!match) return null; // Could not find a chapter number
 
     let bookName = match[1].trim().toLowerCase().replace(/[.]/g, ''); // Remove dots, lowercase
     const chapterNum = match[2];
-    const verses = match[3]; // This will be "11" or "11-13" if present
+    const verses = match[3]; // This will be "11", "11-13", "11,14" etc.
 
     let urlSuffix = langParam;
     if (verses) {
         // If verses are present, add id and p parameters
-        // Example: id=11-13&p11
-        const firstVerse = verses.split('-')[0];
+        // Extract the very first number for the anchor (ignoring - or ,)
+        const firstVerse = verses.split(/[-\s,]/).filter(Boolean)[0];
         urlSuffix += `&id=${verses}#p${firstVerse}`;
     }
 
