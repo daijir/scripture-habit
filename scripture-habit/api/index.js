@@ -2,6 +2,8 @@ import express from 'express';
 import admin from 'firebase-admin';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import axios from 'axios';
+import * as cheerio from 'cheerio';
 
 dotenv.config();
 
@@ -232,6 +234,49 @@ app.get('/api/groups', async (req, res) => {
     } catch (error) {
         console.error('Error fetching groups:', error);
         res.status(500).send('Error fetching groups.');
+    }
+});
+
+// Scraping Endpoint for General Conference Metadata
+app.get('/api/fetch-gc-metadata', async (req, res) => {
+    const { url, lang } = req.query;
+
+    if (!url) return res.status(400).send({ error: 'URL is required' });
+
+    try {
+        const targetUrl = new URL(url);
+        if (lang) {
+            targetUrl.searchParams.set('lang', lang);
+        }
+
+        const response = await axios.get(targetUrl.toString(), {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            }
+        });
+
+        const $ = cheerio.load(response.data);
+
+        // Attempt to find title
+        let title = $('h1').first().text().trim();
+
+        // Attempt to find speaker
+        let speaker = '';
+        // Common selectors for GC talks
+        if ($('div.byline p.author-name').length) {
+            speaker = $('div.byline p.author-name').first().text().trim();
+        } else if ($('p.author-name').length) {
+            speaker = $('p.author-name').first().text().trim();
+        } else if ($('a.author-name').length) {
+            speaker = $('a.author-name').first().text().trim();
+        } else if ($('.speaker-name').length) {
+            speaker = $('.speaker-name').text().trim();
+        }
+
+        res.json({ title, speaker });
+    } catch (error) {
+        console.error('Error scraping GC:', error.message);
+        res.status(500).json({ error: 'Failed to fetch metadata' });
     }
 });
 
