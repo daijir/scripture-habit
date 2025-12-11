@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { db } from '../../firebase';
 import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc, updateDoc, increment } from 'firebase/firestore';
 import ReactMarkdown from 'react-markdown';
-import { UilPlus, UilBookOpen } from '@iconscout/react-unicons';
+import { UilPlus, UilBookOpen, UilSearchAlt } from '@iconscout/react-unicons';
 import NewNote from '../NewNote/NewNote';
+import NoteCard from '../NoteCard/NoteCard';
 import { toast } from 'react-toastify';
 import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
 import { translateChapterField } from '../../Utils/bookNameTranslations';
 import './MyNotes.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
+import NoteDisplay from '../NoteDisplay/NoteDisplay';
 
 const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
   const { language, t } = useLanguage();
@@ -17,6 +19,8 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
   const [selectedNote, setSelectedNote] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
 
   useEffect(() => {
     if (!userData || !userData.uid) {
@@ -84,47 +88,16 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
     }
   };
 
-  const formatNoteForDisplay = (text) => {
-    if (!text) return '';
-    let content = text.replace(/📖 \*\*New Study Note\*\*\n+/, '')
-      .replace(/📖 \*\*New Study Entry\*\*\n+/, '');
 
-    const chapterMatch = content.match(/\*\*(?:Chapter|Title|Speech):\*\* (.*?)(?:\n|$)/);
-    const scriptureMatch = content.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
 
-    // Handle "Other" category - no chapter field
-    if (scriptureMatch && scriptureMatch[1].trim() === 'Other') {
-      const scripture = t('scriptures.other');
-      const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
-      const comment = content.substring(scriptureEnd).trim();
-      return `**${t('noteLabels.scripture')}:** ${scripture}\n\n${comment}`;
-    }
+  const filteredNotes = notes.filter(note => {
+    const matchesSearch = (note.text || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (note.chapter || '').toLowerCase().includes(searchTerm.toLowerCase());
 
-    if (chapterMatch && scriptureMatch) {
-      const chapter = translateChapterField(chapterMatch[1].trim(), language);
-      const rawScripture = scriptureMatch[1].trim();
-      const scriptureMap = { 'Old Testament': 'scriptures.oldTestament', 'New Testament': 'scriptures.newTestament', 'Book of Mormon': 'scriptures.bookOfMormon', 'Doctrine and Covenants': 'scriptures.doctrineAndCovenants', 'Pearl of Great Price': 'scriptures.pearlOfGreatPrice', 'General Conference': 'scriptures.generalConference', 'BYU Speeches': 'scriptures.byuSpeeches' };
-      const scripture = scriptureMap[rawScripture] ? t(scriptureMap[rawScripture]) : rawScripture;
-      const chapterEnd = chapterMatch.index + chapterMatch[0].length;
-      const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
-      const maxEnd = Math.max(chapterEnd, scriptureEnd);
+    const matchesCategory = selectedCategory === 'All' || note.scripture === selectedCategory;
 
-      const comment = content.substring(maxEnd).trim();
-
-      const gcVariants = ['General Conference', '総大会', 'Conferência Geral', '總會大會', 'Conferencia General', 'Đại Hội Trung Ương', 'การประชุมใหญ่สามัญ', '연차 대회', 'Pangkalahatang Kumperensya', 'Mkutano Mkuu'];
-      let chapterLabel = gcVariants.includes(rawScripture) ? t('noteLabels.talk') : t('noteLabels.chapter');
-
-      if (rawScripture === 'BYU Speeches') {
-        chapterLabel = t('noteLabels.speech');
-      } else if (chapterMatch[0].includes('Title')) {
-        chapterLabel = t('noteLabels.title');
-      }
-
-      return `**${t('noteLabels.scripture')}:** ${scripture}\n\n**${chapterLabel}:** ${chapter}\n\n${comment}`;
-    }
-
-    return content;
-  };
+    return matchesSearch && matchesCategory;
+  });
 
   return (
     <div className="MyNotes DashboardContent">
@@ -144,6 +117,48 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
         </button>
       </div>
 
+      <div className="search-and-filter-container">
+        <div className="search-bar-container">
+          <UilSearchAlt className="search-icon" size="20" />
+          <input
+            type="text"
+            className="search-input"
+            placeholder={t('myNotes.searchPlaceholder')}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+        <div className="category-filters">
+          <button
+            className={`category-chip ${selectedCategory === 'All' ? 'active' : ''}`}
+            onClick={() => setSelectedCategory('All')}
+          >
+            {t('dashboard.seeAll')}
+          </button>
+          {['Old Testament', 'New Testament', 'Book of Mormon', 'Doctrine and Covenants', 'Pearl of Great Price', 'General Conference', 'BYU Speeches', 'Other'].map(key => {
+            const translationKeyMap = {
+              'Old Testament': 'scriptures.oldTestament',
+              'New Testament': 'scriptures.newTestament',
+              'Book of Mormon': 'scriptures.bookOfMormon',
+              'Doctrine and Covenants': 'scriptures.doctrineAndCovenants',
+              'Pearl of Great Price': 'scriptures.pearlOfGreatPrice',
+              'General Conference': 'scriptures.generalConference',
+              'BYU Speeches': 'scriptures.byuSpeeches',
+              'Other': 'scriptures.other'
+            };
+            return (
+              <button
+                key={key}
+                className={`category-chip ${selectedCategory === key ? 'active' : ''}`}
+                onClick={() => setSelectedCategory(key)}
+              >
+                {t(translationKeyMap[key])}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
       {loading ? (
         <div className="loading-state">{t('myNotes.loading')}</div>
       ) : notes.length === 0 ? (
@@ -154,40 +169,18 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
         </div>
       ) : (
         <div className="notes-grid">
-          {notes.map((note) => (
-            <div key={note.id} className="note-card" onClick={() => handleNoteClick(note)} style={{ cursor: 'pointer' }}>
-              <div className="note-header">
-                <span className="note-date">
-                  {note.createdAt?.toDate().toLocaleDateString('en-CA')}
-                </span>
-              </div>
-              <div className="note-content-preview">
-                <ReactMarkdown>
-                  {formatNoteForDisplay(note.text)}
-                </ReactMarkdown>
-              </div>
-              {note.scripture === 'Other' && note.chapter ? (
-                <a
-                  href={note.chapter}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="gospel-link"
-                >
-                  📖 {t('myNotes.readStudyMaterial')}
-                </a>
-              ) : getGospelLibraryUrl(note.scripture, note.chapter, language) && (
-                <a
-                  href={getGospelLibraryUrl(note.scripture, note.chapter, language)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="gospel-link"
-                >
-                  📖 {note.scripture === 'BYU Speeches' ? t('myNotes.goToByuSpeech') : t('myNotes.readInGospelLibrary')}
-                </a>
-              )}
+          {filteredNotes.length === 0 && notes.length > 0 ? (
+            <div className="no-results" style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#999', padding: '2rem' }}>
+              {t('dashboard.noRecentNotes')}
             </div>
+          ) : filteredNotes.map((note) => (
+            <NoteCard
+              key={note.id}
+              note={note}
+              isEditable={true}
+              onClick={handleNoteClick}
+              className="my-notes-card"
+            />
           ))}
         </div>
       )

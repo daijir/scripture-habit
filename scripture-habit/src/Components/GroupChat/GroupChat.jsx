@@ -11,6 +11,7 @@ import { translateChapterField } from '../../Utils/bookNameTranslations';
 import LinkPreview from '../LinkPreview/LinkPreview';
 import './GroupChat.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
+import NoteDisplay from '../NoteDisplay/NoteDisplay';
 
 const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFocusChange, onBack, onGroupSelect }) => {
   const { language, t } = useLanguage();
@@ -1303,7 +1304,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                           {msg.text && (
                             (msg.isNote || msg.isEntry) ? (
                               <div className="entry-message-content">
-                                <ReactMarkdown>{formatNoteForDisplay(msg.text)}</ReactMarkdown>
+                                <NoteDisplay text={msg.text} isSent={msg.senderId === userData?.uid} />
                                 <div style={{ marginTop: '0.2rem' }}></div>
                                 {(() => {
                                   // Update regex to find chapter OR title OR speech
