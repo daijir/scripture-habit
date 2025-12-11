@@ -2,6 +2,7 @@ import { Routes, Route, Link } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect } from 'react';
+import { Analytics } from "@vercel/analytics/react";
 
 import SignupForm from './Components/SignupForm/SignupForm';
 import LoginForm from './Components/LoginForm/LoginForm';
@@ -42,6 +43,7 @@ const App = () => {
 
         </Routes>
         <ToastContainer position="top-right" autoClose={3000} />
+        <Analytics />
       </div>
     </LanguageProvider>
   );
