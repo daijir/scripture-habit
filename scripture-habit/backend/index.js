@@ -415,6 +415,64 @@ app.post('/migrate-data', async (req, res) => {
   }
 });
 
+// Scraping Endpoint for General Conference Metadata
+app.get('/fetch-gc-metadata', async (req, res) => {
+  console.log('Received metadata request:', req.query); // Debug log
+  const { url, lang } = req.query;
+
+  if (!url) return res.status(400).send({ error: 'URL is required' });
+
+  // Dynamically require axios/cheerio to avoid crashing if they aren't installed (though they should be in root)
+  let axios, cheerio;
+  try {
+    axios = require('axios');
+    cheerio = require('cheerio');
+  } catch (e) {
+    console.error("Missing dependencies for scraping:", e);
+    return res.status(500).send({ error: 'Backend missing scraping dependencies.' });
+  }
+
+  try {
+    const targetUrl = new URL(url);
+    if (lang) {
+      targetUrl.searchParams.set('lang', lang);
+    }
+
+    const response = await axios.get(targetUrl.toString(), {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      }
+    });
+
+    const $ = cheerio.load(response.data);
+
+    // Attempt to find title
+    let title = $('h1').first().text().trim();
+
+    // Attempt to find speaker
+    let speaker = '';
+    // Common selectors for GC talks
+    if ($('div.byline p.author-name').length) {
+      speaker = $('div.byline p.author-name').first().text().trim();
+    } else if ($('p.author-name').length) {
+      speaker = $('p.author-name').first().text().trim();
+    } else if ($('a.author-name').length) {
+      speaker = $('a.author-name').first().text().trim();
+    } else if ($('.speaker-name').length) {
+      speaker = $('.speaker-name').text().trim();
+    }
+
+    // Clean up title/speaker if needed
+    // e.g., remove "By " prefix if present? usually raw text is fine.
+
+    res.json({ title, speaker });
+  } catch (error) {
+    console.error('Error scraping GC:', error.message);
+    res.status(500).json({ error: 'Failed to fetch metadata' });
+  }
+});
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);

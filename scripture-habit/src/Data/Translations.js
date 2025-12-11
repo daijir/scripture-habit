@@ -52,8 +52,7 @@ export const translations = {
             deleteConfirm: "Are you sure you want to delete this note? This action cannot be undone.",
             cancel: "Cancel",
             delete: "Delete Note",
-            cancel: "Cancel",
-            delete: "Delete Note",
+            searchPlaceholder: "Search notes...",
             readInGospelLibrary: "Read in Gospel Library",
             goToByuSpeech: "Go to BYU Speech",
             readStudyMaterial: "Read The Study Material"
@@ -266,7 +265,7 @@ export const translations = {
         },
         dashboard: {
             welcomeBack: "おかえりなさい",
-            newNote: "新規ノート",
+            newNote: "ノート作成",
             streak: "連続達成日数",
             days: "日",
             totalNotes: "総ノート数",
@@ -334,7 +333,7 @@ export const translations = {
         },
         myNotes: {
             description: "ノートコレクション",
-            newNote: "新規ノート",
+            newNote: "ノート作成",
             loading: "ノートを読み込み中...",
             noNotesTitle: "まだノートがありません",
             noNotesDesc: "最初の学習ノートを作成して、探求を始めましょう。",
@@ -342,22 +341,23 @@ export const translations = {
             deleteConfirm: "本当にこのノートを削除しますか？この操作は取り消せません。",
             cancel: "キャンセル",
             delete: "ノートを削除",
-            delete: "ノートを削除",
+            searchPlaceholder: "ノートを検索...",
             readInGospelLibrary: "福音ライブラリーで読む",
             goToByuSpeech: "BYUスピーチへ移動",
             readStudyMaterial: "学習資料を読む"
         },
         newNote: {
             editTitle: "ノートを編集",
-            newTitle: "新規ノート",
+            newTitle: "ノート作成",
             deleteTitle: "ノートを削除",
             errorMissingFields: "章を入力し、聖典を選択してください。",
             chooseScriptureLabel: "カテゴリを選択",
             chooseScripturePlaceholder: "カテゴリオプションを選択してください",
             chapterLabel: "章",
-            chapterPlaceholder: "例: イザヤ 1、 第二ニーファイ 4:20、モーサヤ 18:8-10",
+            chapterPlaceholder: "例: イザヤ1章",
+            urlPlaceholder: "URLを貼り付けてください (例: https://www.churchofjesuschrist.org/...)",
             commentLabel: "コメント",
-            commentPlaceholder: "例: 今日は本当に時間がない中、「私に従ってきなさい」から読んだのですが、キリストの贖いを思い起こす良い時間になりました。とてもよかったです。",
+            commentPlaceholder: "例: ",
             shareLabel: "共有範囲:",
             shareAll: "すべてのグループ",
             shareCurrent: "このグループ",
@@ -601,6 +601,7 @@ export const translations = {
             chooseScripturePlaceholder: "Por favor, escolha uma opção de escritura",
             chapterLabel: "Capítulo",
             chapterPlaceholder: "ex: Alma 5, Isaías 9:6",
+            urlPlaceholder: "Por favor, cole a URL (ex: https://www.churchofjesuschrist.org/...)",
             commentLabel: "Comentário",
             commentPlaceholder: "ex: Mesmo que eu não tivesse muito tempo hoje, li o Vem, e Segue-Me, e acabou sendo um momento maravilhoso para lembrar a Expiação de Cristo. Foi verdadeiramente edificante.",
             shareLabel: "Compartilhar com:",
@@ -623,7 +624,10 @@ export const translations = {
             newTestament: "Novo Testamento",
             bookOfMormon: "O Livro de Mórmon",
             doctrineAndCovenants: "Doutrina e Convênios",
-            pearlOfGreatPrice: "Pérola de Grande Valor"
+            pearlOfGreatPrice: "Pérola de Grande Valor",
+            generalConference: "Conferência Geral",
+            byuSpeeches: "BYU Speeches",
+            other: "Outros"
         },
         groupOptions: {
             title: "Encontre Sua Comunidade",
@@ -836,6 +840,7 @@ export const translations = {
             chooseScripturePlaceholder: "請選擇經文選項",
             chapterLabel: "章節",
             chapterPlaceholder: "例如：阿爾瑪書 5, 以賽亞書 9:6",
+            urlPlaceholder: "請貼上 URL (例如 https://www.churchofjesuschrist.org/...)",
             commentLabel: "心得",
             commentPlaceholder: "例如：雖然我今天真的沒有太多時間，但我讀了《來跟從我》，這成為紀念基督贖罪的美好時刻。這真的很令人振奮。",
             shareLabel: "分享對象：",
@@ -858,7 +863,10 @@ export const translations = {
             newTestament: "新約",
             bookOfMormon: "摩爾門經",
             doctrineAndCovenants: "教義和聖約",
-            pearlOfGreatPrice: "無價珍珠"
+            pearlOfGreatPrice: "無價珍珠",
+            generalConference: "總會大會",
+            byuSpeeches: "BYU Speeches",
+            other: "其他"
         },
         groupOptions: {
             title: "尋找您的社群",
@@ -1067,6 +1075,7 @@ export const translations = {
             chooseScripturePlaceholder: "Por favor, elige una opción de escritura",
             chapterLabel: "Capítulo",
             chapterPlaceholder: "ej: Alma 5, Isaías 9:6",
+            urlPlaceholder: "Por favor, pega la URL (ej: https://www.churchofjesuschrist.org/...)",
             commentLabel: "Comentario",
             commentPlaceholder: "ej: Aunque realmente no tuve mucho tiempo hoy, leí de Ven, sígueme, y resultó ser un momento maravilloso para recordar la Expiación de Cristo. Fue verdaderamente edificante.",
             shareLabel: "Compartir con:",
@@ -1089,7 +1098,10 @@ export const translations = {
             newTestament: "Nuevo Testamento",
             bookOfMormon: "El Libro de Mormón",
             doctrineAndCovenants: "Doctrina y Convenios",
-            pearlOfGreatPrice: "La Perla de Gran Precio"
+            pearlOfGreatPrice: "La Perla de Gran Precio",
+            generalConference: "Conferencia General",
+            byuSpeeches: "BYU Speeches",
+            other: "Otros"
         },
         groupOptions: {
             title: "Encuentra Tu Comunidad",
@@ -1298,6 +1310,7 @@ export const translations = {
             chooseScripturePlaceholder: "Vui lòng chọn một tùy chọn thánh thư",
             chapterLabel: "Chương",
             chapterPlaceholder: "vd: An Ma 5, Ê Sai 9:6",
+            urlPlaceholder: "Vui lòng dán URL (vd: https://www.churchofjesuschrist.org/...)",
             commentLabel: "Bình luận",
             commentPlaceholder: "vd: Mặc dù hôm nay tôi thực sự không có nhiều thời gian, tôi đã đọc Hãy Đến Mà Theo Ta, và đó là một khoảnh khắc tuyệt vời để nhớ đến Sự Chuộc Tội của Đấng Ky Tô. Thật sự rất nâng cao tinh thần.",
             shareLabel: "Chia sẻ với:",
@@ -1320,7 +1333,10 @@ export const translations = {
             newTestament: "Tân Ước",
             bookOfMormon: "Sách Mặc Môn",
             doctrineAndCovenants: "Giáo Lý và Giao Ước",
-            pearlOfGreatPrice: "Trân Châu Vô Giá"
+            pearlOfGreatPrice: "Trân Châu Vô Giá",
+            generalConference: "Đại Hội Trung Ương",
+            byuSpeeches: "BYU Speeches",
+            other: "Khác"
         },
         groupOptions: {
             title: "Tìm cộng đồng của bạn",
@@ -1529,6 +1545,7 @@ export const translations = {
             chooseScripturePlaceholder: "กรุณาเลือกตัวเลือกพระคัมภีร์",
             chapterLabel: "บท",
             chapterPlaceholder: "เช่น แอลมา 5, อิสยาห์ 9:6",
+            urlPlaceholder: "กรุณาวาง URL (เช่น https://www.churchofjesuschrist.org/...)",
             commentLabel: "ความคิดเห็น",
             commentPlaceholder: "เช่น แม้ว่าวันนี้ฉันจะไม่มีเวลามากนัก แต่ฉันได้อ่านจงตามเรามา และมันกลายเป็นช่วงเวลาที่ยอดเยี่ยมในการระลึกถึงการชดใช้ของพระคริสต์ มันยกระดับจิตใจจริงๆ",
             shareLabel: "แบ่งปันกับ:",
@@ -1551,7 +1568,10 @@ export const translations = {
             newTestament: "พันธสัญญาใหม่",
             bookOfMormon: "พระคัมภีร์มอรมอน",
             doctrineAndCovenants: "หลักคำสอนและพันธสัญญา",
-            pearlOfGreatPrice: "ไข่มุกอันล้ำค่า"
+            pearlOfGreatPrice: "ไข่มุกอันล้ำค่า",
+            generalConference: "การประชุมใหญ่สามัญ",
+            byuSpeeches: "BYU Speeches",
+            other: "อื่นๆ"
         },
         groupOptions: {
             title: "ค้นหาชุมชนของคุณ",
@@ -1760,6 +1780,7 @@ export const translations = {
             chooseScripturePlaceholder: "성구 옵션을 선택해주세요",
             chapterLabel: "장",
             chapterPlaceholder: "예: 앨마서 5, 이사야 9:6",
+            urlPlaceholder: "URL을 붙여넣으세요 (예: https://www.churchofjesuschrist.org/...)",
             commentLabel: "코멘트",
             commentPlaceholder: "예: 오늘 시간이 별로 없었지만 '와서 나를 따르라'를 읽었고, 그리스도의 속죄를 기억하는 멋진 시간이 되었습니다. 정말 고무적이었습니다.",
             shareLabel: "공유 대상:",
@@ -1782,7 +1803,10 @@ export const translations = {
             newTestament: "신약전서",
             bookOfMormon: "몰몬경",
             doctrineAndCovenants: "교리와 성약",
-            pearlOfGreatPrice: "값진 진주"
+            pearlOfGreatPrice: "값진 진주",
+            generalConference: "연차 대회",
+            byuSpeeches: "BYU Speeches",
+            other: "기타"
         },
         groupOptions: {
             title: "커뮤니티 찾기",
@@ -1991,6 +2015,7 @@ export const translations = {
             chooseScripturePlaceholder: "Mangyaring pumili ng opsyon sa banal na kasulatan",
             chapterLabel: "Kabanata",
             chapterPlaceholder: "hal. Alma 5, Isaias 9:6",
+            urlPlaceholder: "Pakilagay ang URL (hal. https://www.churchofjesuschrist.org/...)",
             commentLabel: "Komento",
             commentPlaceholder: "hal. Kahit na wala akong masyadong oras ngayon, nagbasa ako mula sa Pumarito Ka, Sumunod Ka sa Akin, at naging magandang sandali ito para alalahanin ang Pagbabayad-sala ni Cristo. Talagang nakakapagpalakas.",
             shareLabel: "Ibahagi sa:",
@@ -2013,7 +2038,10 @@ export const translations = {
             newTestament: "Bagong Tipan",
             bookOfMormon: "Aklat ni Mormon",
             doctrineAndCovenants: "Doktrina at mga Tipan",
-            pearlOfGreatPrice: "Mahalagang Perlas"
+            pearlOfGreatPrice: "Mahalagang Perlas",
+            generalConference: "Pangkalahatang Kumperensya",
+            byuSpeeches: "BYU Speeches",
+            other: "Iba pa"
         },
         groupOptions: {
             title: "Hanapin ang Iyong Komunidad",
@@ -2222,6 +2250,7 @@ export const translations = {
             chooseScripturePlaceholder: "Tafadhali chagua chaguo la andiko",
             chapterLabel: "Sura",
             chapterPlaceholder: "mf. Alma 5, Isaya 9:6",
+            urlPlaceholder: "Tafadhali bandika URL (mfano https://www.churchofjesuschrist.org/...)",
             commentLabel: "Maoni",
             commentPlaceholder: "mf. Ingawa sikuwa na muda mwingi leo, nilisoma kutoka Njoo, Unifuate, na ilikuwa wakati mzuri wa kukumbuka Upatanisho wa Kristo. Ilikuwa ya kuinua kweli.",
             shareLabel: "Shiriki na:",
@@ -2244,7 +2273,10 @@ export const translations = {
             newTestament: "Agano Jipya",
             bookOfMormon: "Kitabu cha Mormoni",
             doctrineAndCovenants: "Mafundisho na Maagano",
-            pearlOfGreatPrice: "Lulu ya Thamani Kuu"
+            pearlOfGreatPrice: "Lulu ya Thamani Kuu",
+            generalConference: "Mkutano Mkuu",
+            byuSpeeches: "BYU Speeches",
+            other: "Nyingine"
         },
         groupOptions: {
             title: "Tafuta Jumuiya Yako",

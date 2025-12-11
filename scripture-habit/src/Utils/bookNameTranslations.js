@@ -880,28 +880,14 @@ export const translateBookName = (bookName, language) => {
 };
 
 // Function to translate chapter field (e.g., "Alma 7" -> "アルマ書 7")
-import { getSpeakerName, getTalkTitle } from './generalConferenceMapping';
-
 export const translateChapterField = (chapterText, language) => {
     if (!chapterText || !language) return chapterText;
 
     // Special handling for General Conference URLs/Shortcodes
+    // Note: Detailed formatting/fetching is now handled by NoteDisplay.jsx via async API.
+    // This function primarily handles legacy sync display or simple pass-through.
     if (chapterText.includes('general-conference') || /^\d{4}\/\d{2}/.test(chapterText)) {
         let year, month, slug;
-
-        // Helper to formatting the final string consistently
-        const formatGcEntry = (y, m, s) => {
-            const speaker = getSpeakerName(s, language);
-            const title = getTalkTitle(y, m, s, language);
-
-            if (title) {
-                if (language === 'ja') {
-                    return `${y}/${m}: ${title} (${speaker})`;
-                }
-                return `${y}/${m}: "${title}" (${speaker})`;
-            }
-            return `${y}/${m} (${speaker})`;
-        };
 
         // 1. Full URL with slug
         const urlMatch = chapterText.match(/general-conference\/(\d{4})\/(\d{2})\/([^?#]+)/);
@@ -909,10 +895,14 @@ export const translateChapterField = (chapterText, language) => {
             year = urlMatch[1];
             month = urlMatch[2];
             slug = urlMatch[3];
-            return formatGcEntry(year, month, slug);
+            // Formerly looked up in dictionary. Now we just return a stable reference, or let it fall through.
+            // Returning the slug format allows NoteDisplay to detect it as a GC shortcode/path.
+            // If we return just the slug, NoteDisplay needs to be able to handle it if it wasn't already.
+            // But chapterText IS the source. So returning simple formatted text is safer for fallback.
+            return `${year}/${month}/${slug}`;
         }
 
-        // 2. Full URL (Table of Contents) - No slug, no title
+        // 2. Full URL (Table of Contents)
         const urlTocMatch = chapterText.match(/general-conference\/(\d{4})\/(\d{2})(?:[?#]|$)/);
         if (urlTocMatch) {
             year = urlTocMatch[1];
@@ -923,18 +913,14 @@ export const translateChapterField = (chapterText, language) => {
         // 3. Shortcode YYYY/MM/slug
         const shortSlugMatch = chapterText.match(/^(\d{4})\/(\d{2})\/(.+)$/);
         if (shortSlugMatch) {
-            year = shortSlugMatch[1];
-            month = shortSlugMatch[2];
-            slug = shortSlugMatch[3];
-            return formatGcEntry(year, month, slug);
+            // Pass through as-is, it's a valid ref
+            return chapterText;
         }
 
         // 4. Shortcode YYYY/MM
         const shortTocMatch = chapterText.match(/^(\d{4})\/(\d{2})$/);
         if (shortTocMatch) {
-            year = shortTocMatch[1];
-            month = shortTocMatch[2];
-            return `${year}/${month}`;
+            return chapterText;
         }
     }
 

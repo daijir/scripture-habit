@@ -8,6 +8,7 @@ import { ScripturesOptions } from '../../Data/Data';
 import Input from '../Input/Input';
 import './NewNote.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
+import { removeNoteHeader } from '../../Utils/noteUtils';
 
 const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups = [], isGroupContext = false, currentGroupId = null }) => {
     const { t, language } = useLanguage();
@@ -32,25 +33,20 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             case "Doctrine and Covenants": return t('scriptures.doctrineAndCovenants');
             case "Pearl of Great Price": return t('scriptures.pearlOfGreatPrice');
             case "General Conference": return t('scriptures.generalConference');
+            case "BYU Speeches": return t('scriptures.byuSpeeches');
+            case "Other": return t('scriptures.other');
             default: return value;
         }
     };
 
-    const translatedScripturesOptions = ScripturesOptions.filter(option => {
-        if (option.value === "General Conference" || option.value === "BYU Speeches") {
-            return language === 'en' || language === 'ja';
-        }
-        return true;
-    }).map(option => ({
+    const translatedScripturesOptions = ScripturesOptions.map(option => ({
         ...option,
         label: getTranslatedScriptureLabel(option.value)
     }));
 
     React.useEffect(() => {
         if (isOpen && noteToEdit) {
-            let text = noteToEdit.text || '';
-            text = text.replace(/📖 \*\*New Study Note\*\*\n+/, '');
-            text = text.replace(/📖 \*\*New Study Entry\*\*\n+/, '');
+            let text = removeNoteHeader(noteToEdit.text || '');
 
             const chapterMatch = text.match(/\*\*(?:Chapter|Title|Speech):\*\* (.*?)(?:\n|$)/);
             const chap = chapterMatch ? chapterMatch[1].trim() : '';
@@ -457,32 +453,42 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         styles={{
                             control: (base) => ({
                                 ...base,
-                                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                                borderColor: '#ddd',
+                                backgroundColor: '#ffffff',
+                                borderColor: 'rgba(0, 0, 0, 0.05)',
+                                borderWidth: '2px',
                                 borderRadius: '0.5rem',
                                 padding: '0.2rem',
-                                color: 'black',
+                                color: '#333',
+                                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)',
                             }),
                             placeholder: (base) => ({
                                 ...base,
-                                color: 'black',
+                                color: '#999',
                             }),
                             singleValue: (base) => ({
                                 ...base,
-                                color: 'black',
+                                color: '#333',
                             }),
-                            option: (base, { isFocused, isSelected }) => ({
+                            input: (base) => ({
                                 ...base,
-                                color: 'black',
-                                backgroundColor: isSelected ? 'rgba(255, 145, 157, 0.2)' : isFocused ? 'rgba(255, 145, 157, 0.1)' : null,
-                                '&:active': {
-                                    backgroundColor: 'rgba(255, 145, 157, 0.3)',
-                                },
+                                color: '#333',
                             }),
                             menu: (base) => ({
                                 ...base,
                                 zIndex: 100,
-                                color: 'black'
+                                backgroundColor: '#ffffff',
+                                boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+                                borderRadius: '0.5rem',
+                            }),
+                            option: (base, { isFocused, isSelected }) => ({
+                                ...base,
+                                backgroundColor: isSelected ? 'var(--pink)' : isFocused ? 'rgba(255, 145, 157, 0.1)' : 'transparent',
+                                color: isSelected ? 'white' : '#333',
+                                cursor: 'pointer',
+                                '&:active': {
+                                    backgroundColor: 'var(--pink)',
+                                    color: 'white',
+                                },
                             })
                         }}
                     />
