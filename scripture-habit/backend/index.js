@@ -1,7 +1,9 @@
 const express = require('express');
+const path = require('path');
 const admin = require('firebase-admin');
 const cors = require('cors');
-require('dotenv').config();
+const axios = require('axios'); // Add axios
+require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
 const serviceAccount = require('./serviceAccountKey.json');
 
@@ -472,6 +474,112 @@ app.get('/fetch-gc-metadata', async (req, res) => {
   }
 });
 
+
+// AI Ponder Questions Endpoint
+app.post('/generate-ponder-questions', async (req, res) => {
+  const { scripture, chapter, language } = req.body;
+
+  if (!process.env.GEMINI_API_KEY) {
+    return res.status(500).json({ error: 'Gemini API Key is not configured.' });
+  }
+
+  if (!scripture || !chapter) {
+    return res.status(400).json({ error: 'Scripture and chapter are required.' });
+  }
+
+  try {
+    const langCode = language || 'en';
+    let prompt = '';
+
+    if (langCode === 'ja') {
+      prompt = `あなたは末日聖徒イエス・キリスト教会の「わたしに従ってきなさい」の学習ガイドです。
+ユーザーが「${scripture} ${chapter}」を読んでいます。
+この章について、深く考えるための質問（Ponder Question）を1つだけ提案してください。
+箇条書きの記号（*や-など）は使わず、質問文のみをプレーンテキストで出力してください。
+霊的な洞察を促す、心に響く質問にしてください。`;
+    } else {
+      prompt = `You are a "Come, Follow Me" study guide for The Church of Jesus Christ of Latter-day Saints.
+The user is reading "${scripture} ${chapter}".
+Please suggest 1 Ponder Question to help them think deeply about this chapter.
+Do NOT use bullet points or markdown (*, -). Output only the question text.
+Make it spiritually thought-provoking.`;
+    }
+
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${process.env.GEMINI_API_KEY}`;
+
+    const response = await axios.post(apiUrl, {
+      contents: [{
+        parts: [{
+          text: prompt
+        }]
+      }]
+    });
+
+    const generatedText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!generatedText) {
+      throw new Error('No content generated from Gemini.');
+    }
+
+    res.json({ questions: generatedText });
+
+  } catch (error) {
+    console.error('Error generating AI questions:', error.message);
+    if (error.response) {
+      console.error('Gemini API Error Response:', JSON.stringify(error.response.data, null, 2));
+    }
+    res.status(500).json({ error: 'Failed to generate questions.', details: error.message });
+  }
+});
+
+// AI Discussion Starter Endpoint
+app.post('/generate-discussion-topic', async (req, res) => {
+  const { language } = req.body;
+
+  if (!process.env.GEMINI_API_KEY) {
+    return res.status(500).json({ error: 'Gemini API Key is not configured.' });
+  }
+
+  try {
+    const langCode = language || 'en';
+    let prompt = '';
+
+    if (langCode === 'ja') {
+      prompt = `あなたは末日聖徒イエス・キリスト教会の聖典学習グループのファシリテーターです。
+グループのメンバーが互いの経験や証を分かち合いたくなるような、話し合いのきっかけとなる質問を1つだけ提案してください。
+特定の聖句に限定せず、「今週の学習で」「最近の生活で」といった幅広い文脈で、しかし霊的な深まりをもたらす質問にしてください。
+例：「今週、主の助けを感じた瞬間はありましたか？」など。
+箇条書きの記号（*や-など）は使わず、質問文のみをプレーンテキストで出力してください。`;
+    } else {
+      prompt = `You are a facilitator for a scripture study group of The Church of Jesus Christ of Latter-day Saints.
+Please suggest 1 discussion starter question that encourages members to share their experiences and testimonies.
+Make the question broad enough (e.g., "In your study this week...", "In your life recently...") but spiritually meaningful.
+Do NOT use bullet points or markdown (*, -). Output only the question text.`;
+    }
+
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${process.env.GEMINI_API_KEY}`;
+
+    const response = await axios.post(apiUrl, {
+      contents: [{
+        parts: [{
+          text: prompt
+        }]
+      }]
+    });
+
+    const generatedText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!generatedText) {
+      throw new Error('No content generated from Gemini.');
+    }
+
+    res.json({ topic: generatedText.trim() });
+
+  } catch (error) {
+    console.error('Error generating discussion topic:', error.message);
+    res.status(500).json({ error: 'Failed to generate topic.', details: error.message });
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

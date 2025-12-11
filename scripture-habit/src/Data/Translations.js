@@ -91,7 +91,8 @@ export const translations = {
             deleteMessageWarning: "This will also delete the note from My Notes.",
             reply: "Reply",
             like: "Like",
-            unlike: "Unlike"
+            unlike: "Unlike",
+            askAiTopic: "✨ Ask AI for a Topic"
         },
         newNote: {
             editTitle: "Edit Note",
@@ -123,7 +124,8 @@ export const translations = {
             byuUrlLabel: "URL",
             byuUrlPlaceholder: "https://speeches.byu.edu/talks/john-a-mccune/the-gift-of-revelation/",
             otherUrlLabel: "URL",
-            otherUrlPlaceholder: "https://example.com/study-material"
+            otherUrlPlaceholder: "https://example.com/study-material",
+            askAiQuestion: "✨ Ask AI for a Question"
         },
         scriptures: {
             oldTestament: "Old Testament",
@@ -329,7 +331,8 @@ export const translations = {
             deleteMessageWarning: "このノートは「私のノート」からも削除されます。",
             reply: "返信",
             like: "いいね",
-            unlike: "いいね解除"
+            unlike: "いいね解除",
+            askAiTopic: "✨ AI話題提案"
         },
         myNotes: {
             description: "ノートコレクション",
@@ -357,7 +360,7 @@ export const translations = {
             chapterPlaceholder: "例: イザヤ1章",
             urlPlaceholder: "URLを貼り付けてください (例: https://www.churchofjesuschrist.org/...)",
             commentLabel: "コメント",
-            commentPlaceholder: "例: ",
+            commentPlaceholder: "例: かなりよく勉強したのですが、よくわからないことがわかりました（笑）",
             shareLabel: "共有範囲:",
             shareAll: "すべてのグループ",
             shareCurrent: "このグループ",
@@ -376,7 +379,8 @@ export const translations = {
             byuUrlLabel: "URL",
             byuUrlPlaceholder: "https://speeches.byu.edu/talks/john-a-mccune/the-gift-of-revelation/",
             otherUrlLabel: "URL",
-            otherUrlPlaceholder: "https://example.com/study-material"
+            otherUrlPlaceholder: "https://example.com/study-material",
+            askAiQuestion: "✨ AIに質問してもらう"
         },
         scriptures: {
             oldTestament: "旧約聖書",
@@ -578,7 +582,8 @@ export const translations = {
             deleteMessageWarning: "Isso também excluirá a nota de Minhas Anotações.",
             reply: "Responder",
             like: "Curtir",
-            unlike: "Descurtir"
+            unlike: "Descurtir",
+            askAiTopic: "✨ Pedir Tópico à IA"
         },
         myNotes: {
             description: "Coleção de Notas",
@@ -617,7 +622,8 @@ export const translations = {
             post: "Postar Anotação",
             successUpdate: "Anotação atualizada com sucesso!",
             successPost: "Anotação postada com sucesso!",
-            errorSave: "Falha ao salvar anotação. Tente novamente."
+            errorSave: "Falha ao salvar anotação. Tente novamente.",
+            askAiQuestion: "✨ Pedir uma pergunta à IA"
         },
         scriptures: {
             oldTestament: "Velho Testamento",
@@ -817,7 +823,8 @@ export const translations = {
             deleteMessageWarning: "此操作也會從「我的筆記」中刪除此筆記。",
             reply: "回覆",
             like: "讚",
-            unlike: "收回讚"
+            unlike: "收回讚",
+            askAiTopic: "✨ 此群組的 AI 話題"
         },
         myNotes: {
             description: "筆記收藏",
@@ -856,7 +863,8 @@ export const translations = {
             post: "發佈筆記",
             successUpdate: "筆記更新成功！",
             successPost: "筆記發佈成功！",
-            errorSave: "儲存筆記失敗。請重試。"
+            errorSave: "儲存筆記失敗。請重試。",
+            askAiQuestion: "✨ 讓 AI 提問"
         },
         scriptures: {
             oldTestament: "舊約",
@@ -1052,7 +1060,8 @@ export const translations = {
             deleteMessageWarning: "Esto también eliminará la nota de Mis Notas.",
             reply: "Responder",
             like: "Me gusta",
-            unlike: "Ya no me gusta"
+            unlike: "Ya no me gusta",
+            askAiTopic: "✨ Pedir Tema a la IA"
         },
         myNotes: {
             description: "Colección de Notas",
@@ -1091,7 +1100,8 @@ export const translations = {
             post: "Publicar Nota",
             successUpdate: "¡Nota actualizada con éxito!",
             successPost: "¡Nota publicada con éxito!",
-            errorSave: "Error al guardar la nota. Por favor, inténtalo de nuevo."
+            errorSave: "Error al guardar la nota. Por favor, inténtalo de nuevo.",
+            askAiQuestion: "✨ Pedir una pregunta a la IA"
         },
         scriptures: {
             oldTestament: "Antiguo Testamento",
@@ -1287,7 +1297,8 @@ export const translations = {
             deleteMessageWarning: "Điều này cũng sẽ xóa ghi chép khỏi Ghi chép của tôi.",
             reply: "Trả lời",
             like: "Thích",
-            unlike: "Bỏ thích"
+            unlike: "Bỏ thích",
+            askAiTopic: "✨ Yêu cầu AI Chủ đề"
         },
         myNotes: {
             description: "Bộ Sưu Tập Ghi Chép",
@@ -1326,7 +1337,8 @@ export const translations = {
             post: "Đăng ghi chép",
             successUpdate: "Cập nhật ghi chép thành công!",
             successPost: "Đăng ghi chép thành công!",
-            errorSave: "Lưu ghi chép thất bại. Vui lòng thử lại."
+            errorSave: "Lưu ghi chép thất bại. Vui lòng thử lại.",
+            askAiQuestion: "✨ Yêu cầu AI đặt câu hỏi"
         },
         scriptures: {
             oldTestament: "Cựu Ước",
@@ -1522,7 +1534,8 @@ export const translations = {
             deleteMessageWarning: "การดำเนินการนี้จะลบบันทึกจาก บันทึกของฉัน ด้วย",
             reply: "ตอบกลับ",
             like: "ถูกใจ",
-            unlike: "เลิกถูกใจ"
+            unlike: "เลิกถูกใจ",
+            askAiTopic: "✨ ขอหัวข้อจาก AI"
         },
         myNotes: {
             description: "คลังบันทึก",
@@ -1561,7 +1574,8 @@ export const translations = {
             post: "โพสต์บันทึก",
             successUpdate: "อัปเดตบันทึกสำเร็จ!",
             successPost: "โพสต์บันทึกสำเร็จ!",
-            errorSave: "บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง"
+            errorSave: "บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
+            askAiQuestion: "✨ ขอคำถามจาก AI"
         },
         scriptures: {
             oldTestament: "พันธสัญญาเดิม",
@@ -1757,7 +1771,8 @@ export const translations = {
             deleteMessageWarning: "이 작업은 내 노트에서도 해당 노트를 삭제합니다.",
             reply: "답장",
             like: "좋아요",
-            unlike: "좋아요 취소"
+            unlike: "좋아요 취소",
+            askAiTopic: "✨ AI 토픽 요청"
         },
         myNotes: {
             description: "노트 컬렉션",
@@ -1796,7 +1811,8 @@ export const translations = {
             post: "노트 게시",
             successUpdate: "노트가 업데이트되었습니다!",
             successPost: "노트가 게시되었습니다!",
-            errorSave: "노트 저장 실패. 다시 시도해주세요."
+            errorSave: "노트 저장 실패. 다시 시도해주세요.",
+            askAiQuestion: "✨ AI에게 질문 요청"
         },
         scriptures: {
             oldTestament: "구약전서",
@@ -1992,7 +2008,8 @@ export const translations = {
             deleteMessageWarning: "Tatanggalin din nito ang tala mula sa Aking mga Tala.",
             reply: "Sumagot",
             like: "Like",
-            unlike: "Unlike"
+            unlike: "Unlike",
+            askAiTopic: "✨ Humiling ng Paksa sa AI"
         },
         myNotes: {
             description: "Koleksyon ng mga Tala",
@@ -2031,7 +2048,8 @@ export const translations = {
             post: "I-post ang Tala",
             successUpdate: "Matagumpay na na-update ang tala!",
             successPost: "Matagumpay na nai-post ang tala!",
-            errorSave: "Nabigong i-save ang tala. Pakisubukan muli."
+            errorSave: "Nabigong i-save ang tala. Pakisubukan muli.",
+            askAiQuestion: "✨ Humiling ng Tanong sa AI"
         },
         scriptures: {
             oldTestament: "Lumang Tipan",
@@ -2227,7 +2245,8 @@ export const translations = {
             deleteMessageWarning: "Hii pia itafuta maelezo kutoka Maelezo Yangu.",
             reply: "Jibu",
             like: "Penda",
-            unlike: "Ondoa upendo"
+            unlike: "Ondoa upendo",
+            askAiTopic: "✨ Uliza AI Mada"
         },
         myNotes: {
             description: "Mkusanyiko wa Maelezo",
@@ -2266,7 +2285,8 @@ export const translations = {
             post: "Chapisha Ujumbe",
             successUpdate: "Ujumbe umesasishwa kikamilifu!",
             successPost: "Ujumbe umechapishwa kikamilifu!",
-            errorSave: "Imeshindwa kuhifadhi ujumbe. Tafadhali jaribu tena."
+            errorSave: "Imeshindwa kuhifadhi ujumbe. Tafadhali jaribu tena.",
+            askAiQuestion: "✨ Uliza AI Swali"
         },
         scriptures: {
             oldTestament: "Agano la Kale",

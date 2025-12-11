@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { db } from '../../firebase';
 import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { toast } from 'react-toastify';
@@ -22,8 +23,12 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
     const [shareOption, setShareOption] = useState('all'); // 'all', 'specific', 'none', 'current'
     const [selectedShareGroups, setSelectedShareGroups] = useState([]);
 
+
+
     const [loading, setLoading] = useState(false);
+    const [aiLoading, setAiLoading] = useState(false);
     const [error, setError] = useState(null);
+    const [lastAiResponse, setLastAiResponse] = useState('');
 
     const getTranslatedScriptureLabel = (value) => {
         switch (value) {
@@ -46,6 +51,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
     React.useEffect(() => {
         if (isOpen && noteToEdit) {
+            setLastAiResponse('');
             let text = removeNoteHeader(noteToEdit.text || '');
 
             const chapterMatch = text.match(/\*\*(?:Chapter|Title|Speech):\*\* (.*?)(?:\n|$)/);
@@ -81,6 +87,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             setSelectedShareGroups([]);
 
         } else if (isOpen && !noteToEdit) {
+            setLastAiResponse('');
             setChapter('');
             setScripture('');
             setComment('');
@@ -107,6 +114,59 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
     };
 
     if (!isOpen) return null;
+
+    if (!isOpen) return null;
+
+    const handleGenerateQuestions = async () => {
+        if (!scripture || !chapter) {
+            toast.warning(t('newNote.errorMissingFields'));
+            return;
+        }
+
+        setAiLoading(true);
+        try {
+            // Determine API URL based on environment (Vercel vs Local)
+            // Vite proxy should handle /api/ requests if configured, or if served from same origin.
+            // In dev, usually http://localhost:5000/api/... but we rely on relative path if proxy is set.
+            // If running via `vite` and `npm run server` separately without proxy, this might fail on CORS or 404.
+            // Existing app likely uses direct Firebase calls mostly. 
+            // The user added backend/index.js recently.
+            // Let's assume relative path works (Vercel convention).
+
+            const response = await axios.post('/api/generate-ponder-questions', {
+                scripture: selectedOption?.label || scripture,
+                chapter,
+                language
+            });
+
+            if (response.data.questions) {
+                const newContent = response.data.questions;
+
+                setComment(prev => {
+                    const trimmedPrev = prev ? prev.trim() : '';
+                    const trimmedLast = lastAiResponse ? lastAiResponse.trim() : '';
+
+                    // Use includes check, but maintain original whitespace if replacing
+                    if (lastAiResponse && prev.includes(trimmedLast)) {
+                        // Simple replace might be risky if duplicated, but usually sufficient for this context
+                        // We'll replace the last occurrence or just normal replace
+                        return prev.replace(trimmedLast, newContent);
+                    }
+
+                    // If lastAiResponse not found (maybe user edited it), just append
+                    return trimmedPrev ? `${trimmedPrev}\n\n${newContent}` : newContent;
+                });
+
+                setLastAiResponse(newContent);
+                toast.success('AI Ponder Questions generated!');
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error('Failed to generate questions. Gemini API key might be missing.');
+        } finally {
+            setAiLoading(false);
+        }
+    };
 
     const handleSubmit = async () => {
         if (!chapter || !scripture) {
@@ -505,6 +565,33 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     required
                     placeholder={scripture === "General Conference" ? t('newNote.urlPlaceholder') : (scripture === "BYU Speeches" ? t('newNote.byuUrlPlaceholder') : (scripture === "Other" ? t('newNote.otherUrlPlaceholder') : t('newNote.chapterPlaceholder')))}
                 />
+
+                {/* AI Button - simple styling inline for now */}
+                {!noteToEdit && (
+                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '-0.5rem', marginBottom: '0.5rem' }}>
+                        <button
+                            type="button"
+                            onClick={handleGenerateQuestions}
+                            disabled={aiLoading || !scripture || !chapter}
+                            style={{
+                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '20px',
+                                padding: '0.3rem 0.8rem',
+                                fontSize: '0.8rem',
+                                cursor: 'pointer',
+                                opacity: (aiLoading || !scripture || !chapter) ? 0.7 : 1,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.3rem',
+                                boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                            }}
+                        >
+                            {aiLoading ? 'Thinking...' : t('newNote.askAiQuestion')}
+                        </button>
+                    </div>
+                )}
 
                 <Input
                     label={t('newNote.commentLabel')}
