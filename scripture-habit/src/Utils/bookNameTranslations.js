@@ -131,6 +131,7 @@ export const bookNameTranslations = {
         "Esther": "エステル記",
         "Job": "ヨブ記",
         "Psalms": "詩篇",
+        "Psalm": "詩篇",
         "Proverbs": "箴言",
         "Ecclesiastes": "伝道の書",
         "Song of Solomon": "雅歌",
@@ -171,7 +172,7 @@ export const bookNameTranslations = {
         "Titus": "テトスへの手紙",
         "Philemon": "ピリピ人への手紙",
         "Hebrews": "ヘブル人への手紙",
-        "James": "ヤコブへの手紙",
+        "James": "ヤコブの手紙",
         "1 Peter": "ペテロの第一の手紙",
         "2 Peter": "ペテロの第二の手紙",
         "1 John": "ヨハネの第一の手紙",
@@ -957,12 +958,16 @@ export const translateChapterField = (chapterText, language) => {
 
     // First, try to match patterns with chapter numbers
     // Pattern: book name (letters/Japanese/hyphens/spaces) + optional space + chapter:verse
-    // Handles: "Alma7:11", "Alma 7:11", "2ニーファイ2:15", "1 Nephi 3:7", "Articles of Faith 1:13", "Joseph Smith-History 1:5"
-    const match = chapterText.match(/^((?:\d\s*)?[A-Za-zぁ-んァ-ン一-龯\s\-—]+)(?:\s+|(?=\d))(\d+(?::\d+(?:-\d+)?)?)$/);
+    // Handles: "Alma7:11", "Alma 7:11", "2ニーファイ2:15", "1 Nephi 3:7", "Articles of Faith 1:13", "Joseph Smith-History 1:5", "Moroni 7:45, 47-48"
+    const match = chapterText.match(/^((?:\d\s*)?[A-Za-zぁ-んァ-ン一-龯\s\-—]+)(?:\s+|(?=\d))(\d+(?::[\d\s,\-]+)?)$/);
 
     if (match) {
-        const bookName = match[1].trim();
+        let bookName = match[1].trim();
         const chapterVerse = match[2];
+
+        // Normalize em-dash to hyphen for lookup
+        bookName = bookName.replace(/—/g, '-');
+
         const translatedBook = translateBookName(bookName, language);
         return `${translatedBook} ${chapterVerse}`;
     }
