@@ -216,7 +216,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
 
   return (
     <div className="MyNotes DashboardContent">
-      <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+      <div className="dashboard-header" style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <div>
           <h1>Scripture Habit</h1>
           <p className="welcome-text">{t('myNotes.description')}</p>
@@ -227,9 +227,9 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
 
 
 
-      <div className="share-learning-cta" style={{ marginBottom: '2rem', textAlign: 'center' }}>
-        <p style={{ marginBottom: '1rem' }}>{t('myNotes.weeklyReflectionCall')}</p>
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
+      <div className="my-notes-recap-cta">
+        <p>{t('myNotes.weeklyReflectionCall')}</p>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', width: '100%' }}>
           <button
             className={`new-note-btn cta-btn ${!canGenerateRecap || notes.length === 0 ? 'disabled-btn' : ''}`}
             onClick={(e) => {
