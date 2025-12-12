@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useLayoutEffect, useMemo } from 're
 import { db, auth } from '../../firebase';
 import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle, UilUsersAlt } from '@iconscout/react-unicons';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc, getDoc } from 'firebase/firestore';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
 import NewNote from '../NewNote/NewNote';
@@ -17,6 +17,7 @@ import confetti from 'canvas-confetti';
 const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFocusChange, onBack, onGroupSelect }) => {
   const { language, t } = useLanguage();
   const navigate = useNavigate();
+  const location = useLocation();
   const [messages, setMessages] = useState([]);
   const [groupData, setGroupData] = useState(null);
   const [newMessage, setNewMessage] = useState('');
@@ -43,8 +44,35 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const [userReadCount, setUserReadCount] = useState(null);
   const [initialScrollDone, setInitialScrollDone] = useState(false);
   const [isRecapLoading, setIsRecapLoading] = useState(false);
+  const [showInactivityPolicyBanner, setShowInactivityPolicyBanner] = useState(false);
+  const [showWelcomeGuide, setShowWelcomeGuide] = useState(false);
   const longPressTimer = useRef(null);
   const containerRef = useRef(null);
+
+  useEffect(() => {
+    const hasDismissed = localStorage.getItem('hasDismissedInactivityPolicy');
+    if (!hasDismissed) {
+      setShowInactivityPolicyBanner(true);
+    }
+
+    // Check for welcome guide logic from navigation state
+    if (location.state?.showWelcome && location.state?.initialGroupId === groupId) {
+      setShowWelcomeGuide(true);
+      // Clear the state so it doesn't show again on refresh/back (optional, but good practice)
+      // However, standard browser history might keep it. Ideally we rely on it being one-time.
+      // We can't easily clear location state without replacing history.
+      // window.history.replaceState({}, document.title); 
+    }
+  }, [location.state, groupId]);
+
+  const handleDismissInactivityBanner = () => {
+    setShowInactivityPolicyBanner(false);
+    localStorage.setItem('hasDismissedInactivityPolicy', 'true');
+  };
+
+  const handleDismissWelcomeGuide = () => {
+    setShowWelcomeGuide(false);
+  };
   const textareaRef = useRef(null);
   const firstUnreadRef = useRef(null);
   const messagesEndRef = useRef(null);
@@ -97,6 +125,16 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       unsubscribeMessages();
     };
   }, [groupId]);
+
+  const inputPlaceholder = useMemo(() => {
+    const placeholders = [
+      t('groupChat.typeMessage'),
+      t('groupChat.placeholderShare'),
+      t('groupChat.placeholderInactivity'),
+      t('groupChat.placeholderEncourage')
+    ];
+    return placeholders[Math.floor(Math.random() * placeholders.length)];
+  }, [t, groupId]); // Re-roll when group or language changes
 
   // Fetch user's read count when entering the group
   useEffect(() => {
@@ -382,24 +420,10 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       // Increment message count
       // Increment message count and update unity score data
       const groupRef = doc(db, 'groups', groupId);
-      const todayStr = new Date().toDateString();
-      const currentActivity = groupData.dailyActivity || {};
-
       const updatePayload = {
         messageCount: increment(1),
         lastMessageAt: serverTimestamp()
       };
-
-      if (currentActivity.date !== todayStr) {
-        // New day, reset
-        updatePayload.dailyActivity = {
-          date: todayStr,
-          activeMembers: [userData.uid]
-        };
-      } else {
-        // Same day, add user to existing list
-        updatePayload['dailyActivity.activeMembers'] = arrayUnion(userData.uid);
-      }
 
       await updateDoc(groupRef, updatePayload);
 
@@ -943,32 +967,40 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     // Safety check: Ensure the groupData belongs to the current groupId to prevent stale data usage on switch
     if (!groupData?.members || groupData.members.length === 0 || groupData?._groupId !== groupId) return 0;
 
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const todayTime = today.getTime();
+    const todayStr = new Date().toDateString();
+    let uniquePostersCount = 0;
 
-    const uniquePosters = new Set();
+    // PRIMARY SOURCE: dailyActivity from Firestore (This matches Sidebar)
+    if (groupData.dailyActivity && groupData.dailyActivity.date === todayStr && groupData.dailyActivity.activeMembers) {
+      uniquePostersCount = groupData.dailyActivity.activeMembers.length;
+    } else {
+      // FALLBACK: Calculate locally (only if no server data for today)
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const todayTime = today.getTime();
 
-    messages.forEach(msg => {
-      // Check if message is from today
-      let msgTime = 0;
-      if (msg.createdAt?.toDate) {
-        msgTime = msg.createdAt.toDate().getTime();
-      } else if (msg.createdAt?.seconds) {
-        msgTime = msg.createdAt.seconds * 1000;
-      }
+      const uniquePosters = new Set();
 
-      // Filter out system messages if desired, but user asked for "posted in group"
-      // System messages usually have senderId='system'. 
-      // We should probably exclude 'system'.
-      if (msgTime >= todayTime && msg.senderId !== 'system' && !msg.isSystemMessage) {
-        uniquePosters.add(msg.senderId);
-      }
-    });
+      messages.forEach(msg => {
+        // Check if message is from today
+        let msgTime = 0;
+        if (msg.createdAt?.toDate) {
+          msgTime = msg.createdAt.toDate().getTime();
+        } else if (msg.createdAt?.seconds) {
+          msgTime = msg.createdAt.seconds * 1000;
+        }
 
-    const score = Math.round((uniquePosters.size / groupData.members.length) * 100);
+        // Filter out system messages and ensure it is a NOTE
+        if (msgTime >= todayTime && msg.senderId !== 'system' && !msg.isSystemMessage && msg.isNote) {
+          uniquePosters.add(msg.senderId);
+        }
+      });
+      uniquePostersCount = uniquePosters.size;
+    }
+
+    const score = Math.round((uniquePostersCount / groupData.members.length) * 100);
     return Math.min(100, Math.max(0, score));
-  }, [messages, groupData?.members, groupData?._groupId, groupId]);
+  }, [messages, groupData, groupId]);
 
   // Synchronize Daily Activity Data (for Sidebar accuracy)
   useEffect(() => {
@@ -987,7 +1019,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       } else if (msg.createdAt?.seconds) {
         msgTime = msg.createdAt.seconds * 1000;
       }
-      if (msgTime >= todayTime && msg.senderId !== 'system' && !msg.isSystemMessage) {
+      if (msgTime >= todayTime && msg.senderId !== 'system' && !msg.isSystemMessage && msg.isNote) {
         uniquePosters.add(msg.senderId);
       }
     });
@@ -1098,6 +1130,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                         '🌑'} {unityPercentage}%
               </span>
             )}
+
           </h2>
         </div>
         {groupData && (
@@ -1379,6 +1412,32 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         )
       }
 
+
+
+      {/* Welcome Guide Modal */}
+      {
+        showWelcomeGuide && (
+          <div className="leave-modal-overlay guide-modal-overlay">
+            <div className="leave-modal-content guide-modal-content">
+              <div className="guide-image-container">
+                <img src="/images/welcome-bird.png" alt="Welcome Bird" className="guide-bird-image" />
+              </div>
+              <h3>{t('groupChat.welcomeGuideTitle')}</h3>
+              <p className="guide-intro">{t('groupChat.welcomeGuideMessage')}</p>
+
+              <div className="guide-rule-box">
+                <h4 className="guide-rule-title">{t('groupChat.welcomeGuideRule')}</h4>
+                <p className="guide-rule-detail">{t('groupChat.welcomeGuideRuleDetail')}</p>
+              </div>
+
+              <button className="modal-btn guide-btn" onClick={handleDismissWelcomeGuide}>
+                {t('groupChat.welcomeGuideButton')}
+              </button>
+            </div>
+          </div>
+        )
+      }
+
       {
         showDeleteModal && (
           <div className="leave-modal-overlay">
@@ -1412,6 +1471,15 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         )
       }
 
+      {showInactivityPolicyBanner && (
+        <div className="inactivity-policy-banner">
+          <span>{t('groupChat.inactivityPolicyBanner')}</span>
+          <button className="inactivity-policy-dismiss" onClick={handleDismissInactivityBanner}>
+            <UilTimes size="16" />
+          </button>
+        </div>
+      )}
+
       <div
         className="messages-container"
         ref={containerRef}
@@ -1422,6 +1490,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
           }
         }}
       >
+
         {loading && <p>Loading messages...</p>}
         {error && <p className="error-message">{error}</p>}
         {messages.map((msg, index) => {
@@ -1908,7 +1977,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
               }
             }}
             onBlur={() => onInputFocusChange && onInputFocusChange(false)}
-            placeholder={t('groupChat.typeMessage')}
+            placeholder={inputPlaceholder}
             rows={1}
           />
           <div className="add-entry-btn" onClick={() => setIsNewNoteOpen(true)}>

@@ -132,7 +132,7 @@ export default function GroupCard({ group, currentUser, onJoin }: Props) {
           className="join-btn"
           onClick={() => {
             if (isMember) {
-              navigate('/dashboard', { state: { initialView: 2, initialGroupId: group.id } });
+
             }
             else handleJoin();
           }}

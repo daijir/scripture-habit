@@ -109,7 +109,7 @@ export default function JoinGroup() {
       });
       if (resp.ok) {
         alert(`${t('joinGroup.successJoined')} ${groupData.name}`);
-        navigate('/dashboard');
+        navigate('/dashboard', { state: { initialGroupId: groupId, showWelcome: true, initialView: 2 } });
         return;
       }
       const errText = await resp.text();
@@ -133,7 +133,7 @@ export default function JoinGroup() {
         });
         await batch.commit();
         alert(`${t('joinGroup.successJoined')} ${groupData.name}`);
-        navigate('/dashboard');
+        navigate('/dashboard', { state: { initialGroupId: groupId, showWelcome: true, initialView: 2 } });
       } catch (e) {
         console.error("Error joining group:", e);
         setError(t('joinGroup.errorJoinFailed'));

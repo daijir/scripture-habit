@@ -836,6 +836,154 @@ ${notesText}`;
   }
 });
 
+// Check Inactive Users (Cron Job)
+app.get('/check-inactive-users', async (req, res) => {
+  // Use a simple CRON_SECRET if available for security
+  const authHeader = req.headers.authorization;
+  const cronSecret = process.env.CRON_SECRET;
+
+  if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+    console.warn('Unauthorized access attempt to /check-inactive-users');
+    // Allow for now if secret not set, or return 401
+    if (cronSecret) return res.status(401).send('Unauthorized');
+  }
+
+  console.log('Starting inactivity check...');
+  const db = admin.firestore();
+
+  try {
+    const groupsRef = db.collection('groups');
+    const snapshot = await groupsRef.get();
+
+    let processedCount = 0;
+    let removedCount = 0;
+    let initializedCount = 0;
+
+    const BATCH_SIZE = 400;
+    let batch = db.batch();
+    let batchOpCount = 0;
+
+    const now = new Date();
+    const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
+
+    for (const doc of snapshot.docs) {
+      const groupData = doc.data();
+      const groupId = doc.id;
+      const members = groupData.members || [];
+      const memberLastActive = groupData.memberLastActive || {};
+      const ownerUserId = groupData.ownerUserId;
+
+      if (members.length === 0) continue;
+
+      let groupUpdates = {};
+      let groupChanged = false;
+
+      // Identify members to remove
+      const membersToRemove = [];
+      const membersToInitialize = [];
+
+      for (const memberId of members) {
+        // Skip owner
+        if (memberId === ownerUserId) continue;
+
+        const lastActiveTimestamp = memberLastActive[memberId];
+
+        if (!lastActiveTimestamp) {
+          // Initialize tracking if missing (giving them a fresh start)
+          membersToInitialize.push(memberId);
+        } else {
+          const lastActiveDate = lastActiveTimestamp.toDate();
+          const diff = now - lastActiveDate;
+
+          if (diff > THREE_DAYS_MS) {
+            membersToRemove.push(memberId);
+          }
+        }
+      }
+
+      // Handle Initializations
+      if (membersToInitialize.length > 0) {
+        const updateMap = {};
+        membersToInitialize.forEach(uid => {
+          updateMap[`memberLastActive.${uid}`] = admin.firestore.FieldValue.serverTimestamp();
+        });
+        Object.assign(groupUpdates, updateMap);
+        groupChanged = true;
+        initializedCount += membersToInitialize.length;
+      }
+
+      // Handle Removals
+      if (membersToRemove.length > 0) {
+        const removeUidList = membersToRemove;
+
+        // Update Group Doc
+        groupUpdates['members'] = admin.firestore.FieldValue.arrayRemove(...removeUidList);
+        groupUpdates['membersCount'] = admin.firestore.FieldValue.increment(-removeUidList.length);
+
+        removeUidList.forEach(uid => {
+          groupUpdates[`memberLastActive.${uid}`] = admin.firestore.FieldValue.delete();
+        });
+
+        groupChanged = true;
+        removedCount += removeUidList.length;
+
+        // Add System Message
+        const messageRef = groupsRef.doc(groupId).collection('messages').doc();
+        batch.set(messageRef, {
+          text: `👋 **${removeUidList.length} member(s)** were removed due to inactivity (3+ days).`,
+          createdAt: admin.firestore.FieldValue.serverTimestamp(),
+          senderId: 'system',
+          isSystemMessage: true,
+          type: 'leave'
+        });
+        batchOpCount++;
+
+        // Update Users
+        for (const uid of removeUidList) {
+          const userRef = db.collection('users').doc(uid);
+          batch.update(userRef, {
+            groupIds: admin.firestore.FieldValue.arrayRemove(groupId)
+          });
+          batchOpCount++;
+
+          const groupStateRef = userRef.collection('groupStates').doc(groupId);
+          batch.delete(groupStateRef);
+          batchOpCount++;
+        }
+      }
+
+      if (groupChanged) {
+        batch.update(groupsRef.doc(groupId), groupUpdates);
+        batchOpCount++;
+      }
+
+      if (batchOpCount > 300) {
+        await batch.commit();
+        batch = db.batch();
+        batchOpCount = 0;
+      }
+
+      processedCount++;
+    }
+
+    if (batchOpCount > 0) {
+      await batch.commit();
+    }
+
+    res.json({
+      message: 'Inactivity check complete.',
+      stats: { processedGroups: processedCount, removedUsers: removedCount, initializedTracking: initializedCount }
+    });
+
+  } catch (error) {
+    console.error('Error in inactivity check:', error);
+    res.status(500).send('Error checking inactivity: ' + error.message);
+  }
+
+
+});
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT} `);

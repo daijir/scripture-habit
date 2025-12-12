@@ -42,6 +42,7 @@ const Dashboard = () => {
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [warnings, setWarnings] = useState([]);
   const { t, language } = useLanguage();
 
   const todayPlan = getTodayReadingPlan();
@@ -313,6 +314,34 @@ const Dashboard = () => {
     };
   }, [userData, activeGroupId]);
 
+  // Check for inactivity warnings
+  useEffect(() => {
+    if (!userData || userGroups.length === 0) return;
+
+    const newWarnings = [];
+    const now = new Date();
+
+    userGroups.forEach(group => {
+      const memberLastActive = group.memberLastActive || {};
+      const lastActiveTimestamp = memberLastActive[userData.uid];
+
+      if (lastActiveTimestamp) {
+        const lastActiveDate = lastActiveTimestamp.toDate();
+        // diff in ms
+        const diffMs = now - lastActiveDate;
+        // diff in days
+        const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+        // Warn if between 2 and 3 days (48h - 72h)
+        if (diffDays >= 2 && diffDays < 3) {
+          newWarnings.push(group.name || 'Group');
+        }
+      }
+    });
+
+    setWarnings(newWarnings);
+  }, [userGroups, userData]);
+
   if (loading) {
     return <div className='App Dashboard'>Loading...</div>;
   }
@@ -410,6 +439,14 @@ const Dashboard = () => {
                 <p className="welcome-text">{t('dashboard.welcomeBack')}, <strong>{userData.nickname}</strong>!</p>
               </div>
             </div>
+
+            {warnings.length > 0 && (
+              <div className="warning-banner">
+                ⚠️ {language === 'ja'
+                  ? `【警告】${warnings.join(', ')}での活動が2日以上ありません。今日投稿しないと退出になります！`
+                  : `Warning: You have been inactive in ${warnings.join(', ')} for over 2 days. Post today to avoid removal!`}
+              </div>
+            )}
 
             <div className="dashboard-stats">
               <div className="stat-card streak-card">

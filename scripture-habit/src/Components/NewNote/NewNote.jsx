@@ -466,10 +466,30 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     });
 
                     // Update group metadata
-                    await updateDoc(groupRef, {
-                        messageCount: increment(1),
-                        lastMessageAt: serverTimestamp()
-                    });
+                    // Update group metadata
+                    // Read group first to update dailyActivity
+                    const groupSnap = await getDoc(groupRef);
+                    if (groupSnap.exists()) {
+                        const gData = groupSnap.data();
+                        const todayStr = new Date().toDateString();
+                        const currentActivity = gData.dailyActivity || {};
+                        const updatePayload = {
+                            messageCount: increment(1),
+                            lastMessageAt: serverTimestamp(),
+                            [`memberLastActive.${userData.uid}`]: serverTimestamp()
+                        };
+
+                        if (currentActivity.date !== todayStr) {
+                            updatePayload.dailyActivity = {
+                                date: todayStr,
+                                activeMembers: [userData.uid]
+                            };
+                        } else {
+                            updatePayload['dailyActivity.activeMembers'] = arrayUnion(userData.uid);
+                        }
+
+                        await updateDoc(groupRef, updatePayload);
+                    }
 
                     sharedMessageIds[gid] = msgRef.id;
                 });
