@@ -698,7 +698,8 @@ export const translations = {
             errorSave: "Falha ao salvar anotação. Tente novamente.",
             urlLabel: "URL / Sessão",
             askAiQuestion: "✨ Pedir uma pergunta à IA",
-            surpriseMe: "✨ Surpreenda-me"
+            surpriseMe: "✨ Surpreenda-me",
+            aiQuestion: "✨ Pergunta da IA:"
         },
         scriptures: {
             oldTestament: "Velho Testamento",
@@ -962,7 +963,8 @@ export const translations = {
             errorSave: "儲存筆記失敗。請重試。",
             urlLabel: "URL / 會議",
             askAiQuestion: "✨ 讓 AI 提問",
-            surpriseMe: "✨ 隨機經文"
+            surpriseMe: "✨ 隨機經文",
+            aiQuestion: "✨ AI問題:"
         },
         scriptures: {
             oldTestament: "舊約",
@@ -1222,7 +1224,8 @@ export const translations = {
             errorSave: "Error al guardar la nota. Por favor, inténtalo de nuevo.",
             urlLabel: "URL / Sesión",
             askAiQuestion: "✨ Pedir una pregunta a la IA",
-            surpriseMe: "✨ Sorpréndeme"
+            surpriseMe: "✨ Sorpréndeme",
+            aiQuestion: "✨ Pregunta de IA:"
         },
         scriptures: {
             oldTestament: "Antiguo Testamento",
@@ -1482,7 +1485,8 @@ export const translations = {
             errorSave: "Lưu ghi chép thất bại. Vui lòng thử lại.",
             urlLabel: "URL / Phiên",
             askAiQuestion: "✨ Yêu cầu AI đặt câu hỏi",
-            surpriseMe: "✨ Ngẫu nhiên"
+            surpriseMe: "✨ Ngẫu nhiên",
+            aiQuestion: "✨ Câu hỏi AI:"
         },
         scriptures: {
             oldTestament: "Cựu Ước",
@@ -1742,7 +1746,8 @@ export const translations = {
             errorSave: "บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
             urlLabel: "URL / เซสชัน",
             askAiQuestion: "✨ ขอคำถามจาก AI",
-            surpriseMe: "✨ สุ่ม"
+            surpriseMe: "✨ สุ่ม",
+            aiQuestion: "✨ คำถามจาก AI:"
         },
         scriptures: {
             oldTestament: "พันธสัญญาเดิม",
@@ -2002,7 +2007,8 @@ export const translations = {
             errorSave: "노트 저장 실패. 다시 시도해주세요.",
             urlLabel: "URL / 세션",
             askAiQuestion: "✨ AI에게 질문 요청",
-            surpriseMe: "✨ 랜덤 선택"
+            surpriseMe: "✨ 랜덤 선택",
+            aiQuestion: "✨ AI 질문:"
         },
         scriptures: {
             oldTestament: "구약전서",
@@ -2262,7 +2268,8 @@ export const translations = {
             errorSave: "Nabigong i-save ang tala. Pakisubukan muli.",
             urlLabel: "URL / Session",
             askAiQuestion: "✨ Humiling ng Tanong sa AI",
-            surpriseMe: "✨ Surprise Me"
+            surpriseMe: "✨ Surprise Me",
+            aiQuestion: "✨ Tanong ng AI:"
         },
         scriptures: {
             oldTestament: "Lumang Tipan",
@@ -2522,7 +2529,8 @@ export const translations = {
             errorSave: "Imeshindwa kuhifadhi ujumbe. Tafadhali jaribu tena.",
             urlLabel: "URL / Kipindi",
             askAiQuestion: "✨ Uliza AI Swali",
-            surpriseMe: "✨ Surprise Me"
+            surpriseMe: "✨ Surprise Me",
+            aiQuestion: "✨ Swali la AI:"
         },
         scriptures: {
             oldTestament: "Agano la Kale",
