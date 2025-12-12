@@ -119,7 +119,12 @@ export const translations = {
             noNotesForRecap: "No notes found for this week.",
             recapRateLimit: "Weekly recap has already been generated this week.",
             daysLeft: "{days} days left",
-            availableSoon: "Available soon"
+            availableSoon: "Available soon",
+            activeToday: "Active today",
+            activeYesterday: "Active yesterday",
+            activeDaysAgo: "Active {days} days ago",
+            activeMonthsAgo: "Active > {months} months ago",
+            noActivity: "No recent activity"
         },
         newNote: {
             editTitle: "Edit Note",
@@ -264,7 +269,10 @@ export const translations = {
             close: "Close",
             noDescription: "No description.",
             signInFirst: "Sign in first to join groups",
-            unableToJoin: "Unable to join group"
+            unableToJoin: "Unable to join group",
+            statusActive: "🔥 Active",
+            statusNew: "🌱 New",
+            statusRelaxed: "☕ Relaxed"
         },
         noteLabels: {
             scripture: "Category",
@@ -368,7 +376,12 @@ export const translations = {
             noNotesForRecap: "今週のノートが見つかりませんでした。",
             recapRateLimit: "今週の振り返りは既に作成されています。",
             daysLeft: "あと {days} 日",
-            availableSoon: "まもなく利用可能"
+            availableSoon: "まもなく利用可能",
+            activeToday: "今日活動",
+            activeYesterday: "昨日活動",
+            activeDaysAgo: "{days}日前に活動",
+            activeMonthsAgo: "{months}ヶ月以上前に活動",
+            noActivity: "活動記録なし"
         },
         myNotes: {
             description: "ノートコレクション",
@@ -548,7 +561,10 @@ export const translations = {
             close: "閉じる",
             noDescription: "説明はありません。",
             signInFirst: "グループに参加するにはサインインしてください",
-            unableToJoin: "グループに参加できませんでした"
+            unableToJoin: "グループに参加できませんでした",
+            statusActive: "🔥 活発",
+            statusNew: "🌱 新着",
+            statusRelaxed: "☕ まったり"
         },
         noteLabels: {
             scripture: "カテゴリ",
@@ -615,6 +631,8 @@ export const translations = {
             public: "Público",
             private: "Privado",
             inviteCode: "Código de Convite",
+            members: "Membros",
+            groupMembers: "Membros do Grupo",
             typeMessage: "Clique no botão + para criar uma anotação ou digite...",
             leaveGroup: "Sair do Grupo",
             deleteGroup: "Excluir Grupo",
@@ -648,7 +666,12 @@ export const translations = {
             noNotesForRecap: "Nenhuma nota encontrada esta semana.",
             recapRateLimit: "O resumo semanal já foi gerado esta semana.",
             daysLeft: "Faltam {days} dias",
-            availableSoon: "Disponível em breve"
+            availableSoon: "Disponível em breve",
+            activeToday: "Ativo hoje",
+            activeYesterday: "Ativo ontem",
+            activeDaysAgo: "Ativo há {days} dias",
+            activeMonthsAgo: "Ativo há > {months} meses",
+            noActivity: "Sem atividade recente"
         },
         myNotes: {
             description: "Coleção de Notas",
@@ -817,7 +840,10 @@ export const translations = {
             close: "Fechar",
             noDescription: "Sem descrição.",
             signInFirst: "Faça login primeiro para entrar",
-            unableToJoin: "Não foi possível entrar no grupo"
+            unableToJoin: "Não foi possível entrar no grupo",
+            statusActive: "🔥 Ativo",
+            statusNew: "🌱 Novo",
+            statusRelaxed: "☕ Relaxado"
         },
         noteLabels: {
             scripture: "Escritura",
@@ -882,6 +908,8 @@ export const translations = {
             public: "公開",
             private: "私人",
             inviteCode: "邀請碼",
+            members: "成員",
+            groupMembers: "群組成員",
             typeMessage: "點擊 + 按鈕新增筆記或輸入訊息...",
             leaveGroup: "退出群組",
             deleteGroup: "刪除群組",
@@ -915,7 +943,12 @@ export const translations = {
             noNotesForRecap: "本週未找到筆記。",
             recapRateLimit: "本週已生成過每週回顧。",
             daysLeft: "還剩 {days} 天",
-            availableSoon: "即將推出"
+            availableSoon: "即將推出",
+            activeToday: "今日活躍",
+            activeYesterday: "昨日活躍",
+            activeDaysAgo: "{days} 天前活躍",
+            activeMonthsAgo: "{months} 個月前活躍",
+            noActivity: "無近期活躍"
         },
         myNotes: {
             description: "筆記收藏",
@@ -1080,7 +1113,10 @@ export const translations = {
             close: "關閉",
             noDescription: "沒有描述。",
             signInFirst: "請先登入以加入群組",
-            unableToJoin: "無法加入群組"
+            unableToJoin: "無法加入群組",
+            statusActive: "🔥 活躍",
+            statusNew: "🌱 新",
+            statusRelaxed: "☕ 輕鬆"
         },
         noteLabels: {
             scripture: "經文",
@@ -1145,6 +1181,8 @@ export const translations = {
             public: "Público",
             private: "Privado",
             inviteCode: "Código de Invitación",
+            members: "Miembros",
+            groupMembers: "Miembros del Grupo",
             typeMessage: "Haz clic en el botón + para crear una nota o escribe un mensaje...",
             leaveGroup: "Salir del Grupo",
             deleteGroup: "Eliminar Grupo",
@@ -1178,7 +1216,12 @@ export const translations = {
             noNotesForRecap: "No se encontraron notas esta semana.",
             recapRateLimit: "El resumen semanal ya se ha generado esta semana.",
             daysLeft: "Faltan {days} días",
-            availableSoon: "Disponible pronto"
+            availableSoon: "Disponible pronto",
+            activeToday: "Activo hoy",
+            activeYesterday: "Activo ayer",
+            activeDaysAgo: "Activo hace {days} días",
+            activeMonthsAgo: "Activo hace > {months} meses",
+            noActivity: "Sin actividad reciente"
         },
         myNotes: {
             description: "Colección de Notas",
@@ -1343,7 +1386,10 @@ export const translations = {
             close: "Cerrar",
             noDescription: "Sin descripción.",
             signInFirst: "Inicia sesión primero para unirte",
-            unableToJoin: "No se pudo unir al grupo"
+            unableToJoin: "No se pudo unir al grupo",
+            statusActive: "🔥 Activo",
+            statusNew: "🌱 Nuevo",
+            statusRelaxed: "☕ Relajado"
         },
         noteLabels: {
             scripture: "Escritura",
@@ -1408,6 +1454,8 @@ export const translations = {
             public: "Công khai",
             private: "Riêng tư",
             inviteCode: "Mã mời",
+            members: "Thành viên",
+            groupMembers: "Thành viên Nhóm",
             typeMessage: "Nhấn nút + để tạo ghi chép hoặc nhập tin nhắn...",
             leaveGroup: "Rời nhóm",
             deleteGroup: "Xóa nhóm",
@@ -1441,7 +1489,12 @@ export const translations = {
             noNotesForRecap: "Không tìm thấy ghi chép nào trong tuần này.",
             recapRateLimit: "Tổng kết tuần đã được tạo trong tuần này.",
             daysLeft: "Còn {days} ngày",
-            availableSoon: "Sắp có sẵn"
+            availableSoon: "Sắp có sẵn",
+            activeToday: "Hoạt động hôm nay",
+            activeYesterday: "Hoạt động hôm qua",
+            activeDaysAgo: "Hoạt động {days} ngày trước",
+            activeMonthsAgo: "Hoạt động > {months} tháng trước",
+            noActivity: "Không có hoạt động gần đây"
         },
         myNotes: {
             description: "Bộ Sưu Tập Ghi Chép",
@@ -1606,7 +1659,10 @@ export const translations = {
             close: "Đóng",
             noDescription: "Không có mô tả.",
             signInFirst: "Đăng nhập trước để tham gia",
-            unableToJoin: "Không thể tham gia nhóm"
+            unableToJoin: "Không thể tham gia nhóm",
+            statusActive: "🔥 Hoạt động",
+            statusNew: "🌱 Mới",
+            statusRelaxed: "☕ Thư giãn"
         },
         noteLabels: {
             scripture: "Thánh Thư",
@@ -1671,6 +1727,8 @@ export const translations = {
             public: "สาธารณะ",
             private: "ส่วนตัว",
             inviteCode: "รหัสเชิญ",
+            members: "สมาชิก",
+            groupMembers: "สมาชิกกลุ่ม",
             typeMessage: "คลิกปุ่ม + เพื่อสร้างบันทึกหรือพิมพ์ข้อความ...",
             leaveGroup: "ออกจากกลุ่ม",
             deleteGroup: "ลบกลุ่ม",
@@ -1704,7 +1762,12 @@ export const translations = {
             noNotesForRecap: "ไม่พบบันทึกสำหรับสัปดาห์นี้",
             recapRateLimit: "สรุปรายสัปดาห์ถูกสร้างไปแล้วในสัปดาห์นี้",
             daysLeft: "เหลืออีก {days} วัน",
-            availableSoon: "จะพร้อมใช้งานเร็วๆ นี้"
+            availableSoon: "จะพร้อมใช้งานเร็วๆ นี้",
+            activeToday: "ใช้งานวันนี้",
+            activeYesterday: "ใช้งานเมื่อวาน",
+            activeDaysAgo: "ใช้งานเมื่อ {days} วันที่แล้ว",
+            activeMonthsAgo: "ใช้งานเมื่อ {months} เดือนที่แล้ว",
+            noActivity: "ไม่มีกิจกรรมล่าสุด"
         },
         myNotes: {
             description: "คลังบันทึก",
@@ -1869,7 +1932,10 @@ export const translations = {
             close: "ปิด",
             noDescription: "ไม่มีคำอธิบาย",
             signInFirst: "เข้าสู่ระบบก่อนเพื่อเข้าร่วม",
-            unableToJoin: "ไม่สามารถเข้าร่วมกลุ่มได้"
+            unableToJoin: "ไม่สามารถเข้าร่วมกลุ่มได้",
+            statusActive: "🔥 ใช้งาน",
+            statusNew: "🌱 ใหม่",
+            statusRelaxed: "☕ ผ่อนคลาย"
         },
         noteLabels: {
             scripture: "พระคัมภีร์",
@@ -1934,6 +2000,8 @@ export const translations = {
             public: "공개",
             private: "비공개",
             inviteCode: "초대 코드",
+            members: "멤버",
+            groupMembers: "그룹 멤버",
             typeMessage: "+ 버튼을 클릭하여 노트를 작성하거나 메시지를 입력하세요...",
             leaveGroup: "그룹 나가기",
             deleteGroup: "그룹 삭제",
@@ -1967,7 +2035,12 @@ export const translations = {
             noNotesForRecap: "이번 주 노트를 찾을 수 없습니다.",
             recapRateLimit: "이번 주 주간 요약이 이미 생성되었습니다.",
             daysLeft: "{days}일 남음",
-            availableSoon: "곧 이용 가능"
+            availableSoon: "곧 이용 가능",
+            activeToday: "오늘 활동",
+            activeYesterday: "어제 활동",
+            activeDaysAgo: "{days}일 전 활동",
+            activeMonthsAgo: "{months}개월 전 활동",
+            noActivity: "최근 활동 없음"
         },
         myNotes: {
             description: "노트 컬렉션",
@@ -2132,7 +2205,10 @@ export const translations = {
             close: "닫기",
             noDescription: "설명 없음.",
             signInFirst: "가입하려면 먼저 로그인하세요",
-            unableToJoin: "그룹에 가입할 수 없음"
+            unableToJoin: "그룹에 가입할 수 없음",
+            statusActive: "🔥 활동 중",
+            statusNew: "🌱 신규",
+            statusRelaxed: "☕ 여유"
         },
         noteLabels: {
             scripture: "성구",
@@ -2197,6 +2273,8 @@ export const translations = {
             public: "Pampubliko",
             private: "Pribado",
             inviteCode: "Invite Code",
+            members: "Mga Miyembro",
+            groupMembers: "Mga Miyembro ng Grupo",
             typeMessage: "I-click ang + button para gumawa ng tala o mag-type ng mensahe...",
             leaveGroup: "Umalis sa Grupo",
             deleteGroup: "Tanggalin ang Grupo",
@@ -2230,7 +2308,12 @@ export const translations = {
             noNotesForRecap: "Walang nakitang mga tala para sa linggong ito.",
             recapRateLimit: "Ang lingguhang buod ay nagawa na ngayong linggo.",
             daysLeft: "{days} araw na lang",
-            availableSoon: "Magagamit na sa lalong madaling panahon"
+            availableSoon: "Magagamit na sa lalong madaling panahon",
+            activeToday: "Aktibo ngayon",
+            activeYesterday: "Aktibo kahapon",
+            activeDaysAgo: "Aktibo {days} araw ang nakalipas",
+            activeMonthsAgo: "Aktibo {months} buwan ang nakalipas",
+            noActivity: "Walang kamakailang aktibidad"
         },
         myNotes: {
             description: "Koleksyon ng mga Tala",
@@ -2395,7 +2478,10 @@ export const translations = {
             close: "Isara",
             noDescription: "Walang paglalarawan.",
             signInFirst: "Mag-sign in muna para makasali",
-            unableToJoin: "Hindi makasali sa grupo"
+            unableToJoin: "Hindi makasali sa grupo",
+            statusActive: "🔥 Aktibo",
+            statusNew: "🌱 Bago",
+            statusRelaxed: "☕ Relaxed"
         },
         noteLabels: {
             scripture: "Banal na Kasulatan",
@@ -2460,6 +2546,8 @@ export const translations = {
             public: "Umma",
             private: "Binafsi",
             inviteCode: "Msimbo wa Kualika",
+            members: "Wanachama",
+            groupMembers: "Wanachama wa Kikundi",
             typeMessage: "Bofya kitufe cha + kuunda ujumbe au andika ujumbe...",
             leaveGroup: "Ondoka Kwenye Kikundi",
             deleteGroup: "Futa Kikundi",
@@ -2493,7 +2581,12 @@ export const translations = {
             noNotesForRecap: "Hakuna maelezo yaliyopatikana kwa wiki hii.",
             recapRateLimit: "Muhtasari wa wiki tayari umetolewa wiki hii.",
             daysLeft: "Zimebaki siku {days}",
-            availableSoon: "Inakuja hivi karibuni"
+            availableSoon: "Inakuja hivi karibuni",
+            activeToday: "Hali ya leo",
+            activeYesterday: "Hali ya jana",
+            activeDaysAgo: "Hali siku {days} zilizopita",
+            activeMonthsAgo: "Hali miezi {months} iliyopita",
+            noActivity: "Hakuna shughuli za hivi karibuni"
         },
         myNotes: {
             description: "Mkusanyiko wa Maelezo",
@@ -2658,7 +2751,10 @@ export const translations = {
             close: "Funga",
             noDescription: "Hakuna maelezo.",
             signInFirst: "Ingia kwanza ili kujiunga",
-            unableToJoin: "Imeshindwa kujiunga na kikundi"
+            unableToJoin: "Imeshindwa kujiunga na kikundi",
+            statusActive: "🔥 Hai",
+            statusNew: "🌱 Mpya",
+            statusRelaxed: "☕ Imetulia"
         },
         noteLabels: {
             scripture: "Andiko",

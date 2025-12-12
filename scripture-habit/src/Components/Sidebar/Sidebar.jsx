@@ -22,6 +22,45 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
     setShowGroupModal(false);
   };
 
+  const getGroupStatusEmoji = (group) => {
+    const now = new Date();
+    const ONE_HOUR = 1000 * 60 * 60;
+
+    // 1. Check Active (Last message < 24h)
+    let lastDate = null;
+    if (group.lastMessageAt) {
+      if (group.lastMessageAt.toDate) lastDate = group.lastMessageAt.toDate();
+      else if (group.lastMessageAt.seconds) lastDate = new Date(group.lastMessageAt.seconds * 1000);
+      else if (group.lastMessageAt._seconds) lastDate = new Date(group.lastMessageAt._seconds * 1000);
+      else lastDate = new Date(group.lastMessageAt);
+    }
+
+    if (lastDate && !isNaN(lastDate.getTime())) {
+      const diffHours = (now.getTime() - lastDate.getTime()) / ONE_HOUR;
+      if (diffHours <= 24) return '🔥';
+      return '☕';
+    }
+
+    // 2. Check New (Created < 48h)
+    let createdDate = null;
+    if (group.createdAt) {
+      if (group.createdAt.toDate) createdDate = group.createdAt.toDate();
+      else if (group.createdAt.seconds) createdDate = new Date(group.createdAt.seconds * 1000);
+      else if (group.createdAt._seconds) createdDate = new Date(group.createdAt._seconds * 1000);
+      else createdDate = new Date(group.createdAt);
+    }
+
+    if (createdDate && !isNaN(createdDate.getTime())) {
+      const diffHours = (now.getTime() - createdDate.getTime()) / ONE_HOUR;
+      if (diffHours <= 48) return '🌱';
+    }
+
+    // Fallback
+    if (!lastDate && !createdDate) return '🌱';
+
+    return '☕';
+  };
+
   const handleSignOut = () => {
     setShowSignOutModal(true);
   };
@@ -74,7 +113,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
                 className={`menuItem ${selected === 2 && activeGroupId === group.id ? 'active' : ''}`}
                 onClick={() => handleGroupClick(group.id)}
               >
-                <UilUsersAlt />
+                <span style={{ fontSize: '1.2rem', marginRight: '8px' }}>{getGroupStatusEmoji(group)}</span>
                 <span className="group-name-sidebar">{group.name}</span>
                 {group.unreadCount > 0 && (
                   <span className="unread-badge">{group.unreadCount > 99 ? '99+' : group.unreadCount}</span>
@@ -119,7 +158,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
                   className={`modal-group-item ${activeGroupId === group.id ? 'active-group' : ''}`}
                   onClick={() => handleGroupClick(group.id)}
                 >
-                  <UilUsersAlt />
+                  <span style={{ fontSize: '1.2rem', marginRight: '8px' }}>{getGroupStatusEmoji(group)}</span>
                   <span>
                     {group.name}
                     {group.members && <span style={{ fontSize: '0.85em', color: 'var(--gray)', fontWeight: 'normal', marginLeft: '4px' }}>({group.members.length})</span>}
