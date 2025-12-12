@@ -503,5 +503,103 @@ ${notesText}`;
     }
 });
 
+// AI Personal Weekly Recap Endpoint
+app.post('/api/generate-personal-weekly-recap', async (req, res) => {
+    const { uid, language } = req.body;
+
+    if (!uid) {
+        return res.status(400).json({ error: 'User ID is required.' });
+    }
+    if (!process.env.GEMINI_API_KEY) {
+        return res.status(500).json({ error: 'Gemini API Key is not configured.' });
+    }
+
+    try {
+        const db = admin.firestore();
+        const notesRef = db.collection('users').doc(uid).collection('notes');
+
+        // Calculate date 7 days ago
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        const timestamp7DaysAgo = admin.firestore.Timestamp.fromDate(sevenDaysAgo);
+
+        // Query notes from last 7 days
+        const snapshot = await notesRef
+            .where('createdAt', '>=', timestamp7DaysAgo)
+            .get();
+
+        const notes = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            if (data.text || data.comment) {
+                // Format: Scripture Chapter - Comment
+                let content = "";
+                if (data.scripture) content += `[${data.scripture}] `;
+                if (data.chapter) content += `${data.chapter}: `;
+                if (data.comment) content += `${data.comment}`;
+                else if (data.text) content += `${data.text}`; // Fallback for raw text
+                notes.push(content);
+            }
+        });
+
+        if (notes.length === 0) {
+            return res.json({ message: 'No notes found for this week found.' }); // Frontend expects message field for info toast
+        }
+
+        const langCode = language || 'en';
+        let prompt = '';
+        const notesText = notes.join("\n\n---\n\n");
+
+        if (langCode === 'ja') {
+            prompt = `あなたはユーザーの聖典学習をサポートする親しい友人、あるいはメンターです。
+以下は、ユーザーが過去1週間に記録した学習ノートです。
+これらをもとに、ユーザーへの「今週の振り返りレター」を書いてください。
+条件:
+1. ユーザーの頑張りを褒め、励ますような温かいトーンで。
+2. ノートから読み取れる霊的な洞察やテーマ（例：信仰、祈り、愛など）を取り上げてください。
+3. 「親愛なる友へ」のような書き出しで始めてください。
+4. 箇条書きではなく、手紙形式の文章にしてください。
+5. 日本語で記述してください。
+
+ユーザーのノート:
+${notesText}`;
+        } else {
+            prompt = `You are a close friend or mentor supporting the user's scripture study.
+Below are the study notes the user recorded over the past week.
+Based on these, please write a "Weekly Reflection Letter" to the user.
+Requirements:
+1. Use a warm, encouraging tone that praises their efforts.
+2. Highlight spiritual insights or themes (e.g., faith, prayer, love) found in their notes.
+3. Start with a greeting like "Dear Friend,".
+4. Write in a letter format, not bullet points.
+
+User's Notes:
+${notesText}`;
+        }
+
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${process.env.GEMINI_API_KEY}`;
+
+        const response = await axios.post(apiUrl, {
+            contents: [{
+                parts: [{
+                    text: prompt
+                }]
+            }]
+        });
+
+        const generatedText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!generatedText) {
+            throw new Error('No content generated from Gemini.');
+        }
+
+        res.json({ message: 'Personal weekly recap generated successfully.', recap: generatedText.trim() });
+
+    } catch (error) {
+        console.error('Error generating personal weekly recap:', error.message);
+        res.status(500).json({ error: 'Failed to generate recap.', details: error.message });
+    }
+});
+
 // Export the app for Vercel
 export default app;
