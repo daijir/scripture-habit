@@ -652,6 +652,7 @@ export const translations = {
             deleteConfirm: "Tem certeza de que deseja excluir esta anotação? Esta ação não pode ser desfeita.",
             cancel: "Cancelar",
             delete: "Excluir Anotação",
+            searchPlaceholder: "Pesquisar anotações...",
             readInGospelLibrary: "Ler na Biblioteca do Evangelho",
             weeklyReflectionCall: "Gostaria de refletir sobre sua semana?"
         },
@@ -915,6 +916,7 @@ export const translations = {
             deleteConfirm: "您確定要刪除這則筆記嗎？此動作無法復原。",
             cancel: "取消",
             delete: "刪除筆記",
+            searchPlaceholder: "搜尋筆記...",
             readInGospelLibrary: "在福音圖書館閱讀",
             weeklyReflectionCall: "您想回顧本週的學習嗎？"
         },
@@ -1174,6 +1176,7 @@ export const translations = {
             deleteConfirm: "¿Estás seguro de que quieres eliminar esta nota? Esta acción no se puede deshacer.",
             cancel: "Cancelar",
             delete: "Eliminar Nota",
+            searchPlaceholder: "Buscar notas...",
             readInGospelLibrary: "Leer en Biblioteca del Evangelio",
             weeklyReflectionCall: "¿Te gustaría reflexionar sobre tu semana?"
         },
@@ -1433,6 +1436,7 @@ export const translations = {
             deleteConfirm: "Bạn có chắc chắn muốn xóa ghi chép này không? Hành động này không thể hoàn tác.",
             cancel: "Hủy",
             delete: "Xóa ghi chép",
+            searchPlaceholder: "Tìm kiếm ghi chép...",
             readInGospelLibrary: "Đọc trong Thư viện Phúc âm",
             weeklyReflectionCall: "Bạn có muốn suy ngẫm về tuần này không?"
         },
@@ -1692,6 +1696,7 @@ export const translations = {
             deleteConfirm: "คุณแน่ใจหรือไม่ว่าต้องการลบบันทึกนี้? การดำเนินการนี้ไม่สามารถย้อนกลับได้",
             cancel: "ยกเลิก",
             delete: "ลบบันทึก",
+            searchPlaceholder: "ค้นหาบันทึก...",
             readInGospelLibrary: "อ่านในคลังค้นคว้าพระกิตติคุณ",
             weeklyReflectionCall: "คุณต้องการทบทวนสัปดาห์นี้หรือไม่?"
         },
@@ -1951,6 +1956,7 @@ export const translations = {
             deleteConfirm: "이 노트를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
             cancel: "취소",
             delete: "노트 삭제",
+            searchPlaceholder: "노트 검색...",
             readInGospelLibrary: "복음 자료실에서 읽기",
             weeklyReflectionCall: "이번 주를 되돌아보시겠습니까?"
         },
@@ -2210,6 +2216,7 @@ export const translations = {
             deleteConfirm: "Sigurado ka bang gusto mong tanggalin ang talang ito? Hindi na ito mababawi.",
             cancel: "Kanselahin",
             delete: "Tanggalin ang Tala",
+            searchPlaceholder: "Maghanap ng mga tala...",
             readInGospelLibrary: "Basahin sa Gospel Library",
             weeklyReflectionCall: "Gusto mo bang magnilay sa iyong linggo?"
         },
@@ -2469,6 +2476,7 @@ export const translations = {
             deleteConfirm: "Je, una uhakika unataka kufuta ujumbe huu? Hatua hii haiwezi kubatilishwa.",
             cancel: "Ghairi",
             delete: "Futa Ujumbe",
+            searchPlaceholder: "Tafuta maelezo...",
             readInGospelLibrary: "Soma katika Gospel Library",
             weeklyReflectionCall: "Je, ungependa kutafakari wiki yako?"
         },
