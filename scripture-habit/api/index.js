@@ -210,6 +210,94 @@ app.post('/api/leave-group', async (req, res) => {
     }
 });
 
+app.post('/api/delete-group', async (req, res) => {
+    const authHeader = req.headers.authorization;
+    let idToken;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        idToken = authHeader.split('Bearer ')[1];
+    } else if (req.body.token) {
+        idToken = req.body.token;
+    } else {
+        return res.status(401).send('Unauthorized: No token provided.');
+    }
+
+    const { groupId } = req.body;
+    if (!groupId) return res.status(400).send('Group ID is required.');
+
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        const uid = decodedToken.uid;
+        const db = admin.firestore();
+
+        await db.runTransaction(async (t) => {
+            const groupRef = db.collection('groups').doc(groupId);
+            const groupDoc = await t.get(groupRef);
+
+            if (!groupDoc.exists) {
+                const err = new Error('Group not found');
+                err.code = 'GROUP_NOT_FOUND';
+                throw err;
+            }
+
+            const groupData = groupDoc.data();
+            if (groupData.ownerUserId !== uid) {
+                throw new Error('Permission denied: Only the owner can delete this group.');
+            }
+
+            const members = groupData.members || [];
+
+            // Transaction limit is 500 operations. 
+            // We read group (1) + delete group (1) = 2.
+            // For each member: read (1) + update (1) = 2.
+            // Max members supported in single transaction ~= (500 - 2) / 2 = 249.
+            // If group is bigger, we might need batched writes outside transaction or multiple chunks.
+            // For now, assuming < 250 members.
+            const membersToUpdate = members.slice(0, 240);
+
+            for (const memberId of membersToUpdate) {
+                const userRef = db.collection('users').doc(memberId);
+                const userDoc = await t.get(userRef);
+
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    const currentGroupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
+
+                    if (currentGroupIds.includes(groupId)) {
+                        const newGroupIds = currentGroupIds.filter(id => id !== groupId);
+                        let newPrimaryId = userData.groupId;
+
+                        // If the deleted group was the active one, pick a new one or null
+                        if (userData.groupId === groupId) {
+                            newPrimaryId = newGroupIds.length > 0 ? newGroupIds[0] : null;
+                        }
+
+                        t.update(userRef, {
+                            groupIds: admin.firestore.FieldValue.arrayRemove(groupId),
+                            groupId: newPrimaryId
+                        });
+                    }
+                }
+            }
+
+            // Delete group document
+            t.delete(groupRef);
+        });
+
+        res.status(200).send({ message: 'Group deleted successfully.' });
+
+    } catch (error) {
+        if (error.code === 'GROUP_NOT_FOUND') {
+            return res.status(404).send('Group not found.');
+        }
+        if (error.message.includes('Permission denied')) {
+            return res.status(403).send(error.message);
+        }
+        console.error('Error deleting group:', error);
+        res.status(500).send(error.message || 'Internal Server Error');
+    }
+});
+
+
 
 app.get('/api/groups', async (req, res) => {
     try {

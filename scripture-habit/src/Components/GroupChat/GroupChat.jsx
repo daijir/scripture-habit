@@ -460,28 +460,27 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     }
 
     try {
-      const members = groupData.members || [];
+      const idToken = await auth.currentUser.getIdToken();
 
-      // 1. Update all members' groupIds
-      for (const memberId of members) {
-        const userRef = doc(db, 'users', memberId);
-        const userSnap = await getDocs(query(collection(db, 'users'), where('__name__', '==', memberId)));
+      const response = await fetch('/api/delete-group', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ groupId })
+      });
 
-        if (!userSnap.empty) {
-          const memberData = userSnap.docs[0].data();
-          const updatedGroupIds = (memberData.groupIds || []).filter(id => id !== groupId);
-
-          const updates = { groupIds: updatedGroupIds };
-          if (memberData.groupId === groupId) {
-            updates.groupId = updatedGroupIds.length > 0 ? updatedGroupIds[0] : null;
-          }
-
-          await updateDoc(userRef, updates);
+      if (!response.ok) {
+        const text = await response.text();
+        // If it's a 404/not found, it might already be deleted, so we can treat as success or specific error
+        if (response.status === 404) {
+          toast.success("Group already deleted.");
+          navigate('/dashboard');
+          return;
         }
+        throw new Error(text || 'Failed to delete group');
       }
-
-      // 2. Delete the group document (messages subcollection will remain but be orphaned)
-      await deleteDoc(doc(db, 'groups', groupId));
 
       toast.success("Group deleted successfully.");
       navigate('/dashboard');
