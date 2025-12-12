@@ -151,7 +151,8 @@ export const translations = {
             otherUrlLabel: "URL",
             otherUrlPlaceholder: "https://example.com/study-material",
             askAiQuestion: "✨ Ask AI for a Question",
-            surpriseMe: "✨ Surprise Me"
+            surpriseMe: "✨ Surprise Me",
+            aiQuestion: "✨ AI Question:"
         },
         scriptures: {
             oldTestament: "Old Testament",
@@ -432,7 +433,8 @@ export const translations = {
             otherUrlLabel: "URL",
             otherUrlPlaceholder: "https://example.com/study-material",
             askAiQuestion: "✨ AIに質問してもらう",
-            surpriseMe: "✨ おまかせ聖句"
+            surpriseMe: "✨ おまかせ聖句",
+            aiQuestion: "✨ AIからの質問:"
         },
         scriptures: {
             oldTestament: "旧約聖書",
