@@ -595,6 +595,10 @@
 }
 
 @media screen and (max-width: 768px) {
+    .GroupChat {
+        padding-top: 55px;
+    }
+
     .chat-header {
         position: fixed;
         top: 0;
@@ -815,12 +819,6 @@ input:checked+.slider:before {
     animation: fadeIn 0.3s ease;
     flex-shrink: 0;
     z-index: 10;
-}
-
-@media screen and (max-width: 768px) {
-    .inactivity-policy-banner {
-        margin-top: 60px;
-    }
 }
 
 .inactivity-policy-dismiss {
