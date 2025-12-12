@@ -535,6 +535,9 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         "ジョセフ・スミス—歴史": "js-h",
         "信仰箇条": "a-of-f",
 
+        // Japanese Doctrine and Covenants (Official Declarations)
+        "公式の宣言": "od",
+
         // Portuguese Pearl of Great Price
         "moisés": "moses", "moises": "moses",
         "abraão": "abr", "abraao": "abr",
