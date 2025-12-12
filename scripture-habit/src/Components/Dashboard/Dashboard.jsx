@@ -454,7 +454,7 @@ const Dashboard = () => {
                   backdropFilter: 'blur(10px)',
                   textAlign: 'center'
                 }}>
-                  <h3 style={{ margin: '0 0 10px 0', fontSize: '1.1rem', color: '#4a5568' }}>{t('dashboard.todaysReadingPlan')}</h3>
+                  <h3 style={{ margin: '0 0 10px 0', fontSize: '1.1rem', color: '#4a5568' }}>{t('dashboard.todaysComeFollowMe')}</h3>
                   {todayPlan ? (
                     <div>
                       <p style={{ fontSize: '0.9rem', color: '#718096', marginBottom: '0.5rem' }}>{todayPlan.date}</p>

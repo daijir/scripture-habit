@@ -27,7 +27,7 @@ export const translations = {
             shareLearningCall: "Would you like to share what you learned today?",
             goToByuSpeech: "Go to BYU Speech",
             readStudyMaterial: "Read The Study Material",
-            todaysReadingPlan: "Today's Reading Plan",
+            todaysComeFollowMe: "Today's Reading Plan",
             noReadingPlan: "No plan for today."
         },
         languages: {
@@ -319,7 +319,7 @@ export const translations = {
             shareLearningCall: "あなたの今日の学びを共有しませんか？",
             goToByuSpeech: "BYUスピーチへ移動",
             readStudyMaterial: "学習資料を読む",
-            todaysReadingPlan: "今日の学習プラン",
+            todaysComeFollowMe: "今日の「わたしに従ってきなさい」",
             noReadingPlan: "今日のプランはありません。"
         },
         languages: {
@@ -609,7 +609,7 @@ export const translations = {
             inspirationQuote: "\"Portanto, aquele que prega e aquele que recebe se compreendem um ao outro e ambos são edificados e juntos se regozijam\"",
             inspirationSource: "— Jesus Cristo (Doutrina e Convênios 50:22)",
             shareLearningCall: "Gostaria de compartilhar o que aprendeu hoje?",
-            todaysReadingPlan: "Plano de Leitura de Hoje",
+            todaysComeFollowMe: "Plano de Leitura de Hoje",
             noReadingPlan: "Nenhum plano para hoje."
         },
         languages: {
@@ -886,7 +886,7 @@ export const translations = {
             inspirationQuote: "「因此，那宣講的和接受的，彼此了解，雙方都被啟發，並一起快樂。」",
             inspirationSource: "— 耶穌基督(教義和聖約50:22)",
             shareLearningCall: "您想分享今天所學到的嗎？",
-            todaysReadingPlan: "今日閱讀計畫",
+            todaysComeFollowMe: "今日閱讀計畫",
             noReadingPlan: "今日無計畫。"
         },
         languages: {
@@ -1159,7 +1159,7 @@ export const translations = {
             inspirationQuote: "\"“De manera que, el que la predica y el que la recibe se comprenden el uno al otro, y ambos son edificados y se regocijan juntamente.\"",
             inspirationSource: "— Jesucristo (Doctrina y Convenios 50:22)",
             shareLearningCall: "¿Te gustaría compartir lo que aprendiste hoy?",
-            todaysReadingPlan: "Plan de Lectura de Hoy",
+            todaysComeFollowMe: "Plan de Lectura de Hoy",
             noReadingPlan: "No hay plan para hoy."
         },
         languages: {
@@ -1432,7 +1432,7 @@ export const translations = {
             inspirationQuote: "\"Vậy nên, người thuyết giảng và người nhận hiểu được nhau, và cả hai được gây dựng và cùng nhau vui vẻ.\"",
             inspirationSource: "— Chúa Giê Su Ky Tô (Giáo Lý và Giao Ước 50:22)",
             shareLearningCall: "Bạn có muốn chia sẻ những gì bạn đã học hôm nay không?",
-            todaysReadingPlan: "Kế hoạch Đọc Hôm nay",
+            todaysComeFollowMe: "Kế hoạch Đọc Hôm nay",
             noReadingPlan: "Không có kế hoạch cho hôm nay."
         },
         languages: {
@@ -1705,7 +1705,7 @@ export const translations = {
             inspirationQuote: "\"ดังนั้น, คนที่สั่งสอนและคนที่รับ, เข้าใจกัน, และทั้งสองได้รับการจรรโลงใจและชื่นชมยินดีด้วยกัน.\"",
             inspirationSource: "— พระเยซูคริสต์ (หลักคำสอนและพันธสัญญา 50:22)",
             shareLearningCall: "คุณต้องการแบ่งปันสิ่งที่คุณเรียนรู้วันนี้หรือไม่?",
-            todaysReadingPlan: "แผนการอ่านวันนี้",
+            todaysComeFollowMe: "แผนการอ่านวันนี้",
             noReadingPlan: "ไม่มีแผนสำหรับวันนี้"
         },
         languages: {
@@ -1978,7 +1978,7 @@ export const translations = {
             inspirationQuote: "\"그런즉 전도하는 자와 받는 자는 서로를 이해하고 둘 다 교화되며, 함께 기뻐하느니라.\"",
             inspirationSource: "— 예수 그리스도 (교리와 성약 50:22)",
             shareLearningCall: "오늘 배운 것을 공유하시겠습니까?",
-            todaysReadingPlan: "오늘의 읽기 계획",
+            todaysComeFollowMe: "오늘의 읽기 계획",
             noReadingPlan: "오늘의 계획이 없습니다."
         },
         languages: {
@@ -2251,7 +2251,7 @@ export const translations = {
             inspirationQuote: "\"Samakatwid, siya na nangangaral at siya na nakatatanggap ay nauunawaan ang isa't isa, at sila ay kapwa pinabuti at nagsasaya nang magkasama.\"",
             inspirationSource: "— Jesucristo (Doktrina at mga Tipan 50:22)",
             shareLearningCall: "Gusto mo bang ibahagi ang natutunan mo ngayon?",
-            todaysReadingPlan: "Plano ng Pagbabasa Ngayon",
+            todaysComeFollowMe: "Plano ng Pagbabasa Ngayon",
             noReadingPlan: "Walang plano para sa araw na ito."
         },
         languages: {
@@ -2524,7 +2524,7 @@ export const translations = {
             inspirationQuote: "\"Kwa sababu hiyo, yule ambaye huhubiri na yule apokeaye, huelewana, na wote hujengana na kufurahi kwa pamoja.\"",
             inspirationSource: "— Yesu Kristo (Mafundisho na Maagano 50:22)",
             shareLearningCall: "Je, ungependa kushiriki ulichojifunza leo?",
-            todaysReadingPlan: "Mpango wa Kusoma Leo",
+            todaysComeFollowMe: "Mpango wa Kusoma Leo",
             noReadingPlan: "Hakuna mpango wa leo."
         },
         languages: {
