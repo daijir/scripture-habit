@@ -380,11 +380,28 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       await addDoc(messagesRef, messageData);
 
       // Increment message count
+      // Increment message count and update unity score data
       const groupRef = doc(db, 'groups', groupId);
-      await updateDoc(groupRef, {
+      const todayStr = new Date().toDateString();
+      const currentActivity = groupData.dailyActivity || {};
+
+      const updatePayload = {
         messageCount: increment(1),
         lastMessageAt: serverTimestamp()
-      });
+      };
+
+      if (currentActivity.date !== todayStr) {
+        // New day, reset
+        updatePayload.dailyActivity = {
+          date: todayStr,
+          activeMembers: [userData.uid]
+        };
+      } else {
+        // Same day, add user to existing list
+        updatePayload['dailyActivity.activeMembers'] = arrayUnion(userData.uid);
+      }
+
+      await updateDoc(groupRef, updatePayload);
 
       setNewMessage('');
       setReplyTo(null);
@@ -953,6 +970,56 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     return Math.min(100, Math.max(0, score));
   }, [messages, groupData?.members, groupData?._groupId, groupId]);
 
+  // Synchronize Daily Activity Data (for Sidebar accuracy)
+  useEffect(() => {
+    if (!groupData || groupData._groupId !== groupId || !messages) return;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayTime = today.getTime();
+    const todayStr = today.toDateString();
+
+    const uniquePosters = new Set();
+    messages.forEach(msg => {
+      let msgTime = 0;
+      if (msg.createdAt?.toDate) {
+        msgTime = msg.createdAt.toDate().getTime();
+      } else if (msg.createdAt?.seconds) {
+        msgTime = msg.createdAt.seconds * 1000;
+      }
+      if (msgTime >= todayTime && msg.senderId !== 'system' && !msg.isSystemMessage) {
+        uniquePosters.add(msg.senderId);
+      }
+    });
+
+    // Check against Firestore data
+    const currentActivity = groupData.dailyActivity || {};
+    const recordedMembers = (currentActivity.date === todayStr && currentActivity.activeMembers)
+      ? new Set(currentActivity.activeMembers)
+      : new Set();
+
+    // Find missing members (present in local calculation but missing in Firestore)
+    const missingMembers = [...uniquePosters].filter(uid => !recordedMembers.has(uid));
+
+    if (missingMembers.length > 0) {
+      const groupRef = doc(db, 'groups', groupId);
+      const updatePayload = {};
+
+      if (currentActivity.date !== todayStr) {
+        // New day (or overwrite stale data)
+        updatePayload.dailyActivity = {
+          date: todayStr,
+          activeMembers: Array.from(uniquePosters)
+        };
+      } else {
+        // Add only missing members
+        updatePayload['dailyActivity.activeMembers'] = arrayUnion(...missingMembers);
+      }
+
+      updateDoc(groupRef, updatePayload).catch(err => console.error("Error syncing daily activity:", err));
+    }
+  }, [messages, groupData, groupId]);
+
   // Track previous percentage to trigger effect only on change
   useEffect(() => {
     if (!userData?.uid || !groupId) return;
@@ -1016,15 +1083,19 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
             {groupData && (
               <span className="unity-score-badge" style={{
                 marginLeft: '8px',
-                fontSize: '0.9rem',
+                fontSize: '1.0rem',
                 display: 'flex',
                 alignItems: 'center',
-                color: unityPercentage === 100 ? '#FFD700' : 'var(--text-color)',
+                color: unityPercentage === 100 ? '#B8860B' : 'var(--text-color)',
                 fontWeight: unityPercentage === 100 ? 'bold' : 'normal',
-                textShadow: unityPercentage === 100 ? '0 0 8px rgba(255, 215, 0, 0.6)' : 'none',
+                textShadow: unityPercentage === 100 ? '0 0 8px rgba(255, 215, 0, 0.4)' : 'none',
                 transition: 'all 0.3s ease'
               }} title="Unity Score: members active today">
-                👫 {unityPercentage}%
+                {unityPercentage === 100 ? '🌕' :
+                  unityPercentage >= 75 ? '🌔' :
+                    unityPercentage >= 50 ? '🌓' :
+                      unityPercentage >= 25 ? '🌒' :
+                        '🌑'} {unityPercentage}%
               </span>
             )}
           </h2>
@@ -1217,42 +1288,20 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
               <div className="mobile-groups-list">
                 {userGroups.map((group) => {
                   const getEmoji = (g) => {
-                    const now = new Date();
-                    const ONE_HOUR = 1000 * 60 * 60;
-
-                    // 1. Active (24h)
-                    let lastDate = null;
-                    if (g.lastMessageAt) {
-                      if (g.lastMessageAt.toDate) lastDate = g.lastMessageAt.toDate();
-                      else if (g.lastMessageAt.seconds) lastDate = new Date(g.lastMessageAt.seconds * 1000);
-                      else if (g.lastMessageAt._seconds) lastDate = new Date(g.lastMessageAt._seconds * 1000);
-                      else lastDate = new Date(g.lastMessageAt);
+                    let percentage = 0;
+                    if (g && g.members && g.members.length > 0) {
+                      const todayStr = new Date().toDateString();
+                      if (g.dailyActivity && g.dailyActivity.date === todayStr && g.dailyActivity.activeMembers) {
+                        const uniqueCount = new Set(g.dailyActivity.activeMembers).size;
+                        percentage = Math.round((uniqueCount / g.members.length) * 100);
+                      }
                     }
 
-                    if (lastDate && !isNaN(lastDate.getTime())) {
-                      const diff = (now - lastDate) / ONE_HOUR;
-                      if (diff <= 24) return '🔥';
-                      return '☕';
-                    }
-
-                    // 2. New (48h)
-                    let createdDate = null;
-                    if (g.createdAt) {
-                      if (g.createdAt.toDate) createdDate = g.createdAt.toDate();
-                      else if (g.createdAt.seconds) createdDate = new Date(g.createdAt.seconds * 1000);
-                      else if (g.createdAt._seconds) createdDate = new Date(g.createdAt._seconds * 1000);
-                      else createdDate = new Date(g.createdAt);
-                    }
-
-                    if (createdDate && !isNaN(createdDate.getTime())) {
-                      const diff = (now - createdDate) / ONE_HOUR;
-                      if (diff <= 48) return '🌱';
-                    }
-
-                    // Fallback
-                    if (!lastDate && !createdDate) return '🌱';
-
-                    return '☕';
+                    if (percentage === 100) return '🌕';
+                    if (percentage >= 75) return '🌔';
+                    if (percentage >= 50) return '🌓';
+                    if (percentage >= 25) return '🌒';
+                    return '🌑';
                   };
 
                   return (

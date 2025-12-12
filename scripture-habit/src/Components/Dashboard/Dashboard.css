@@ -5,7 +5,7 @@
   border-radius: 2rem;
   background-color: var(--glass);
   overflow: hidden;
-  grid-template-columns: 13rem auto;
+  grid-template-columns: 16.25rem auto;
   gap: 10px;
 }
 
