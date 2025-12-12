@@ -454,6 +454,8 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
                 const postPromises = groupsToPostTo.map(async (gid) => {
                     const messagesRef = collection(db, 'groups', gid, 'messages');
+                    const groupRef = doc(db, 'groups', gid);
+
                     const msgRef = await addDoc(messagesRef, {
                         text: messageText,
                         senderId: userData.uid,
@@ -462,6 +464,13 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         isNote: true,
                         originalNoteId: personalNoteRef.id // Link to personal note
                     });
+
+                    // Update group metadata
+                    await updateDoc(groupRef, {
+                        messageCount: increment(1),
+                        lastMessageAt: serverTimestamp()
+                    });
+
                     sharedMessageIds[gid] = msgRef.id;
                 });
 

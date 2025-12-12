@@ -314,11 +314,59 @@ app.get('/api/groups', async (req, res) => {
             groups.push({ id: doc.id, ...doc.data() });
         });
 
+        const now = new Date();
+        const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
+        const activeGroups = groups.filter(group => {
+            // Creation check
+            let createdAt = group.createdAt;
+            if (createdAt && typeof createdAt.toDate === 'function') {
+                createdAt = createdAt.toDate();
+            } else if (createdAt) {
+                createdAt = new Date(createdAt);
+            } else {
+                // Keep groups without creation date safe
+                return true;
+            }
+
+            const daysSinceCreation = (now - createdAt) / ONE_DAY_MS;
+
+            // 1. If created within last 7 days, always show (New groups)
+            if (daysSinceCreation < 7) {
+                return true;
+            }
+
+            // 2. If older than 7 days, check for ghost status
+            const messageCount = group.messageCount || 0;
+
+            // Is ghost if: Has 0 messages
+            if (messageCount === 0) {
+                return false;
+            }
+
+            // OR: Has messages but was inactive for > 30 days
+            let lastMessageAt = group.lastMessageAt;
+            if (lastMessageAt && typeof lastMessageAt.toDate === 'function') {
+                lastMessageAt = lastMessageAt.toDate();
+            } else if (lastMessageAt) {
+                lastMessageAt = new Date(lastMessageAt);
+            }
+
+            if (lastMessageAt) {
+                const daysSinceLastActivity = (now - lastMessageAt) / ONE_DAY_MS;
+                if (daysSinceLastActivity > 30) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
         // Sort by membersCount ascending (handle missing count as 0)
-        groups.sort((a, b) => (a.membersCount || 0) - (b.membersCount || 0));
+        activeGroups.sort((a, b) => (a.membersCount || 0) - (b.membersCount || 0));
 
         // Return top 20
-        res.status(200).json(groups.slice(0, 20));
+        res.status(200).json(activeGroups.slice(0, 20));
     } catch (error) {
         console.error('Error fetching groups:', error);
         res.status(500).send('Error fetching groups.');

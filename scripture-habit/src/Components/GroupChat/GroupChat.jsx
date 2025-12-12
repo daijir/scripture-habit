@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect, useMemo } from 'react';
 import { db, auth } from '../../firebase';
 import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle, UilUsersAlt } from '@iconscout/react-unicons';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc, getDoc } from 'firebase/firestore';
@@ -12,6 +12,7 @@ import LinkPreview from '../LinkPreview/LinkPreview';
 import './GroupChat.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 import NoteDisplay from '../NoteDisplay/NoteDisplay';
+import confetti from 'canvas-confetti';
 
 const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFocusChange, onBack, onGroupSelect }) => {
   const { language, t } = useLanguage();
@@ -920,6 +921,74 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
 
   const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit;
 
+  // Calculate Unity Score (Percentage of members who posted today)
+  const unityPercentage = useMemo(() => {
+    // Safety check: Ensure the groupData belongs to the current groupId to prevent stale data usage on switch
+    if (!groupData?.members || groupData.members.length === 0 || groupData?._groupId !== groupId) return 0;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayTime = today.getTime();
+
+    const uniquePosters = new Set();
+
+    messages.forEach(msg => {
+      // Check if message is from today
+      let msgTime = 0;
+      if (msg.createdAt?.toDate) {
+        msgTime = msg.createdAt.toDate().getTime();
+      } else if (msg.createdAt?.seconds) {
+        msgTime = msg.createdAt.seconds * 1000;
+      }
+
+      // Filter out system messages if desired, but user asked for "posted in group"
+      // System messages usually have senderId='system'. 
+      // We should probably exclude 'system'.
+      if (msgTime >= todayTime && msg.senderId !== 'system' && !msg.isSystemMessage) {
+        uniquePosters.add(msg.senderId);
+      }
+    });
+
+    const score = Math.round((uniquePosters.size / groupData.members.length) * 100);
+    return Math.min(100, Math.max(0, score));
+  }, [messages, groupData?.members, groupData?._groupId, groupId]);
+
+  // Track previous percentage to trigger effect only on change
+  useEffect(() => {
+    if (!userData?.uid || !groupId) return;
+
+    if (unityPercentage === 100) {
+      const todayStr = new Date().toDateString();
+      const storageKey = `unity_firework_${groupId}_${userData.uid}`;
+      const lastSeen = localStorage.getItem(storageKey);
+
+      if (lastSeen !== todayStr) {
+        // Fire confetti!
+        const duration = 3 * 1000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10000 };
+
+        const randomInRange = (min, max) => Math.random() * (max - min) + min;
+
+        const interval = setInterval(function () {
+          const timeLeft = animationEnd - Date.now();
+
+          if (timeLeft <= 0) {
+            return clearInterval(interval);
+          }
+
+          const particleCount = 50 * (timeLeft / duration);
+          // since particles fall down, start a bit higher than random
+          confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+          confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+        }, 250);
+
+        // Mark as seen for today
+        localStorage.setItem(storageKey, todayStr);
+      }
+    }
+  }, [unityPercentage, groupId, userData?.uid]);
+
   return (
     <div className="GroupChat" >
       <NewNote
@@ -944,6 +1013,20 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
           <h2 style={{ display: 'flex', alignItems: 'center' }}>
             {groupData ? groupData.name : t('groupChat.groupName')}
             {groupData?.members && <span className="member-count-badge">({groupData.members.length})</span>}
+            {groupData && (
+              <span className="unity-score-badge" style={{
+                marginLeft: '8px',
+                fontSize: '0.9rem',
+                display: 'flex',
+                alignItems: 'center',
+                color: unityPercentage === 100 ? '#FFD700' : 'var(--text-color)',
+                fontWeight: unityPercentage === 100 ? 'bold' : 'normal',
+                textShadow: unityPercentage === 100 ? '0 0 8px rgba(255, 215, 0, 0.6)' : 'none',
+                transition: 'all 0.3s ease'
+              }} title="Unity Score: members active today">
+                👫 {unityPercentage}%
+              </span>
+            )}
           </h2>
         </div>
         {groupData && (
@@ -1132,39 +1215,80 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                 My Groups
               </div>
               <div className="mobile-groups-list">
-                {userGroups.map((group) => (
-                  <div
-                    key={group.id}
-                    className={`mobile-menu-item ${group.id === groupId ? 'active' : ''}`}
-                    onClick={() => {
-                      onGroupSelect && onGroupSelect(group.id);
-                      setShowMobileMenu(false);
-                    }}
-                    style={group.id === groupId ? { background: 'rgba(255, 145, 157, 0.1)', color: 'var(--pink)' } : {}}
-                  >
-                    <div className="menu-item-icon" style={group.id === groupId ? { color: 'var(--pink)' } : {}}>
-                      <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>#</span>
-                    </div>
-                    <span className="menu-item-label" style={group.id === groupId ? { fontWeight: 'bold' } : {}}>
-                      {group.name} {group.members && <span style={{ fontSize: '0.85em', color: group.id === groupId ? 'var(--pink)' : 'var(--gray)', opacity: 0.8, fontWeight: 'normal', marginLeft: '4px' }}>({group.members.length})</span>}
-                    </span>
-                    {group.unreadCount > 0 && (
-                      <span style={{
-                        background: 'var(--pink)',
-                        color: 'white',
-                        borderRadius: '50%',
-                        padding: '0.2rem 0.5rem',
-                        fontSize: '0.75rem',
-                        fontWeight: 'bold',
-                        marginLeft: 'auto',
-                        minWidth: '20px',
-                        textAlign: 'center'
-                      }}>
-                        {group.unreadCount > 99 ? '99+' : group.unreadCount}
+                {userGroups.map((group) => {
+                  const getEmoji = (g) => {
+                    const now = new Date();
+                    const ONE_HOUR = 1000 * 60 * 60;
+
+                    // 1. Active (24h)
+                    let lastDate = null;
+                    if (g.lastMessageAt) {
+                      if (g.lastMessageAt.toDate) lastDate = g.lastMessageAt.toDate();
+                      else if (g.lastMessageAt.seconds) lastDate = new Date(g.lastMessageAt.seconds * 1000);
+                      else if (g.lastMessageAt._seconds) lastDate = new Date(g.lastMessageAt._seconds * 1000);
+                      else lastDate = new Date(g.lastMessageAt);
+                    }
+
+                    if (lastDate && !isNaN(lastDate.getTime())) {
+                      const diff = (now - lastDate) / ONE_HOUR;
+                      if (diff <= 24) return '🔥';
+                      return '☕';
+                    }
+
+                    // 2. New (48h)
+                    let createdDate = null;
+                    if (g.createdAt) {
+                      if (g.createdAt.toDate) createdDate = g.createdAt.toDate();
+                      else if (g.createdAt.seconds) createdDate = new Date(g.createdAt.seconds * 1000);
+                      else if (g.createdAt._seconds) createdDate = new Date(g.createdAt._seconds * 1000);
+                      else createdDate = new Date(g.createdAt);
+                    }
+
+                    if (createdDate && !isNaN(createdDate.getTime())) {
+                      const diff = (now - createdDate) / ONE_HOUR;
+                      if (diff <= 48) return '🌱';
+                    }
+
+                    // Fallback
+                    if (!lastDate && !createdDate) return '🌱';
+
+                    return '☕';
+                  };
+
+                  return (
+                    <div
+                      key={group.id}
+                      className={`mobile-menu-item ${group.id === groupId ? 'active' : ''}`}
+                      onClick={() => {
+                        onGroupSelect && onGroupSelect(group.id);
+                        setShowMobileMenu(false);
+                      }}
+                      style={group.id === groupId ? { background: 'rgba(255, 145, 157, 0.1)', color: 'var(--pink)' } : {}}
+                    >
+                      <div className="menu-item-icon" style={group.id === groupId ? { color: 'var(--pink)' } : {}}>
+                        <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{getEmoji(group)}</span>
+                      </div>
+                      <span className="menu-item-label" style={group.id === groupId ? { fontWeight: 'bold' } : {}}>
+                        {group.name} {group.members && <span style={{ fontSize: '0.85em', color: group.id === groupId ? 'var(--pink)' : 'var(--gray)', opacity: 0.8, fontWeight: 'normal', marginLeft: '4px' }}>({group.members.length})</span>}
                       </span>
-                    )}
-                  </div>
-                ))}
+                      {group.unreadCount > 0 && (
+                        <span style={{
+                          background: 'var(--pink)',
+                          color: 'white',
+                          borderRadius: '50%',
+                          padding: '0.2rem 0.5rem',
+                          fontSize: '0.75rem',
+                          fontWeight: 'bold',
+                          marginLeft: 'auto',
+                          minWidth: '20px',
+                          textAlign: 'center'
+                        }}>
+                          {group.unreadCount > 99 ? '99+' : group.unreadCount}
+                        </span>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
               {userGroups.length < 12 && (
                 <>
@@ -1662,11 +1786,33 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                       }}>
                         {member.nickname ? member.nickname.substring(0, 1).toUpperCase() : '?'}
                       </div>
-                      <span style={{ fontWeight: '500', color: 'var(--black)' }}>
-                        {member.nickname || 'Unknown User'}
-                        {member.id === groupData.ownerUserId && <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', background: '#ffe0e3', color: 'var(--pink)', padding: '2px 6px', borderRadius: '4px' }}>Owner</span>}
-                        {member.id === userData.uid && <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', background: '#e0e0e0', color: 'var(--gray)', padding: '2px 6px', borderRadius: '4px' }}>You</span>}
-                      </span>
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <span style={{ fontWeight: '500', color: 'var(--black)' }}>
+                          {member.nickname || 'Unknown User'}
+                          {member.id === groupData.ownerUserId && <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', background: '#ffe0e3', color: 'var(--pink)', padding: '2px 6px', borderRadius: '4px' }}>Owner</span>}
+                          {member.id === userData.uid && <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', background: '#e0e0e0', color: 'var(--gray)', padding: '2px 6px', borderRadius: '4px' }}>You</span>}
+                        </span>
+                        <span style={{ fontSize: '0.75rem', color: 'var(--gray)' }}>
+                          {(() => {
+                            const lastActive = member.lastPostDate;
+                            if (!lastActive) return t('groupChat.noActivity') || "No recent activity";
+
+                            let dateObj;
+                            if (lastActive.toDate) dateObj = lastActive.toDate();
+                            else if (lastActive.seconds) dateObj = new Date(lastActive.seconds * 1000);
+                            else dateObj = new Date(lastActive);
+
+                            const now = new Date();
+                            const diffDays = Math.floor((now - dateObj) / (1000 * 60 * 60 * 24));
+
+                            if (diffDays <= 0) return t('groupChat.activeToday') || "Active today";
+                            if (diffDays === 1) return t('groupChat.activeYesterday') || "Active yesterday";
+                            if (diffDays < 30) return (t('groupChat.activeDaysAgo') || "Active {days} days ago").replace('{days}', diffDays);
+                            const diffMonths = Math.floor(diffDays / 30);
+                            return (t('groupChat.activeMonthsAgo') || "Active > {months} months ago").replace('{months}', diffMonths);
+                          })()}
+                        </span>
+                      </div>
                     </div>
                   ))
                 )}
