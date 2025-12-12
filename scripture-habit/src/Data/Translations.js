@@ -655,6 +655,20 @@ export const translations = {
             readInGospelLibrary: "Ler na Biblioteca do Evangelho",
             weeklyReflectionCall: "Gostaria de refletir sobre sua semana?"
         },
+        recapModal: {
+            title: "Sua Carta Semanal",
+            subtitle: "Uma reflexão sobre sua jornada espiritual esta semana.",
+            close: "Fechar",
+            saveToNotes: "Salvar na Caixa de Entrada"
+        },
+        letterBox: {
+            title: "Caixa de Entrada",
+            deleteConfirm: "Tem certeza de que deseja descartar esta carta?",
+            back: "Voltar para a Lista",
+            loading: "Carregando cartas...",
+            empty: "Nenhuma carta ainda. Gere um resumo semanal para receber uma!",
+            defaultTitle: "Resumo Semanal"
+        },
         newNote: {
             editTitle: "Editar Anotação",
             newTitle: "Nova Anotação",
@@ -904,6 +918,20 @@ export const translations = {
             readInGospelLibrary: "在福音圖書館閱讀",
             weeklyReflectionCall: "您想回顧本週的學習嗎？"
         },
+        recapModal: {
+            title: "您的每週信件",
+            subtitle: "本週靈性旅程的反思。",
+            close: "關閉",
+            saveToNotes: "儲存至信箱"
+        },
+        letterBox: {
+            title: "信箱",
+            deleteConfirm: "您確定要丟棄這封信嗎？",
+            back: "返回列表",
+            loading: "載入信件中...",
+            empty: "尚無信件。生成每週回顧以收到一封信！",
+            defaultTitle: "每週回顧"
+        },
         newNote: {
             editTitle: "編輯筆記",
             newTitle: "新增筆記",
@@ -1148,6 +1176,20 @@ export const translations = {
             delete: "Eliminar Nota",
             readInGospelLibrary: "Leer en Biblioteca del Evangelio",
             weeklyReflectionCall: "¿Te gustaría reflexionar sobre tu semana?"
+        },
+        recapModal: {
+            title: "Tu Carta Semanal",
+            subtitle: "Una reflexión sobre tu viaje espiritual esta semana.",
+            close: "Cerrar",
+            saveToNotes: "Guardar en el Buzón de Cartas"
+        },
+        letterBox: {
+            title: "Buzón de Cartas",
+            deleteConfirm: "¿Estás seguro de que quieres descartar esta carta?",
+            back: "Volver a la Lista",
+            loading: "Cargando cartas...",
+            empty: "No hay cartas todavía. ¡Genera un resumen semanal para recibir una!",
+            defaultTitle: "Resumen Semanal"
         },
         newNote: {
             editTitle: "Editar Nota",
@@ -1394,6 +1436,20 @@ export const translations = {
             readInGospelLibrary: "Đọc trong Thư viện Phúc âm",
             weeklyReflectionCall: "Bạn có muốn suy ngẫm về tuần này không?"
         },
+        recapModal: {
+            title: "Thư hàng tuần của bạn",
+            subtitle: "Một sự suy ngẫm về hành trình tâm linh của bạn trong tuần này.",
+            close: "Đóng",
+            saveToNotes: "Lưu vào Hộp thư"
+        },
+        letterBox: {
+            title: "Hộp thư",
+            deleteConfirm: "Bạn có chắc chắn muốn hủy lá thư này không?",
+            back: "Quay lại Danh sách",
+            loading: "Đang tải thư...",
+            empty: "Chưa có thư nào. Hãy tạo bản tóm tắt hàng tuần để nhận được một lá thư!",
+            defaultTitle: "Tóm tắt hàng tuần"
+        },
         newNote: {
             editTitle: "Chỉnh sửa ghi chép",
             newTitle: "Ghi chép mới",
@@ -1638,6 +1694,20 @@ export const translations = {
             delete: "ลบบันทึก",
             readInGospelLibrary: "อ่านในคลังค้นคว้าพระกิตติคุณ",
             weeklyReflectionCall: "คุณต้องการทบทวนสัปดาห์นี้หรือไม่?"
+        },
+        recapModal: {
+            title: "จดหมายรายสัปดาห์ของคุณ",
+            subtitle: "การสะท้อนถึงการเดินทางทางจิตวิญญาณของคุณในสัปดาห์นี้",
+            close: "ปิด",
+            saveToNotes: "บันทึกลงในกล่องจดหมาย"
+        },
+        letterBox: {
+            title: "กล่องจดหมาย",
+            deleteConfirm: "คุณแน่ใจหรือไม่ว่าต้องการทิ้งจดหมายฉบับนี้?",
+            back: "กลับไปที่รายการ",
+            loading: "กำลังโหลดจดหมาย...",
+            empty: "ยังไม่มีจดหมาย สร้างสรุปรายสัปดาห์เพื่อรับจดหมาย!",
+            defaultTitle: "สรุปรายสัปดาห์"
         },
         newNote: {
             editTitle: "แก้ไขบันทึก",
@@ -1884,6 +1954,20 @@ export const translations = {
             readInGospelLibrary: "복음 자료실에서 읽기",
             weeklyReflectionCall: "이번 주를 되돌아보시겠습니까?"
         },
+        recapModal: {
+            title: "당신의 주간 편지",
+            subtitle: "이번 주 영적 여정에 대한 성찰.",
+            close: "닫기",
+            saveToNotes: "편지함에 저장"
+        },
+        letterBox: {
+            title: "편지함",
+            deleteConfirm: "이 편지를 정말 버리시겠습니까?",
+            back: "목록으로 돌아가기",
+            loading: "편지 로딩 중...",
+            empty: "아직 편지가 없습니다. 주간 요약을 생성하여 편지를 받으세요!",
+            defaultTitle: "주간 요약"
+        },
         newNote: {
             editTitle: "노트 편집",
             newTitle: "새 노트",
@@ -2129,6 +2213,20 @@ export const translations = {
             readInGospelLibrary: "Basahin sa Gospel Library",
             weeklyReflectionCall: "Gusto mo bang magnilay sa iyong linggo?"
         },
+        recapModal: {
+            title: "Ang Iyong Lingguhang Sulat",
+            subtitle: "Isang pagninilay sa iyong espirituwal na paglalakbay ngayong linggo.",
+            close: "Isara",
+            saveToNotes: "I-save sa Letter Box"
+        },
+        letterBox: {
+            title: "Letter Box",
+            deleteConfirm: "Sigurado ka bang gusto mong itapon ang sulat na ito?",
+            back: "Bumalik sa Listahan",
+            loading: "Naglo-load ng mga sulat...",
+            empty: "Wala pang mga sulat. Gumawa ng lingguhang buod upang makatanggap ng isa!",
+            defaultTitle: "Lingguhang Buod"
+        },
         newNote: {
             editTitle: "I-edit ang Tala",
             newTitle: "Bagong Tala",
@@ -2373,6 +2471,20 @@ export const translations = {
             delete: "Futa Ujumbe",
             readInGospelLibrary: "Soma katika Gospel Library",
             weeklyReflectionCall: "Je, ungependa kutafakari wiki yako?"
+        },
+        recapModal: {
+            title: "Barua Yako ya Wiki",
+            subtitle: "Tafakari juu ya safari yako ya kiroho wiki hii.",
+            close: "Funga",
+            saveToNotes: "Hifadhi kwenye Sanduku la Barua"
+        },
+        letterBox: {
+            title: "Sanduku la Barua",
+            deleteConfirm: "Je, una uhakika unataka kufuta barua hii?",
+            back: "Rudi kwenye Orodha",
+            loading: "Inapakia barua...",
+            empty: "Hakuna barua bado. Tengeneza muhtasari wa wiki ili kupokea moja!",
+            defaultTitle: "Muhtasari wa Wiki"
         },
         newNote: {
             editTitle: "Hariri Ujumbe",
