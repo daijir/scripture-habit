@@ -814,7 +814,13 @@ input:checked+.slider:before {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     animation: fadeIn 0.3s ease;
     flex-shrink: 0;
-    /* Prevent shrinking */
+    z-index: 10;
+}
+
+@media screen and (max-width: 768px) {
+    .inactivity-policy-banner {
+        margin-top: 60px;
+    }
 }
 
 .inactivity-policy-dismiss {
