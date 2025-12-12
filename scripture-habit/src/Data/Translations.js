@@ -124,7 +124,16 @@ export const translations = {
             activeYesterday: "Active yesterday",
             activeDaysAgo: "Active {days} days ago",
             activeMonthsAgo: "Active > {months} months ago",
-            noActivity: "No recent activity"
+            noActivity: "No recent activity",
+            inactivityPolicyBanner: "⚠️ If you don't post a note in this group for 3 days, you will be automatically removed.",
+            placeholderShare: "Let's share what you learned today!",
+            placeholderInactivity: "⚠️ Inactivity for 3 days leads to auto-removal.",
+            placeholderEncourage: "Share your thoughts with the group.",
+            welcomeGuideTitle: "Welcome to the Group!",
+            welcomeGuideMessage: "This group has a simple rule to keep us active and edified:",
+            welcomeGuideRule: "Post at least once every 3 days!",
+            welcomeGuideRuleDetail: "If you are inactive for 3 days, you will be automatically removed to keep the group engaging.",
+            welcomeGuideButton: "Got it!"
         },
         newNote: {
             editTitle: "Edit Note",
@@ -381,7 +390,16 @@ export const translations = {
             activeYesterday: "昨日活動",
             activeDaysAgo: "{days}日前に活動",
             activeMonthsAgo: "{months}ヶ月以上前に活動",
-            noActivity: "活動記録なし"
+            noActivity: "活動記録なし",
+            inactivityPolicyBanner: "⚠️ 3日間グループにノートを投稿しないと、このグループから自動的に退出します。",
+            placeholderShare: "今日も学んだことを共有しましょう！",
+            placeholderInactivity: "⚠️ 3日間何もしないと自動退室になっちゃいます",
+            placeholderEncourage: "あなたの考えをグループで分かち合いましょう",
+            welcomeGuideTitle: "グループへようこそ！",
+            welcomeGuideMessage: "みんなで楽しく学ぶための簡単なルールです。",
+            welcomeGuideRule: "3日に1回は投稿してね！",
+            welcomeGuideRuleDetail: "3日間投稿がないと、グループの活発さを保つために自動的に退出となります。",
+            welcomeGuideButton: "わかった！"
         },
         myNotes: {
             description: "ノートコレクション",
@@ -671,7 +689,16 @@ export const translations = {
             activeYesterday: "Ativo ontem",
             activeDaysAgo: "Ativo há {days} dias",
             activeMonthsAgo: "Ativo há > {months} meses",
-            noActivity: "Sem atividade recente"
+            noActivity: "Sem atividade recente",
+            inactivityPolicyBanner: "⚠️ Se você não postar uma nota ou mensagem neste grupo por 3 dias, será removido automaticamente.",
+            placeholderShare: "Vamos compartilhar o que você aprendeu hoje!",
+            placeholderInactivity: "⚠️ Inatividade por 3 dias leva à remoção automática.",
+            placeholderEncourage: "Compartilhe seus pensamentos com o grupo.",
+            welcomeGuideTitle: "Bem-vindo ao Grupo!",
+            welcomeGuideMessage: "Este grupo tem uma regra simples para nos manter ativos e edificados:",
+            welcomeGuideRule: "Poste pelo menos uma vez a cada 3 dias!",
+            welcomeGuideRuleDetail: "Se você ficar inativo por 3 dias, será removido automaticamente para manter o grupo engajado.",
+            welcomeGuideButton: "Entendi!"
         },
         myNotes: {
             description: "Coleção de Notas",
@@ -948,7 +975,16 @@ export const translations = {
             activeYesterday: "昨日活躍",
             activeDaysAgo: "{days} 天前活躍",
             activeMonthsAgo: "{months} 個月前活躍",
-            noActivity: "無近期活躍"
+            noActivity: "無近期活躍",
+            inactivityPolicyBanner: "⚠️ 如果您在 3 天內未在此群組發布筆記或訊息，您將被自動移除。",
+            placeholderShare: "分享您今天學到的內容吧！",
+            placeholderInactivity: "⚠️ 閒置 3 天將導致自動移除。",
+            placeholderEncourage: "與群組分享您的想法。",
+            welcomeGuideTitle: "歡迎來到群組！",
+            welcomeGuideMessage: "這個群組有一個簡單的規則，讓我們保持活躍並互相啟發：",
+            welcomeGuideRule: "每 3 天至少發布一次！",
+            welcomeGuideRuleDetail: "如果您閒置 3 天，將被自動移除以保持群組的參與度。",
+            welcomeGuideButton: "明白了！"
         },
         myNotes: {
             description: "筆記收藏",
@@ -1221,7 +1257,16 @@ export const translations = {
             activeYesterday: "Activo ayer",
             activeDaysAgo: "Activo hace {days} días",
             activeMonthsAgo: "Activo hace > {months} meses",
-            noActivity: "Sin actividad reciente"
+            noActivity: "Sin actividad reciente",
+            inactivityPolicyBanner: "⚠️ Si no publica una nota o mensaje en este grupo durante 3 días, será eliminado automáticamente.",
+            placeholderShare: "¡Compartamos lo que aprendió hoy!",
+            placeholderInactivity: "⚠️ La inactividad durante 3 días conduce a la eliminación automática.",
+            placeholderEncourage: "Comparta sus pensamientos con el grupo.",
+            welcomeGuideTitle: "¡Bienvenido al Grupo!",
+            welcomeGuideMessage: "Este grupo tiene una regla simple para mantenernos activos y edificados:",
+            welcomeGuideRule: "¡Publique al menos una vez cada 3 días!",
+            welcomeGuideRuleDetail: "Si está inactivo durante 3 días, será eliminado automáticamente para mantener el grupo participativo.",
+            welcomeGuideButton: "¡Entendido!"
         },
         myNotes: {
             description: "Colección de Notas",
@@ -1494,7 +1539,16 @@ export const translations = {
             activeYesterday: "Hoạt động hôm qua",
             activeDaysAgo: "Hoạt động {days} ngày trước",
             activeMonthsAgo: "Hoạt động > {months} tháng trước",
-            noActivity: "Không có hoạt động gần đây"
+            noActivity: "Không có hoạt động gần đây",
+            inactivityPolicyBanner: "⚠️ Nếu bạn không đăng ghi chép hoặc tin nhắn trong nhóm này trong 3 ngày, bạn sẽ tự động bị xóa.",
+            placeholderShare: "Hãy chia sẻ những gì bạn đã học được hôm nay!",
+            placeholderInactivity: "⚠️ Không hoạt động trong 3 ngày sẽ bị tự động xóa.",
+            placeholderEncourage: "Chia sẻ suy nghĩ của bạn với nhóm.",
+            welcomeGuideTitle: "Chào mừng đến với Nhóm!",
+            welcomeGuideMessage: "Nhóm này có một quy tắc đơn giản để giữ cho chúng ta tích cực và được gây dựng:",
+            welcomeGuideRule: "Đăng ít nhất một lần mỗi 3 ngày!",
+            welcomeGuideRuleDetail: "Nếu bạn không hoạt động trong 3 ngày, bạn sẽ tự động bị xóa để giữ cho nhóm luôn tương tác.",
+            welcomeGuideButton: "Đã hiểu!"
         },
         myNotes: {
             description: "Bộ Sưu Tập Ghi Chép",
@@ -1767,7 +1821,16 @@ export const translations = {
             activeYesterday: "ใช้งานเมื่อวาน",
             activeDaysAgo: "ใช้งานเมื่อ {days} วันที่แล้ว",
             activeMonthsAgo: "ใช้งานเมื่อ {months} เดือนที่แล้ว",
-            noActivity: "ไม่มีกิจกรรมล่าสุด"
+            noActivity: "ไม่มีกิจกรรมล่าสุด",
+            inactivityPolicyBanner: "⚠️ หากคุณไม่โพสต์บันทึกหรือข้อความในกลุ่มนี้เป็นเวลา 3 วัน คุณจะถูกลบออกโดยอัตโนมัติ",
+            placeholderShare: "มาแบ่งปันสิ่งที่คุณเรียนรู้วันนี้กันเถอะ!",
+            placeholderInactivity: "⚠️ ไม่มีความเคลื่อนไหว 3 วันจะถูกลบออกอัตโนมัติ",
+            placeholderEncourage: "แบ่งปันความคิดของคุณกับกลุ่ม",
+            welcomeGuideTitle: "ยินดีต้อนรับสู่กลุ่ม!",
+            welcomeGuideMessage: "กลุ่มนี้มีกฎง่ายๆ เพื่อให้เรากระตือรือร้นและได้รับความรู้:",
+            welcomeGuideRule: "โพสต์อย่างน้อยหนึ่งครั้งทุก 3 วัน!",
+            welcomeGuideRuleDetail: "หากคุณไม่มีความเคลื่อนไหวเป็นเวลา 3 วัน คุณจะถูกลบออกโดยอัตโนมัติเพื่อให้กลุ่มมีความน่าสนใจ",
+            welcomeGuideButton: "เข้าใจแล้ว!"
         },
         myNotes: {
             description: "คลังบันทึก",
@@ -2040,7 +2103,16 @@ export const translations = {
             activeYesterday: "어제 활동",
             activeDaysAgo: "{days}일 전 활동",
             activeMonthsAgo: "{months}개월 전 활동",
-            noActivity: "최근 활동 없음"
+            noActivity: "최근 활동 없음",
+            inactivityPolicyBanner: "⚠️ 3일 동안 이 그룹에 노트나 메시지를 게시하지 않으면 자동으로 삭제됩니다.",
+            placeholderShare: "오늘 배운 내용을 공유해 보세요!",
+            placeholderInactivity: "⚠️ 3일 동안 활동이 없으면 자동 삭제됩니다.",
+            placeholderEncourage: "그룹과 생각을 공유하세요.",
+            welcomeGuideTitle: "그룹에 오신 것을 환영합니다!",
+            welcomeGuideMessage: "이 그룹에는 우리를 활동적이고 교화되게 유지하기 위한 간단한 규칙이 있습니다:",
+            welcomeGuideRule: "3일에 한 번 이상 게시하세요!",
+            welcomeGuideRuleDetail: "3일 동안 활동하지 않으면 그룹 참여를 유지하기 위해 자동으로 삭제됩니다.",
+            welcomeGuideButton: "알겠습니다!"
         },
         myNotes: {
             description: "노트 컬렉션",
@@ -2313,7 +2385,16 @@ export const translations = {
             activeYesterday: "Aktibo kahapon",
             activeDaysAgo: "Aktibo {days} araw ang nakalipas",
             activeMonthsAgo: "Aktibo {months} buwan ang nakalipas",
-            noActivity: "Walang kamakailang aktibidad"
+            noActivity: "Walang kamakailang aktibidad",
+            inactivityPolicyBanner: "⚠️ Kung hindi ka mag-post ng note o mensahe sa grupong ito sa loob ng 3 araw, awtomatiko kang aalisin.",
+            placeholderShare: "Ibahagi natin ang iyong natutunan ngayong araw!",
+            placeholderInactivity: "⚠️ Ang kawalan ng aktibidad sa loob ng 3 araw ay hahantong sa awtomatikong pagtanggal.",
+            placeholderEncourage: "Ibahagi ang iyong mga saloobin sa grupo.",
+            welcomeGuideTitle: "Maligayang pagdating sa Grupo!",
+            welcomeGuideMessage: "Ang grupong ito ay may simpleng panuntunan upang panatilihin tayong aktibo at napalalakas:",
+            welcomeGuideRule: "Mag-post ng hindi bababa sa isang beses bawat 3 araw!",
+            welcomeGuideRuleDetail: "Kung hindi ka aktibo sa loob ng 3 araw, awtomatiko kang aalisin upang mapanatiling masigla ang grupo.",
+            welcomeGuideButton: "Nakuha ko!"
         },
         myNotes: {
             description: "Koleksyon ng mga Tala",
@@ -2586,7 +2667,16 @@ export const translations = {
             activeYesterday: "Hali ya jana",
             activeDaysAgo: "Hali siku {days} zilizopita",
             activeMonthsAgo: "Hali miezi {months} iliyopita",
-            noActivity: "Hakuna shughuli za hivi karibuni"
+            noActivity: "Hakuna shughuli za hivi karibuni",
+            inactivityPolicyBanner: "⚠️ Ikiwa hutachapisha dokezo au ujumbe katika kikundi hiki kwa siku 3, utaondolewa kiotomatiki.",
+            placeholderShare: "Tushiriki ulichojifunza leo!",
+            placeholderInactivity: "⚠️ Kutofanya kazi kwa siku 3 kutasababisha kuondolewa kiotomatiki.",
+            placeholderEncourage: "Shiriki mawazo yako na kikundi.",
+            welcomeGuideTitle: "Karibu kwenye Kikundi!",
+            welcomeGuideMessage: "Kikundi hiki kina kanuni rahisi ya kutuweka hai na kuelimika:",
+            welcomeGuideRule: "Chapisha angalau mara moja kila siku 3!",
+            welcomeGuideRuleDetail: "Ikiwa hutafanya kazi kwa siku 3, utaondolewa kiotomatiki ili kuweka kikundi kikijishughulisha.",
+            welcomeGuideButton: "Nimeelewa!"
         },
         myNotes: {
             description: "Mkusanyiko wa Maelezo",

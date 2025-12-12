@@ -737,5 +737,219 @@ ${notesText}`;
     }
 });
 
+// Check Inactive Users (Cron Job)
+app.get('/api/check-inactive-users', async (req, res) => {
+    // Use a simple CRON_SECRET if available for security
+    const authHeader = req.headers.authorization;
+    const cronSecret = process.env.CRON_SECRET;
+
+    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+        console.warn('Unauthorized access attempt to /api/check-inactive-users');
+        if (cronSecret) return res.status(401).send('Unauthorized');
+    }
+
+    console.log('Starting inactivity check...');
+    const db = admin.firestore();
+
+    try {
+        const groupsRef = db.collection('groups');
+        const snapshot = await groupsRef.get();
+
+        let processedCount = 0;
+        let removedCount = 0;
+        let transferCount = 0;
+        let deletedGroupCount = 0;
+        let initializedCount = 0;
+
+        let batch = db.batch();
+        let batchOpCount = 0;
+
+        const now = new Date();
+        const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
+
+        for (const doc of snapshot.docs) {
+            const groupData = doc.data();
+            const groupId = doc.id;
+            const members = groupData.members || [];
+            const memberLastActive = groupData.memberLastActive || {};
+            let ownerUserId = groupData.ownerUserId;
+
+            if (members.length === 0) continue;
+
+            let groupChanged = false;
+            let groupUpdates = {};
+            let isGroupDeleted = false;
+
+            // Classify members
+            const activeMembers = [];
+            const inactiveMembers = [];
+            const membersToInitialize = [];
+
+            for (const memberId of members) {
+                const lastActiveTimestamp = memberLastActive[memberId];
+
+                if (!lastActiveTimestamp) {
+                    // Initialize tracking if missing (giving them a fresh start)
+                    membersToInitialize.push(memberId);
+                    activeMembers.push(memberId); // Treat as active for ownership transfer purposes
+                } else {
+                    const lastActiveDate = lastActiveTimestamp.toDate();
+                    const diff = now - lastActiveDate;
+
+                    if (diff > THREE_DAYS_MS) {
+                        inactiveMembers.push(memberId);
+                    } else {
+                        activeMembers.push(memberId);
+                    }
+                }
+            }
+
+            // Check if Owner is Inactive
+            if (inactiveMembers.includes(ownerUserId)) {
+                // Owner is inactive.
+                if (activeMembers.length > 0) {
+                    // Transfer Ownership
+                    // activeMembers preserves order from 'members' array loop
+                    const newOwnerId = activeMembers[0];
+                    groupUpdates['ownerUserId'] = newOwnerId;
+                    ownerUserId = newOwnerId; // Update local var so we don't remove the new owner
+
+                    groupChanged = true;
+                    transferCount++;
+
+                    // System Message for Transfer
+                    const transferMsgRef = groupsRef.doc(groupId).collection('messages').doc();
+                    batch.set(transferMsgRef, {
+                        text: `� **Ownership Transferred**\nThe previous owner was inactive. Ownership has been transferred to a verified active member.`,
+                        createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                        senderId: 'system',
+                        isSystemMessage: true,
+                        type: 'system'
+                    });
+                    batchOpCount++;
+                } else {
+                    // No active members to transfer to.
+                    // DELETE GROUP
+                    batch.delete(groupsRef.doc(groupId));
+                    batchOpCount++;
+                    deletedGroupCount++;
+                    isGroupDeleted = true;
+
+                    // Remove group from ALL users
+                    for (const uid of members) {
+                        const userRef = db.collection('users').doc(uid);
+                        batch.update(userRef, {
+                            groupIds: admin.firestore.FieldValue.arrayRemove(groupId)
+                        });
+                        batchOpCount++;
+
+                        const groupStateRef = userRef.collection('groupStates').doc(groupId);
+                        batch.delete(groupStateRef);
+                        batchOpCount++;
+                    }
+                }
+            }
+
+            // If group was deleted, skip standard removal logic
+            if (isGroupDeleted) {
+                processedCount++;
+                if (batchOpCount > 300) {
+                    await batch.commit();
+                    batch = db.batch();
+                    batchOpCount = 0;
+                }
+                continue;
+            }
+
+            // Handle Initializations (only if group exists)
+            if (membersToInitialize.length > 0) {
+                const updateMap = {};
+                membersToInitialize.forEach(uid => {
+                    updateMap[`memberLastActive.${uid}`] = admin.firestore.FieldValue.serverTimestamp();
+                });
+                Object.assign(groupUpdates, updateMap);
+                groupChanged = true;
+                initializedCount += membersToInitialize.length;
+            }
+
+            // Handle Inactive Removals
+            // Ensure we don't remove the CURRENT owner
+            const finalMembersToRemove = inactiveMembers.filter(uid => uid !== ownerUserId);
+
+            if (finalMembersToRemove.length > 0) {
+                const removeUidList = finalMembersToRemove;
+
+                // Update Group Doc
+                groupUpdates['members'] = admin.firestore.FieldValue.arrayRemove(...removeUidList);
+                groupUpdates['membersCount'] = admin.firestore.FieldValue.increment(-removeUidList.length);
+
+                removeUidList.forEach(uid => {
+                    groupUpdates[`memberLastActive.${uid}`] = admin.firestore.FieldValue.delete();
+                });
+
+                groupChanged = true;
+                removedCount += removeUidList.length;
+
+                // Add System Message
+                const messageRef = groupsRef.doc(groupId).collection('messages').doc();
+                batch.set(messageRef, {
+                    text: `👋 **${removeUidList.length} member(s)** were removed due to inactivity (3+ days).`,
+                    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                    senderId: 'system',
+                    isSystemMessage: true,
+                    type: 'leave'
+                });
+                batchOpCount++;
+
+                // Update Users
+                for (const uid of removeUidList) {
+                    const userRef = db.collection('users').doc(uid);
+                    batch.update(userRef, {
+                        groupIds: admin.firestore.FieldValue.arrayRemove(groupId)
+                    });
+                    batchOpCount++;
+
+                    const groupStateRef = userRef.collection('groupStates').doc(groupId);
+                    batch.delete(groupStateRef);
+                    batchOpCount++;
+                }
+            }
+
+            if (groupChanged) {
+                batch.update(groupsRef.doc(groupId), groupUpdates);
+                batchOpCount++;
+            }
+
+            // Commit batch if getting too large
+            if (batchOpCount > 300) {
+                await batch.commit();
+                batch = db.batch();
+                batchOpCount = 0;
+            }
+
+            processedCount++;
+        }
+
+        if (batchOpCount > 0) {
+            await batch.commit();
+        }
+
+        res.json({
+            message: 'Inactivity check complete.',
+            stats: {
+                processedGroups: processedCount,
+                removedUsers: removedCount,
+                initializedTracking: initializedCount,
+                transferredOwnerships: transferCount,
+                deletedGroups: deletedGroupCount
+            }
+        });
+
+    } catch (error) {
+        console.error('Error in inactivity check:', error);
+        res.status(500).send('Error checking inactivity: ' + error.message);
+    }
+});
+
 // Export the app for Vercel
 export default app;

@@ -408,3 +408,31 @@
     font-size: 2rem;
   }
 }
+
+/* Warning Banner */
+.warning-banner {
+  background-color: #FED7D7;
+  border: 1px solid #F56565;
+  color: #C53030;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-weight: 600;
+  animation: pulse 2s infinite;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.02);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
