@@ -399,7 +399,8 @@ app.post('/api/generate-weekly-recap', async (req, res) => {
 
     try {
         const db = admin.firestore();
-        const messagesRef = db.collection('groups').doc(groupId).collection('messages');
+        const groupRef = db.collection('groups').doc(groupId);
+        const messagesRef = groupRef.collection('messages');
 
         // Calculate date 7 days ago
         const sevenDaysAgo = new Date();
