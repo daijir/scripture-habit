@@ -21,6 +21,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
     const [scripture, setScripture] = useState('');
     const [selectedOption, setSelectedOption] = useState(null);
     const [comment, setComment] = useState('');
+    const [aiQuestion, setAiQuestion] = useState('');
 
     // New sharing states
     const [shareOption, setShareOption] = useState('all'); // 'all', 'specific', 'none', 'current'
@@ -108,6 +109,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 setChapter('');
                 setScripture('');
                 setComment('');
+                setAiQuestion('');
                 setSelectedOption(null);
             }
 
@@ -159,23 +161,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
             if (response.data.questions) {
                 const newContent = response.data.questions;
-
-                setComment(prev => {
-                    const trimmedPrev = prev ? prev.trim() : '';
-                    const trimmedLast = lastAiResponse ? lastAiResponse.trim() : '';
-
-                    // Use includes check, but maintain original whitespace if replacing
-                    if (lastAiResponse && prev.includes(trimmedLast)) {
-                        // Simple replace might be risky if duplicated, but usually sufficient for this context
-                        // We'll replace the last occurrence or just normal replace
-                        return prev.replace(trimmedLast, newContent);
-                    }
-
-                    // If lastAiResponse not found (maybe user edited it), just append
-                    return trimmedPrev ? `${trimmedPrev}\n\n${newContent}` : newContent;
-                });
-
-                setLastAiResponse(newContent);
+                setAiQuestion(newContent);
                 toast.success('AI Ponder Questions generated!');
             }
         } catch (error) {
@@ -225,6 +211,11 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     label = "Speech";
                 }
                 messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**${label}:** ${chapter}\n\n${comment}`;
+            }
+
+            // Append AI question if it exists
+            if (aiQuestion) {
+                messageText += `\n\n> **AI Question:** ${aiQuestion}`;
             }
 
             if (noteToEdit) {
@@ -663,6 +654,38 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                             }}
                         >
                             {aiLoading ? 'Thinking...' : t('newNote.askAiQuestion')}
+                        </button>
+                    </div>
+                )}
+
+                {aiQuestion && (
+                    <div style={{
+                        backgroundColor: '#f0f4ff',
+                        padding: '10px',
+                        borderRadius: '8px',
+                        marginBottom: '1rem',
+                        border: '1px solid #dbe4ff',
+                        position: 'relative'
+                    }}>
+                        <p style={{ margin: 0, fontSize: '0.9rem', color: '#4a5568', whiteSpace: 'pre-wrap' }}>
+                            <strong>{t('newNote.aiQuestion')}</strong><br />
+                            {aiQuestion}
+                        </p>
+                        <button
+                            onClick={() => setAiQuestion('')}
+                            style={{
+                                position: 'absolute',
+                                top: '5px',
+                                right: '5px',
+                                background: 'transparent',
+                                border: 'none',
+                                cursor: 'pointer',
+                                color: '#a0aec0',
+                                fontSize: '1rem',
+                                padding: '0 5px'
+                            }}
+                        >
+                            ×
                         </button>
                     </div>
                 )}
