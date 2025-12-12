@@ -627,6 +627,14 @@
         font-size: 1rem;
     }
 
+    .unity-score-badge {
+        font-size: 1.1rem !important;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 2px 8px;
+        border-radius: 8px;
+        margin-left: 0.5rem !important;
+    }
+
     /* Change hamburger menu color to white on mobile */
     .hamburger-icon span {
         background: white !important;

@@ -59,6 +59,16 @@ service cloud.firestore {
            request.auth.uid in resource.data.members &&
            request.resource.data.diff(resource.data).affectedKeys().hasOnly(['messageCount', 'lastMessageAt'])
         )
+        ||
+        (
+           request.auth.uid in resource.data.members &&
+           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['dailyActivity'])
+        )
+        ||
+        (
+           request.auth.uid in resource.data.members &&
+           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['messageCount', 'lastMessageAt', 'dailyActivity'])
+        )
       );
       
       // Allow deletion if the user is the owner
