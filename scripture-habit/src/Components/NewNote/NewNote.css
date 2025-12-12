@@ -201,3 +201,25 @@
   color: white;
   cursor: pointer;
 }
+
+/* Gospel Library Link Styles */
+.gospel-link-container {
+  margin-top: 0.2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.gospel-library-link {
+  color: #888;
+  font-size: 0.85rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gospel-library-link:hover {
+  color: #747bff !important;
+}
