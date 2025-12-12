@@ -23,6 +23,11 @@ service cloud.firestore {
       match /groupStates/{groupId} {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
+
+      // Rules for the 'letters' subcollection (for weekly recaps)
+      match /letters/{letterId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
     }
     
     // Rules for the 'groups' collection

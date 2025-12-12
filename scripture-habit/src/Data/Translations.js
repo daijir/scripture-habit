@@ -55,7 +55,26 @@ export const translations = {
             searchPlaceholder: "Search notes...",
             readInGospelLibrary: "Read in Gospel Library",
             goToByuSpeech: "Go to BYU Speech",
-            readStudyMaterial: "Read The Study Material"
+            readStudyMaterial: "Read The Study Material",
+            generateRecap: "✨ Generate Weekly Recap",
+            generatingRecap: "Generating weekly recap... This may take a moment.",
+            recapSuccess: "Weekly recap generated! Review and save it.",
+            noNotesForRecap: "No notes found for this week.",
+            recapError: "Failed to generate recap."
+        },
+        recapModal: {
+            title: "Your Weekly Letter",
+            subtitle: "A reflection on your spiritual journey this week.",
+            close: "Close",
+            saveToNotes: "Save to Letter Box"
+        },
+        letterBox: {
+            title: "Letter Box",
+            deleteConfirm: "Are you sure you want to discard this letter?",
+            back: "Back to List",
+            loading: "Loading letters...",
+            empty: "No letters yet. Generate a weekly recap to receive one!",
+            defaultTitle: "Weekly Recap"
         },
         groupChat: {
             send: "Send",
@@ -92,7 +111,12 @@ export const translations = {
             reply: "Reply",
             like: "Like",
             unlike: "Unlike",
-            askAiTopic: "✨ Ask AI for a Topic"
+            askAiTopic: "✨ Ask AI for a Topic",
+            generateWeeklyRecap: "✨ Generate Weekly Recap",
+            noNotesForRecap: "No notes found for this week.",
+            recapRateLimit: "Weekly recap has already been generated this week.",
+            daysLeft: "{days} days left",
+            availableSoon: "Available soon"
         },
         newNote: {
             editTitle: "Edit Note",
@@ -332,7 +356,12 @@ export const translations = {
             reply: "返信",
             like: "いいね",
             unlike: "いいね解除",
-            askAiTopic: "✨ AI話題提案"
+            askAiTopic: "✨ AI話題提案",
+            generateWeeklyRecap: "✨ 今週の振り返りを作成",
+            noNotesForRecap: "今週のノートが見つかりませんでした。",
+            recapRateLimit: "今週の振り返りは既に作成されています。",
+            daysLeft: "あと {days} 日",
+            availableSoon: "まもなく利用可能"
         },
         myNotes: {
             description: "ノートコレクション",
@@ -347,7 +376,26 @@ export const translations = {
             searchPlaceholder: "ノートを検索...",
             readInGospelLibrary: "福音ライブラリーで読む",
             goToByuSpeech: "BYUスピーチへ移動",
-            readStudyMaterial: "学習資料を読む"
+            readStudyMaterial: "学習資料を読む",
+            generateRecap: "✨ 今週の振り返りを作成",
+            generatingRecap: "振り返りを作成中... 少し時間がかかります。",
+            recapSuccess: "作成完了！お手紙が届いています。",
+            noNotesForRecap: "今週のノートが見つかりませんでした。",
+            recapError: "作成に失敗しました。"
+        },
+        recapModal: {
+            title: "今週の振り返りレター",
+            subtitle: "あなたの今週の霊的な旅路を振り返りましょう。",
+            close: "閉じる",
+            saveToNotes: "レターボックスに保存"
+        },
+        letterBox: {
+            title: "レターボックス",
+            deleteConfirm: "本当にこの手紙を捨ててしまいますか？",
+            back: "一覧に戻る",
+            loading: "読み込み中...",
+            empty: "まだ手紙がありません。振り返りを作成して手紙を受け取りましょう！",
+            defaultTitle: "今週の振り返り"
         },
         newNote: {
             editTitle: "ノートを編集",
@@ -583,7 +631,12 @@ export const translations = {
             reply: "Responder",
             like: "Curtir",
             unlike: "Descurtir",
-            askAiTopic: "✨ Pedir Tópico à IA"
+            askAiTopic: "✨ Pedir Tópico à IA",
+            generateWeeklyRecap: "✨ Gerar Resumo Semanal",
+            noNotesForRecap: "Nenhuma nota encontrada esta semana.",
+            recapRateLimit: "O resumo semanal já foi gerado esta semana.",
+            daysLeft: "Faltam {days} dias",
+            availableSoon: "Disponível em breve"
         },
         myNotes: {
             description: "Coleção de Notas",
@@ -824,7 +877,12 @@ export const translations = {
             reply: "回覆",
             like: "讚",
             unlike: "收回讚",
-            askAiTopic: "✨ 此群組的 AI 話題"
+            askAiTopic: "✨ 此群組的 AI 話題",
+            generateWeeklyRecap: "✨ 生成每週回顧",
+            noNotesForRecap: "本週未找到筆記。",
+            recapRateLimit: "本週已生成過每週回顧。",
+            daysLeft: "還剩 {days} 天",
+            availableSoon: "即將推出"
         },
         myNotes: {
             description: "筆記收藏",
@@ -1061,7 +1119,12 @@ export const translations = {
             reply: "Responder",
             like: "Me gusta",
             unlike: "Ya no me gusta",
-            askAiTopic: "✨ Pedir Tema a la IA"
+            askAiTopic: "✨ Pedir Tema a la IA",
+            generateWeeklyRecap: "✨ Generar Resumen Semanal",
+            noNotesForRecap: "No se encontraron notas esta semana.",
+            recapRateLimit: "El resumen semanal ya se ha generado esta semana.",
+            daysLeft: "Faltan {days} días",
+            availableSoon: "Disponible pronto"
         },
         myNotes: {
             description: "Colección de Notas",
@@ -1298,7 +1361,12 @@ export const translations = {
             reply: "Trả lời",
             like: "Thích",
             unlike: "Bỏ thích",
-            askAiTopic: "✨ Yêu cầu AI Chủ đề"
+            askAiTopic: "✨ Yêu cầu AI Chủ đề",
+            generateWeeklyRecap: "✨ Tạo Tổng Kết Tuần",
+            noNotesForRecap: "Không tìm thấy ghi chép nào trong tuần này.",
+            recapRateLimit: "Tổng kết tuần đã được tạo trong tuần này.",
+            daysLeft: "Còn {days} ngày",
+            availableSoon: "Sắp có sẵn"
         },
         myNotes: {
             description: "Bộ Sưu Tập Ghi Chép",
@@ -1535,7 +1603,12 @@ export const translations = {
             reply: "ตอบกลับ",
             like: "ถูกใจ",
             unlike: "เลิกถูกใจ",
-            askAiTopic: "✨ ขอหัวข้อจาก AI"
+            askAiTopic: "✨ ขอหัวข้อจาก AI",
+            generateWeeklyRecap: "✨ สร้างสรุปรายสัปดาห์",
+            noNotesForRecap: "ไม่พบบันทึกสำหรับสัปดาห์นี้",
+            recapRateLimit: "สรุปรายสัปดาห์ถูกสร้างไปแล้วในสัปดาห์นี้",
+            daysLeft: "เหลืออีก {days} วัน",
+            availableSoon: "จะพร้อมใช้งานเร็วๆ นี้"
         },
         myNotes: {
             description: "คลังบันทึก",
@@ -1772,7 +1845,12 @@ export const translations = {
             reply: "답장",
             like: "좋아요",
             unlike: "좋아요 취소",
-            askAiTopic: "✨ AI 토픽 요청"
+            askAiTopic: "✨ AI 토픽 요청",
+            generateWeeklyRecap: "✨ 주간 요약 생성",
+            noNotesForRecap: "이번 주 노트를 찾을 수 없습니다.",
+            recapRateLimit: "이번 주 주간 요약이 이미 생성되었습니다.",
+            daysLeft: "{days}일 남음",
+            availableSoon: "곧 이용 가능"
         },
         myNotes: {
             description: "노트 컬렉션",
@@ -2009,7 +2087,12 @@ export const translations = {
             reply: "Sumagot",
             like: "Like",
             unlike: "Unlike",
-            askAiTopic: "✨ Humiling ng Paksa sa AI"
+            askAiTopic: "✨ Humiling ng Paksa sa AI",
+            generateWeeklyRecap: "✨ Gumawa ng Lingguhang Buod",
+            noNotesForRecap: "Walang nakitang mga tala para sa linggong ito.",
+            recapRateLimit: "Ang lingguhang buod ay nagawa na ngayong linggo.",
+            daysLeft: "{days} araw na lang",
+            availableSoon: "Magagamit na sa lalong madaling panahon"
         },
         myNotes: {
             description: "Koleksyon ng mga Tala",
@@ -2246,7 +2329,12 @@ export const translations = {
             reply: "Jibu",
             like: "Penda",
             unlike: "Ondoa upendo",
-            askAiTopic: "✨ Uliza AI Mada"
+            askAiTopic: "✨ Uliza AI Mada",
+            generateWeeklyRecap: "✨ Tengeneza Muhtasari wa Wiki",
+            noNotesForRecap: "Hakuna maelezo yaliyopatikana kwa wiki hii.",
+            recapRateLimit: "Muhtasari wa wiki tayari umetolewa wiki hii.",
+            daysLeft: "Zimebaki siku {days}",
+            availableSoon: "Inakuja hivi karibuni"
         },
         myNotes: {
             description: "Mkusanyiko wa Maelezo",

@@ -11,7 +11,7 @@ import './NewNote.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 import { removeNoteHeader } from '../../Utils/noteUtils';
 
-const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups = [], isGroupContext = false, currentGroupId = null }) => {
+const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups = [], isGroupContext = false, currentGroupId = null, initialData = null }) => {
     const { t, language } = useLanguage();
 
     const [chapter, setChapter] = useState('');
@@ -88,10 +88,25 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
         } else if (isOpen && !noteToEdit) {
             setLastAiResponse('');
-            setChapter('');
-            setScripture('');
-            setComment('');
-            setSelectedOption(null);
+
+            // Check for initialData
+            if (initialData) {
+                setChapter(initialData.chapter || '');
+                setScripture(initialData.scripture || '');
+                setComment(initialData.comment || '');
+
+                if (initialData.scripture) {
+                    const option = translatedScripturesOptions.find(opt => opt.value.toLowerCase() === initialData.scripture.toLowerCase());
+                    setSelectedOption(option || null);
+                } else {
+                    setSelectedOption(null);
+                }
+            } else {
+                setChapter('');
+                setScripture('');
+                setComment('');
+                setSelectedOption(null);
+            }
 
             // Default sharing option logic
             if (isGroupContext) {
@@ -101,7 +116,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             }
             setSelectedShareGroups([]);
         }
-    }, [isOpen, noteToEdit, userGroups.length, isGroupContext]); // Removed translatedScripturesOptions from dependency to avoid loop if not memoized, though t() change triggers re-render anyway.
+    }, [isOpen, noteToEdit, userGroups.length, isGroupContext, initialData]); // Removed translatedScripturesOptions from dependency to avoid loop if not memoized, though t() change triggers re-render anyway.
 
     const handleGroupSelection = (groupId) => {
         setSelectedShareGroups(prev => {

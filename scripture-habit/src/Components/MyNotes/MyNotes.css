@@ -251,3 +251,14 @@
         flex-shrink: 0;
     }
 }
+
+/* Disabled state for buttons */
+.cta-btn.disabled-btn {
+    background: #e0e0e0 !important;
+    color: #999 !important;
+    cursor: not-allowed !important;
+    border-color: #eee !important;
+    pointer-events: none;
+    box-shadow: none !important;
+    transform: none !important;
+}

@@ -310,7 +310,7 @@ Do NOT use bullet points or markdown (*, -). Output only the question text.
 Make it spiritually thought-provoking.`;
         }
 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
@@ -362,7 +362,7 @@ Make the question broad enough (e.g., "In your study this week...", "In your lif
 Do NOT use bullet points or markdown (*, -). Output only the question text.`;
         }
 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
@@ -383,6 +383,122 @@ Do NOT use bullet points or markdown (*, -). Output only the question text.`;
     } catch (error) {
         console.error('Error generating discussion topic:', error.message);
         res.status(500).json({ error: 'Failed to generate topic.' });
+    }
+});
+
+// AI Weekly Recap Endpoint
+app.post('/api/generate-weekly-recap', async (req, res) => {
+    const { groupId, language } = req.body;
+
+    if (!groupId) {
+        return res.status(400).json({ error: 'Group ID is required.' });
+    }
+    if (!process.env.GEMINI_API_KEY) {
+        return res.status(500).json({ error: 'Gemini API Key is not configured.' });
+    }
+
+    try {
+        const db = admin.firestore();
+        const messagesRef = db.collection('groups').doc(groupId).collection('messages');
+
+        // Calculate date 7 days ago
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+        const timestamp7DaysAgo = admin.firestore.Timestamp.fromDate(sevenDaysAgo);
+
+        // Query notes from last 7 days
+        const snapshot = await messagesRef
+            .where('createdAt', '>=', timestamp7DaysAgo)
+            .get();
+
+        const notes = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            // Collect both 'isNote' (legacy) and 'isEntry' (new)
+            if (data.isNote || data.isEntry) {
+                // Anonymize: only take text/content
+                if (data.text) {
+                    notes.push(data.text);
+                }
+            }
+        });
+
+        if (notes.length === 0) {
+            return res.json({ message: 'No notes found for this week, skipping recap.' });
+        }
+
+        const langCode = language || 'en';
+        let prompt = '';
+        const notesText = notes.join("\n\n---\n\n");
+
+        if (langCode === 'ja') {
+            prompt = `あなたは末日聖徒イエス・キリスト教会の聖典学習グループのアナウンサーです。
+以下は、グループメンバーが過去1週間に共有した（匿名の）学習ノートの内容です。
+これらを分析し、グループ全体の「学習トレンド」や「深まっているテーマ」について、短く励ましとなるようなレポートを作成してください。
+出力形式:
+「今週の振り返り：」で始め、その後に分析結果を続けてください。
+例：「今週の振り返り：今週はグループ全体で『祈り』についての学びが深まっているようです！多くのメンバーがアルマ書から主の憐れみについて感じています。」
+特定の個人の名前や詳細なプライバシーには触れず、ポジティブな全体の傾向を伝えてください。
+です・ます常体で、親しみやすく記述してください。
+
+ノート内容:
+${notesText}`;
+        } else {
+            prompt = `You are an announcer for a scripture study group of The Church of Jesus Christ of Latter-day Saints.
+Below are the (anonymized) study notes shared by group members over the past week.
+Analyze them and create a short, encouraging report on the group's "learning trends" or "deepening themes".
+Output Format:
+Start with "Weekly Reflection:", followed by your analysis.
+Example: "Weekly Reflection: This week, the group seems to be deepening their understanding of 'Prayer'! Many members are feeling the Lord's mercy from the Book of Alma."
+Do not mention specific individual names or private details. Focus on positive overall trends.
+Keep it friendly and uplifting.
+
+Notes Content:
+${notesText}`;
+        }
+
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${process.env.GEMINI_API_KEY}`;
+
+        const response = await axios.post(apiUrl, {
+            contents: [{
+                parts: [{
+                    text: prompt
+                }]
+            }]
+        });
+
+        const generatedText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!generatedText) {
+            throw new Error('No content generated from Gemini.');
+        }
+
+        // Save the system message
+        const batch = db.batch();
+        const newMessageRef = messagesRef.doc();
+        batch.set(newMessageRef, {
+            text: generatedText.trim(),
+            createdAt: admin.firestore.FieldValue.serverTimestamp(),
+            senderId: 'system',
+            isSystemMessage: true,
+            messageType: 'weeklyRecap',
+            messageData: {
+                weekOf: new Date().toISOString()
+            }
+        });
+
+        // Update last generated timestamp
+        batch.update(groupRef, {
+            lastRecapGeneratedAt: admin.firestore.FieldValue.serverTimestamp()
+        });
+
+        await batch.commit();
+
+        res.json({ message: 'Weekly recap generated successfully.', recap: generatedText });
+
+    } catch (error) {
+        console.error('Error generating weekly recap:', error.message);
+        res.status(500).json({ error: 'Failed to generate recap.', details: error.message });
     }
 });
 
