@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
 import { getFirestore, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { app, auth } from '../firebase';
 import './GroupCard.css';
@@ -13,7 +13,7 @@ type Props = {
 
 export default function GroupCard({ group, currentUser, onJoin }: Props) {
   const { t } = useLanguage();
-  const navigate = useNavigate();
+
   const [joining, setJoining] = useState(false);
   const db = getFirestore(app);
 
