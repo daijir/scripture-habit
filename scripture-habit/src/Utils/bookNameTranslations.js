@@ -956,9 +956,9 @@ export const translateChapterField = (chapterText, language) => {
     // Also handles numbered books like "1 Nephi", "2 Kings"
 
     // First, try to match patterns with chapter numbers
-    // Pattern: book name (letters/Japanese) + optional space + chapter:verse
-    // Handles: "Alma7:11", "Alma 7:11", "2ニーファイ2:15", "1 Nephi 3:7"
-    const match = chapterText.match(/^((?:\d\s*)?[A-Za-zぁ-んァ-ン一-龯]+)\s*(\d+(?::\d+(?:-\d+)?)?)$/);
+    // Pattern: book name (letters/Japanese/hyphens/spaces) + optional space + chapter:verse
+    // Handles: "Alma7:11", "Alma 7:11", "2ニーファイ2:15", "1 Nephi 3:7", "Articles of Faith 1:13", "Joseph Smith-History 1:5"
+    const match = chapterText.match(/^((?:\d\s*)?[A-Za-zぁ-んァ-ン一-龯\s\-—]+)(?:\s+|(?=\d))(\d+(?::\d+(?:-\d+)?)?)$/);
 
     if (match) {
         const bookName = match[1].trim();
