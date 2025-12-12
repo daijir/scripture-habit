@@ -1,0 +1,192 @@
+.LetterBoxOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1500;
+    display: flex;
+    justify-content: flex-end;
+    /* Slide from right */
+}
+
+.LetterBoxContent {
+    background-color: #f9f9f9;
+    width: 100%;
+    max-width: 450px;
+    height: 100%;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    animation: slideInRight 0.3s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+.letterbox-header {
+    background: linear-gradient(135deg, #8e44ad 0%, #a569bd 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.letterbox-header h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.close-btn {
+    background: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.letterbox-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    position: relative;
+}
+
+/* List View */
+.letter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.letter-item {
+    background: white;
+    border-radius: 0.8rem;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border-left: 4px solid #8e44ad;
+}
+
+.letter-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.08);
+}
+
+.letter-icon {
+    background-color: rgba(142, 68, 173, 0.1);
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.letter-info {
+    flex: 1;
+}
+
+.letter-info h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #333;
+}
+
+.letter-date-meta {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+.delete-letter-btn {
+    background: transparent;
+    border: none;
+    color: #ccc;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.2s;
+}
+
+.delete-letter-btn:hover {
+    color: #e74c3c;
+}
+
+.empty-letters {
+    text-align: center;
+    margin-top: 3rem;
+    color: #aaa;
+}
+
+/* Detail View */
+.letter-detail-view {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.back-btn {
+    align-self: flex-start;
+    background: transparent;
+    border: none;
+    color: #8e44ad;
+    cursor: pointer;
+    margin-bottom: 1rem;
+    font-weight: 500;
+}
+
+.letter-paper {
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    padding: 2rem;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    font-family: 'Merriweather', serif;
+    line-height: 1.8;
+    color: #444;
+    overflow-y: auto;
+    /* Paper texture */
+    background-image: linear-gradient(#f9f9f9 1px, transparent 1px);
+    background-size: 100% 1.8em;
+}
+
+.letter-date {
+    text-align: right;
+    font-size: 0.9rem;
+    color: #888;
+    margin-bottom: 1rem;
+    font-family: sans-serif;
+}
+
+/* Markdown Styles inside letter */
+.letter-paper h1,
+.letter-paper h2 {
+    font-size: 1.4rem;
+    color: #8e44ad;
+    margin-top: 0;
+}
+
+.letter-paper p {
+    margin-bottom: 1em;
+}
+
+@media (max-width: 600px) {
+    .LetterBoxContent {
+        max-width: 100%;
+    }
+}

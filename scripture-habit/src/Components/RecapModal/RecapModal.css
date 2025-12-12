@@ -1,0 +1,207 @@
+.RecapModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.RecapModalContent {
+    background: linear-gradient(135deg, #fffcf5 0%, #fdfbf7 100%);
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    border-radius: 1rem;
+    padding: 2rem;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.recap-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #999;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.recap-close-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: #333;
+}
+
+.recap-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.recap-icon-wrapper {
+    background-color: rgba(142, 68, 173, 0.1);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 1rem auto;
+    box-shadow: 0 4px 10px rgba(142, 68, 173, 0.15);
+}
+
+.recap-header h2 {
+    font-size: 1.8rem;
+    color: #2c3e50;
+    margin-bottom: 0.3rem;
+    font-family: 'Georgia', serif;
+    /* Serif font for letter feel */
+}
+
+.recap-subtitle {
+    color: #7f8c8d;
+    font-size: 0.95rem;
+}
+
+/* The Paper Effect */
+.recap-paper {
+    background-color: #ffffff;
+    border: 1px solid #e8e4da;
+    border-radius: 4px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 1.5rem;
+    overflow-y: auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    flex-grow: 1;
+    /* Optional: Lined paper effect */
+    background-image: linear-gradient(#f1f1f1 1px, transparent 1px);
+    background-size: 100% 2em;
+    line-height: 2em;
+}
+
+.recap-body {
+    color: #444;
+    font-family: 'Merriweather', 'Georgia', serif;
+    font-size: 1rem;
+    line-height: 2em;
+    /* Ensure text sits on lines */
+}
+
+.recap-body h1,
+.recap-body h2,
+.recap-body h3 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    color: #8e44ad;
+    font-family: 'Helvetica Neue', sans-serif;
+    /* Keep headers clean */
+}
+
+.recap-body p {
+    margin-bottom: 1em;
+}
+
+/* Actions */
+.recap-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding-top: 0.5rem;
+}
+
+.recap-discard-btn {
+    background: transparent;
+    border: 1px solid #ddd;
+    color: #666;
+    padding: 0.6rem 1.2rem;
+    border-radius: 2rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.recap-discard-btn:hover {
+    background-color: #f5f5f5;
+    border-color: #ccc;
+    color: #333;
+}
+
+.recap-save-btn {
+    background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 100%);
+    border: none;
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border-radius: 2rem;
+    cursor: pointer;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3);
+    transition: all 0.2s;
+}
+
+.recap-save-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(142, 68, 173, 0.4);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .RecapModalContent {
+        width: 95%;
+        padding: 1.5rem;
+        height: 85vh;
+    }
+
+    .recap-paper {
+        padding: 1rem;
+        background-size: 100% 1.8em;
+        line-height: 1.8em;
+    }
+
+    .recap-body {
+        line-height: 1.8em;
+        font-size: 0.95rem;
+    }
+
+    .recap-header h2 {
+        font-size: 1.4rem;
+    }
+}

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { db } from '../../firebase';
-import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc, updateDoc, increment } from 'firebase/firestore';
+import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc, updateDoc, increment, addDoc, serverTimestamp } from 'firebase/firestore';
 import ReactMarkdown from 'react-markdown';
-import { UilPlus, UilBookOpen, UilSearchAlt } from '@iconscout/react-unicons';
+import { UilPlus, UilBookOpen, UilSearchAlt, UilAnalysis, UilEnvelope } from '@iconscout/react-unicons';
 import NewNote from '../NewNote/NewNote';
 import NoteCard from '../NoteCard/NoteCard';
+import RecapModal from '../RecapModal/RecapModal'; // Import RecapModal
+import LetterBox from '../LetterBox/LetterBox'; // Import LetterBox
 import { toast } from 'react-toastify';
 import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
 import { translateChapterField } from '../../Utils/bookNameTranslations';
@@ -22,11 +25,29 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
+  const [recapLoading, setRecapLoading] = useState(false);
+  const [newNoteInitialData, setNewNoteInitialData] = useState(null);
+
+  // New state for RecapModal
+  const [isRecapModalOpen, setIsRecapModalOpen] = useState(false);
+  const [generatedRecapText, setGeneratedRecapText] = useState('');
+
+  // New state for LetterBox
+  const [isLetterBoxOpen, setIsLetterBoxOpen] = useState(false);
+
+  // State to hold real-time user data
+  const [currentUserData, setCurrentUserData] = useState(userData);
+
   useEffect(() => {
-    if (!userData || !userData.uid) {
-      setLoading(false);
-      return;
-    }
+    if (!userData || !userData.uid) return;
+
+    // Listen to the user document specifically for lastRecapGeneratedAt updates
+    const userDocRef = doc(db, 'users', userData.uid);
+    const unsubscribeUser = onSnapshot(userDocRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setCurrentUserData({ ...userData, ...docSnap.data() });
+      }
+    });
 
     const notesRef = collection(db, 'users', userData.uid, 'notes');
     const q = query(
@@ -34,7 +55,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
       orderBy('createdAt', 'desc')
     );
 
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    const unsubscribeNotes = onSnapshot(q, (querySnapshot) => {
       const fetchedNotes = [];
       querySnapshot.forEach((doc) => {
         fetchedNotes.push({ id: doc.id, ...doc.data() });
@@ -46,12 +67,90 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
       setLoading(false);
     });
 
-    return () => unsubscribe();
-  }, [userData]);
+    return () => {
+      unsubscribeUser();
+      unsubscribeNotes();
+    };
+  }, [userData?.uid]); // Only re-run if UID changes
 
   const handleNoteClick = (note) => {
     setSelectedNote(note);
+    setNewNoteInitialData(null);
     setIsEditModalOpen(true);
+  };
+
+  const handleGenerateRecap = async () => {
+    // Check for rate limiting (6 days)
+    if (currentUserData?.lastRecapGeneratedAt) {
+      const lastGenerated = currentUserData.lastRecapGeneratedAt.toDate();
+      const now = new Date();
+      const diffTime = Math.abs(now - lastGenerated);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays < 6) {
+        const daysLeft = 6 - diffDays;
+        toast.info(t('groupChat.recapRateLimit') + " " + t('groupChat.daysLeft', { days: daysLeft })); // Reusing existing keys or add new if needed
+        return;
+      }
+    }
+
+    setRecapLoading(true);
+    toast.info(t('myNotes.generatingRecap'));
+    try {
+      const response = await axios.post('/api/generate-personal-weekly-recap', {
+        uid: userData.uid,
+        language: language
+      });
+
+      if (response.data.recap) {
+        setGeneratedRecapText(response.data.recap);
+        setIsRecapModalOpen(true); // Open "Letter" modal first
+        toast.success(t('myNotes.recapSuccess'));
+      } else {
+        toast.info(response.data.message || t('myNotes.noNotesForRecap'));
+      }
+    } catch (error) {
+      console.error("Error generating recap:", error);
+      toast.error(t('myNotes.recapError'));
+    } finally {
+      setRecapLoading(false);
+    }
+  };
+
+  const handleSaveRecapToLetterBox = async () => {
+    try {
+      const lettersRef = collection(db, 'users', userData.uid, 'letters');
+
+      // Extract a simple title if possible from the first line or default
+      const lines = generatedRecapText.split('\n');
+      let title = t('letterBox.defaultTitle') || "Weekly Recap";
+
+      // Try to find a title line (e.g. "Title: ...") - Simple heuristic
+      const titleLine = lines.find(line => line.toLowerCase().includes('title:') || line.includes('タイトル：'));
+      if (titleLine) {
+        title = titleLine.replace(/Title:|タイトル：/i, '').replace(/\*/g, '').trim();
+      }
+
+      await addDoc(lettersRef, {
+        content: generatedRecapText,
+        title: title,
+        createdAt: serverTimestamp(),
+        type: 'weekly_recap'
+      });
+
+      // Update the user's last generated timestamp
+      const userRef = doc(db, 'users', userData.uid);
+      await updateDoc(userRef, {
+        lastRecapGeneratedAt: serverTimestamp()
+      });
+
+      setIsRecapModalOpen(false);
+      toast.success(t('newNote.successPost') || "Saved to Letter Box!");
+      setIsLetterBoxOpen(true); // Open the box to show the new item
+    } catch (error) {
+      console.error("Error saving to letter box:", error);
+      toast.error("Failed to save letter.");
+    }
   };
 
   const confirmDelete = async () => {
@@ -99,22 +198,90 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
     return matchesSearch && matchesCategory;
   });
 
+  // Calculate if recap can be generated
+  let canGenerateRecap = true;
+  let daysLeft = 0;
+
+  if (currentUserData?.lastRecapGeneratedAt) {
+    const lastGenerated = currentUserData.lastRecapGeneratedAt.toDate();
+    const now = new Date();
+    const diffTime = Math.abs(now - lastGenerated);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 6) {
+      canGenerateRecap = false;
+      daysLeft = 6 - diffDays;
+    }
+  }
+
   return (
     <div className="MyNotes DashboardContent">
-      <div className="dashboard-header">
+      <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1>Scripture Habit</h1>
           <p className="welcome-text">{t('myNotes.description')}</p>
         </div>
+
+        <button
+          className="letter-box-toggle"
+          onClick={() => setIsLetterBoxOpen(true)}
+          title={t('letterBox.title')}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            cursor: 'pointer',
+            color: '#8e44ad',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            fontSize: '0.9rem',
+            fontWeight: 'bold',
+            padding: '0.5rem',
+            borderRadius: '8px',
+            transition: 'background-color 0.2s'
+          }}
+          onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(142, 68, 173, 0.1)'}
+          onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+        >
+          <UilEnvelope size="24" />
+          <span style={{ display: window.innerWidth <= 600 ? 'none' : 'inline' }}>{t('letterBox.title')}</span>
+        </button>
       </div>
 
 
 
       <div className="share-learning-cta" style={{ marginBottom: '2rem' }}>
         <p>{t('dashboard.shareLearningCall')}</p>
-        <button className="new-note-btn cta-btn" onClick={() => setIsModalOpen(true)}>
-          <UilPlus /> {t('dashboard.newNote')}
-        </button>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <button className="new-note-btn cta-btn" onClick={() => {
+            setNewNoteInitialData(null);
+            setIsModalOpen(true);
+          }}>
+            <UilPlus /> {t('dashboard.newNote')}
+          </button>
+          <button
+            className={`new-note-btn cta-btn ${!canGenerateRecap ? 'disabled-btn' : ''}`}
+            onClick={(e) => {
+              if (!canGenerateRecap || recapLoading) {
+                e.preventDefault();
+                return;
+              }
+              handleGenerateRecap();
+            }}
+            disabled={recapLoading || !canGenerateRecap}
+            style={{
+              background: !canGenerateRecap ? '#e0e0e0' : 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
+              color: !canGenerateRecap ? '#999' : '#555',
+              border: '1px solid #eee',
+              cursor: !canGenerateRecap ? 'not-allowed' : 'pointer'
+            }}
+          >
+            <UilAnalysis size="20" />
+            {recapLoading ? t('myNotes.loading') :
+              !canGenerateRecap ? t('groupChat.daysLeft', { days: daysLeft }) :
+                t('myNotes.generateRecap')}
+          </button>
+        </div>
       </div>
 
       <div className="search-and-filter-container">
@@ -206,14 +373,30 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
         )
       }
 
+      <LetterBox
+        isOpen={isLetterBoxOpen}
+        onClose={() => setIsLetterBoxOpen(false)}
+        userData={currentUserData}
+      />
+
+      <RecapModal
+        isOpen={isRecapModalOpen}
+        onClose={() => setIsRecapModalOpen(false)}
+        recapText={generatedRecapText}
+        onSave={handleSaveRecapToLetterBox}
+      />
+
       <NewNote
-        isOpen={isEditModalOpen}
+        isOpen={isEditModalOpen || isModalOpen}
         onClose={() => {
           setIsEditModalOpen(false);
+          setIsModalOpen(false); // Also close the passed in modal state for new notes
           setSelectedNote(null);
+          setNewNoteInitialData(null);
         }}
         userData={userData}
         noteToEdit={selectedNote}
+        initialData={newNoteInitialData}
         onDelete={() => setIsDeleteModalOpen(true)}
       />
     </div >

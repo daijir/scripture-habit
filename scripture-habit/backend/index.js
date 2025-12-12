@@ -3,17 +3,39 @@ const path = require('path');
 const admin = require('firebase-admin');
 const cors = require('cors');
 const axios = require('axios'); // Add axios
-require('dotenv').config({ path: path.join(__dirname, '../.env') });
 
-const serviceAccount = require('./serviceAccountKey.json');
+// Load .env from project root (one level up from backend/ directory)
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+const apiKey = process.env.GEMINI_API_KEY;
+if (!apiKey) {
+  console.warn("WARNING: GEMINI_API_KEY is not set in environment variables.");
+} else {
+  console.log(`GEMINI_API_KEY loaded: ${apiKey.substring(0, 4)}...`);
+}
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
+
+// Initialize Firebase Admin SDK
+// Try to get credentials from environment variables first (Vercel)
+const serviceAccount = process.env.FIREBASE_SERVICE_ACCOUNT
+  ? JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+  : require('./serviceAccountKey.json'); // Fallback for local dev
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+}
+
+const db = admin.firestore();
+
+// API Model Configuration
+const GEMINI_MODEL = 'gemini-2.5-flash-lite';
+const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 app.post('/verify-login', async (req, res) => {
   const { token } = req.body;
@@ -505,7 +527,7 @@ Do NOT use bullet points or markdown (*, -). Output only the question text.
 Make it spiritually thought-provoking.`;
     }
 
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${process.env.GEMINI_API_KEY}`;
+    const apiUrl = `${GEMINI_API_URL}?key=${process.env.GEMINI_API_KEY}`;
 
     const response = await axios.post(apiUrl, {
       contents: [{
@@ -557,7 +579,7 @@ Make the question broad enough (e.g., "In your study this week...", "In your lif
 Do NOT use bullet points or markdown (*, -). Output only the question text.`;
     }
 
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${process.env.GEMINI_API_KEY}`;
+    const apiUrl = `${GEMINI_API_URL}?key=${process.env.GEMINI_API_KEY}`;
 
     const response = await axios.post(apiUrl, {
       contents: [{
@@ -581,7 +603,240 @@ Do NOT use bullet points or markdown (*, -). Output only the question text.`;
   }
 });
 
+// AI Weekly Recap Endpoint
+app.post('/generate-weekly-recap', async (req, res) => {
+  const { groupId, language } = req.body;
+
+  if (!groupId) {
+    return res.status(400).json({ error: 'Group ID is required.' });
+  }
+  if (!process.env.GEMINI_API_KEY) {
+    return res.status(500).json({ error: 'Gemini API Key is not configured.' });
+  }
+
+  try {
+    const db = admin.firestore();
+    const messagesRef = db.collection('groups').doc(groupId).collection('messages');
+
+    // Calculate date 7 days ago
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const timestamp7DaysAgo = admin.firestore.Timestamp.fromDate(sevenDaysAgo);
+
+    // Query notes from last 7 days
+    const snapshot = await messagesRef
+      .where('createdAt', '>=', timestamp7DaysAgo)
+      .get();
+
+    const notes = [];
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      // Collect both 'isNote' (legacy) and 'isEntry' (new)
+      if (data.isNote || data.isEntry) {
+        // Anonymize: only take text/content
+        if (data.text) {
+          notes.push(data.text);
+        }
+      }
+    });
+
+    if (notes.length === 0) {
+      return res.json({ message: 'No notes found for this week, skipping recap.' });
+    }
+
+    // Check frequency limit (once per week)
+    const groupRef = db.collection('groups').doc(groupId);
+    const groupDoc = await groupRef.get();
+    const groupData = groupDoc.data();
+
+    if (groupData.lastRecapGeneratedAt) {
+      const lastGenerated = groupData.lastRecapGeneratedAt.toDate();
+      const now = new Date();
+      const diffTime = Math.abs(now - lastGenerated);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      if (diffDays < 7) {
+        return res.status(429).json({
+          error: 'Weekly recap can only be generated once a week.',
+          nextAvailable: new Date(lastGenerated.getTime() + 7 * 24 * 60 * 60 * 1000)
+        });
+      }
+    }
+
+    const langCode = language || 'en';
+    let prompt = '';
+    const notesText = notes.join("\n\n---\n\n");
+
+    if (langCode === 'ja') {
+      prompt = `あなたは末日聖徒イエス・キリスト教会の聖典学習グループのアナウンサーです。
+以下は、グループメンバーが過去1週間に共有した（匿名の）学習ノートの内容です。
+これらを分析し、グループ全体の「学習トレンド」や「深まっているテーマ」について、短く励ましとなるようなレポートを作成してください。
+出力形式:
+「今週の振り返り：」で始め、その後に分析結果を続けてください。
+例：「今週の振り返り：今週はグループ全体で『祈り』についての学びが深まっているようです！多くのメンバーがアルマ書から主の憐れみについて感じています。」
+特定の個人の名前や詳細なプライバシーには触れず、ポジティブな全体の傾向を伝えてください。
+です・ます常体で、親しみやすく記述してください。
+
+ノート内容:
+${notesText}`;
+    } else {
+      prompt = `You are an announcer for a scripture study group of The Church of Jesus Christ of Latter-day Saints.
+Below are the (anonymized) study notes shared by group members over the past week.
+Analyze them and create a short, encouraging report on the group's "learning trends" or "deepening themes".
+Output Format:
+Start with "Weekly Reflection:", followed by your analysis.
+Example: "Weekly Reflection: This week, the group seems to be deepening their understanding of 'Prayer'! Many members are feeling the Lord's mercy from the Book of Alma."
+Do not mention specific individual names or private details. Focus on positive overall trends.
+Keep it friendly and uplifting.
+
+Notes Content:
+${notesText}`;
+    }
+
+    const apiUrl = `${GEMINI_API_URL}?key=${process.env.GEMINI_API_KEY}`;
+
+    const response = await axios.post(apiUrl, {
+      contents: [{
+        parts: [{
+          text: prompt
+        }]
+      }]
+    });
+
+    const generatedText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!generatedText) {
+      throw new Error('No content generated from Gemini.');
+    }
+
+    // Save the system message
+    const batch = db.batch();
+    const newMessageRef = messagesRef.doc();
+    batch.set(newMessageRef, {
+      text: generatedText.trim(),
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      senderId: 'system',
+      isSystemMessage: true,
+      messageType: 'weeklyRecap',
+      messageData: {
+        weekOf: new Date().toISOString()
+      }
+    });
+
+    // Update last generated timestamp
+    batch.update(groupRef, {
+      lastRecapGeneratedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    await batch.commit();
+
+    res.json({ message: 'Weekly recap generated successfully.', recap: generatedText });
+
+  } catch (error) {
+    console.error('Error generating weekly recap:', error.message);
+    res.status(500).json({ error: 'Failed to generate recap.', details: error.message });
+  }
+});
+
+app.post('/generate-personal-weekly-recap', async (req, res) => {
+  const { uid, language } = req.body;
+
+  if (!uid) {
+    return res.status(400).json({ error: 'User ID is required.' });
+  }
+
+  try {
+    const notesRef = db.collection('users').doc(uid).collection('notes');
+
+    // Calculate date 7 days ago
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    const timestamp7DaysAgo = admin.firestore.Timestamp.fromDate(sevenDaysAgo);
+
+    // Query notes from last 7 days
+    const snapshot = await notesRef
+      .where('createdAt', '>=', timestamp7DaysAgo)
+      .get();
+
+    const notes = [];
+    snapshot.forEach(doc => {
+      const data = doc.data();
+      if (data.comment) {
+        notes.push(`[${data.scripture || 'Scripture'} - ${data.chapter || ''}] ${data.comment}`);
+      } else if (data.text) {
+        notes.push(data.text);
+      }
+    });
+
+    if (notes.length === 0) {
+      return res.status(200).json({ recap: null, message: 'No notes found for this week.' });
+    }
+
+    const langCode = language || 'en';
+    let prompt = '';
+    const notesText = notes.join("\n\n---\n\n");
+
+    if (langCode === 'ja') {
+      prompt = `あなたは個人の聖典学習のアシスタントです。
+以下は、ユーザーが過去1週間に記録した学習ノートの内容です。
+これらを分析し、ユーザーのための「個人的な学習の振り返り」を作成してください。
+深まっているテーマ、繰り返し出てくる聖句、または感情の変化などに注目し、励ましとなるようなフィードバックをしてください。
+
+出力形式:
+タイトル：📅 今週の学習成果（${new Date().toLocaleDateString('ja-JP')}）
+1. 深まったテーマ：
+2. ピックアップ聖句：
+3. 素晴らしい点：
+4. 次週へのヒント：
+
+です・ます常体で、親しみやすく記述してください。
+
+ノート内容:
+${notesText}`;
+    } else {
+      prompt = `You are a personal scripture study assistant.
+Below are the study notes recorded by the user over the past week.
+Analyze these and create a "Personal Study Reflection" for the user.
+Focus on deepened themes, recurring scriptures, or changes in emotions, and provide encouraging feedback.
+
+Output Format:
+Title: 📅 Weekly Study Harvest (${new Date().toLocaleDateString()})
+1. Deepened Themes:
+2. Highlighted Scriptures:
+3. What went well:
+4. Tips for next week:
+
+Keep the tone friendly, encouraging, and respectful.
+
+Notes Content:
+${notesText}`;
+    }
+
+    const apiUrl = `${GEMINI_API_URL}?key=${process.env.GEMINI_API_KEY}`;
+
+    const response = await axios.post(apiUrl, {
+      contents: [{
+        parts: [{
+          text: prompt
+        }]
+      }]
+    });
+
+    const generatedText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!generatedText) {
+      throw new Error('No content generated from Gemini.');
+    }
+
+    res.status(200).json({ recap: generatedText.trim() });
+
+  } catch (error) {
+    console.error('Error generating personal recap:', error.response ? error.response.data : error.message);
+    res.status(500).json({ error: 'Failed to generate personal recap.' });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT} `);
 });

@@ -16,7 +16,7 @@ export const LanguageProvider = ({ children }) => {
         setLanguageState(newLanguage);
     };
 
-    const t = (key) => {
+    const t = (key, replacements = {}) => {
         const keys = key.split('.');
         let value = translations[language];
         for (const k of keys) {
@@ -26,6 +26,14 @@ export const LanguageProvider = ({ children }) => {
                 return key; // Return key if translation not found
             }
         }
+
+        // Handle variable replacement
+        if (typeof value === 'string' && replacements) {
+            Object.keys(replacements).forEach(replaceKey => {
+                value = value.replace(`{${replaceKey}}`, replacements[replaceKey]);
+            });
+        }
+
         return value;
     };
 

@@ -41,6 +41,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [userReadCount, setUserReadCount] = useState(null);
   const [initialScrollDone, setInitialScrollDone] = useState(false);
+  const [isRecapLoading, setIsRecapLoading] = useState(false);
   const longPressTimer = useRef(null);
   const containerRef = useRef(null);
   const textareaRef = useRef(null);
@@ -492,6 +493,53 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     }
   };
 
+  const handleGenerateWeeklyRecap = async () => {
+    if (!userData || !groupId) return;
+
+    // Optional: Check if user is owner, or just let anyone generate for engagement (but maybe rate limit or only owner?)
+    // For now, let's restrict to owner to avoid spamming system messages
+    if (groupData?.ownerUserId !== userData.uid) {
+      toast.error("Only the group owner can generate the weekly recap.");
+      return;
+    }
+
+    toast.info("Generating weekly recap... This may take a moment.");
+    setShowMobileMenu(false);
+
+    try {
+      const response = await fetch('/api/generate-weekly-recap', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          groupId,
+          language: language || 'en'
+        })
+      });
+
+      if (response.status === 429) {
+        toast.info(t('groupChat.recapRateLimit') || "Weekly recap can only be generated once a week.");
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error('Failed to generate recap');
+      }
+
+      const data = await response.json();
+      if (data.message && data.message.includes('No notes found')) {
+        toast.info(t('groupChat.noNotesForRecap') || "No notes found for this week.");
+      } else {
+        toast.success("Weekly recap generated!");
+      }
+
+    } catch (error) {
+      console.error("Error generating recap:", error);
+      toast.error("Failed to generate weekly recap.");
+    }
+  };
+
   const handleKeyDown = (e) => {
     // User requested: Enter = Newline, Send = Click only (for Desktop)
     // Simply do nothing on Enter key, allowing default behavior (newline)
@@ -840,6 +888,37 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     }
   };
 
+  /* 
+   * Check if weekly recap is available (7 day cooldown)
+   */
+  const getLastRecapDate = () => {
+    if (groupData?.lastRecapGeneratedAt?.toDate) {
+      return groupData.lastRecapGeneratedAt.toDate();
+    }
+    // Handle specific case where it might be a raw timestamp object (if not converted by Firestore SDK yet in some edge cases)
+    if (groupData?.lastRecapGeneratedAt?.seconds) {
+      return new Date(groupData.lastRecapGeneratedAt.seconds * 1000);
+    }
+    return null;
+  };
+
+  const lastRecapDate = getLastRecapDate();
+  const daysSinceLastRecap = lastRecapDate
+    ? (new Date() - lastRecapDate) / (1000 * 60 * 60 * 24)
+    : 100; // if never generated, treat as long time ago
+
+  const isRecapAvailable = daysSinceLastRecap >= 7;
+
+  const handleRecapClick = (e) => {
+    if (!isRecapAvailable) {
+      e.stopPropagation();
+      toast.info(t('groupChat.recapRateLimit') || "Weekly recap can only be generated once a week.");
+      setIsRecapLoading(false); // Ensure loading state is off if somehow on
+      return;
+    }
+    handleGenerateWeeklyRecap();
+  };
+
   const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit;
 
   return (
@@ -894,6 +973,22 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                 <UilUsersAlt size="16" className="copy-icon" />
                 <span className="desktop-members-label">{t('groupChat.members')}</span>
               </div>
+
+              {userData.uid === groupData.ownerUserId && (
+                <div
+                  className={`invite-code-display members-btn-desktop ${!isRecapAvailable ? 'disabled' : ''}`}
+                  onClick={handleRecapClick}
+                  title={!isRecapAvailable ? (t('groupChat.recapRateLimit') || "Weekly recap available next week") : (t('groupChat.generateWeeklyRecap') || "Weekly Recap")}
+                  style={{
+                    marginRight: '8px',
+                    opacity: !isRecapAvailable ? 0.5 : 1,
+                    cursor: !isRecapAvailable ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  <span style={{ fontSize: '1.1rem' }}>📊</span>
+                  {isRecapLoading && <div className="spinner-mini"></div>}
+                </div>
+              )}
 
               {userData.uid === groupData.ownerUserId ? (
                 <button className="leave-group-btn delete-group-btn" onClick={() => setShowDeleteModal(true)} title={t('groupChat.deleteGroup')}>
@@ -971,6 +1066,41 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                   <span className="menu-item-label">{t('groupChat.members')}</span>
                 </div>
               </div>
+
+              <div className="mobile-menu-divider"></div>
+
+              {/* Weekly Recap - Owner Only */}
+              {userData.uid === groupData.ownerUserId && (
+                <div
+                  className={`mobile-menu-item ${!isRecapAvailable ? 'disabled' : ''}`}
+                  onClick={(e) => {
+                    if (!isRecapAvailable) {
+                      e.stopPropagation();
+                      toast.info(t('groupChat.recapRateLimit') || "Weekly recap can only be generated once a week.");
+                    } else {
+                      handleGenerateWeeklyRecap();
+                    }
+                  }}
+                  style={{
+                    opacity: !isRecapAvailable ? 0.5 : 1,
+                    cursor: !isRecapAvailable ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  <div className="menu-item-icon">
+                    <span style={{ fontSize: '1.2rem' }}>📊</span>
+                  </div>
+                  <div className="menu-item-content">
+                    <span className="menu-item-label">{t('groupChat.generateWeeklyRecap') || "Weekly Recap"}</span>
+                    {!isRecapAvailable && (
+                      <span style={{ fontSize: '0.7rem', color: 'var(--red)' }}>
+                        {Math.ceil(7 - daysSinceLastRecap) > 0
+                          ? (t('groupChat.daysLeft') || "{days} days left").replace('{days}', Math.ceil(7 - daysSinceLastRecap))
+                          : (t('groupChat.availableSoon') || "Available soon")}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
 
               <div className="mobile-menu-divider"></div>
 
@@ -1161,6 +1291,12 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                         if (msg.messageType === 'userLeft' && msg.messageData) {
                           return t('groupChat.userLeft')
                             .replace('{nickname}', msg.messageData.nickname);
+                        }
+
+                        if (msg.messageType === 'weeklyRecap') {
+                          // Just return text, maybe bold the title if we want, but markdown handles it.
+                          // The text comes with "Weekly Reflection: ..." or similar
+                          return msg.text;
                         }
 
                         // Legacy format: parse from text
