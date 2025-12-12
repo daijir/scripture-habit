@@ -3,13 +3,16 @@ import axios from 'axios';
 import { db } from '../../firebase';
 import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment, query, where, getDocs, Timestamp } from 'firebase/firestore';
 import { toast } from 'react-toastify';
-import { UilTrashAlt } from '@iconscout/react-unicons';
+import { UilTrashAlt, UilShuffle } from '@iconscout/react-unicons';
 import Select from 'react-select';
 import { ScripturesOptions } from '../../Data/Data';
+import { MasteryScriptures } from '../../Data/MasteryScriptures';
 import Input from '../Input/Input';
 import './NewNote.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 import { removeNoteHeader } from '../../Utils/noteUtils';
+import { translateChapterField } from '../../Utils/bookNameTranslations';
+import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
 
 const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups = [], isGroupContext = false, currentGroupId = null, initialData = null }) => {
     const { t, language } = useLanguage();
@@ -180,6 +183,25 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             toast.error('Failed to generate questions. Gemini API key might be missing.');
         } finally {
             setAiLoading(false);
+        }
+    };
+
+
+
+    const handleSurpriseMe = () => {
+        const randomIndex = Math.floor(Math.random() * MasteryScriptures.length);
+        const randomScripture = MasteryScriptures[randomIndex];
+
+        // Find the option that matches the category
+        // Note: translatedScripturesOptions rely on 'value' being English (e.g. 'Old Testament') which matches our data
+        const option = translatedScripturesOptions.find(opt => opt.value === randomScripture.scripture);
+
+        if (option) {
+            setSelectedOption(option);
+            setScripture(randomScripture.scripture);
+            // Translate the chapter field if possible (e.g. Proverbs 3:5-6 -> 箴言 3:5-6)
+            const translatedChapter = translateChapterField(randomScripture.chapter, language);
+            setChapter(translatedChapter);
         }
     };
 
@@ -516,7 +538,31 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 </div>
                 {error && <p className="error-message">{error}</p>}
                 <div style={{ marginBottom: '1rem' }}>
-                    <label htmlFor="scripture-select" className="modal-label">{t('newNote.chooseScriptureLabel')}</label>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                        <label htmlFor="scripture-select" className="modal-label" style={{ marginBottom: 0 }}>{t('newNote.chooseScriptureLabel')}</label>
+                        {!noteToEdit && (
+                            <button
+                                type="button"
+                                onClick={handleSurpriseMe}
+                                style={{
+                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '20px',
+                                    padding: '0.3rem 0.8rem',
+                                    fontSize: '0.8rem',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.3rem',
+                                    fontWeight: 'bold',
+                                    boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                                }}
+                            >
+                                <UilShuffle size="16" /> {t('newNote.surpriseMe')}
+                            </button>
+                        )}
+                    </div>
                     <Select
                         options={translatedScripturesOptions}
                         onChange={(option) => {
@@ -580,6 +626,19 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     required
                     placeholder={scripture === "General Conference" ? t('newNote.urlPlaceholder') : (scripture === "BYU Speeches" ? t('newNote.byuUrlPlaceholder') : (scripture === "Other" ? t('newNote.otherUrlPlaceholder') : t('newNote.chapterPlaceholder')))}
                 />
+
+                {scripture && chapter && (['Old Testament', 'New Testament', 'Book of Mormon', 'Doctrine and Covenants', 'Pearl of Great Price'].includes(scripture)) && (
+                    <div className="gospel-link-container">
+                        <a
+                            href={getGospelLibraryUrl(scripture, chapter, language)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="gospel-library-link"
+                        >
+                            {t('myNotes.readInGospelLibrary')} <i className="uil uil-external-link-alt" style={{ fontSize: '0.85em' }}></i>
+                        </a>
+                    </div>
+                )}
 
                 {/* AI Button - simple styling inline for now */}
                 {!noteToEdit && (

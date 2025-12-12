@@ -222,43 +222,14 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
           <p className="welcome-text">{t('myNotes.description')}</p>
         </div>
 
-        <button
-          className="letter-box-toggle"
-          onClick={() => setIsLetterBoxOpen(true)}
-          title={t('letterBox.title')}
-          style={{
-            background: 'transparent',
-            border: 'none',
-            cursor: 'pointer',
-            color: '#8e44ad',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            fontSize: '0.9rem',
-            fontWeight: 'bold',
-            padding: '0.5rem',
-            borderRadius: '8px',
-            transition: 'background-color 0.2s'
-          }}
-          onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'rgba(142, 68, 173, 0.1)'}
-          onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
-        >
-          <UilEnvelope size="24" />
-          <span style={{ display: window.innerWidth <= 600 ? 'none' : 'inline' }}>{t('letterBox.title')}</span>
-        </button>
+
       </div>
 
 
 
-      <div className="share-learning-cta" style={{ marginBottom: '2rem' }}>
-        <p>{t('dashboard.shareLearningCall')}</p>
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', justifyContent: 'center' }}>
-          <button className="new-note-btn cta-btn" onClick={() => {
-            setNewNoteInitialData(null);
-            setIsModalOpen(true);
-          }}>
-            <UilPlus /> {t('dashboard.newNote')}
-          </button>
+      <div className="share-learning-cta" style={{ marginBottom: '2rem', textAlign: 'center' }}>
+        <p style={{ marginBottom: '1rem' }}>{t('myNotes.weeklyReflectionCall')}</p>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '10px' }}>
           <button
             className={`new-note-btn cta-btn ${!canGenerateRecap ? 'disabled-btn' : ''}`}
             onClick={(e) => {
@@ -273,13 +244,37 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
               background: !canGenerateRecap ? '#e0e0e0' : 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
               color: !canGenerateRecap ? '#999' : '#555',
               border: '1px solid #eee',
-              cursor: !canGenerateRecap ? 'not-allowed' : 'pointer'
+              cursor: !canGenerateRecap ? 'not-allowed' : 'pointer',
+              width: '100%',
+              maxWidth: '300px',
+              justifyContent: 'center'
             }}
           >
             <UilAnalysis size="20" />
             {recapLoading ? t('myNotes.loading') :
               !canGenerateRecap ? t('groupChat.daysLeft', { days: daysLeft }) :
                 t('myNotes.generateRecap')}
+          </button>
+
+          <button
+            className="letter-box-btn"
+            onClick={() => setIsLetterBoxOpen(true)}
+            style={{
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              color: '#8e44ad',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              fontSize: '0.9rem',
+              fontWeight: '500',
+              padding: '0.5rem',
+              transition: 'all 0.2s'
+            }}
+          >
+            <UilEnvelope size="20" />
+            {t('letterBox.title')}
           </button>
         </div>
       </div>

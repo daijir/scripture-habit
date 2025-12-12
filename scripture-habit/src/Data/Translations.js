@@ -60,7 +60,8 @@ export const translations = {
             generatingRecap: "Generating weekly recap... This may take a moment.",
             recapSuccess: "Weekly recap generated! Review and save it.",
             noNotesForRecap: "No notes found for this week.",
-            recapError: "Failed to generate recap."
+            recapError: "Failed to generate recap.",
+            weeklyReflectionCall: "Would you like to reflect on your week?"
         },
         recapModal: {
             title: "Your Weekly Letter",
@@ -129,7 +130,7 @@ export const translations = {
             chapterPlaceholder: "e.g. Alma 5, Isaiah 9:6, Matthew 22:36-40",
             urlPlaceholder: "Please paste the URL (e.g. https://www.churchofjesuschrist.org/...)",
             commentLabel: "Comment",
-            commentPlaceholder: "e.g. Even though I really didn't have much time today, I read from Come, Follow Me, and it turned out to be a wonderful moment to remember Christ's Atonement. It was truly uplifting.",
+            commentPlaceholder: "e.g. It's difficult... I wonder what this means? Does anyone understand this scripture?",
             shareLabel: "Share with:",
             shareAll: "All my groups",
             shareCurrent: "This Group",
@@ -144,12 +145,13 @@ export const translations = {
             successUpdate: "Note updated successfully!",
             successPost: "Note posted successfully!",
             errorSave: "Failed to save note. Please try again.",
-            urlLabel: "URL / Session (Supports past 10 years)",
+            urlLabel: "URL / Session",
             byuUrlLabel: "URL",
             byuUrlPlaceholder: "https://speeches.byu.edu/talks/john-a-mccune/the-gift-of-revelation/",
             otherUrlLabel: "URL",
             otherUrlPlaceholder: "https://example.com/study-material",
-            askAiQuestion: "✨ Ask AI for a Question"
+            askAiQuestion: "✨ Ask AI for a Question",
+            surpriseMe: "✨ Surprise Me"
         },
         scriptures: {
             oldTestament: "Old Testament",
@@ -381,7 +383,8 @@ export const translations = {
             generatingRecap: "振り返りを作成中... 少し時間がかかります。",
             recapSuccess: "作成完了！お手紙が届いています。",
             noNotesForRecap: "今週のノートが見つかりませんでした。",
-            recapError: "作成に失敗しました。"
+            recapError: "作成に失敗しました。",
+            weeklyReflectionCall: "今週の振り返りをしてみませんか？"
         },
         recapModal: {
             title: "今週の振り返りレター",
@@ -408,7 +411,7 @@ export const translations = {
             chapterPlaceholder: "例: イザヤ1章",
             urlPlaceholder: "URLを貼り付けてください (例: https://www.churchofjesuschrist.org/...)",
             commentLabel: "コメント",
-            commentPlaceholder: "例: かなりよく勉強したのですが、よくわからないことがわかりました（笑）",
+            commentPlaceholder: "例: 難しい...どういうことなんだろう？皆この聖句についてわかりますか？",
             shareLabel: "共有範囲:",
             shareAll: "すべてのグループ",
             shareCurrent: "このグループ",
@@ -423,12 +426,13 @@ export const translations = {
             successUpdate: "ノートが更新されました！",
             successPost: "ノートが投稿されました！",
             errorSave: "ノートの保存に失敗しました。もう一度お試しください。",
-            urlLabel: "URL / 部会 (過去10年分の総大会に対応)",
+            urlLabel: "URL / 部会",
             byuUrlLabel: "URL",
             byuUrlPlaceholder: "https://speeches.byu.edu/talks/john-a-mccune/the-gift-of-revelation/",
             otherUrlLabel: "URL",
             otherUrlPlaceholder: "https://example.com/study-material",
-            askAiQuestion: "✨ AIに質問してもらう"
+            askAiQuestion: "✨ AIに質問してもらう",
+            surpriseMe: "✨ おまかせ聖句"
         },
         scriptures: {
             oldTestament: "旧約聖書",
@@ -648,7 +652,8 @@ export const translations = {
             deleteConfirm: "Tem certeza de que deseja excluir esta anotação? Esta ação não pode ser desfeita.",
             cancel: "Cancelar",
             delete: "Excluir Anotação",
-            readInGospelLibrary: "Ler na Biblioteca do Evangelho"
+            readInGospelLibrary: "Ler na Biblioteca do Evangelho",
+            weeklyReflectionCall: "Gostaria de refletir sobre sua semana?"
         },
         newNote: {
             editTitle: "Editar Anotação",
@@ -661,7 +666,7 @@ export const translations = {
             chapterPlaceholder: "ex: Alma 5, Isaías 9:6",
             urlPlaceholder: "Por favor, cole a URL (ex: https://www.churchofjesuschrist.org/...)",
             commentLabel: "Comentário",
-            commentPlaceholder: "ex: Mesmo que eu não tivesse muito tempo hoje, li o Vem, e Segue-Me, e acabou sendo um momento maravilhoso para lembrar a Expiação de Cristo. Foi verdadeiramente edificante.",
+            commentPlaceholder: "ex: É difícil... O que isso significa? Alguém entende essa escritura?",
             shareLabel: "Compartilhar com:",
             shareAll: "Todos os meus grupos",
             shareCurrent: "Este Grupo",
@@ -676,7 +681,9 @@ export const translations = {
             successUpdate: "Anotação atualizada com sucesso!",
             successPost: "Anotação postada com sucesso!",
             errorSave: "Falha ao salvar anotação. Tente novamente.",
-            askAiQuestion: "✨ Pedir uma pergunta à IA"
+            urlLabel: "URL / Sessão",
+            askAiQuestion: "✨ Pedir uma pergunta à IA",
+            surpriseMe: "✨ Surpreenda-me"
         },
         scriptures: {
             oldTestament: "Velho Testamento",
@@ -894,7 +901,8 @@ export const translations = {
             deleteConfirm: "您確定要刪除這則筆記嗎？此動作無法復原。",
             cancel: "取消",
             delete: "刪除筆記",
-            readInGospelLibrary: "在福音圖書館閱讀"
+            readInGospelLibrary: "在福音圖書館閱讀",
+            weeklyReflectionCall: "您想回顧本週的學習嗎？"
         },
         newNote: {
             editTitle: "編輯筆記",
@@ -907,7 +915,7 @@ export const translations = {
             chapterPlaceholder: "例如：阿爾瑪書 5, 以賽亞書 9:6",
             urlPlaceholder: "請貼上 URL (例如 https://www.churchofjesuschrist.org/...)",
             commentLabel: "心得",
-            commentPlaceholder: "例如：雖然我今天真的沒有太多時間，但我讀了《來跟從我》，這成為紀念基督贖罪的美好時刻。這真的很令人振奮。",
+            commentPlaceholder: "例如：很難...這是什麼意思？有人理解這段經文嗎？",
             shareLabel: "分享對象：",
             shareAll: "我所有的群組",
             shareCurrent: "此群組",
@@ -922,7 +930,9 @@ export const translations = {
             successUpdate: "筆記更新成功！",
             successPost: "筆記發佈成功！",
             errorSave: "儲存筆記失敗。請重試。",
-            askAiQuestion: "✨ 讓 AI 提問"
+            urlLabel: "URL / 會議",
+            askAiQuestion: "✨ 讓 AI 提問",
+            surpriseMe: "✨ 隨機經文"
         },
         scriptures: {
             oldTestament: "舊約",
@@ -1136,7 +1146,8 @@ export const translations = {
             deleteConfirm: "¿Estás seguro de que quieres eliminar esta nota? Esta acción no se puede deshacer.",
             cancel: "Cancelar",
             delete: "Eliminar Nota",
-            readInGospelLibrary: "Leer en Biblioteca del Evangelio"
+            readInGospelLibrary: "Leer en Biblioteca del Evangelio",
+            weeklyReflectionCall: "¿Te gustaría reflexionar sobre tu semana?"
         },
         newNote: {
             editTitle: "Editar Nota",
@@ -1149,7 +1160,7 @@ export const translations = {
             chapterPlaceholder: "ej: Alma 5, Isaías 9:6",
             urlPlaceholder: "Por favor, pega la URL (ej: https://www.churchofjesuschrist.org/...)",
             commentLabel: "Comentario",
-            commentPlaceholder: "ej: Aunque realmente no tuve mucho tiempo hoy, leí de Ven, sígueme, y resultó ser un momento maravilloso para recordar la Expiación de Cristo. Fue verdaderamente edificante.",
+            commentPlaceholder: "ej: Es difícil... ¿Qué significa esto? ¿Alguien entiende esta escritura?",
             shareLabel: "Compartir con:",
             shareAll: "Todos mis grupos",
             shareCurrent: "Este Grupo",
@@ -1164,7 +1175,9 @@ export const translations = {
             successUpdate: "¡Nota actualizada con éxito!",
             successPost: "¡Nota publicada con éxito!",
             errorSave: "Error al guardar la nota. Por favor, inténtalo de nuevo.",
-            askAiQuestion: "✨ Pedir una pregunta a la IA"
+            urlLabel: "URL / Sesión",
+            askAiQuestion: "✨ Pedir una pregunta a la IA",
+            surpriseMe: "✨ Sorpréndeme"
         },
         scriptures: {
             oldTestament: "Antiguo Testamento",
@@ -1378,7 +1391,8 @@ export const translations = {
             deleteConfirm: "Bạn có chắc chắn muốn xóa ghi chép này không? Hành động này không thể hoàn tác.",
             cancel: "Hủy",
             delete: "Xóa ghi chép",
-            readInGospelLibrary: "Đọc trong Thư viện Phúc âm"
+            readInGospelLibrary: "Đọc trong Thư viện Phúc âm",
+            weeklyReflectionCall: "Bạn có muốn suy ngẫm về tuần này không?"
         },
         newNote: {
             editTitle: "Chỉnh sửa ghi chép",
@@ -1391,7 +1405,7 @@ export const translations = {
             chapterPlaceholder: "vd: An Ma 5, Ê Sai 9:6",
             urlPlaceholder: "Vui lòng dán URL (vd: https://www.churchofjesuschrist.org/...)",
             commentLabel: "Bình luận",
-            commentPlaceholder: "vd: Mặc dù hôm nay tôi thực sự không có nhiều thời gian, tôi đã đọc Hãy Đến Mà Theo Ta, và đó là một khoảnh khắc tuyệt vời để nhớ đến Sự Chuộc Tội của Đấng Ky Tô. Thật sự rất nâng cao tinh thần.",
+            commentPlaceholder: "vd: Khó quá... Điều này có nghĩa là gì? Có ai hiểu câu thánh thư này không?",
             shareLabel: "Chia sẻ với:",
             shareAll: "Tất cả các nhóm của tôi",
             shareCurrent: "Nhóm này",
@@ -1406,7 +1420,9 @@ export const translations = {
             successUpdate: "Cập nhật ghi chép thành công!",
             successPost: "Đăng ghi chép thành công!",
             errorSave: "Lưu ghi chép thất bại. Vui lòng thử lại.",
-            askAiQuestion: "✨ Yêu cầu AI đặt câu hỏi"
+            urlLabel: "URL / Phiên",
+            askAiQuestion: "✨ Yêu cầu AI đặt câu hỏi",
+            surpriseMe: "✨ Ngẫu nhiên"
         },
         scriptures: {
             oldTestament: "Cựu Ước",
@@ -1620,7 +1636,8 @@ export const translations = {
             deleteConfirm: "คุณแน่ใจหรือไม่ว่าต้องการลบบันทึกนี้? การดำเนินการนี้ไม่สามารถย้อนกลับได้",
             cancel: "ยกเลิก",
             delete: "ลบบันทึก",
-            readInGospelLibrary: "อ่านในคลังค้นคว้าพระกิตติคุณ"
+            readInGospelLibrary: "อ่านในคลังค้นคว้าพระกิตติคุณ",
+            weeklyReflectionCall: "คุณต้องการทบทวนสัปดาห์นี้หรือไม่?"
         },
         newNote: {
             editTitle: "แก้ไขบันทึก",
@@ -1633,7 +1650,7 @@ export const translations = {
             chapterPlaceholder: "เช่น แอลมา 5, อิสยาห์ 9:6",
             urlPlaceholder: "กรุณาวาง URL (เช่น https://www.churchofjesuschrist.org/...)",
             commentLabel: "ความคิดเห็น",
-            commentPlaceholder: "เช่น แม้ว่าวันนี้ฉันจะไม่มีเวลามากนัก แต่ฉันได้อ่านจงตามเรามา และมันกลายเป็นช่วงเวลาที่ยอดเยี่ยมในการระลึกถึงการชดใช้ของพระคริสต์ มันยกระดับจิตใจจริงๆ",
+            commentPlaceholder: "ตัวอย่าง: ยากจัง... หมายความว่าอย่างไร? มีใครเข้าใจพระคัมภีร์ข้อนี้บ้าง?",
             shareLabel: "แบ่งปันกับ:",
             shareAll: "กลุ่มทั้งหมดของฉัน",
             shareCurrent: "กลุ่มนี้",
@@ -1648,7 +1665,9 @@ export const translations = {
             successUpdate: "อัปเดตบันทึกสำเร็จ!",
             successPost: "โพสต์บันทึกสำเร็จ!",
             errorSave: "บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
-            askAiQuestion: "✨ ขอคำถามจาก AI"
+            urlLabel: "URL / เซสชัน",
+            askAiQuestion: "✨ ขอคำถามจาก AI",
+            surpriseMe: "✨ สุ่ม"
         },
         scriptures: {
             oldTestament: "พันธสัญญาเดิม",
@@ -1862,7 +1881,8 @@ export const translations = {
             deleteConfirm: "이 노트를 삭제하시겠습니까? 이 작업은 취소할 수 없습니다.",
             cancel: "취소",
             delete: "노트 삭제",
-            readInGospelLibrary: "복음 자료실에서 읽기"
+            readInGospelLibrary: "복음 자료실에서 읽기",
+            weeklyReflectionCall: "이번 주를 되돌아보시겠습니까?"
         },
         newNote: {
             editTitle: "노트 편집",
@@ -1875,7 +1895,7 @@ export const translations = {
             chapterPlaceholder: "예: 앨마서 5, 이사야 9:6",
             urlPlaceholder: "URL을 붙여넣으세요 (예: https://www.churchofjesuschrist.org/...)",
             commentLabel: "코멘트",
-            commentPlaceholder: "예: 오늘 시간이 별로 없었지만 '와서 나를 따르라'를 읽었고, 그리스도의 속죄를 기억하는 멋진 시간이 되었습니다. 정말 고무적이었습니다.",
+            commentPlaceholder: "예: 어렵네요... 무슨 뜻일까요? 이 성구에 대해 아시는 분 계신가요?",
             shareLabel: "공유 대상:",
             shareAll: "내 모든 그룹",
             shareCurrent: "이 그룹",
@@ -1890,7 +1910,9 @@ export const translations = {
             successUpdate: "노트가 업데이트되었습니다!",
             successPost: "노트가 게시되었습니다!",
             errorSave: "노트 저장 실패. 다시 시도해주세요.",
-            askAiQuestion: "✨ AI에게 질문 요청"
+            urlLabel: "URL / 세션",
+            askAiQuestion: "✨ AI에게 질문 요청",
+            surpriseMe: "✨ 랜덤 선택"
         },
         scriptures: {
             oldTestament: "구약전서",
@@ -2104,7 +2126,8 @@ export const translations = {
             deleteConfirm: "Sigurado ka bang gusto mong tanggalin ang talang ito? Hindi na ito mababawi.",
             cancel: "Kanselahin",
             delete: "Tanggalin ang Tala",
-            readInGospelLibrary: "Basahin sa Gospel Library"
+            readInGospelLibrary: "Basahin sa Gospel Library",
+            weeklyReflectionCall: "Gusto mo bang magnilay sa iyong linggo?"
         },
         newNote: {
             editTitle: "I-edit ang Tala",
@@ -2117,7 +2140,7 @@ export const translations = {
             chapterPlaceholder: "hal. Alma 5, Isaias 9:6",
             urlPlaceholder: "Pakilagay ang URL (hal. https://www.churchofjesuschrist.org/...)",
             commentLabel: "Komento",
-            commentPlaceholder: "hal. Kahit na wala akong masyadong oras ngayon, nagbasa ako mula sa Pumarito Ka, Sumunod Ka sa Akin, at naging magandang sandali ito para alalahanin ang Pagbabayad-sala ni Cristo. Talagang nakakapagpalakas.",
+            commentPlaceholder: "hal. Mahirap... Ano ang ibig sabihin nito? May nakakaunawa ba sa banal na kasulatang ito?",
             shareLabel: "Ibahagi sa:",
             shareAll: "Lahat ng aking grupo",
             shareCurrent: "Ang Grupong Ito",
@@ -2132,7 +2155,9 @@ export const translations = {
             successUpdate: "Matagumpay na na-update ang tala!",
             successPost: "Matagumpay na nai-post ang tala!",
             errorSave: "Nabigong i-save ang tala. Pakisubukan muli.",
-            askAiQuestion: "✨ Humiling ng Tanong sa AI"
+            urlLabel: "URL / Session",
+            askAiQuestion: "✨ Humiling ng Tanong sa AI",
+            surpriseMe: "✨ Surprise Me"
         },
         scriptures: {
             oldTestament: "Lumang Tipan",
@@ -2346,7 +2371,8 @@ export const translations = {
             deleteConfirm: "Je, una uhakika unataka kufuta ujumbe huu? Hatua hii haiwezi kubatilishwa.",
             cancel: "Ghairi",
             delete: "Futa Ujumbe",
-            readInGospelLibrary: "Soma katika Gospel Library"
+            readInGospelLibrary: "Soma katika Gospel Library",
+            weeklyReflectionCall: "Je, ungependa kutafakari wiki yako?"
         },
         newNote: {
             editTitle: "Hariri Ujumbe",
@@ -2359,7 +2385,7 @@ export const translations = {
             chapterPlaceholder: "mf. Alma 5, Isaya 9:6",
             urlPlaceholder: "Tafadhali bandika URL (mfano https://www.churchofjesuschrist.org/...)",
             commentLabel: "Maoni",
-            commentPlaceholder: "mf. Ingawa sikuwa na muda mwingi leo, nilisoma kutoka Njoo, Unifuate, na ilikuwa wakati mzuri wa kukumbuka Upatanisho wa Kristo. Ilikuwa ya kuinua kweli.",
+            commentPlaceholder: "mf. Ni ngumu... Hii ina maana gani? Je, kuna mtu yeyote anaelewa andiko hili?",
             shareLabel: "Shiriki na:",
             shareAll: "Vikundi vyangu vyote",
             shareCurrent: "Kikundi Hiki",
@@ -2374,7 +2400,9 @@ export const translations = {
             successUpdate: "Ujumbe umesasishwa kikamilifu!",
             successPost: "Ujumbe umechapishwa kikamilifu!",
             errorSave: "Imeshindwa kuhifadhi ujumbe. Tafadhali jaribu tena.",
-            askAiQuestion: "✨ Uliza AI Swali"
+            urlLabel: "URL / Kipindi",
+            askAiQuestion: "✨ Uliza AI Swali",
+            surpriseMe: "✨ Surprise Me"
         },
         scriptures: {
             oldTestament: "Agano la Kale",
