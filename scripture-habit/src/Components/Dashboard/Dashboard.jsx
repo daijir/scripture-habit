@@ -19,6 +19,7 @@ import { translateChapterField } from '../../Utils/bookNameTranslations';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 import NoteDisplay from '../NoteDisplay/NoteDisplay';
 import NoteCard from '../NoteCard/NoteCard';
+import { getTodayReadingPlan } from '../../Data/DailyReadingPlan2025';
 
 
 const Dashboard = () => {
@@ -42,6 +43,47 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const { t, language } = useLanguage();
+
+  const todayPlan = getTodayReadingPlan();
+
+  const getReadingPlanUrl = (script) => {
+    // Basic heuristic for 2025 Curriculum (D&C)
+    const baseUrl = "https://www.churchofjesuschrist.org/study/scriptures";
+    const langParam = language === 'ja' ? '?lang=jpn' : '?lang=eng'; // Simplified lang check
+
+    if (script.includes("Official Declarations")) {
+      const match = script.match(/(\d+)(?::([\d\-\,]+))?/);
+      const num = match ? match[1] : '1';
+      return `${baseUrl}/dc-testament/od/${num}${langParam}`;
+    }
+    if (script.includes("The Family: A Proclamation")) {
+      return `${baseUrl}/the-family-a-proclamation-to-the-world/the-family-a-proclamation-to-the-world${langParam}`;
+    }
+    if (script.includes("Joseph Smith—History") || script.includes("Joseph Smith-History")) {
+      // Extract verses if any
+      const match = script.match(/History\s*1(?::([\d\-\,]+))?/);
+      const verses = match && match[1] ? `&id=${match[1]}#p${match[1].split('-')[0]}` : '';
+      return `${baseUrl}/pgp/js-h/1${langParam}${verses}`;
+    }
+    if (script.includes("Articles of Faith")) {
+      return `${baseUrl}/pgp/a-of-f/1${langParam}`;
+    }
+
+    // Default D&C
+    // Check if it is D&C
+    if (script.includes("Doctrine and Covenants")) {
+      // Extract section
+      const match = script.match(/(\d+)(?::([\d\-\,]+))?/);
+      if (match) {
+        const section = match[1];
+        const verses = match[2] ? `&id=${match[2]}#p${match[2].split('-')[0]}` : '';
+        return `${baseUrl}/dc-testament/dc/${section}${langParam}${verses}`;
+      }
+    }
+
+    // Fallback: Try generic mapper
+    return getGospelLibraryUrl("Doctrine and Covenants", script, language);
+  };
 
   useEffect(() => {
     if (location.state?.initialView !== undefined) {
@@ -400,11 +442,69 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="share-learning-cta">
-              <p>{t('dashboard.shareLearningCall')}</p>
-              <button className="new-note-btn cta-btn" onClick={() => setIsModalOpen(true)}>
-                <UilPlus /> {t('dashboard.newNote')}
-              </button>
+            {/* Today's Reading Plan & New Note Split Row */}
+            <div className="dashboard-split-row">
+              {/* Today's Reading Plan Section */}
+              <div className="reading-plan-section">
+                <div className="reading-plan-card" style={{
+                  background: 'rgba(255, 255, 255, 0.4)',
+                  padding: '0.8rem',
+                  borderRadius: '16px',
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                  backdropFilter: 'blur(10px)',
+                  textAlign: 'center'
+                }}>
+                  <h3 style={{ margin: '0 0 10px 0', fontSize: '1.1rem', color: '#4a5568' }}>{t('dashboard.todaysReadingPlan')}</h3>
+                  {todayPlan ? (
+                    <div>
+                      <p style={{ fontSize: '0.9rem', color: '#718096', marginBottom: '0.5rem' }}>{todayPlan.date}</p>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'center' }}>
+                        {todayPlan.scripts.map((script, idx) => {
+                          const url = getReadingPlanUrl(script);
+                          const odTranslations = {
+                            ja: "公式の宣言",
+                            pt: "Declarações Oficiais",
+                            zho: "正式宣言",
+                            es: "Declaraciones Oficiales",
+                            vi: "Tuyên Ngôn Chính Thức",
+                            th: "คำประกาศอย่างเป็นทางการ",
+                            ko: "공식 선언",
+                            tl: "Opisyal na Pahayag",
+                            sw: "Matamko Rasmi"
+                          };
+
+                          let displayScript = script;
+                          if (script.includes("Official Declarations")) {
+                            if (odTranslations[language]) {
+                              displayScript = script.replace("Official Declarations", odTranslations[language]);
+                            }
+                          }
+                          return (
+                            <a
+                              key={idx}
+                              href={url || '#'}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ color: '#6B46C1', fontWeight: 'bold', textDecoration: 'none', fontSize: '1.1rem' }}
+                            >
+                              {displayScript}
+                            </a>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ) : (
+                    <p>{t('dashboard.noReadingPlan')}</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="share-learning-cta">
+                <p>{t('dashboard.shareLearningCall')}</p>
+                <button className="new-note-btn cta-btn" onClick={() => setIsModalOpen(true)}>
+                  <UilPlus /> {t('dashboard.newNote')}
+                </button>
+              </div>
             </div>
 
             <div className="dashboard-section">
