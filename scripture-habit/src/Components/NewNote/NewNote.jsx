@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { db } from '../../firebase';
-import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment, query, where, getDocs, Timestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment, query, where, getDocs, Timestamp, arrayUnion } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { UilTrashAlt, UilShuffle } from '@iconscout/react-unicons';
 import Select from 'react-select';
@@ -511,7 +511,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     for (const gid of targetGroupIds) {
                         const messagesRef = collection(db, 'groups', gid, 'messages');
                         await addDoc(messagesRef, {
-                            text: `🎉🎉🎉 **${userData.nickname} reached a ${newStreak} day streak!!** 🎉🎉🎉\n\n**Let us edify one another in the group and share joy together!**`,
+                            text: t('groupChat.streakAnnouncement', { nickname: userData.nickname, streak: newStreak }),
                             senderId: 'system',
                             senderNickname: 'Scripture Habit Bot',
                             createdAt: announcementTimestamp, // Explicit timestamp 2 seconds after note
