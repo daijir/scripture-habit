@@ -127,20 +127,24 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   }, [groupId]);
 
   const inputPlaceholder = useMemo(() => {
-    // Check if 'typeMessage' is an array (new humorous list) or string
-    let typeMessageText = t('groupChat.typeMessage');
-    if (Array.isArray(typeMessageText)) {
-      typeMessageText = typeMessageText[Math.floor(Math.random() * typeMessageText.length)];
+    const typeMessageRaw = t('groupChat.typeMessage');
+    let candidates = [];
+
+    if (Array.isArray(typeMessageRaw)) {
+      // If it's an array (humorous list), add all items to increase their frequency
+      candidates = [...typeMessageRaw];
+    } else {
+      // If string (other languages), just add the single string
+      candidates.push(typeMessageRaw);
     }
 
-    const placeholders = [
-      typeMessageText,
-      t('groupChat.placeholderShare'),
-      t('groupChat.placeholderInactivity'),
-      t('groupChat.placeholderEncourage')
-    ];
-    // Return a random one from the mix (including the already randomized typeMessage if applicable)
-    return placeholders[Math.floor(Math.random() * placeholders.length)];
+    // Add other placeholders to the pool
+    // In Japanese, these will be "diluted" by the many humorous options, appearing less frequently
+    candidates.push(t('groupChat.placeholderInactivity'));
+    candidates.push(t('groupChat.placeholderShare'));
+    candidates.push(t('groupChat.placeholderEncourage'));
+
+    return candidates[Math.floor(Math.random() * candidates.length)];
   }, [t, groupId, language]); // Re-roll when group or language changes
 
   // Fetch user's read count when entering the group
