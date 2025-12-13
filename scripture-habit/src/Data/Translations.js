@@ -27,7 +27,7 @@ export const translations = {
             shareLearningCall: "Would you like to share what you learned today?",
             goToByuSpeech: "Go to BYU Speech",
             readStudyMaterial: "Read The Study Material",
-            todaysComeFollowMe: "Today's Reading Plan",
+            todaysComeFollowMe: "Today's 'Come, Follow Me'",
             noReadingPlan: "No plan for today."
         },
         languages: {
@@ -298,6 +298,24 @@ export const translations = {
             message: "Are you sure you want to sign out?",
             confirm: "Sign Out",
             cancel: "Cancel"
+        },
+        welcomeStory: {
+            page1Title: "Welcome to Scripture Habit!",
+            page1Content: "This app was created to help you build a daily scripture study habit by learning from and edifying one another within a group.",
+            page2Title: "Did you know?",
+            page2Content: "According to a study by Dominican University of California, you are <strong style='color: #E53E3E; font-size: 1.2em;'>about twice</strong> as likely to succeed in building a new habit when you cooperate with a friend compared to doing it alone!",
+            page3Title: "How it works for {username}",
+            page3Step1: "1. Write down what you learned (Output)",
+            page3Step2: "2. Share what you learned (Edification)",
+            page3Step3: "3. Weekly AI reports (Reflection)",
+            page4Title: "Our Vision",
+            page4Quote: "\"Wherefore, he that preacheth and he that receiveth, understand one another, and both are edified and rejoice together.\" - Jesus Christ",
+            page4Content: "If you can feel joy through this app as this scripture says, I would be very happy. It is a developer's delight.",
+            page5Title: "Ready to start?",
+            page5Content: "Have a great scripture study journey!",
+            startButton: "Start",
+            nextButton: "Next",
+            skipButton: "Skip"
         }
     },
     ja: {
@@ -393,7 +411,7 @@ export const translations = {
             noActivity: "活動記録なし",
             inactivityPolicyBanner: "⚠️ 3日間グループにノートを投稿しないと、このグループから自動的に退出します。",
             placeholderShare: "今日も学んだことを共有しましょう！",
-            placeholderInactivity: "⚠️ 3日間何もしないと自動退室になっちゃいます",
+            placeholderInactivity: "⚠️ 3日間ノートを投稿しないと自動退室になってしまいます",
             placeholderEncourage: "あなたの考えをグループで分かち合いましょう",
             welcomeGuideTitle: "グループへようこそ！",
             welcomeGuideMessage: "みんなで楽しく学ぶための簡単なルールです。",
@@ -599,6 +617,25 @@ export const translations = {
             message: "本当にサインアウトしますか？",
             confirm: "サインアウト",
             cancel: "キャンセル"
+        },
+        welcomeStory: {
+            page1Title: "Scripture Habitへようこそ！",
+            page1Content: "このアプリはグループ内でお互いに聖典から学び、教化し合うことで日々の聖典学習を習慣づけることを目的に作成しました。",
+            page2Title: "知っていましたか？",
+            page2Content: "カリフォルニア州ドミニカン大学の研究によると、新しいことの習慣化において一人でやるより友人とお互いに協力してやった方が<strong style='color: #E53E3E; font-size: 1.2em;'>約２倍</strong>の習慣化達成率があることがわかったんです！",
+            page3Title: "このアプリは...",
+            page3Step1: "1. 学んだことを書き出す(アウトプット)",
+            page3Step2: "2. お互いに学んだことを共有する(教化)",
+            page3Step3: "3. AIによる一週間のレポート作成(振り返り)",
+            page3ContentSuffix: "をすることで、{username}さんにとってよりよい聖典学習の習慣化をサポートします。",
+            page4Title: "ビジョン",
+            page4Quote: "「それゆえ、説く者と受ける者は互いに理解し合い、ともに教化されて、ともに喜ぶのである。」- イエス・キリスト",
+            page4Content: "この聖句の通り{username}さんが喜びを感じることができたら、とてもうれしいです。開発者冥利につきます。",
+            page5Title: "準備はいいですか？",
+            page5Content: "それでは、良い聖典学習の旅を！",
+            startButton: "はじめる",
+            nextButton: "次へ",
+            skipButton: "スキップ"
         }
     },
     pt: {
@@ -627,7 +664,7 @@ export const translations = {
             inspirationQuote: "\"Portanto, aquele que prega e aquele que recebe se compreendem um ao outro e ambos são edificados e juntos se regozijam\"",
             inspirationSource: "— Jesus Cristo (Doutrina e Convênios 50:22)",
             shareLearningCall: "Gostaria de compartilhar o que aprendeu hoje?",
-            todaysComeFollowMe: "Plano de Leitura de Hoje",
+            todaysComeFollowMe: "'Vem, e Segue-Me' de Hoje",
             noReadingPlan: "Nenhum plano para hoje."
         },
         languages: {
@@ -885,6 +922,24 @@ export const translations = {
             message: "Tem certeza de que deseja sair?",
             confirm: "Sair",
             cancel: "Cancelar"
+        },
+        welcomeStory: {
+            page1Title: "Bem-vindo ao Scripture Habit!",
+            page1Content: "Este aplicativo foi criado para ajudá-lo a construir um hábito diário de estudo das escrituras, aprendendo e edificando uns aos outros dentro de um grupo.",
+            page2Title: "Você sabia?",
+            page2Content: "De acordo com um estudo da Universidade Dominicana da Califórnia, você tem <strong style='color: #E53E3E; font-size: 1.2em;'>cerca de duas vezes</strong> mais chances de sucesso ao construir um novo hábito quando coopera com um amigo em comparação a fazê-lo sozinho!",
+            page3Title: "Como funciona para {username}",
+            page3Step1: "1. Escreva o que você aprendeu (Produção)",
+            page3Step2: "2. Compartilhe o que você aprendeu (Edificação)",
+            page3Step3: "3. Relatórios semanais de IA (Reflexão)",
+            page4Title: "Nossa Visão",
+            page4Quote: "\"Portanto, aquele que prega e aquele que recebe se compreendem um ao outro e ambos são edificados e juntos se regozijam\" - Jesus Cristo",
+            page4Content: "Se você puder sentir alegria através deste aplicativo como diz esta escritura, ficarei muito feliz. É a alegria de um desenvolvedor.",
+            page5Title: "Pronto para começar?",
+            page5Content: "Tenha uma ótima jornada de estudo das escrituras!",
+            startButton: "Começar",
+            nextButton: "Próximo",
+            skipButton: "Pular"
         }
     },
     zho: {
@@ -913,7 +968,7 @@ export const translations = {
             inspirationQuote: "「因此，那宣講的和接受的，彼此了解，雙方都被啟發，並一起快樂。」",
             inspirationSource: "— 耶穌基督(教義和聖約50:22)",
             shareLearningCall: "您想分享今天所學到的嗎？",
-            todaysComeFollowMe: "今日閱讀計畫",
+            todaysComeFollowMe: "今日的《來跟從我》",
             noReadingPlan: "今日無計畫。"
         },
         languages: {
@@ -1167,6 +1222,24 @@ export const translations = {
             message: "您確定要登出嗎？",
             confirm: "登出",
             cancel: "取消"
+        },
+        welcomeStory: {
+            page1Title: "歡迎來到 Scripture Habit！",
+            page1Content: "這個應用程式是為了幫助您建立每日研讀經文的習慣，通過在群組中互相學習和啟發。",
+            page2Title: "您知道嗎？",
+            page2Content: "根據加州多明尼克大學的一項研究，當您與朋友合作時，建立新習慣的成功率是單獨做時的<strong style='color: #E53E3E; font-size: 1.2em;'>約兩倍</strong>！",
+            page3Title: "{username} 的運作方式",
+            page3Step1: "1. 寫下您學到的內容（輸出）",
+            page3Step2: "2. 分享您學到的內容（啟發）",
+            page3Step3: "3. 每週 AI 報告（反思）",
+            page4Title: "我們的願景",
+            page4Quote: "「因此，那宣講的和接受的，彼此了解，雙方都被啟發，並一起快樂。」 - 耶穌基督",
+            page4Content: "如果您能像這段經文所說的那樣通過這個應用程式感受到快樂，我會非常高興。這是開發者的喜悅。",
+            page5Title: "準備好開始了嗎？",
+            page5Content: "祝您有美好的經文研讀旅程！",
+            startButton: "開始",
+            nextButton: "下一步",
+            skipButton: "跳過"
         }
     },
     es: {
@@ -1195,7 +1268,7 @@ export const translations = {
             inspirationQuote: "\"“De manera que, el que la predica y el que la recibe se comprenden el uno al otro, y ambos son edificados y se regocijan juntamente.\"",
             inspirationSource: "— Jesucristo (Doctrina y Convenios 50:22)",
             shareLearningCall: "¿Te gustaría compartir lo que aprendiste hoy?",
-            todaysComeFollowMe: "Plan de Lectura de Hoy",
+            todaysComeFollowMe: "'Ven, sígueme' de Hoy",
             noReadingPlan: "No hay plan para hoy."
         },
         languages: {
@@ -1449,6 +1522,24 @@ export const translations = {
             message: "¿Estás seguro de que quieres cerrar sesión?",
             confirm: "Cerrar Sesión",
             cancel: "Cancelar"
+        },
+        welcomeStory: {
+            page1Title: "¡Bienvenido a Scripture Habit!",
+            page1Content: "Esta aplicación fue creada para ayudarte a construir un hábito diario de estudio de las escrituras aprendiendo y edificándose unos a otros dentro de un grupo.",
+            page2Title: "¿Sabías qué?",
+            page2Content: "Según un estudio de la Universidad Dominicana de California, ¡tienes <strong style='color: #E53E3E; font-size: 1.2em;'>aproximadamente el doble</strong> de probabilidades de éxito al construir un nuevo hábito cuando cooperas con un amigo en comparación con hacerlo solo!",
+            page3Title: "Cómo funciona para {username}",
+            page3Step1: "1. Escribe lo que aprendiste (Salida)",
+            page3Step2: "2. Comparte lo que aprendiste (Edificación)",
+            page3Step3: "3. Informes semanales de IA (Reflexión)",
+            page4Title: "Nuestra Visión",
+            page4Quote: "\"De manera que, el que la predica y el que la recibe se comprenden el uno al otro, y ambos son edificados y se regocijan juntamente.\" - Jesucristo",
+            page4Content: "Si puedes sentir gozo a través de esta aplicación como dice esta escritura, seré muy feliz. Es el deleite de un desarrollador.",
+            page5Title: "¿Listo para empezar?",
+            page5Content: "¡Que tengas una gran jornada de estudio de las escrituras!",
+            startButton: "Empezar",
+            nextButton: "Siguiente",
+            skipButton: "Omitir"
         }
     },
     vi: {
@@ -1477,7 +1568,7 @@ export const translations = {
             inspirationQuote: "\"Vậy nên, người thuyết giảng và người nhận hiểu được nhau, và cả hai được gây dựng và cùng nhau vui vẻ.\"",
             inspirationSource: "— Chúa Giê Su Ky Tô (Giáo Lý và Giao Ước 50:22)",
             shareLearningCall: "Bạn có muốn chia sẻ những gì bạn đã học hôm nay không?",
-            todaysComeFollowMe: "Kế hoạch Đọc Hôm nay",
+            todaysComeFollowMe: "'Hãy Đến Mà Theo Ta' Hôm Nay",
             noReadingPlan: "Không có kế hoạch cho hôm nay."
         },
         languages: {
@@ -1731,6 +1822,24 @@ export const translations = {
             message: "Bạn có chắc chắn muốn đăng xuất không?",
             confirm: "Đăng xuất",
             cancel: "Hủy"
+        },
+        welcomeStory: {
+            page1Title: "Chào mừng đến với Scripture Habit!",
+            page1Content: "Ứng dụng này được tạo ra để giúp bạn xây dựng thói quen học thánh thư hàng ngày bằng cách học hỏi và gây dựng lẫn nhau trong một nhóm.",
+            page2Title: "Bạn có biết?",
+            page2Content: "Theo một nghiên cứu của Đại học Dominican California, bạn có khả năng thành công cao gấp <strong style='color: #E53E3E; font-size: 1.2em;'>khoảng hai lần</strong> trong việc xây dựng thói quen mới khi hợp tác với một người bạn so với khi làm một mình!",
+            page3Title: "Cách hoạt động đối với {username}",
+            page3Step1: "1. Viết ra những gì bạn đã học (Đầu ra)",
+            page3Step2: "2. Chia sẻ những gì bạn đã học (Gây dựng)",
+            page3Step3: "3. Báo cáo AI hàng tuần (Suy ngẫm)",
+            page4Title: "Tầm nhìn của chúng tôi",
+            page4Quote: "\"Vậy nên, người thuyết giảng và người nhận hiểu được nhau, và cả hai được gây dựng và cùng nhau vui vẻ.\" - Chúa Giê Su Ky Tô",
+            page4Content: "Nếu bạn có thể cảm thấy niềm vui qua ứng dụng này như câu thánh thư này nói, tôi sẽ rất hạnh phúc. Đó là niềm vui của một nhà phát triển.",
+            page5Title: "Sẵn sàng bắt đầu?",
+            page5Content: "Chúc bạn có một hành trình học thánh thư tuyệt vời!",
+            startButton: "Bắt đầu",
+            nextButton: "Tiếp theo",
+            skipButton: "Bỏ qua"
         }
     },
     th: {
@@ -1759,7 +1868,7 @@ export const translations = {
             inspirationQuote: "\"ดังนั้น, คนที่สั่งสอนและคนที่รับ, เข้าใจกัน, และทั้งสองได้รับการจรรโลงใจและชื่นชมยินดีด้วยกัน.\"",
             inspirationSource: "— พระเยซูคริสต์ (หลักคำสอนและพันธสัญญา 50:22)",
             shareLearningCall: "คุณต้องการแบ่งปันสิ่งที่คุณเรียนรู้วันนี้หรือไม่?",
-            todaysComeFollowMe: "แผนการอ่านวันนี้",
+            todaysComeFollowMe: "'จงตามเรามา' ของวันนี้",
             noReadingPlan: "ไม่มีแผนสำหรับวันนี้"
         },
         languages: {
@@ -2013,6 +2122,24 @@ export const translations = {
             message: "คุณแน่ใจหรือไม่ว่าต้องการออกจากระบบ?",
             confirm: "ออกจากระบบ",
             cancel: "ยกเลิก"
+        },
+        welcomeStory: {
+            page1Title: "ยินดีต้อนรับสู่ Scripture Habit!",
+            page1Content: "แอปนี้สร้างขึ้นเพื่อช่วยให้คุณสร้างนิสัยการศึกษาพระคัมภีร์ทุกวันโดยการเรียนรู้จากกันและกัน และจรรโลงใจกันและกันภายในกลุ่ม",
+            page2Title: "คุณรู้หรือไม่?",
+            page2Content: "จากการศึกษาของ Dominican University of California คุณมีแนวโน้มที่จะประสบความสำเร็จในการสร้างนิสัยใหม่ได้ <strong style='color: #E53E3E; font-size: 1.2em;'>ประมาณสองเท่า</strong> เมื่อร่วมมือกับเพื่อน เทียบกับการทำคนเดียว!",
+            page3Title: "วิธีการทำงานสำหรับ {username}",
+            page3Step1: "1. เขียนสิ่งที่คุณได้เรียนรู้ (ผลลัพธ์)",
+            page3Step2: "2. แบ่งปันสิ่งที่คุณได้เรียนรู้ (การจรรโลงใจ)",
+            page3Step3: "3. รายงาน AI รายสัปดาห์ (การสะท้อนกลับ)",
+            page4Title: "วิสัยทัศน์ของเรา",
+            page4Quote: "\"ดังนั้น, คนที่สั่งสอนและคนที่รับ, เข้าใจกัน, และทั้งสองได้รับการจรรโลงใจและชื่นชมยินดีด้วยกัน.\" - พระเยซูคริสต์",
+            page4Content: "หากคุณรู้สึกถึงความสุขผ่านแอปนี้ตามที่พระคัมภีร์ข้อนี้กล่าวไว้ ผมจะมีความสุขมาก เป็นความปิติยินดีของนักพัฒนา",
+            page5Title: "พร้อมที่จะเริ่มหรือยัง?",
+            page5Content: "ขอให้มีการเดินทางศึกษาพระคัมภีร์ที่ยอดเยี่ยม!",
+            startButton: "เริ่ม",
+            nextButton: "ถัดไป",
+            skipButton: "ข้าม"
         }
     },
     ko: {
@@ -2041,7 +2168,7 @@ export const translations = {
             inspirationQuote: "\"그런즉 전도하는 자와 받는 자는 서로를 이해하고 둘 다 교화되며, 함께 기뻐하느니라.\"",
             inspirationSource: "— 예수 그리스도 (교리와 성약 50:22)",
             shareLearningCall: "오늘 배운 것을 공유하시겠습니까?",
-            todaysComeFollowMe: "오늘의 읽기 계획",
+            todaysComeFollowMe: "오늘의 '와서 나를 따르라'",
             noReadingPlan: "오늘의 계획이 없습니다."
         },
         languages: {
@@ -2295,6 +2422,24 @@ export const translations = {
             message: "정말로 로그아웃하시겠습니까?",
             confirm: "로그아웃",
             cancel: "취소"
+        },
+        welcomeStory: {
+            page1Title: "Scripture Habit에 오신 것을 환영합니다!",
+            page1Content: "이 앱은 그룹 내에서 서로 배우고 교화함으로써 매일 경전 공부 습관을 기를 수 있도록 돕기 위해 만들어졌습니다.",
+            page2Title: "알고 계셨나요?",
+            page2Content: "도미니칸 대학교 캘리포니아의 연구에 따르면, 친구와 협력할 때 혼자 할 때보다 새로운 습관을 형성하는 데 성공할 확률이 <strong style='color: #E53E3E; font-size: 1.2em;'>약 2배</strong> 더 높다고 합니다!",
+            page3Title: "{username}님을 위한 사용법",
+            page3Step1: "1. 배운 것을 기록하기 (아웃풋)",
+            page3Step2: "2. 배운 것을 공유하기 (교화)",
+            page3Step3: "3. 주간 AI 리포트 (성찰)",
+            page4Title: "우리의 비전",
+            page4Quote: "\"그런즉 전도하는 자와 받는 자는 서로를 이해하고 둘 다 교화되며, 함께 기뻐하느니라.\" - 예수 그리스도",
+            page4Content: "이 성구 말씀처럼 이 앱을 통해 기쁨을 느끼실 수 있다면 정말 행복하겠습니다. 그것이 개발자의 기쁨입니다.",
+            page5Title: "시작할 준비가 되셨나요?",
+            page5Content: "멋진 경전 공부 여정이 되시길 바랍니다!",
+            startButton: "시작",
+            nextButton: "다음",
+            skipButton: "건너뛰기"
         }
     },
     tl: {
@@ -2323,7 +2468,7 @@ export const translations = {
             inspirationQuote: "\"Samakatwid, siya na nangangaral at siya na nakatatanggap ay nauunawaan ang isa't isa, at sila ay kapwa pinabuti at nagsasaya nang magkasama.\"",
             inspirationSource: "— Jesucristo (Doktrina at mga Tipan 50:22)",
             shareLearningCall: "Gusto mo bang ibahagi ang natutunan mo ngayon?",
-            todaysComeFollowMe: "Plano ng Pagbabasa Ngayon",
+            todaysComeFollowMe: "'Pumarito Ka, Sumunod Ka sa Akin' Ngayon",
             noReadingPlan: "Walang plano para sa araw na ito."
         },
         languages: {
@@ -2577,6 +2722,24 @@ export const translations = {
             message: "Sigurado ka bang gusto mong mag-sign out?",
             confirm: "Mag-sign Out",
             cancel: "Kanselahin"
+        },
+        welcomeStory: {
+            page1Title: "Maligayang pagdating sa Scripture Habit!",
+            page1Content: "Ang app na ito ay nilikha upang tulungan kang bumuo ng araw-araw na gawi sa pag-aaral ng banal na kasulatan sa pamamagitan ng pag-aaral mula sa at pagpapatibay sa isa't isa sa loob ng isang grupo.",
+            page2Title: "Alam mo ba?",
+            page2Content: "Ayon sa isang pag-aaral ng Dominican University of California, ikaw ay may <strong style='color: #E53E3E; font-size: 1.2em;'>humigit-kumulang dalawang beses</strong> na mas malaking posibilidad na magtagumpay sa pagbuo ng bagong gawi kapag nakikipagtulungan ka sa isang kaibigan kumpara sa paggawa nito nang mag-isa!",
+            page3Title: "Paano ito gumagana para kay {username}",
+            page3Step1: "1. Isulat ang iyong natutunan (Output)",
+            page3Step2: "2. Ibahagi ang iyong natutunan (Edification)",
+            page3Step3: "3. Lingguhang mga ulat ng AI (Reflection)",
+            page4Title: "Ang Aming Bisyon",
+            page4Quote: "\"Samakatwid, siya na nangangaral at siya na nakatatanggap ay nauunawaan ang isa't isa, at sila ay kapwa pinabuti at nagsasaya nang magkasama.\" - Jesucristo",
+            page4Content: "Kung makakaramdam ka ng kagalakan sa pamamagitan ng app na ito gaya ng sinasabi ng banal na kasulatang ito, ako ay magiging napakasaya. Ito ay kaluguran ng isang developer.",
+            page5Title: "Handa nang magsimula?",
+            page5Content: "Magkaroon ng magandang paglalakbay sa pag-aaral ng banal na kasulatan!",
+            startButton: "Magsimula",
+            nextButton: "Susunod",
+            skipButton: "Laktawan"
         }
     },
     sw: {
@@ -2605,7 +2768,7 @@ export const translations = {
             inspirationQuote: "\"Kwa sababu hiyo, yule ambaye huhubiri na yule apokeaye, huelewana, na wote hujengana na kufurahi kwa pamoja.\"",
             inspirationSource: "— Yesu Kristo (Mafundisho na Maagano 50:22)",
             shareLearningCall: "Je, ungependa kushiriki ulichojifunza leo?",
-            todaysComeFollowMe: "Mpango wa Kusoma Leo",
+            todaysComeFollowMe: "'Njoo, Unifuate' ya Leo",
             noReadingPlan: "Hakuna mpango wa leo."
         },
         languages: {
@@ -2859,6 +3022,24 @@ export const translations = {
             message: "Je, una uhakika unataka kuondoka?",
             confirm: "Ondoka",
             cancel: "Ghairi"
+        },
+        welcomeStory: {
+            page1Title: "Karibu kwenye Scripture Habit!",
+            page1Content: "Programu hii iliundwa ili kukusaidia kujenga tabia ya kila siku ya kujifunza maandiko kwa kujifunza kutoka na kujengana na wengine ndani ya kikundi.",
+            page2Title: "Je, ulijua?",
+            page2Content: "Kulingana na utafiti wa Chuo Kikuu cha Dominican cha California, una uwezekano wa <strong style='color: #E53E3E; font-size: 1.2em;'>mara mbili zaidi</strong> wa kufanikiwa katika kujenga tabia mpya unaposhirikiana na rafiki ukilinganisha na kufanya peke yako!",
+            page3Title: "Jinsi inavyofanya kazi kwa {username}",
+            page3Step1: "1. Andika ulichojifunza (Matokeo)",
+            page3Step2: "2. Shiriki ulichojifunza (Kujengana)",
+            page3Step3: "3. Ripoti za AI za kila wiki (Tafakari)",
+            page4Title: "Maono Yetu",
+            page4Quote: "\"Kwa sababu hiyo, yule ambaye huhubiri na yule apokeaye, huelewana, na wote hujengana na kufurahi kwa pamoja.\" - Yesu Kristo",
+            page4Content: "Ikiwa unaweza kuhisi furaha kupitia programu hii kama andiko hili linavyosema, nitafurahi sana. Hiyo ni furaha ya msanidi programu.",
+            page5Title: "Uko tayari kuanza?",
+            page5Content: "Uwe na safari njema ya kujifunza maandiko!",
+            startButton: "Anza",
+            nextButton: "Inayofuata",
+            skipButton: "Ruka"
         }
     }
 };
