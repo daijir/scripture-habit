@@ -51,6 +51,24 @@
     /* Fallback/Safety */
 }
 
+/* MyNotes Specific Overrides for Compact View */
+.my-notes-card {
+    padding: 1rem !important;
+    gap: 0.6rem !important;
+}
+
+.my-notes-card .note-header {
+    padding-bottom: 0.5rem !important;
+    margin-bottom: 0.2rem !important;
+}
+
+.my-notes-card .note-content-preview {
+    -webkit-line-clamp: 10 !important;
+    /* Reduced max lines to limit height */
+    font-size: 0.9rem !important;
+    /* Slightly smaller text for compact feel */
+}
+
 .note-content-preview p {
     margin: 0;
 }
