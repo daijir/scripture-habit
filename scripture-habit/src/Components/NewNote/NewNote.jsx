@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { db } from '../../firebase';
 import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment, query, where, getDocs, Timestamp, arrayUnion } from 'firebase/firestore';
@@ -27,6 +27,10 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
     const [shareOption, setShareOption] = useState('all'); // 'all', 'specific', 'none', 'current'
     const [selectedShareGroups, setSelectedShareGroups] = useState([]);
 
+    // Randomized placeholders state
+    const [currentChapterPlaceholder, setCurrentChapterPlaceholder] = useState('');
+    const [currentCommentPlaceholder, setCurrentCommentPlaceholder] = useState('');
+
 
 
     const [loading, setLoading] = useState(false);
@@ -53,7 +57,17 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
         label: getTranslatedScriptureLabel(option.value)
     }));
 
-    React.useEffect(() => {
+    useEffect(() => {
+        if (isOpen) {
+            const rawChapterPh = t('newNote.chapterPlaceholder');
+            setCurrentChapterPlaceholder(Array.isArray(rawChapterPh) ? rawChapterPh[Math.floor(Math.random() * rawChapterPh.length)] : rawChapterPh);
+
+            const rawCommentPh = t('newNote.commentPlaceholder');
+            setCurrentCommentPlaceholder(Array.isArray(rawCommentPh) ? rawCommentPh[Math.floor(Math.random() * rawCommentPh.length)] : rawCommentPh);
+        }
+    }, [isOpen, language, t]);
+
+    useEffect(() => {
         if (isOpen && noteToEdit) {
             setLastAiResponse('');
             let text = removeNoteHeader(noteToEdit.text || '');
@@ -641,7 +655,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         setChapter(val);
                     }}
                     required
-                    placeholder={scripture === "General Conference" ? t('newNote.urlPlaceholder') : (scripture === "BYU Speeches" ? t('newNote.byuUrlPlaceholder') : (scripture === "Other" ? t('newNote.otherUrlPlaceholder') : t('newNote.chapterPlaceholder')))}
+                    placeholder={scripture === "General Conference" ? t('newNote.urlPlaceholder') : (scripture === "BYU Speeches" ? t('newNote.byuUrlPlaceholder') : (scripture === "Other" ? t('newNote.otherUrlPlaceholder') : currentChapterPlaceholder))}
                 />
 
                 {scripture && chapter && (['Old Testament', 'New Testament', 'Book of Mormon', 'Doctrine and Covenants', 'Pearl of Great Price'].includes(scripture)) && (
@@ -722,7 +736,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     value={comment}
                     onChange={(e) => setComment(e.target.value)}
                     required
-                    placeholder={t('newNote.commentPlaceholder')}
+                    placeholder={currentCommentPlaceholder}
                 />
 
                 {!noteToEdit && (
