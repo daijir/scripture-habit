@@ -127,14 +127,21 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   }, [groupId]);
 
   const inputPlaceholder = useMemo(() => {
+    // Check if 'typeMessage' is an array (new humorous list) or string
+    let typeMessageText = t('groupChat.typeMessage');
+    if (Array.isArray(typeMessageText)) {
+      typeMessageText = typeMessageText[Math.floor(Math.random() * typeMessageText.length)];
+    }
+
     const placeholders = [
-      t('groupChat.typeMessage'),
+      typeMessageText,
       t('groupChat.placeholderShare'),
       t('groupChat.placeholderInactivity'),
       t('groupChat.placeholderEncourage')
     ];
+    // Return a random one from the mix (including the already randomized typeMessage if applicable)
     return placeholders[Math.floor(Math.random() * placeholders.length)];
-  }, [t, groupId]); // Re-roll when group or language changes
+  }, [t, groupId, language]); // Re-roll when group or language changes
 
   // Fetch user's read count when entering the group
   useEffect(() => {
