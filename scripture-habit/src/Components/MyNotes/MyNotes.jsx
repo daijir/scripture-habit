@@ -14,12 +14,14 @@ import { translateChapterField } from '../../Utils/bookNameTranslations';
 import './MyNotes.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 import NoteDisplay from '../NoteDisplay/NoteDisplay';
+import NoteDetailModal from './NoteDetailModal';
 
-const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
+const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
   const { language, t } = useLanguage();
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedNote, setSelectedNote] = useState(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
@@ -76,7 +78,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
   const handleNoteClick = (note) => {
     setSelectedNote(note);
     setNewNoteInitialData(null);
-    setIsEditModalOpen(true);
+    setIsDetailModalOpen(true);
   };
 
   const handleGenerateRecap = async () => {
@@ -368,6 +370,22 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen }) => {
           </div>
         )
       }
+
+      <NoteDetailModal
+        isOpen={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+        note={selectedNote}
+        userData={userData}
+        userGroups={userGroups}
+        onEdit={() => {
+          setIsDetailModalOpen(false);
+          setIsEditModalOpen(true);
+        }}
+        onDelete={() => {
+          setIsDetailModalOpen(false);
+          setIsDeleteModalOpen(true);
+        }}
+      />
 
       <LetterBox
         isOpen={isLetterBoxOpen}

@@ -63,7 +63,8 @@ export const translations = {
             recapSuccess: "Weekly recap generated! Review and save it.",
             noNotesForRecap: "No notes found for this week.",
             recapError: "Failed to generate recap.",
-            weeklyReflectionCall: "Would you like to reflect on your week?"
+            weeklyReflectionCall: "Would you like to reflect on your week?",
+            sharedActivity: "Shared Activity"
         },
         recapModal: {
             title: "Your Weekly Letter",
@@ -438,7 +439,8 @@ export const translations = {
             recapSuccess: "作成完了！お手紙が届いています。",
             noNotesForRecap: "今週のノートが見つかりませんでした。",
             recapError: "作成に失敗しました。",
-            weeklyReflectionCall: "今週の振り返りをしてみませんか？"
+            weeklyReflectionCall: "今週の振り返りをしてみませんか？",
+            sharedActivity: "共有されたグループのアクティビティ"
         },
         recapModal: {
             title: "今週の振り返りレター",

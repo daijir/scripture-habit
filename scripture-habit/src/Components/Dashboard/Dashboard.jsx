@@ -621,7 +621,7 @@ const Dashboard = () => {
           </div>
         )}
         {selectedView === 1 && (
-          <MyNotes userData={userData} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+          <MyNotes userData={userData} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} userGroups={userGroups} />
         )}
         {selectedView === 2 && (
           <GroupChat
