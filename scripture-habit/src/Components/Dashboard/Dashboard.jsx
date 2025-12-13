@@ -132,16 +132,7 @@ const Dashboard = () => {
     return () => unsubscribe();
   }, []);
 
-  // Show welcome story for first-time users
-  useEffect(() => {
-    if (userData && !loading && userData.hasSeenWelcomeStory === undefined) {
-      // Small delay to ensure smooth loading transition
-      const timer = setTimeout(() => {
-        setShowWelcomeStory(true);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [userData, loading]);
+
 
   const handleCloseWelcomeStory = async () => {
     setShowWelcomeStory(false);
@@ -502,24 +493,24 @@ const Dashboard = () => {
               >
                 <div style={{
                   position: 'absolute',
-                  top: '-15px',
-                  right: '-15px',
-                  width: '56px',
-                  height: '56px',
-                  background: 'linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%)',
-                  color: 'white',
-                  borderRadius: '50%',
+                  top: '-10px',
+                  right: '-10px',
+                  width: '40px',
+                  height: '40px',
+                  background: 'white',
+                  color: '#2D3748',
+                  borderRadius: '50% 50% 50% 0',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '1.1rem',
-                  fontWeight: '800',
-                  boxShadow: '0 4px 10px rgba(255, 107, 107, 0.4)',
+                  fontSize: '1.5rem',
+                  fontWeight: 'bold',
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
                   zIndex: 10,
-                  transform: 'rotate(15deg)',
-                  border: '2px solid rgba(255,255,255,0.8)'
+                  border: '2px solid #2D3748',
+                  paddingBottom: '8px'
                 }}>
-                  Tap!
+                  <span className="typing-dots" style={{ position: 'relative', top: '-1px' }}></span>
                 </div>
 
                 <blockquote className="inspiration-quote">
