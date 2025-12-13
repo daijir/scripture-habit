@@ -436,3 +436,29 @@
     transform: scale(1);
   }
 }
+
+@keyframes dot-typing {
+  0% {
+    content: '.';
+  }
+
+  33% {
+    content: '..';
+  }
+
+  66% {
+    content: '...';
+  }
+
+  100% {
+    content: '...';
+  }
+}
+
+.typing-dots::after {
+  content: '.';
+  animation: dot-typing 1.5s steps(1, end) infinite;
+  display: inline-block;
+  width: 1em;
+  text-align: left;
+}

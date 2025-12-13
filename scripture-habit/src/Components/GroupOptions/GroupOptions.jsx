@@ -1,10 +1,61 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './GroupOptions.css';
 import { useLanguage } from '../../Context/LanguageContext';
+import { auth, db } from '../../firebase';
+import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import WelcomeStoryModal from '../WelcomeStoryModal/WelcomeStoryModal';
 
 const GroupOptions = () => {
     const { t } = useLanguage();
+    const [user, setUser] = useState(null);
+    const [userData, setUserData] = useState(null);
+    const [showWelcomeStory, setShowWelcomeStory] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            setUser(currentUser);
+            if (currentUser) {
+                const userDocRef = doc(db, 'users', currentUser.uid);
+                const unsubUser = onSnapshot(userDocRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        setUserData({ uid: currentUser.uid, ...data });
+
+                        // Show welcome story if not seen yet
+                        if (data.hasSeenWelcomeStory === undefined) {
+                            setTimeout(() => setShowWelcomeStory(true), 500);
+                        }
+                    }
+                    setLoading(false);
+                });
+                return () => unsubUser();
+            } else {
+                setLoading(false);
+                // navigate('/login'); // Optional: redirect if not logged in
+            }
+        });
+
+        return () => unsubscribe();
+    }, [navigate]);
+
+    const handleCloseWelcomeStory = async () => {
+        setShowWelcomeStory(false);
+        if (user && userData && userData.hasSeenWelcomeStory === undefined) {
+            try {
+                await updateDoc(doc(db, 'users', user.uid), {
+                    hasSeenWelcomeStory: true
+                });
+            } catch (error) {
+                console.error("Error marking welcome story as seen:", error);
+            }
+        }
+    };
+
+    if (loading) return <div className="App GroupOptions">Loading...</div>;
 
     return (
         <div className="App GroupOptions">
@@ -30,6 +81,12 @@ const GroupOptions = () => {
                     {t('groupOptions.backToDashboard')}
                 </Link>
             </div>
+
+            <WelcomeStoryModal
+                isOpen={showWelcomeStory}
+                onClose={handleCloseWelcomeStory}
+                userData={userData}
+            />
         </div>
     );
 };

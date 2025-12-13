@@ -213,10 +213,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**${label}:** ${chapter}\n\n${comment}`;
             }
 
-            // Append AI question if it exists
-            if (aiQuestion) {
-                messageText += `\n\n> **AI Question:** ${aiQuestion}`;
-            }
+
 
             if (noteToEdit) {
                 if (noteToEdit.groupMessageId && noteToEdit.groupId) {
