@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
 import { auth, db } from '../../firebase';
-import { doc, onSnapshot, collection, query, where, orderBy, limit } from 'firebase/firestore';
+import { doc, onSnapshot, collection, query, where, orderBy, limit, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import ReactMarkdown from 'react-markdown';
 import { UilPlus } from '@iconscout/react-unicons';
@@ -20,6 +20,7 @@ import { useLanguage } from '../../Context/LanguageContext.jsx';
 import NoteDisplay from '../NoteDisplay/NoteDisplay';
 import NoteCard from '../NoteCard/NoteCard';
 import { getTodayReadingPlan } from '../../Data/DailyReadingPlan2025';
+import WelcomeStoryModal from '../WelcomeStoryModal/WelcomeStoryModal';
 
 
 const Dashboard = () => {
@@ -39,6 +40,7 @@ const Dashboard = () => {
   const location = useLocation();
   // Initialize activeGroupId from location state if available, to avoid initial null state
   const [activeGroupId, setActiveGroupId] = useState(location.state?.initialGroupId || null);
+  const [showWelcomeStory, setShowWelcomeStory] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
@@ -129,6 +131,30 @@ const Dashboard = () => {
 
     return () => unsubscribe();
   }, []);
+
+  // Show welcome story for first-time users
+  useEffect(() => {
+    if (userData && !loading && userData.hasSeenWelcomeStory === undefined) {
+      // Small delay to ensure smooth loading transition
+      const timer = setTimeout(() => {
+        setShowWelcomeStory(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [userData, loading]);
+
+  const handleCloseWelcomeStory = async () => {
+    setShowWelcomeStory(false);
+    if (user && userData && userData.hasSeenWelcomeStory === undefined) {
+      try {
+        await updateDoc(doc(db, 'users', user.uid), {
+          hasSeenWelcomeStory: true
+        });
+      } catch (error) {
+        console.error("Error marking welcome story as seen:", error);
+      }
+    }
+  };
 
   // Fetch user groups details
   useEffect(() => {
@@ -469,7 +495,32 @@ const Dashboard = () => {
             </div>
 
             <div className="inspiration-section">
-              <div className="inspiration-card">
+              <div
+                className="inspiration-card"
+                style={{ position: 'relative', cursor: 'pointer', transition: 'transform 0.2s' }}
+                onClick={() => setShowWelcomeStory(true)}
+              >
+                <div style={{
+                  position: 'absolute',
+                  top: '-15px',
+                  right: '-15px',
+                  width: '56px',
+                  height: '56px',
+                  background: 'linear-gradient(135deg, #FF6B6B 0%, #FF8E53 100%)',
+                  color: 'white',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '1.1rem',
+                  fontWeight: '800',
+                  boxShadow: '0 4px 10px rgba(255, 107, 107, 0.4)',
+                  zIndex: 10,
+                  transform: 'rotate(15deg)',
+                  border: '2px solid rgba(255,255,255,0.8)'
+                }}>
+                  Tap!
+                </div>
 
                 <blockquote className="inspiration-quote">
                   {t('dashboard.inspirationQuote')}
@@ -597,6 +648,12 @@ const Dashboard = () => {
         )}
 
         <NewNote isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} userGroups={userGroups} currentGroupId={activeGroupId} />
+
+        <WelcomeStoryModal
+          isOpen={showWelcomeStory}
+          onClose={handleCloseWelcomeStory}
+          userData={userData}
+        />
       </div>
     </div>
   );
