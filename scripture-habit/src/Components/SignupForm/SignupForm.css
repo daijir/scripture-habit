@@ -130,3 +130,57 @@
     justify-content: center;
   }
 }
+
+.facebook-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20rem;
+  max-width: 90%;
+  padding: 0.8rem 1.5rem;
+  background-color: #1877F2;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin: 0 auto;
+  font-weight: 600;
+  color: white;
+  gap: 10px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.facebook-btn:hover {
+  background-color: #166fe5;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(24, 119, 242, 0.3);
+}
+
+.github-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20rem;
+  max-width: 90%;
+  padding: 0.8rem 1.5rem;
+  background-color: #24292e;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin: 0 auto;
+  font-weight: 600;
+  color: white;
+  gap: 10px;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.github-btn:hover {
+  background-color: #2f363d;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(36, 41, 46, 0.3);
+}

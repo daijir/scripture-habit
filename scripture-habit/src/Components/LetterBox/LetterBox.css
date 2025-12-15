@@ -52,11 +52,20 @@
 .close-btn {
     background: transparent;
     border: none;
-    color: white;
+    color: #ffffff;
     cursor: pointer;
     display: flex;
     align-items: center;
+    opacity: 1;
+    transition: transform 0.2s;
 }
+
+.close-btn svg {
+    fill: #ffffff;
+    stroke: #ffffff;
+    stroke-width: 1px;
+}
+
 
 .letterbox-body {
     flex: 1;

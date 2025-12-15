@@ -39,6 +39,8 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
     const [aiLoading, setAiLoading] = useState(false);
     const [error, setError] = useState(null);
     const [lastAiResponse, setLastAiResponse] = useState('');
+    const [showScriptureSelectionModal, setShowScriptureSelectionModal] = useState(false);
+    const [availableReadingPlanScripts, setAvailableReadingPlanScripts] = useState([]);
 
     const getTranslatedScriptureLabel = (value) => {
         switch (value) {
@@ -208,14 +210,9 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
         }
     };
 
-    const handleTodaysReading = () => {
-        const plan = getTodayReadingPlan();
-        if (!plan || !plan.scripts || plan.scripts.length === 0) {
-            toast.info(t('dashboard.noReadingPlan'));
-            return;
-        }
 
-        const script = plan.scripts[0];
+
+    const fillScriptureData = (script) => {
         let category = 'Other';
         let chapterVal = script;
 
@@ -389,6 +386,21 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             setScripture('Other');
             setChapter(script);
             setSelectedOption(translatedScripturesOptions.find(opt => opt.value === 'Other'));
+        }
+    };
+
+    const handleTodaysReading = () => {
+        const plan = getTodayReadingPlan();
+        if (!plan || !plan.scripts || plan.scripts.length === 0) {
+            toast.info(t('dashboard.noReadingPlan'));
+            return;
+        }
+
+        if (plan.scripts.length > 1) {
+            setAvailableReadingPlanScripts(plan.scripts);
+            setShowScriptureSelectionModal(true);
+        } else {
+            fillScriptureData(plan.scripts[0]);
         }
     };
 
@@ -739,6 +751,54 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
         }
     };
 
+    if (showScriptureSelectionModal) {
+        return (
+            <div className="ModalOverlay" onClick={onClose}>
+                <div className="ModalContent" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px', textAlign: 'center' }}>
+                    <div className="modal-header" style={{ justifyContent: 'center' }}>
+                        <h1>{t('dashboard.todaysComeFollowMe')}</h1>
+                    </div>
+                    <p style={{ marginBottom: '1rem', color: '#666' }}>{t('newNote.chooseScripturePlaceholder')}</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', width: '100%', overflowY: 'auto', padding: '0.5rem' }}>
+                        {availableReadingPlanScripts.map((script, idx) => (
+                            <button
+                                key={idx}
+                                onClick={() => {
+                                    fillScriptureData(script);
+                                    setShowScriptureSelectionModal(false);
+                                }}
+                                style={{
+                                    padding: '1rem',
+                                    borderRadius: '12px',
+                                    border: '1px solid #e2e8f0',
+                                    background: 'white',
+                                    cursor: 'pointer',
+                                    fontSize: '1rem',
+                                    fontWeight: '500',
+                                    color: '#2d3748',
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                                    transition: 'all 0.2s',
+                                    textAlign: 'left'
+                                }}
+                                onMouseOver={(e) => e.currentTarget.style.borderColor = '#b794f4'}
+                                onMouseOut={(e) => e.currentTarget.style.borderColor = '#e2e8f0'}
+                            >
+                                📖 {script}
+                            </button>
+                        ))}
+                    </div>
+                    <button
+                        onClick={() => setShowScriptureSelectionModal(false)}
+                        className="cancel-btn"
+                        style={{ marginTop: '1.5rem', alignSelf: 'center', width: 'auto', background: '#e2e8f0', color: '#4a5568' }}
+                    >
+                        {t('newNote.cancel')}
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="ModalOverlay" onClick={onClose}>
             <div className="ModalContent" onClick={(e) => e.stopPropagation()}>
@@ -1021,8 +1081,12 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
                 <div className="modal-actions">
                     <button onClick={onClose} className="cancel-btn">{t('newNote.cancel')}</button>
-                    <button onClick={handleSubmit} disabled={loading} className="submit-btn">
-                        {loading ? t('newNote.saving') : (noteToEdit ? t('newNote.update') : t('newNote.post'))}
+                    <button
+                        onClick={handleSubmit}
+                        disabled={loading || !scripture || !chapter || !comment}
+                        className="submit-btn"
+                    >
+                        {loading ? t('newNote.saving') : (noteToEdit ? <>✨ {t('newNote.update')}</> : <>✨ {t('newNote.post')}</>)}
                     </button>
                 </div>
             </div>

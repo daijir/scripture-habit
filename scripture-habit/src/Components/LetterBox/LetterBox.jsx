@@ -48,7 +48,7 @@ const LetterBox = ({ isOpen, onClose, userData }) => {
             <div className="LetterBoxContent" onClick={(e) => e.stopPropagation()}>
                 <div className="letterbox-header">
                     <h2><UilEnvelope /> {t('letterBox.title')}</h2>
-                    <button className="close-btn" onClick={onClose}><UilTimes /></button>
+                    <button className="close-btn" onClick={onClose}><UilTimes color="#ffffff" /></button>
                 </div>
 
                 <div className="letterbox-body">

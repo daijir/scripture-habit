@@ -238,14 +238,15 @@ export const translations = {
         },
         login: {
             title: "Log In",
-            emailLabel: "Gmail Address",
+            emailLabel: "Email Address",
             passwordLabel: "Password",
             submitButton: "Log In",
-            errorGmail: "Please use a Gmail address.",
             noAccount: "Don't have an account?",
             signupLink: "Sign Up",
             forgotPassword: "Forgot your password?",
             googleButton: "Log in with Google",
+            facebookButton: "Log in with Facebook",
+            githubButton: "Log in with GitHub",
             inAppBrowserWarning: "Google Login is not supported in this in-app browser. Please open in Chrome or Safari."
         },
         forgotPasswordPage: {
@@ -258,15 +259,16 @@ export const translations = {
         signup: {
             title: "Sign Up",
             nicknameLabel: "Nickname",
-            emailLabel: "Gmail Address",
+            emailLabel: "Email Address",
             passwordLabel: "Password",
             submitButton: "Sign Up",
-            errorGmail: "Please use a Gmail address.",
             errorSaveProfile: "Failed to save user profile. Please contact support.",
             errorEmailInUse: "This email address is already in use. Please log in or use a different email.",
             hasAccount: "Already have an account?",
             loginLink: "Log In",
             googleButton: "Sign up with Google",
+            facebookButton: "Sign up with Facebook",
+            githubButton: "Sign up with GitHub",
             verificationSent: "Verification email sent! Please check your inbox.",
             completeProfile: "Complete Your Profile",
             finishSignup: "Finish Sign Up"
@@ -619,14 +621,15 @@ export const translations = {
         },
         login: {
             title: "ログイン",
-            emailLabel: "Gmailアドレス",
+            emailLabel: "メールアドレス",
             passwordLabel: "パスワード",
             submitButton: "ログイン",
-            errorGmail: "Gmailアドレスを使用してください。",
             noAccount: "アカウントをお持ちでないですか？",
             signupLink: "サインアップ",
             forgotPassword: "パスワードをお忘れですか？",
             googleButton: "Googleでログイン",
+            facebookButton: "Facebookでログイン",
+            githubButton: "GitHubでログイン",
             inAppBrowserWarning: "このアプリ内ブラウザではGoogleログインが利用できません。右上のメニュー等からChromeやSafariで開いてください。"
         },
         forgotPasswordPage: {
@@ -639,15 +642,16 @@ export const translations = {
         signup: {
             title: "サインアップ",
             nicknameLabel: "ニックネーム",
-            emailLabel: "Gmailアドレス",
+            emailLabel: "メールアドレス",
             passwordLabel: "パスワード",
             submitButton: "サインアップ",
-            errorGmail: "Gmailアドレスを使用してください。",
             errorSaveProfile: "プロフィールの保存に失敗しました。サポートにお問い合わせください。",
             errorEmailInUse: "このメールアドレスは既に使用されています。ログインするか、別のメールアドレスを使用してください。",
             hasAccount: "すでにアカウントをお持ちですか？",
             loginLink: "ログイン",
             googleButton: "Googleで登録",
+            facebookButton: "Facebookで登録",
+            githubButton: "GitHubで登録",
             verificationSent: "確認メールを送信しました！受信トレイを確認してください。",
             completeProfile: "プロフィールを完成させる",
             finishSignup: "登録を完了する"
@@ -949,6 +953,8 @@ export const translations = {
             signupLink: "Inscrever-se",
             forgotPassword: "Esqueceu sua senha?",
             googleButton: "Entrar com o Google",
+            facebookButton: "Entrar com Facebook",
+            githubButton: "Entrar com GitHub",
             inAppBrowserWarning: "O login do Google não é suportado neste navegador no aplicativo. Abra no Chrome ou Safari."
         },
         forgotPasswordPage: {
@@ -970,6 +976,8 @@ export const translations = {
             hasAccount: "Já tem uma conta?",
             loginLink: "Entrar",
             googleButton: "Inscrever-se com o Google",
+            facebookButton: "Inscrever-se com Facebook",
+            githubButton: "Inscrever-se com GitHub",
             verificationSent: "E-mail de verificação enviado! Por favor, verifique sua caixa de entrada.",
             completeProfile: "Complete Seu Perfil",
             finishSignup: "Concluir Inscrição"
@@ -1271,6 +1279,8 @@ export const translations = {
             signupLink: "註冊",
             forgotPassword: "忘記密碼了嗎？",
             googleButton: "使用 Google 登入",
+            facebookButton: "使用 Facebook 登入",
+            githubButton: "使用 GitHub 登入",
             inAppBrowserWarning: "此應用程式內瀏覽器不支援 Google 登入。請在 Chrome 或 Safari 中開啟。"
         },
         forgotPasswordPage: {
@@ -1292,6 +1302,8 @@ export const translations = {
             hasAccount: "已經有帳號？",
             loginLink: "登入",
             googleButton: "使用 Google 註冊",
+            facebookButton: "使用 Facebook 註冊",
+            githubButton: "使用 GitHub 註冊",
             verificationSent: "驗證信已發送！請檢查您的收件匣。",
             completeProfile: "完成您的個人資料",
             finishSignup: "完成註冊"
@@ -1593,6 +1605,8 @@ export const translations = {
             signupLink: "Registrarse",
             forgotPassword: "¿Olvidaste tu contraseña?",
             googleButton: "Iniciar sesión con Google",
+            facebookButton: "Iniciar sesión con Facebook",
+            githubButton: "Iniciar sesión con GitHub",
             inAppBrowserWarning: "El inicio de sesión con Google no es compatible en este navegador de la aplicación. Por favor, ábrelo en Chrome o Safari."
         },
         forgotPasswordPage: {
@@ -1614,6 +1628,8 @@ export const translations = {
             hasAccount: "Ya tienes una cuenta?",
             loginLink: "Iniciar Sesión",
             googleButton: "Registrarse con Google",
+            facebookButton: "Registrarse con Facebook",
+            githubButton: "Registrarse con GitHub",
             verificationSent: "¡Correo de verificación enviado! Por favor revise su bandeja de entrada.",
             completeProfile: "Completa tu Perfil",
             finishSignup: "Terminar Registro"
@@ -1915,6 +1931,8 @@ export const translations = {
             signupLink: "Đăng ký",
             forgotPassword: "Bạn quên mật khẩu?",
             googleButton: "Đăng nhập bằng Google",
+            facebookButton: "Đăng nhập bằng Facebook",
+            githubButton: "Đăng nhập bằng GitHub",
             inAppBrowserWarning: "Đăng nhập Google không được hỗ trợ trong trình duyệt ứng dụng này. Vui lòng mở trong Chrome hoặc Safari."
         },
         forgotPasswordPage: {
@@ -1936,6 +1954,8 @@ export const translations = {
             hasAccount: "Đã có tài khoản?",
             loginLink: "Đăng nhập",
             googleButton: "Đăng ký bằng Google",
+            facebookButton: "Đăng ký bằng Facebook",
+            githubButton: "Đăng ký bằng GitHub",
             verificationSent: "Email xác minh đã được gửi! Vui lòng kiểm tra hộp thư đến của bạn.",
             completeProfile: "Hoàn thành Hồ sơ của bạn",
             finishSignup: "Hoàn tất Đăng ký"
@@ -2237,6 +2257,8 @@ export const translations = {
             signupLink: "ลงทะเบียน",
             forgotPassword: "ลืมรหัสผ่าน?",
             googleButton: "เข้าสู่ระบบด้วย Google",
+            facebookButton: "เข้าสู่ระบบด้วย Facebook",
+            githubButton: "เข้าสู่ระบบด้วย GitHub",
             inAppBrowserWarning: "การเข้าสู่ระบบด้วย Google ไม่รองรับในเบราว์เซอร์ในแอปนี้ กรุณาเปิดใน Chrome หรือ Safari"
         },
         forgotPasswordPage: {
@@ -2258,6 +2280,8 @@ export const translations = {
             hasAccount: "มีบัญชีอยู่แล้ว?",
             loginLink: "เข้าสู่ระบบ",
             googleButton: "ลงทะเบียนด้วย Google",
+            facebookButton: "สมัครสมาชิกด้วย Facebook",
+            githubButton: "สมัครสมาชิกด้วย GitHub",
             verificationSent: "ส่งอีเมลยืนยันแล้ว! โปรดตรวจสอบกล่องจดหมายของคุณ",
             completeProfile: "กรอกข้อมูลโปรไฟล์ของคุณให้สมบูรณ์",
             finishSignup: "เสร็จสิ้นการลงทะเบียน"
@@ -2559,6 +2583,8 @@ export const translations = {
             signupLink: "회원가입",
             forgotPassword: "비밀번호를 잊으셨나요?",
             googleButton: "Google로 로그인",
+            facebookButton: "Facebook으로 로그인",
+            githubButton: "GitHub로 로그인",
             inAppBrowserWarning: "Google 로그인은 이 인앱 브라우저에서 지원되지 않습니다. Chrome 또는 Safari에서 열어주세요."
         },
         forgotPasswordPage: {
@@ -2580,6 +2606,8 @@ export const translations = {
             hasAccount: "이미 계정이 있으신가요?",
             loginLink: "로그인",
             googleButton: "Google로 가입",
+            facebookButton: "Facebook으로 가입",
+            githubButton: "GitHub로 가입",
             verificationSent: "확인 이메일이 전송되었습니다! 받은 편지함을 확인해주세요.",
             completeProfile: "프로필 완성하기",
             finishSignup: "가입 완료"
@@ -2881,6 +2909,8 @@ export const translations = {
             signupLink: "Mag-sign Up",
             forgotPassword: "Nakalimutan ang password?",
             googleButton: "Mag-log in gamit ang Google",
+            facebookButton: "Mag-login gamit ang Facebook",
+            githubButton: "Mag-login gamit ang GitHub",
             inAppBrowserWarning: "Hindi suportado ang Google Login sa in-app browser na ito. Pakibuksan sa Chrome o Safari."
         },
         forgotPasswordPage: {
@@ -2902,6 +2932,8 @@ export const translations = {
             hasAccount: "May account na?",
             loginLink: "Mag-log In",
             googleButton: "Mag-sign up gamit ang Google",
+            facebookButton: "Mag-sign up gamit ang Facebook",
+            githubButton: "Mag-sign up gamit ang GitHub",
             verificationSent: "Naipadala na ang verification email! Pakitingnan ang iyong inbox.",
             completeProfile: "Kumpletuhin ang Iyong Profile",
             finishSignup: "Tapusin ang Pag-sign Up"
@@ -3203,6 +3235,8 @@ export const translations = {
             signupLink: "Jisajili",
             forgotPassword: "Umesahau nenosiri?",
             googleButton: "Ingia na Google",
+            facebookButton: "Ingia na Facebook",
+            githubButton: "Ingia na GitHub",
             inAppBrowserWarning: "Kuingia kwa Google hakutumiki katika kivinjari hiki cha ndani ya programu. Tafadhali fungua kwenye Chrome au Safari."
         },
         forgotPasswordPage: {
@@ -3224,6 +3258,8 @@ export const translations = {
             hasAccount: "Tayari una akaunti?",
             loginLink: "Ingia",
             googleButton: "Jisajili na Google",
+            facebookButton: "Jisajili na Facebook",
+            githubButton: "Jisajili na GitHub",
             verificationSent: "Barua pepe ya uthibitishaji imetumwa! Tafadhali angalia kikasha chako.",
             completeProfile: "Kamilisha Wasifu Wako",
             finishSignup: "Maliza Kujisajili"
