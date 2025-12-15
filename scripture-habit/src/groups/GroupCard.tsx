@@ -9,9 +9,10 @@ type Props = {
   group: { id: string; name: string; description?: string; members?: string[]; lastMessageAt?: any; messageCount?: number };
   currentUser: { uid: string } | null;
   onJoin?: (groupId: string, groupData?: any) => Promise<void> | void;
+  onOpen?: (group: any) => void;
 };
 
-export default function GroupCard({ group, currentUser, onJoin }: Props) {
+export default function GroupCard({ group, currentUser, onJoin, onOpen }: Props) {
   const { t } = useLanguage();
 
   const [joining, setJoining] = useState(false);
@@ -132,7 +133,7 @@ export default function GroupCard({ group, currentUser, onJoin }: Props) {
           className="join-btn"
           onClick={() => {
             if (isMember) {
-
+              if (onOpen) onOpen(group);
             }
             else handleJoin();
           }}

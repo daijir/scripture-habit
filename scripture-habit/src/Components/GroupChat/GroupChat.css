@@ -251,6 +251,24 @@
     transform: none;
 }
 
+.modal-btn.primary {
+    background: var(--pink);
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 145, 157, 0.4);
+}
+
+.modal-btn.primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255, 145, 157, 0.5);
+}
+
+.modal-btn.primary:disabled {
+    background: #ffccc9;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
 .messages-container {
     flex: 1 1 auto;
     min-height: 0;
@@ -619,6 +637,10 @@
     .back-button {
         display: flex;
         color: white !important;
+    }
+
+    .edit-group-name-btn {
+        display: none !important;
     }
 
     .chat-header h2 {

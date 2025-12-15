@@ -154,6 +154,10 @@ export default function JoinGroup() {
     }
   };
 
+  const handleOpenGroup = (groupId) => {
+    navigate('/dashboard', { state: { initialGroupId: groupId, showWelcome: false, initialView: 2 } });
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
@@ -228,6 +232,7 @@ export default function JoinGroup() {
                   group={group}
                   currentUser={user}
                   onJoin={() => handleJoinClick(group.id, group)}
+                  onOpen={() => handleOpenGroup(group.id)}
                 />
               ))}
             </div>
