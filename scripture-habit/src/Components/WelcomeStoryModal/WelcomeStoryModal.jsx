@@ -9,7 +9,7 @@ const WelcomeStoryModal = ({ isOpen, onClose, userData }) => {
     const [page, setPage] = useState(0);
 
     useEffect(() => {
-        if (page === 4) {
+        if (page === 5) {
             // Trigger confetti on the last page
             confetti({
                 particleCount: 150,
@@ -22,7 +22,7 @@ const WelcomeStoryModal = ({ isOpen, onClose, userData }) => {
     if (!isOpen) return null;
 
     const handleNext = () => {
-        if (page < 4) {
+        if (page < 5) {
             setPage(page + 1);
         } else {
             onClose();
@@ -75,7 +75,22 @@ const WelcomeStoryModal = ({ isOpen, onClose, userData }) => {
             )}
         </div>,
 
-        // Page 4: Vision
+        // Page 4: The Rule (New)
+        <div className="story-page" key="p3-rule">
+            <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🤝🔥</div>
+            <h2 className="story-title">{t('welcomeStory.page3RuleTitle')}</h2>
+            <div className="story-highlight-box" style={{ background: 'rgba(255, 100, 100, 0.1)', borderLeft: '4px solid #ff6b6b' }}>
+                <p className="story-text" dangerouslySetInnerHTML={{ __html: t('welcomeStory.page3RuleContent1') }} />
+            </div>
+            <p className="story-text" style={{ marginTop: '1rem', fontSize: '0.95rem' }}>
+                {t('welcomeStory.page3RuleContent2')}
+            </p>
+            <p className="story-text" style={{ marginTop: '1rem', fontWeight: 'bold' }}>
+                {t('welcomeStory.page3RuleContent3')}
+            </p>
+        </div>,
+
+        // Page 5: Vision
         <div className="story-page" key="p4">
             <h2 className="story-title">{t('welcomeStory.page4Title')}</h2>
             <div style={{ padding: '0 1rem' }}>
@@ -88,7 +103,7 @@ const WelcomeStoryModal = ({ isOpen, onClose, userData }) => {
             </div>
         </div>,
 
-        // Page 5: Start
+        // Page 6: Start
         <div className="story-page" key="p5">
             <img src="/images/welcome-bird.png" alt="Welcome Bird" className="story-image" style={{ transform: 'scale(1.2)' }} />
             <h2 className="story-title">{t('welcomeStory.page5Title')}</h2>
@@ -109,7 +124,7 @@ const WelcomeStoryModal = ({ isOpen, onClose, userData }) => {
 
                 <div className="story-navigation">
                     <button className="story-btn" onClick={handleNext}>
-                        {page === 4 ? t('welcomeStory.startButton') : t('welcomeStory.nextButton')}
+                        {page === 5 ? t('welcomeStory.startButton') : t('welcomeStory.nextButton')}
                     </button>
 
                     <div className="story-indicator">

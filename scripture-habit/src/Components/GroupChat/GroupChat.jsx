@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect, useMemo } from 'react';
 import { db, auth } from '../../firebase';
-import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle, UilUsersAlt } from '@iconscout/react-unicons';
+import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle, UilUsersAlt, UilPen } from '@iconscout/react-unicons';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc, getDoc } from 'firebase/firestore';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -46,6 +46,8 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const [isRecapLoading, setIsRecapLoading] = useState(false);
   const [showInactivityPolicyBanner, setShowInactivityPolicyBanner] = useState(false);
   const [showWelcomeGuide, setShowWelcomeGuide] = useState(false);
+  const [showEditNameModal, setShowEditNameModal] = useState(false);
+  const [newGroupName, setNewGroupName] = useState('');
   const longPressTimer = useRef(null);
   const containerRef = useRef(null);
 
@@ -545,6 +547,28 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     }
   };
 
+  const handleUpdateGroupName = async () => {
+    if (!userData || !groupId || !groupData || !newGroupName.trim()) return;
+
+    if (groupData.ownerUserId !== userData.uid) {
+      toast.error("Only the group owner can change the group name.");
+      return;
+    }
+
+    try {
+      const groupRef = doc(db, 'groups', groupId);
+      await updateDoc(groupRef, {
+        name: newGroupName.trim()
+      });
+      toast.success(t('groupChat.groupNameChanged'));
+      setShowEditNameModal(false);
+      setNewGroupName('');
+    } catch (error) {
+      console.error("Error updating group name:", error);
+      toast.error(t('groupChat.errorChangeGroupName'));
+    }
+  };
+
   const handleGenerateWeeklyRecap = async () => {
     if (!userData || !groupId) return;
 
@@ -971,7 +995,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     handleGenerateWeeklyRecap();
   };
 
-  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit;
+  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit || showEditNameModal || showMembersModal;
 
   // Calculate Unity Score (Percentage of members who posted today)
   const unityPercentage = useMemo(() => {
@@ -1122,6 +1146,30 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
           )}
           <h2 style={{ display: 'flex', alignItems: 'center' }}>
             {groupData ? groupData.name : t('groupChat.groupName')}
+            {groupData?.ownerUserId === userData?.uid && (
+              <button
+                className="edit-group-name-btn"
+                onClick={() => {
+                  setNewGroupName(groupData.name);
+                  setShowEditNameModal(true);
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--gray)',
+                  cursor: 'pointer',
+                  marginLeft: '8px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: '4px',
+                  borderRadius: '50%',
+                  transition: 'background 0.2s'
+                }}
+                title={t('groupChat.changeGroupName')}
+              >
+                <UilPen size="18" />
+              </button>
+            )}
             {groupData?.members && <span className="member-count-badge">({groupData.members.length})</span>}
             {groupData && (
               <span className="unity-score-badge" style={{
@@ -1251,6 +1299,22 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                     />
                     <span className="slider round"></span>
                   </label>
+                </div>
+              )}
+
+              {/* Change Group Name (Owner only) */}
+              {userData.uid === groupData.ownerUserId && (
+                <div className="mobile-menu-item" onClick={() => {
+                  setNewGroupName(groupData.name);
+                  setShowMobileMenu(false);
+                  setShowEditNameModal(true);
+                }}>
+                  <div className="menu-item-icon">
+                    <UilPen size="20" />
+                  </div>
+                  <div className="menu-item-content">
+                    <span className="menu-item-label">{t('groupChat.changeGroupName')}</span>
+                  </div>
                 </div>
               )}
 
@@ -1475,6 +1539,34 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                   disabled={deleteConfirmationName !== groupData?.name}
                 >
                   {t('groupChat.confirmDelete')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      }
+
+      {
+        showEditNameModal && (
+          <div className="leave-modal-overlay">
+            <div className="leave-modal-content">
+              <h3>{t('groupChat.changeGroupName')}</h3>
+              <input
+                type="text"
+                className="delete-confirmation-input" // Reusing this class for styling
+                value={newGroupName}
+                onChange={(e) => setNewGroupName(e.target.value)}
+                placeholder={t('groupChat.enterNewGroupName')}
+                style={{ marginTop: '1rem', marginBottom: '1rem' }}
+              />
+              <div className="leave-modal-actions">
+                <button className="modal-btn cancel" onClick={() => { setShowEditNameModal(false); setNewGroupName(''); }}>{t('groupChat.cancel')}</button>
+                <button
+                  className="modal-btn primary"
+                  onClick={handleUpdateGroupName}
+                  disabled={!newGroupName.trim() || newGroupName === groupData?.name}
+                >
+                  {t('groupChat.save')}
                 </button>
               </div>
             </div>

@@ -4,7 +4,7 @@ import { auth, db } from '../../firebase';
 import { doc, onSnapshot, collection, query, where, orderBy, limit, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import ReactMarkdown from 'react-markdown';
-import { UilPlus } from '@iconscout/react-unicons';
+import { UilPlus, UilPen } from '@iconscout/react-unicons';
 import Hero from '../Hero/Hero';
 import Sidebar from '../Sidebar/Sidebar';
 import GroupChat from '../GroupChat/GroupChat';
@@ -45,6 +45,8 @@ const Dashboard = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [warnings, setWarnings] = useState([]);
+  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
+  const [newNickname, setNewNickname] = useState('');
   const { t, language } = useLanguage();
 
   const todayPlan = getTodayReadingPlan();
@@ -436,6 +438,22 @@ const Dashboard = () => {
 
 
 
+  const handleUpdateProfile = async () => {
+    if (!newNickname.trim() || !user || !userData) return;
+
+    try {
+      const userRef = doc(db, 'users', user.uid);
+      await updateDoc(userRef, {
+        nickname: newNickname.trim()
+      });
+      // toast.success(t('groupChat.nicknameChanged')); // Assuming toast is available or imported if needed, otherwise rely on listener update
+      setShowEditProfileModal(false);
+      setNewNickname('');
+    } catch (error) {
+      console.error("Error updating nickname:", error);
+      // toast.error(t('groupChat.errorChangeNickname'));
+    }
+  };
 
   return (
     <div className='App Dashboard'>
@@ -453,7 +471,29 @@ const Dashboard = () => {
             <div className="dashboard-header">
               <div>
                 <h1>Scripture Habit</h1>
-                <p className="welcome-text">{t('dashboard.welcomeBack')}, <strong>{userData.nickname}</strong>!</p>
+                <p className="welcome-text">
+                  {t('dashboard.welcomeBack')}, <strong>{userData.nickname}</strong>!
+                  <button
+                    className="edit-profile-btn"
+                    onClick={() => {
+                      setNewNickname(userData.nickname || '');
+                      setShowEditProfileModal(true);
+                    }}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      marginLeft: '0.5rem',
+                      color: 'var(--gray)',
+                      verticalAlign: 'middle',
+                      padding: '4px',
+                      display: 'inline-flex',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <UilPen size="16" />
+                  </button>
+                </p>
               </div>
             </div>
 
@@ -705,6 +745,38 @@ const Dashboard = () => {
           onClose={handleCloseWelcomeStory}
           userData={userData}
         />
+
+        {/* Edit Profile Modal */}
+        {showEditProfileModal && (
+          <div className="leave-modal-overlay" style={{ zIndex: 2000 }}>
+            <div className="leave-modal-content">
+              <h3>{t('groupChat.changeNickname')}</h3>
+              <input
+                type="text"
+                className="delete-confirmation-input"
+                value={newNickname}
+                onChange={(e) => setNewNickname(e.target.value)}
+                placeholder={t('groupChat.enterNewNickname')}
+                style={{ marginTop: '1rem', marginBottom: '1rem' }}
+              />
+              <div className="leave-modal-actions">
+                <button
+                  className="modal-btn cancel"
+                  onClick={() => { setShowEditProfileModal(false); setNewNickname(''); }}
+                >
+                  {t('groupChat.cancel')}
+                </button>
+                <button
+                  className="modal-btn primary"
+                  onClick={handleUpdateProfile}
+                  disabled={!newNickname.trim() || newNickname === userData?.nickname}
+                >
+                  {t('groupChat.save')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
