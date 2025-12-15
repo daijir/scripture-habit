@@ -1,0 +1,178 @@
+Checking against base language: ja
+Total base keys: 280
+
+[en] OK
+
+[pt] Missing 16 keys:
+  - dashboard.goToByuSpeech
+  - dashboard.readStudyMaterial
+  - myNotes.goToByuSpeech
+  - myNotes.readStudyMaterial
+  - myNotes.generateRecap
+  - myNotes.generatingRecap
+  - myNotes.recapSuccess
+  - myNotes.noNotesForRecap
+  - myNotes.recapError
+  - myNotes.sharedActivity
+  - newNote.byuUrlLabel
+  - newNote.byuUrlPlaceholder
+  - newNote.otherUrlLabel
+  - newNote.otherUrlPlaceholder
+  - noteLabels.talk
+  - noteLabels.speech
+
+[zho] Missing 20 keys:
+  - dashboard.goToByuSpeech
+  - dashboard.readStudyMaterial
+  - myNotes.goToByuSpeech
+  - myNotes.readStudyMaterial
+  - myNotes.generateRecap
+  - myNotes.generatingRecap
+  - myNotes.recapSuccess
+  - myNotes.noNotesForRecap
+  - myNotes.recapError
+  - myNotes.sharedActivity
+  - newNote.byuUrlLabel
+  - newNote.byuUrlPlaceholder
+  - newNote.otherUrlLabel
+  - newNote.otherUrlPlaceholder
+  - signup.googleButton
+  - signup.verificationSent
+  - signup.completeProfile
+  - signup.finishSignup
+  - noteLabels.talk
+  - noteLabels.speech
+
+[es] Missing 20 keys:
+  - dashboard.goToByuSpeech
+  - dashboard.readStudyMaterial
+  - myNotes.goToByuSpeech
+  - myNotes.readStudyMaterial
+  - myNotes.generateRecap
+  - myNotes.generatingRecap
+  - myNotes.recapSuccess
+  - myNotes.noNotesForRecap
+  - myNotes.recapError
+  - myNotes.sharedActivity
+  - newNote.byuUrlLabel
+  - newNote.byuUrlPlaceholder
+  - newNote.otherUrlLabel
+  - newNote.otherUrlPlaceholder
+  - signup.googleButton
+  - signup.verificationSent
+  - signup.completeProfile
+  - signup.finishSignup
+  - noteLabels.talk
+  - noteLabels.speech
+
+[vi] Missing 20 keys:
+  - dashboard.goToByuSpeech
+  - dashboard.readStudyMaterial
+  - myNotes.goToByuSpeech
+  - myNotes.readStudyMaterial
+  - myNotes.generateRecap
+  - myNotes.generatingRecap
+  - myNotes.recapSuccess
+  - myNotes.noNotesForRecap
+  - myNotes.recapError
+  - myNotes.sharedActivity
+  - newNote.byuUrlLabel
+  - newNote.byuUrlPlaceholder
+  - newNote.otherUrlLabel
+  - newNote.otherUrlPlaceholder
+  - signup.googleButton
+  - signup.verificationSent
+  - signup.completeProfile
+  - signup.finishSignup
+  - noteLabels.talk
+  - noteLabels.speech
+
+[th] Missing 20 keys:
+  - dashboard.goToByuSpeech
+  - dashboard.readStudyMaterial
+  - myNotes.goToByuSpeech
+  - myNotes.readStudyMaterial
+  - myNotes.generateRecap
+  - myNotes.generatingRecap
+  - myNotes.recapSuccess
+  - myNotes.noNotesForRecap
+  - myNotes.recapError
+  - myNotes.sharedActivity
+  - newNote.byuUrlLabel
+  - newNote.byuUrlPlaceholder
+  - newNote.otherUrlLabel
+  - newNote.otherUrlPlaceholder
+  - signup.googleButton
+  - signup.verificationSent
+  - signup.completeProfile
+  - signup.finishSignup
+  - noteLabels.talk
+  - noteLabels.speech
+
+[ko] Missing 20 keys:
+  - dashboard.goToByuSpeech
+  - dashboard.readStudyMaterial
+  - myNotes.goToByuSpeech
+  - myNotes.readStudyMaterial
+  - myNotes.generateRecap
+  - myNotes.generatingRecap
+  - myNotes.recapSuccess
+  - myNotes.noNotesForRecap
+  - myNotes.recapError
+  - myNotes.sharedActivity
+  - newNote.byuUrlLabel
+  - newNote.byuUrlPlaceholder
+  - newNote.otherUrlLabel
+  - newNote.otherUrlPlaceholder
+  - signup.googleButton
+  - signup.verificationSent
+  - signup.completeProfile
+  - signup.finishSignup
+  - noteLabels.talk
+  - noteLabels.speech
+
+[tl] Missing 20 keys:
+  - dashboard.goToByuSpeech
+  - dashboard.readStudyMaterial
+  - myNotes.goToByuSpeech
+  - myNotes.readStudyMaterial
+  - myNotes.generateRecap
+  - myNotes.generatingRecap
+  - myNotes.recapSuccess
+  - myNotes.noNotesForRecap
+  - myNotes.recapError
+  - myNotes.sharedActivity
+  - newNote.byuUrlLabel
+  - newNote.byuUrlPlaceholder
+  - newNote.otherUrlLabel
+  - newNote.otherUrlPlaceholder
+  - signup.googleButton
+  - signup.verificationSent
+  - signup.completeProfile
+  - signup.finishSignup
+  - noteLabels.talk
+  - noteLabels.speech
+
+[sw] Missing 20 keys:
+  - dashboard.goToByuSpeech
+  - dashboard.readStudyMaterial
+  - myNotes.goToByuSpeech
+  - myNotes.readStudyMaterial
+  - myNotes.generateRecap
+  - myNotes.generatingRecap
+  - myNotes.recapSuccess
+  - myNotes.noNotesForRecap
+  - myNotes.recapError
+  - myNotes.sharedActivity
+  - newNote.byuUrlLabel
+  - newNote.byuUrlPlaceholder
+  - newNote.otherUrlLabel
+  - newNote.otherUrlPlaceholder
+  - signup.googleButton
+  - signup.verificationSent
+  - signup.completeProfile
+  - signup.finishSignup
+  - noteLabels.talk
+  - noteLabels.speech
+
+Found total 156 missing translations.

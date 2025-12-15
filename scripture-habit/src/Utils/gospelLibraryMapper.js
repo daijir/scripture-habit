@@ -39,6 +39,8 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         volumeUrlPart = "general-conference";
     } else if (lowerVolume === "byu speeches" || volume === "BYU Speeches") {
         volumeUrlPart = "byu-speeches";
+    } else if (lowerVolume === "ordinances and proclamations" || volume === "儀式と宣言" || volume === "Ordenanças e Declarações") {
+        volumeUrlPart = "ordinances-and-proclamations";
     } else {
         return null;
     }
@@ -81,6 +83,27 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
     if (volumeUrlPart === "byu-speeches") {
         // Return URL directly
         return chapterInput;
+    }
+
+    // Special handling for Ordinances and Proclamations
+    if (volumeUrlPart === "ordinances-and-proclamations") {
+        const lowerChap = chapterInput.toLowerCase();
+
+        // Family Proclamation
+        if (lowerChap.includes("family") || lowerChap.includes("家族")) {
+            return `${baseUrl}/the-family-a-proclamation-to-the-world/the-family-a-proclamation-to-the-world${langParam}`;
+        }
+        // Living Christ
+        if (lowerChap.includes("living christ") || lowerChap.includes("生けるキリスト")) {
+            return `${baseUrl}/the-living-christ/the-living-christ${langParam}`;
+        }
+        // Restoration
+        if (lowerChap.includes("restoration") || lowerChap.includes("回復")) {
+            return `${baseUrl}/the-restoration/the-restoration${langParam}`;
+        }
+
+        // Fallback to index
+        return `${baseUrl}/ordinances-and-proclamations${langParam}`;
     }
 
     // Parse chapterInput to separate Book and Chapter

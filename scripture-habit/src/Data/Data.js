@@ -61,6 +61,10 @@ export const ScripturesOptions = [
         label: "Pearl of Great Price"
     },
     {
+        value: "Ordinances and Proclamations",
+        label: "Ordinances and Proclamations"
+    },
+    {
         value: "General Conference",
         label: "General Conference"
     },

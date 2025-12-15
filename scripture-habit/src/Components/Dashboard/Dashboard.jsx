@@ -19,7 +19,7 @@ import { translateChapterField } from '../../Utils/bookNameTranslations';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 import NoteDisplay from '../NoteDisplay/NoteDisplay';
 import NoteCard from '../NoteCard/NoteCard';
-import { getTodayReadingPlan } from '../../Data/DailyReadingPlan2025';
+import { getTodayReadingPlan } from '../../Data/DailyReadingPlan';
 import WelcomeStoryModal from '../WelcomeStoryModal/WelcomeStoryModal';
 
 
@@ -540,22 +540,82 @@ const Dashboard = () => {
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '5px', alignItems: 'center' }}>
                         {todayPlan.scripts.map((script, idx) => {
                           const url = getReadingPlanUrl(script);
-                          const odTranslations = {
-                            ja: "公式の宣言",
-                            pt: "Declarações Oficiais",
-                            zho: "正式宣言",
-                            es: "Declaraciones Oficiales",
-                            vi: "Tuyên Ngôn Chính Thức",
-                            th: "คำประกาศอย่างเป็นทางการ",
-                            ko: "공식 선언",
-                            tl: "Opisyal na Pahayag",
-                            sw: "Matamko Rasmi"
+                          const translations = {
+                            "Official Declarations": {
+                              ja: "公式の宣言",
+                              pt: "Declarações Oficiais",
+                              zho: "正式宣言",
+                              es: "Declaraciones Oficiales",
+                              vi: "Tuyên Ngôn Chính Thức",
+                              th: "คำประกาศอย่างเป็นทางการ",
+                              ko: "공식 선언",
+                              tl: "Opisyal na Pahayag",
+                              sw: "Matamko Rasmi"
+                            },
+                            "The Family: A Proclamation to the World": {
+                              ja: "家族：世界への宣言",
+                              pt: "A Família: Proclamação ao Mundo",
+                              zho: "家庭：致全世界文告",
+                              es: "La Familia: Una Proclamación para el Mundo",
+                              vi: "Gia Đình: Bản Tuyên Ngôn gửi cho Thế Giới",
+                              th: "ครอบครัว: ถ้อยแถลงต่อโลก",
+                              ko: "가족: 세상에 전하는 선언문",
+                              tl: "Ang Mag-anak: Isang Pagpapahayag sa Mundo",
+                              sw: "Familia: Tangazo kwa Ulimwengu"
+                            },
+                            "The Living Christ: The Testimony of the Apostles": {
+                              ja: "生けるキリスト：使徒たちの証",
+                              pt: "O Cristo Vivo: O Testemunho dos Apóstolos",
+                              zho: "活著的基督：使徒的見證",
+                              es: "El Cristo Viviente: El Testimonio de los Apóstoles",
+                              vi: "Đấng Ky Tô Sống: Chứng Ngôn của Các Vị Sứ Đồ",
+                              th: "พระคริสต์ที่ทรงพระชนม์: คำพยานของอัครสาวก",
+                              ko: "살아 계신 그리스도: 사도들의 간증",
+                              tl: "Ang Buhay na Cristo: Ang Patotoo ng mga Apostol",
+                              sw: "Kristo Aliye Hai: Ushuhuda wa Mitume"
+                            },
+                            "The Restoration of the Fulness of the Gospel of Jesus Christ: A Bicentennial Proclamation to the World": {
+                              ja: "イエス・キリストの福音の満ちみちた回復：世界への宣言200周年",
+                              pt: "A Restauração da Plenitude do Evangelho de Jesus Cristo: Uma Proclamação Bicentenária ao Mundo",
+                              zho: "耶穌基督福音的復興：兩百週年致全世界文告",
+                              es: "La Restauración de la plenitud del evangelio de Jesucristo: Una proclamación para el mundo en el bicentenario",
+                              vi: "Sự Phục Hồi Trọn Vẹn Phúc Âm của Chúa Giê Su Ky Tô: Bản Tuyên Ngôn Kỷ Niệm Hai Trăm Năm Gửi cho Thế Giới",
+                              th: "การฟื้นฟูความสมบูรณ์ของพระกิตติคุณของพระเยซูคริสต์: ถ้อยแถลงในวาระครบสองศตวรรษต่อโลก",
+                              ko: "예수 그리스도 복음의 충만함의 회복: 세상에 전하는 이백주년 선언문",
+                              tl: "Ang Pagapanumbalik ng Kabuuan ng Ebanghelyo ni Jesucristo: Isang Pagpapahayag sa Mundo sa Ika-200 Anibersaryo",
+                              sw: "Urejesho wa Utimilifu wa Injili ya Yesu Kristo: Tangazo la Miaka Mia Mbili kwa Ulimwengu"
+                            },
+                            "The Restoration of the Fulness of the Gospel of Jesus Christ": {
+                              ja: "回復の宣言",
+                              pt: "A Restauração",
+                              zho: "復興宣文",
+                              es: "La Restauración",
+                              vi: "Sự Phục Hồi",
+                              th: "การฟื้นฟู",
+                              ko: "회복 선언문",
+                              tl: "Ang Pagapanumbalik",
+                              sw: "Urejesho"
+                            },
+                            "Articles of Faith": {
+                              ja: "信仰箇条",
+                              pt: "Regras de Fé",
+                              zho: "信條",
+                              es: "Artículos de Fe",
+                              vi: "Những Tín Điều",
+                              th: "หลักแห่งความเชื่อ",
+                              ko: "신앙개조",
+                              tl: "Mga Saligan ng Pananampalataya",
+                              sw: "Makala ya Imani"
+                            }
                           };
 
                           let displayScript = script;
-                          if (script.includes("Official Declarations")) {
-                            if (odTranslations[language]) {
-                              displayScript = script.replace("Official Declarations", odTranslations[language]);
+
+                          // Check each key in translations to see if it exists in the script
+                          for (const [key, langMap] of Object.entries(translations)) {
+                            if (script.includes(key) && langMap[language]) {
+                              displayScript = script.replace(key, langMap[language]);
+                              break; // Assume only one match per script string
                             }
                           }
                           return (

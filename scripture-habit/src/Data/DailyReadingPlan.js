@@ -1,0 +1,17 @@
+import { DailyReadingPlan2025 } from './DailyReadingPlan2025';
+import { DailyReadingPlan2026 } from './DailyReadingPlan2026';
+
+// Function to retrieve today's reading plan
+export const getTodayReadingPlan = () => {
+    const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Tokyo';
+    const now = new Date();
+    // Format to YYYY-MM-DD in local time
+    const localDate = now.toLocaleDateString('en-CA', { timeZone });
+
+    // Switch to 2026 plan starting from Dec 29, 2025
+    if (localDate >= "2025-12-29") {
+        return DailyReadingPlan2026.find(p => p.date === localDate);
+    } else {
+        return DailyReadingPlan2025.find(p => p.date === localDate);
+    }
+};
