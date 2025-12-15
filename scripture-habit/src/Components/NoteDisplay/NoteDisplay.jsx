@@ -64,29 +64,51 @@ ${parts.comment}
 
     }, [data, loading, parts, url, language, t]);
 
+    // Extract URLs from comments
+    const commentUrls = extractUrls(parts.comment);
+
     return (
-        <ReactMarkdown
-            components={{
-                a: ({ node, ...props }) => (
-                    <a
-                        {...props}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                            color: 'black',
-                            textDecoration: 'none'
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                    />
-                ),
-                strong: ({ node, ...props }) => (
-                    <strong {...props} style={{ color: 'inherit' }} />
-                )
-            }}
-        >
-            {content}
-        </ReactMarkdown>
+        <>
+            <ReactMarkdown
+                components={{
+                    a: ({ node, ...props }) => (
+                        <a
+                            {...props}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                                color: 'black',
+                                textDecoration: 'none'
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                    ),
+                    strong: ({ node, ...props }) => (
+                        <strong {...props} style={{ color: 'inherit' }} />
+                    )
+                }}
+            >
+                {content}
+            </ReactMarkdown>
+            {commentUrls.length > 0 && (
+                <div className="note-link-previews" style={{ marginTop: '0.5rem' }}>
+                    {commentUrls.map((u, idx) => (
+                        <LinkPreview key={idx} url={u} isSent={isSent} />
+                    ))}
+                </div>
+            )}
+        </>
     );
+};
+
+import LinkPreview from '../LinkPreview/LinkPreview';
+
+// Helper to extract URLs
+const extractUrls = (text) => {
+    if (!text) return [];
+    const urlPattern = /(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/g;
+    const matches = text.match(urlPattern);
+    return matches || [];
 };
 
 const NoteDisplay = ({ text, isSent }) => {
@@ -213,6 +235,9 @@ const NoteDisplay = ({ text, isSent }) => {
         comment = body;
     }
 
+    // Extract URLs from comment for preview
+    const commentUrls = extractUrls(comment);
+
     const constructedMd = `
 ${headerTrans}
 
@@ -225,24 +250,33 @@ ${comment}
     `.trim();
 
     return (
-        <ReactMarkdown
-            components={{
-                a: ({ node, ...props }) => (
-                    <a
-                        {...props}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                            color: isSent ? 'white' : 'var(--purple)',
-                            textDecoration: 'underline'
-                        }}
-                        onClick={(e) => e.stopPropagation()}
-                    />
-                )
-            }}
-        >
-            {constructedMd}
-        </ReactMarkdown>
+        <>
+            <ReactMarkdown
+                components={{
+                    a: ({ node, ...props }) => (
+                        <a
+                            {...props}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                                color: isSent ? 'white' : 'var(--purple)',
+                                textDecoration: 'underline'
+                            }}
+                            onClick={(e) => e.stopPropagation()}
+                        />
+                    )
+                }}
+            >
+                {constructedMd}
+            </ReactMarkdown>
+            {commentUrls.length > 0 && (
+                <div className="note-link-previews" style={{ marginTop: '0.5rem' }}>
+                    {commentUrls.map((url, idx) => (
+                        <LinkPreview key={idx} url={url} isSent={isSent} />
+                    ))}
+                </div>
+            )}
+        </>
     );
 
 };
