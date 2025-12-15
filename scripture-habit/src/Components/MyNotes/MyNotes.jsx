@@ -300,13 +300,14 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
           >
             {t('dashboard.seeAll')}
           </button>
-          {['Old Testament', 'New Testament', 'Book of Mormon', 'Doctrine and Covenants', 'Pearl of Great Price', 'General Conference', 'BYU Speeches', 'Other'].map(key => {
+          {['Old Testament', 'New Testament', 'Book of Mormon', 'Doctrine and Covenants', 'Pearl of Great Price', 'Ordinances and Proclamations', 'General Conference', 'BYU Speeches', 'Other'].map(key => {
             const translationKeyMap = {
               'Old Testament': 'scriptures.oldTestament',
               'New Testament': 'scriptures.newTestament',
               'Book of Mormon': 'scriptures.bookOfMormon',
               'Doctrine and Covenants': 'scriptures.doctrineAndCovenants',
               'Pearl of Great Price': 'scriptures.pearlOfGreatPrice',
+              'Ordinances and Proclamations': 'scriptures.ordinancesAndProclamations',
               'General Conference': 'scriptures.generalConference',
               'BYU Speeches': 'scriptures.byuSpeeches',
               'Other': 'scriptures.other'

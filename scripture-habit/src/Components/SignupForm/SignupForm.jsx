@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import Button from '../Button/Button';
 import { auth, db } from '../../firebase';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, sendEmailVerification } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider, signInWithPopup, sendEmailVerification } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import Input from '../Input/Input';
 import './SignupForm.css'
 import { useLanguage } from '../../Context/LanguageContext';
-import { UilGoogle } from '@iconscout/react-unicons';
+import { UilGoogle, UilFacebook, UilGithub } from '@iconscout/react-unicons';
 
 export default function SignupForm() {
   const { t } = useLanguage();
@@ -18,8 +18,7 @@ export default function SignupForm() {
   const [pendingGoogleUser, setPendingGoogleUser] = useState(null);
   const navigate = useNavigate();
 
-  const handleGoogleSignup = async () => {
-    const provider = new GoogleAuthProvider();
+  const handleSocialSignup = async (provider) => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
@@ -38,7 +37,7 @@ export default function SignupForm() {
       }
 
     } catch (error) {
-      console.error("Error signing in with Google:", error);
+      console.error("Error signing in with provider:", error);
       setError(error.message);
     }
   };
@@ -77,10 +76,7 @@ export default function SignupForm() {
     e.preventDefault();
     setError(null);
 
-    if (!email.endsWith('@gmail.com')) {
-      setError(t('signup.errorGmail'));
-      return;
-    }
+
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -155,12 +151,28 @@ export default function SignupForm() {
         <h2>{t('signup.title')}</h2>
 
         <button
-          onClick={handleGoogleSignup}
+          onClick={() => handleSocialSignup(new GoogleAuthProvider())}
           className="google-btn"
           type="button"
         >
           <UilGoogle size="20" />
           {t('signup.googleButton')}
+        </button>
+        <button
+          onClick={() => handleSocialSignup(new FacebookAuthProvider())}
+          className="facebook-btn"
+          type="button"
+        >
+          <UilFacebook size="20" />
+          {t('signup.facebookButton')}
+        </button>
+        <button
+          onClick={() => handleSocialSignup(new GithubAuthProvider())}
+          className="github-btn"
+          type="button"
+        >
+          <UilGithub size="20" />
+          {t('signup.githubButton')}
         </button>
 
         <div className="separator">
