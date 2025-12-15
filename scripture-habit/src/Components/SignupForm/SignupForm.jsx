@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Button from '../Button/Button';
 import { auth, db } from '../../firebase';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider, signInWithPopup, sendEmailVerification } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider, signInWithPopup, sendEmailVerification, signOut } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import Input from '../Input/Input';
@@ -84,8 +84,6 @@ export default function SignupForm() {
 
       // Send verification email
       await sendEmailVerification(user);
-      window.alert(t('signup.verificationSent'));
-
       const now = new Date();
       const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -110,7 +108,9 @@ export default function SignupForm() {
         return;
       }
 
-      navigate('/group-options');
+      await signOut(auth);
+      window.alert(t('signup.verificationSent'));
+      navigate('/login');
 
     } catch (authError) {
       console.error("Error creating user in Authentication:", authError);

@@ -256,7 +256,8 @@ export const translations = {
             googleButton: "Log in with Google",
             facebookButton: "Log in with Facebook",
             githubButton: "Log in with GitHub",
-            inAppBrowserWarning: "Google Login is not supported in this in-app browser. Please open in Chrome or Safari."
+            inAppBrowserWarning: "Google Login is not supported in this in-app browser. Please open in Chrome or Safari.",
+            emailNotVerified: "Please verify your email address before logging in."
         },
         forgotPasswordPage: {
             title: "Reset Your Password",
@@ -654,7 +655,8 @@ export const translations = {
             googleButton: "Googleでログイン",
             facebookButton: "Facebookでログイン",
             githubButton: "GitHubでログイン",
-            inAppBrowserWarning: "このアプリ内ブラウザではGoogleログインが利用できません。右上のメニュー等からChromeやSafariで開いてください。"
+            inAppBrowserWarning: "このアプリ内ブラウザではGoogleログインが利用できません。右上のメニュー等からChromeやSafariで開いてください。",
+            emailNotVerified: "ログインする前にメールアドレスの確認を行ってください。"
         },
         forgotPasswordPage: {
             title: "パスワードをリセット",
