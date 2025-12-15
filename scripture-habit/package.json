@@ -11,6 +11,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/cli": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
     "@iconscout/react-unicons": "^2.2.5",
     "@vercel/analytics": "^1.6.1",
     "axios": "^1.13.2",

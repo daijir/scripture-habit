@@ -108,7 +108,13 @@ const Dashboard = () => {
           // Use onSnapshot for real-time updates to user profile
           const unsubUser = onSnapshot(userDocRef, (docSnap) => {
             if (docSnap.exists()) {
-              setUserData({ uid: currentUser.uid, ...docSnap.data() });
+              const data = docSnap.data();
+              setUserData({ uid: currentUser.uid, ...data });
+
+              // Show welcome story if not seen yet
+              if (data.hasSeenWelcomeStory === undefined) {
+                setTimeout(() => setShowWelcomeStory(true), 500);
+              }
             } else {
               console.log("No such user document!");
               setError("User profile not found.");

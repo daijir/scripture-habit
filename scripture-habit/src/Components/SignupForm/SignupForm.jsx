@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import Button from '../Button/Button';
 import { auth, db } from '../../firebase';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider, signInWithPopup, sendEmailVerification, signOut } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, sendEmailVerification, signOut } from 'firebase/auth';
 import { doc, setDoc, getDoc } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import Input from '../Input/Input';
 import './SignupForm.css'
 import { useLanguage } from '../../Context/LanguageContext';
-import { UilGoogle, UilFacebook, UilGithub } from '@iconscout/react-unicons';
+import { UilGoogle, UilGithub } from '@iconscout/react-unicons';
 
 export default function SignupForm() {
   const { t } = useLanguage();
@@ -38,7 +38,11 @@ export default function SignupForm() {
 
     } catch (error) {
       console.error("Error signing in with provider:", error);
-      setError(error.message);
+      if (error.code === 'auth/account-exists-with-different-credential') {
+        setError(t('signup.errorAccountExistsWithDifferentCredential'));
+      } else {
+        setError(error.message);
+      }
     }
   };
 
@@ -157,14 +161,6 @@ export default function SignupForm() {
         >
           <UilGoogle size="20" />
           {t('signup.googleButton')}
-        </button>
-        <button
-          onClick={() => handleSocialSignup(new FacebookAuthProvider())}
-          className="facebook-btn"
-          type="button"
-        >
-          <UilFacebook size="20" />
-          {t('signup.facebookButton')}
         </button>
         <button
           onClick={() => handleSocialSignup(new GithubAuthProvider())}

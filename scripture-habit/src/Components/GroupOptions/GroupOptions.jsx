@@ -27,7 +27,7 @@ const GroupOptions = () => {
 
                         // Show welcome story if not seen yet
                         if (data.hasSeenWelcomeStory === undefined) {
-                            setTimeout(() => setShowWelcomeStory(true), 500);
+                            setTimeout(() => setShowWelcomeStory(true), 100);
                         }
                     }
                     setLoading(false);

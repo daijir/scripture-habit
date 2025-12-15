@@ -257,7 +257,9 @@ export const translations = {
             facebookButton: "Log in with Facebook",
             githubButton: "Log in with GitHub",
             inAppBrowserWarning: "Google Login is not supported in this in-app browser. Please open in Chrome or Safari.",
-            emailNotVerified: "Please verify your email address before logging in."
+            emailNotVerified: "Please verify your email address before logging in.",
+            resendVerification: "Resend Verification Email",
+            verificationResent: "Verification email sent again."
         },
         forgotPasswordPage: {
             title: "Reset Your Password",
@@ -281,7 +283,8 @@ export const translations = {
             githubButton: "Sign up with GitHub",
             verificationSent: "Verification email sent! Please check your inbox.",
             completeProfile: "Complete Your Profile",
-            finishSignup: "Finish Sign Up"
+            finishSignup: "Finish Sign Up",
+            errorAccountExistsWithDifferentCredential: "This email is associated with another sign-in method. Please use the original method (e.g., Google or Email)."
         },
         groupCard: {
             members: "members",
@@ -656,7 +659,9 @@ export const translations = {
             facebookButton: "Facebookでログイン",
             githubButton: "GitHubでログイン",
             inAppBrowserWarning: "このアプリ内ブラウザではGoogleログインが利用できません。右上のメニュー等からChromeやSafariで開いてください。",
-            emailNotVerified: "ログインする前にメールアドレスの確認を行ってください。"
+            emailNotVerified: "ログインする前にメールアドレスの確認を行ってください。",
+            resendVerification: "確認メールを再送信",
+            verificationResent: "確認メールを再送信しました。"
         },
         forgotPasswordPage: {
             title: "パスワードをリセット",
@@ -680,7 +685,8 @@ export const translations = {
             githubButton: "GitHubで登録",
             verificationSent: "確認メールを送信しました！受信トレイを確認してください。",
             completeProfile: "プロフィールを完成させる",
-            finishSignup: "登録を完了する"
+            finishSignup: "登録を完了する",
+            errorAccountExistsWithDifferentCredential: "このメールアドレスは既に別の方法（Googleやメールなど）で登録されています。元の方法でログインしてください。"
         },
         groupCard: {
             members: "メンバー",
