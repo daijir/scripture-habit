@@ -126,8 +126,6 @@ export default function GroupCard({ group, currentUser, onJoin, onOpen }: Props)
         </div>
       </div>
 
-      {group.description && <p className="group-desc">{group.description}</p>}
-
       <div className="group-actions">
         <button
           className="join-btn"
@@ -139,7 +137,7 @@ export default function GroupCard({ group, currentUser, onJoin, onOpen }: Props)
           }}
           disabled={joining}
         >
-          {isMember ? t('groupCard.open') : joining ? t('groupCard.joining') : t('groupCard.join')}
+          {isMember ? t('groupCard.open') : joining ? t('groupCard.joining') : t('groupCard.details')}
         </button>
       </div>
     </div>
