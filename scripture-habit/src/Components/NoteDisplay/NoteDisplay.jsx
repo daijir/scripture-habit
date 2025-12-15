@@ -106,9 +106,15 @@ import LinkPreview from '../LinkPreview/LinkPreview';
 // Helper to extract URLs
 const extractUrls = (text) => {
     if (!text) return [];
-    const urlPattern = /(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/g;
+    // Improved regex to capture URLs, then clean trailing punctuation
+    const urlPattern = /(https?:\/\/[^\s]+)/g;
     const matches = text.match(urlPattern);
-    return matches || [];
+    if (!matches) return [];
+
+    return matches.map(url => {
+        // Remove common trailing punctuation that might be part of the sentence
+        return url.replace(/[.,:;"')\]]+$/, '');
+    });
 };
 
 const NoteDisplay = ({ text, isSent }) => {
@@ -124,27 +130,39 @@ const NoteDisplay = ({ text, isSent }) => {
     // But GroupChat uses this for ALL messages if we replace the renderer.
     // So we need to handle non-notes too.
     if (!headerMatch) {
+        // Extract URLs for plain messages
+        const simpleUrls = extractUrls(text);
+
         // Render as standard text with link detection
         // We can use ReactMarkdown directly for regular messages too!
         return (
-            <ReactMarkdown
-                components={{
-                    a: ({ node, ...props }) => (
-                        <a
-                            {...props}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                                color: isSent ? 'white' : 'var(--purple)',
-                                textDecoration: 'underline'
-                            }}
-                            onClick={(e) => e.stopPropagation()}
-                        />
-                    )
-                }}
-            >
-                {text}
-            </ReactMarkdown>
+            <>
+                <ReactMarkdown
+                    components={{
+                        a: ({ node, ...props }) => (
+                            <a
+                                {...props}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: isSent ? 'white' : 'var(--purple)',
+                                    textDecoration: 'underline'
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                            />
+                        )
+                    }}
+                >
+                    {text}
+                </ReactMarkdown>
+                {simpleUrls.length > 0 && (
+                    <div className="note-link-previews" style={{ marginTop: '0.5rem' }}>
+                        {simpleUrls.map((u, idx) => (
+                            <LinkPreview key={idx} url={u} isSent={isSent} />
+                        ))}
+                    </div>
+                )}
+            </>
         );
     }
 
