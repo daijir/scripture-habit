@@ -814,6 +814,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       'Doctrine and Covenants': 'scriptures.doctrineAndCovenants',
       'Doctrine and Convenants': 'scriptures.doctrineAndCovenants', // typo variant for legacy data
       'Pearl of Great Price': 'scriptures.pearlOfGreatPrice',
+      'Ordinances and Proclamations': 'scriptures.ordinancesAndProclamations',
       // Also handle variations
       '旧約聖書': 'scriptures.oldTestament',
       '新約聖書': 'scriptures.newTestament',
