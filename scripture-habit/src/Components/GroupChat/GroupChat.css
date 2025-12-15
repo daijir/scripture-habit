@@ -953,7 +953,7 @@ input:checked+.slider:before {
         /* On mobile, adjust margin to account for fixed header overlay.
            The banner is a direct child of GroupChat (flex col), so it needs to clear the fixed header.
            GroupChat padding-top helps, but we add extra margin to be safe. */
-        margin: 3.5rem 0.5rem 0;
+        margin: 2.2rem 0.5rem 0;
         font-size: 0.8rem;
     }
 }
