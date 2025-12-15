@@ -950,10 +950,10 @@ input:checked+.slider:before {
 
 @media screen and (max-width: 768px) {
     .inactivity-policy-banner {
-        /* On mobile, adjust margin to account for fixed header overlay if necessary, 
-           but since it's inside messages-container which has padding-top, 
-           simple margin is usually fine. */
-        margin: 1.5rem 0.5rem 0;
+        /* On mobile, adjust margin to account for fixed header overlay.
+           The banner is a direct child of GroupChat (flex col), so it needs to clear the fixed header.
+           GroupChat padding-top helps, but we add extra margin to be safe. */
+        margin: 3.5rem 0.5rem 0;
         font-size: 0.8rem;
     }
 }

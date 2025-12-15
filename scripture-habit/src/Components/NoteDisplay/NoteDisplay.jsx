@@ -206,6 +206,7 @@ const NoteDisplay = ({ text, isSent }) => {
             'Book of Mormon': 'scriptures.bookOfMormon',
             'Doctrine and Covenants': 'scriptures.doctrineAndCovenants',
             'Pearl of Great Price': 'scriptures.pearlOfGreatPrice',
+            'Ordinances and Proclamations': 'scriptures.ordinancesAndProclamations',
             'General Conference': 'scriptures.generalConference',
             // Add legacy/other variants if needed
         };
