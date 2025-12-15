@@ -953,7 +953,7 @@ input:checked+.slider:before {
         /* On mobile, adjust margin to account for fixed header overlay if necessary, 
            but since it's inside messages-container which has padding-top, 
            simple margin is usually fine. */
-        margin: 0.5rem 0.5rem 0;
+        margin: 1.5rem 0.5rem 0;
         font-size: 0.8rem;
     }
 }
