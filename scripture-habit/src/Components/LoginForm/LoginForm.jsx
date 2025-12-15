@@ -3,11 +3,11 @@ import './LoginForm.css';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 import { auth, db } from '../../firebase';
-import { signInWithEmailAndPassword, GoogleAuthProvider, FacebookAuthProvider, GithubAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
+import { signInWithEmailAndPassword, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, signOut, sendEmailVerification } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import { useLanguage } from '../../Context/LanguageContext';
-import { UilGoogle, UilFacebook, UilGithub } from '@iconscout/react-unicons';
+import { UilGoogle, UilGithub } from '@iconscout/react-unicons';
 
 export default function LoginForm() {
   const { t } = useLanguage();
@@ -16,6 +16,7 @@ export default function LoginForm() {
   const [nickname, setNickname] = useState('');
   const [error, setError] = useState(null);
   const [pendingGoogleUser, setPendingGoogleUser] = useState(null);
+  const [unverifiedUser, setUnverifiedUser] = useState(null);
   const navigate = useNavigate();
 
   const isInApp = () => {
@@ -44,7 +45,11 @@ export default function LoginForm() {
 
     } catch (error) {
       console.error("Error signing in with provider:", error);
-      setError(error.message);
+      if (error.code === 'auth/account-exists-with-different-credential') {
+        setError(t('signup.errorAccountExistsWithDifferentCredential'));
+      } else {
+        setError(error.message);
+      }
     }
   };
 
@@ -67,6 +72,7 @@ export default function LoginForm() {
         streakCount: 0,
         totalNotes: 0,
         timeZone: timeZone,
+
       };
 
       await setDoc(doc(db, 'users', pendingGoogleUser.uid), userData);
@@ -81,14 +87,13 @@ export default function LoginForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
-
-
+    setUnverifiedUser(null);
 
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
 
       if (!userCredential.user.emailVerified) {
-        await signOut(auth);
+        setUnverifiedUser(userCredential.user);
         setError(t('login.emailNotVerified'));
         return;
       }
@@ -96,6 +101,18 @@ export default function LoginForm() {
       navigate('/dashboard');
     } catch (error) {
       setError(error.message);
+    }
+  };
+
+  const handleResendVerification = async () => {
+    if (unverifiedUser) {
+      try {
+        await sendEmailVerification(unverifiedUser);
+        window.alert(t('login.verificationResent'));
+      } catch (error) {
+        console.error("Error resending verification email:", error);
+        setError("Error: " + error.message);
+      }
     }
   };
 
@@ -149,14 +166,7 @@ export default function LoginForm() {
           <UilGoogle size="20" />
           {t('login.googleButton')}
         </button>
-        <button
-          onClick={() => handleSocialLogin(new FacebookAuthProvider())}
-          className="facebook-btn"
-          type="button"
-        >
-          <UilFacebook size="20" />
-          {t('login.facebookButton')}
-        </button>
+
         <button
           onClick={() => handleSocialLogin(new GithubAuthProvider())}
           className="github-btn"
@@ -199,7 +209,28 @@ export default function LoginForm() {
         </form>
 
         {/* Error message */}
-        {error && <p className='error'>{error}</p>}
+        {error && (
+          <div className='error-container' style={{ marginTop: '10px' }}>
+            <p className='error'>{error}</p>
+            {unverifiedUser && (
+              <button
+                type="button"
+                onClick={handleResendVerification}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#4a90e2',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                  marginTop: '5px',
+                  fontSize: '0.9rem'
+                }}
+              >
+                {t('login.resendVerification')}
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Switch to Sign Up */}
         <div className="auth-switch">
