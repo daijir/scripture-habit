@@ -994,7 +994,8 @@ export const translations = {
             googleButton: "Entrar com o Google",
             facebookButton: "Entrar com Facebook",
             githubButton: "Entrar com GitHub",
-            inAppBrowserWarning: "O login do Google não é suportado neste navegador no aplicativo. Abra no Chrome ou Safari."
+            inAppBrowserWarning: "O login do Google não é suportado neste navegador no aplicativo. Abra no Chrome ou Safari.",
+            emailNotVerified: "Por favor, verifique seu endereço de e-mail antes de fazer login."
         },
         forgotPasswordPage: {
             title: "Redefinir sua senha",
@@ -1333,7 +1334,8 @@ export const translations = {
             googleButton: "使用 Google 登入",
             facebookButton: "使用 Facebook 登入",
             githubButton: "使用 GitHub 登入",
-            inAppBrowserWarning: "此應用程式內瀏覽器不支援 Google 登入。請在 Chrome 或 Safari 中開啟。"
+            inAppBrowserWarning: "此應用程式內瀏覽器不支援 Google 登入。請在 Chrome 或 Safari 中開啟。",
+            emailNotVerified: "請在登錄前驗證您的電子郵件地址。"
         },
         forgotPasswordPage: {
             title: "重設您的密碼",
@@ -1672,7 +1674,8 @@ export const translations = {
             googleButton: "Iniciar sesión con Google",
             facebookButton: "Iniciar sesión con Facebook",
             githubButton: "Iniciar sesión con GitHub",
-            inAppBrowserWarning: "El inicio de sesión con Google no es compatible en este navegador de la aplicación. Por favor, ábrelo en Chrome o Safari."
+            inAppBrowserWarning: "El inicio de sesión con Google no es compatible en este navegador de la aplicación. Por favor, ábrelo en Chrome o Safari.",
+            emailNotVerified: "Por favor, verifique su dirección de correo electrónico antes de iniciar sesión."
         },
         forgotPasswordPage: {
             title: "Restablecer tu contraseña",
@@ -2011,7 +2014,8 @@ export const translations = {
             googleButton: "Đăng nhập bằng Google",
             facebookButton: "Đăng nhập bằng Facebook",
             githubButton: "Đăng nhập bằng GitHub",
-            inAppBrowserWarning: "Đăng nhập Google không được hỗ trợ trong trình duyệt ứng dụng này. Vui lòng mở trong Chrome hoặc Safari."
+            inAppBrowserWarning: "Đăng nhập Google không được hỗ trợ trong trình duyệt ứng dụng này. Vui lòng mở trong Chrome hoặc Safari.",
+            emailNotVerified: "Vui lòng xác minh địa chỉ email của bạn trước khi đăng nhập."
         },
         forgotPasswordPage: {
             title: "Đặt lại mật khẩu của bạn",
@@ -2350,7 +2354,8 @@ export const translations = {
             googleButton: "เข้าสู่ระบบด้วย Google",
             facebookButton: "เข้าสู่ระบบด้วย Facebook",
             githubButton: "เข้าสู่ระบบด้วย GitHub",
-            inAppBrowserWarning: "การเข้าสู่ระบบด้วย Google ไม่รองรับในเบราว์เซอร์ในแอปนี้ กรุณาเปิดใน Chrome หรือ Safari"
+            inAppBrowserWarning: "การเข้าสู่ระบบด้วย Google ไม่รองรับในเบราว์เซอร์ในแอปนี้ กรุณาเปิดใน Chrome หรือ Safari",
+            emailNotVerified: "กรุณายืนยันที่อยู่อีเมลของคุณก่อนเข้าสู่ระบบ"
         },
         forgotPasswordPage: {
             title: "รีเซ็ตรหัสผ่านของคุณ",
@@ -2689,7 +2694,8 @@ export const translations = {
             googleButton: "Google로 로그인",
             facebookButton: "Facebook으로 로그인",
             githubButton: "GitHub로 로그인",
-            inAppBrowserWarning: "Google 로그인은 이 인앱 브라우저에서 지원되지 않습니다. Chrome 또는 Safari에서 열어주세요."
+            inAppBrowserWarning: "Google 로그인은 이 인앱 브라우저에서 지원되지 않습니다. Chrome 또는 Safari에서 열어주세요.",
+            emailNotVerified: "로그인하기 전에 이메일 주소를 확인해주세요."
         },
         forgotPasswordPage: {
             title: "비밀번호 재설정",
@@ -3028,7 +3034,8 @@ export const translations = {
             googleButton: "Mag-log in gamit ang Google",
             facebookButton: "Mag-login gamit ang Facebook",
             githubButton: "Mag-login gamit ang GitHub",
-            inAppBrowserWarning: "Hindi suportado ang Google Login sa in-app browser na ito. Pakibuksan sa Chrome o Safari."
+            inAppBrowserWarning: "Hindi suportado ang Google Login sa in-app browser na ito. Pakibuksan sa Chrome o Safari.",
+            emailNotVerified: "Pakiberipika ang iyong email address bago mag-login."
         },
         forgotPasswordPage: {
             title: "I-reset ang Iyong Password",
@@ -3367,7 +3374,8 @@ export const translations = {
             googleButton: "Ingia na Google",
             facebookButton: "Ingia na Facebook",
             githubButton: "Ingia na GitHub",
-            inAppBrowserWarning: "Kuingia kwa Google hakutumiki katika kivinjari hiki cha ndani ya programu. Tafadhali fungua kwenye Chrome au Safari."
+            inAppBrowserWarning: "Kuingia kwa Google hakutumiki katika kivinjari hiki cha ndani ya programu. Tafadhali fungua kwenye Chrome au Safari.",
+            emailNotVerified: "Tafadhali thibitisha anwani yako ya barua pepe kabla ya kuingia."
         },
         forgotPasswordPage: {
             title: "Weka Upya Nenosiri Lako",
