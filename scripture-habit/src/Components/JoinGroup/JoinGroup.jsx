@@ -141,9 +141,36 @@ export default function JoinGroup() {
     }
   };
 
-  const handleJoinClick = (groupId, groupData) => {
+  const [memberNames, setMemberNames] = useState([]);
+  const [loadingMembers, setLoadingMembers] = useState(false);
+
+  const handleJoinClick = async (groupId, groupData) => {
     setSelectedGroup({ id: groupId, ...groupData });
     setShowConfirmModal(true);
+    setMemberNames([]); // Reset
+    setLoadingMembers(true);
+
+    if (groupData.members && groupData.members.length > 0) {
+      try {
+        // Fetch up to 10 members for preview to avoid excessive reads/latency, or just fetch all since groups are small
+        const memberIds = groupData.members.slice(0, 20);
+        const names = await Promise.all(memberIds.map(async (uid) => {
+          try {
+            const uSnap = await getDoc(doc(db, 'users', uid));
+            if (uSnap.exists()) {
+              return uSnap.data().nickname;
+            }
+          } catch (e) {
+            console.warn("Failed to fetch user", uid);
+          }
+          return null;
+        }));
+        setMemberNames(names.filter(n => n));
+      } catch (e) {
+        console.error("Error fetching member names:", e);
+      }
+    }
+    setLoadingMembers(false);
   };
 
   const confirmJoin = async () => {
@@ -151,6 +178,7 @@ export default function JoinGroup() {
       await joinGroup(selectedGroup.id, selectedGroup);
       setShowConfirmModal(false);
       setSelectedGroup(null);
+      setMemberNames([]);
     }
   };
 
@@ -253,11 +281,45 @@ export default function JoinGroup() {
       </div>
 
       {/* Join Confirmation Modal */}
-      {showConfirmModal && (
+      {showConfirmModal && selectedGroup && (
         <div className="group-modal-overlay" onClick={() => setShowConfirmModal(false)}>
-          <div className="group-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '300px', textAlign: 'center' }}>
-            <h3>{t('joinGroup.joinConfirmTitle')}</h3>
-            <p>{t('joinGroup.joinConfirmMessage')}</p>
+          <div className="group-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '400px', textAlign: 'center' }}>
+            <h3>{selectedGroup.name}</h3>
+            {selectedGroup.description && (
+              <p style={{ color: '#718096', marginBottom: '1rem', fontStyle: 'italic' }}>
+                {selectedGroup.description}
+              </p>
+            )}
+
+            <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
+              <h4 style={{ fontSize: '0.9rem', color: '#4A5568', marginBottom: '0.5rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '0.25rem' }}>
+                {t('groupChat.members')} ({selectedGroup.membersCount || 0})
+              </h4>
+              {loadingMembers ? (
+                <p style={{ fontSize: '0.8rem', color: '#718096' }}>Loading members...</p>
+              ) : (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                  {memberNames.length > 0 ? (
+                    memberNames.map((name, idx) => (
+                      <span key={idx} style={{
+                        backgroundColor: '#EDF2F7',
+                        color: '#4A5568',
+                        padding: '0.25rem 0.5rem',
+                        borderRadius: '9999px',
+                        fontSize: '0.8rem'
+                      }}>
+                        {name}
+                      </span>
+                    ))
+                  ) : (
+                    <p style={{ fontSize: '0.8rem', color: '#718096' }}>None</p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <p style={{ marginBottom: '1.5rem' }}>{t('joinGroup.joinConfirmMessage')}</p>
+
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}>
               <button
                 className="close-modal-btn"
