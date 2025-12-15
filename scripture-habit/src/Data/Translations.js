@@ -177,6 +177,7 @@ export const translations = {
             bookOfMormon: "Book of Mormon",
             doctrineAndCovenants: "Doctrine and Covenants",
             pearlOfGreatPrice: "Pearl of Great Price",
+            ordinancesAndProclamations: "Ordinances and Proclamations",
             generalConference: "General Conference",
             byuSpeeches: "BYU Speeches",
             other: "Other"
@@ -309,6 +310,7 @@ export const translations = {
             page3Step1: "1. Write down what you learned (Output)",
             page3Step2: "2. Share what you learned (Edification)",
             page3Step3: "3. Weekly AI reports (Reflection)",
+            page3ContentSuffix: " we support {username}'s better habit of scripture study.",
             page4Title: "Our Vision",
             page4Quote: "\"Wherefore, he that preacheth and he that receiveth, understand one another, and both are edified and rejoice together.\" - Jesus Christ",
             page4Content: "If you can feel joy through this app as this scripture says, I would be very happy. It is a developer's delight.",
@@ -348,7 +350,7 @@ export const translations = {
             goToByuSpeech: "BYUスピーチへ移動",
             readStudyMaterial: "学習資料を読む",
             todaysComeFollowMe: "今日の「わたしに従ってきなさい」",
-            noReadingPlan: "今日のプランはありません。"
+            noReadingPlan: "今日の「わたしに従ってきなさい」はありません。"
         },
         languages: {
             title: "言語設定",
@@ -556,6 +558,7 @@ export const translations = {
             bookOfMormon: "モルモン書",
             doctrineAndCovenants: "教義と聖約",
             pearlOfGreatPrice: "高価な真珠",
+            ordinancesAndProclamations: "儀式と宣言",
             generalConference: "総大会",
             byuSpeeches: "BYU Speeches",
             other: "その他"
@@ -725,6 +728,8 @@ export const translations = {
             inspirationQuote: "\"Portanto, aquele que prega e aquele que recebe se compreendem um ao outro e ambos são edificados e juntos se regozijam\"",
             inspirationSource: "— Jesus Cristo (Doutrina e Convênios 50:22)",
             shareLearningCall: "Gostaria de compartilhar o que aprendeu hoje?",
+            goToByuSpeech: "Ir para o Discurso da BYU",
+            readStudyMaterial: "Ler o Material de Estudo",
             todaysComeFollowMe: "'Vem, e Segue-Me' de Hoje",
             noReadingPlan: "Nenhum plano para hoje."
         },
@@ -810,7 +815,15 @@ export const translations = {
             delete: "Excluir Anotação",
             searchPlaceholder: "Pesquisar anotações...",
             readInGospelLibrary: "Ler na Biblioteca do Evangelho",
-            weeklyReflectionCall: "Gostaria de refletir sobre sua semana?"
+            goToByuSpeech: "Ir para o Discurso da BYU",
+            readStudyMaterial: "Ler o Material de Estudo",
+            generateRecap: "✨ Gerar Resumo Semanal",
+            generatingRecap: "Gerando resumo semanal... Isso pode levar um momento.",
+            recapSuccess: "Resumo semanal gerado! Revise e salve-o.",
+            noNotesForRecap: "Nenhuma nota encontrada esta semana.",
+            recapError: "Falha ao gerar resumo.",
+            weeklyReflectionCall: "Gostaria de refletir sobre sua semana?",
+            sharedActivity: "Atividade Compartilhada"
         },
         recapModal: {
             title: "Sua Carta Semanal",
@@ -853,6 +866,10 @@ export const translations = {
             successPost: "Anotação postada com sucesso!",
             errorSave: "Falha ao salvar anotação. Tente novamente.",
             urlLabel: "URL / Sessão",
+            byuUrlLabel: "URL BYU",
+            byuUrlPlaceholder: "https://speeches.byu.edu/talks/...",
+            otherUrlLabel: "URL",
+            otherUrlPlaceholder: "https://example.com/study-material",
             askAiQuestion: "✨ Pedir uma pergunta à IA",
             surpriseMe: "✨ Surpreenda-me",
             aiQuestion: "✨ Pergunta da IA:"
@@ -863,6 +880,7 @@ export const translations = {
             bookOfMormon: "O Livro de Mórmon",
             doctrineAndCovenants: "Doutrina e Convênios",
             pearlOfGreatPrice: "Pérola de Grande Valor",
+            ordinancesAndProclamations: "Ordenanças e Declarações",
             generalConference: "Conferência Geral",
             byuSpeeches: "BYU Speeches",
             other: "Outros"
@@ -976,7 +994,9 @@ export const translations = {
             title: "Título",
             comment: "Comentário",
             newStudyNote: "Nova Nota de Estudo",
-            newStudyEntry: "Nova Entrada de Estudo"
+            newStudyEntry: "Nova Entrada de Estudo",
+            talk: "Discurso",
+            speech: "Discurso"
         },
         signOut: {
             title: "Sair",
@@ -993,6 +1013,7 @@ export const translations = {
             page3Step1: "1. Escreva o que você aprendeu (Produção)",
             page3Step2: "2. Compartilhe o que você aprendeu (Edificação)",
             page3Step3: "3. Relatórios semanais de IA (Reflexão)",
+            page3ContentSuffix: " nós apoiamos o melhor hábito de estudo das escrituras de {username}.",
             page4Title: "Nossa Visão",
             page4Quote: "\"Portanto, aquele que prega e aquele que recebe se compreendem um ao outro e ambos são edificados e juntos se regozijam\" - Jesus Cristo",
             page4Content: "Se você puder sentir alegria através deste aplicativo como diz esta escritura, ficarei muito feliz. É a alegria de um desenvolvedor.",
@@ -1029,6 +1050,8 @@ export const translations = {
             inspirationQuote: "「因此，那宣講的和接受的，彼此了解，雙方都被啟發，並一起快樂。」",
             inspirationSource: "— 耶穌基督(教義和聖約50:22)",
             shareLearningCall: "您想分享今天所學到的嗎？",
+            goToByuSpeech: "前往 BYU 演講",
+            readStudyMaterial: "閱讀研讀資料",
             todaysComeFollowMe: "今日的《來跟從我》",
             noReadingPlan: "今日無計畫。"
         },
@@ -1114,7 +1137,15 @@ export const translations = {
             delete: "刪除筆記",
             searchPlaceholder: "搜尋筆記...",
             readInGospelLibrary: "在福音圖書館閱讀",
-            weeklyReflectionCall: "您想回顧本週的學習嗎？"
+            goToByuSpeech: "前往 BYU 演講",
+            readStudyMaterial: "閱讀研讀資料",
+            generateRecap: "✨ 產生每週回顧",
+            generatingRecap: "正在產生每週回顧... 請稍候。",
+            recapSuccess: "每週回顧已產生！請檢視並儲存。",
+            noNotesForRecap: "本週找不到筆記。",
+            recapError: "產生回顧失敗。",
+            weeklyReflectionCall: "您想回顧本週的學習嗎？",
+            sharedActivity: "分享的活動"
         },
         recapModal: {
             title: "您的每週信件",
@@ -1156,10 +1187,14 @@ export const translations = {
             successUpdate: "筆記更新成功！",
             successPost: "筆記發佈成功！",
             errorSave: "儲存筆記失敗。請重試。",
-            urlLabel: "URL / 會議",
-            askAiQuestion: "✨ 讓 AI 提問",
-            surpriseMe: "✨ 隨機經文",
-            aiQuestion: "✨ AI問題:"
+            urlLabel: "URL / 場次",
+            byuUrlLabel: "網址",
+            byuUrlPlaceholder: "https://speeches.byu.edu/talks/...",
+            otherUrlLabel: "網址",
+            otherUrlPlaceholder: "https://example.com/study-material",
+            askAiQuestion: "✨ 向 AI 提問",
+            surpriseMe: "✨ 給我驚喜",
+            aiQuestion: "✨ AI 提問："
         },
         scriptures: {
             oldTestament: "舊約",
@@ -1167,6 +1202,7 @@ export const translations = {
             bookOfMormon: "摩爾門經",
             doctrineAndCovenants: "教義和聖約",
             pearlOfGreatPrice: "無價珍珠",
+            ordinancesAndProclamations: "儀式與宣言",
             generalConference: "總會大會",
             byuSpeeches: "BYU Speeches",
             other: "其他"
@@ -1254,7 +1290,11 @@ export const translations = {
             errorSaveProfile: "儲存個人資料失敗。請聯繫支援。",
             errorEmailInUse: "此電子郵件地址已被使用。請登入或使用其他電子郵件。",
             hasAccount: "已經有帳號？",
-            loginLink: "登入"
+            loginLink: "登入",
+            googleButton: "使用 Google 註冊",
+            verificationSent: "驗證信已發送！請檢查您的收件匣。",
+            completeProfile: "完成您的個人資料",
+            finishSignup: "完成註冊"
         },
         groupCard: {
             members: "成員",
@@ -1276,7 +1316,9 @@ export const translations = {
             title: "標題",
             comment: "心得",
             newStudyNote: "新研讀筆記",
-            newStudyEntry: "新研讀記錄"
+            newStudyEntry: "新研讀條目",
+            talk: "演講",
+            speech: "演講"
         },
         signOut: {
             title: "登出",
@@ -1293,6 +1335,7 @@ export const translations = {
             page3Step1: "1. 寫下您學到的內容（輸出）",
             page3Step2: "2. 分享您學到的內容（啟發）",
             page3Step3: "3. 每週 AI 報告（反思）",
+            page3ContentSuffix: " 我們支持 {username} 養成更好的經文研讀習慣。",
             page4Title: "我們的願景",
             page4Quote: "「因此，那宣講的和接受的，彼此了解，雙方都被啟發，並一起快樂。」 - 耶穌基督",
             page4Content: "如果您能像這段經文所說的那樣通過這個應用程式感受到快樂，我會非常高興。這是開發者的喜悅。",
@@ -1329,7 +1372,9 @@ export const translations = {
             inspirationQuote: "\"“De manera que, el que la predica y el que la recibe se comprenden el uno al otro, y ambos son edificados y se regocijan juntamente.\"",
             inspirationSource: "— Jesucristo (Doctrina y Convenios 50:22)",
             shareLearningCall: "¿Te gustaría compartir lo que aprendiste hoy?",
-            todaysComeFollowMe: "'Ven, sígueme' de Hoy",
+            goToByuSpeech: "Ir al Discurso de BYU",
+            readStudyMaterial: "Leer el Material de Estudio",
+            todaysComeFollowMe: "'Ven, sígueme' de hoy",
             noReadingPlan: "No hay plan para hoy."
         },
         languages: {
@@ -1394,7 +1439,7 @@ export const translations = {
             noActivity: "Sin actividad reciente",
             inactivityPolicyBanner: "⚠️ Si no publica una nota o mensaje en este grupo durante 3 días, será eliminado automáticamente.",
             placeholderShare: "¡Compartamos lo que aprendió hoy!",
-            placeholderInactivity: "⚠️ La inactividad durante 3 días conduce a la eliminación automática.",
+            placeholderInactivity: "⚠️ La inactividad durante 3 días conducirá a la eliminación automática.",
             placeholderEncourage: "Comparta sus pensamientos con el grupo.",
             welcomeGuideTitle: "¡Bienvenido al Grupo!",
             welcomeGuideMessage: "Este grupo tiene una regla simple para mantenernos activos y edificados:",
@@ -1413,8 +1458,16 @@ export const translations = {
             cancel: "Cancelar",
             delete: "Eliminar Nota",
             searchPlaceholder: "Buscar notas...",
-            readInGospelLibrary: "Leer en Biblioteca del Evangelio",
-            weeklyReflectionCall: "¿Te gustaría reflexionar sobre tu semana?"
+            readInGospelLibrary: "Leer en la Biblioteca del Evangelio",
+            goToByuSpeech: "Ir al Discurso de BYU",
+            readStudyMaterial: "Leer el Material de Estudio",
+            generateRecap: "✨ Generar Resumen Semanal",
+            generatingRecap: "Generando resumen semanal... Esto puede tardar un momento.",
+            recapSuccess: "¡Resumen semanal generado! Revísalo y guárdalo.",
+            noNotesForRecap: "No se encontraron notas esta semana.",
+            recapError: "Error al generar el resumen.",
+            weeklyReflectionCall: "¿Te gustaría reflexionar sobre tu semana?",
+            sharedActivity: "Actividad Compartida"
         },
         recapModal: {
             title: "Tu Carta Semanal",
@@ -1457,7 +1510,11 @@ export const translations = {
             successPost: "¡Nota publicada con éxito!",
             errorSave: "Error al guardar la nota. Por favor, inténtalo de nuevo.",
             urlLabel: "URL / Sesión",
-            askAiQuestion: "✨ Pedir una pregunta a la IA",
+            byuUrlLabel: "URL",
+            byuUrlPlaceholder: "https://speeches.byu.edu/talks/...",
+            otherUrlLabel: "URL",
+            otherUrlPlaceholder: "https://example.com/study-material",
+            askAiQuestion: "✨ Pedir Pregunta a la IA",
             surpriseMe: "✨ Sorpréndeme",
             aiQuestion: "✨ Pregunta de IA:"
         },
@@ -1467,6 +1524,7 @@ export const translations = {
             bookOfMormon: "El Libro de Mormón",
             doctrineAndCovenants: "Doctrina y Convenios",
             pearlOfGreatPrice: "La Perla de Gran Precio",
+            ordinancesAndProclamations: "Ordenanzas y Declaraciones",
             generalConference: "Conferencia General",
             byuSpeeches: "BYU Speeches",
             other: "Otros"
@@ -1553,8 +1611,12 @@ export const translations = {
             errorGmail: "Por favor, usa una dirección de Gmail.",
             errorSaveProfile: "Error al guardar el perfil. Contacta a soporte.",
             errorEmailInUse: "Este correo ya está en uso. Inicia sesión o usa otro.",
-            hasAccount: "¿Ya tienes una cuenta?",
-            loginLink: "Iniciar Sesión"
+            hasAccount: "Ya tienes una cuenta?",
+            loginLink: "Iniciar Sesión",
+            googleButton: "Registrarse con Google",
+            verificationSent: "¡Correo de verificación enviado! Por favor revise su bandeja de entrada.",
+            completeProfile: "Completa tu Perfil",
+            finishSignup: "Terminar Registro"
         },
         groupCard: {
             members: "miembros",
@@ -1576,7 +1638,9 @@ export const translations = {
             title: "Título",
             comment: "Comentario",
             newStudyNote: "Nueva Nota de Estudio",
-            newStudyEntry: "Nueva Entrada de Estudio"
+            newStudyEntry: "Nueva Entrada de Estudio",
+            talk: "Discurso",
+            speech: "Discurso"
         },
         signOut: {
             title: "Cerrar Sesión",
@@ -1593,6 +1657,7 @@ export const translations = {
             page3Step1: "1. Escribe lo que aprendiste (Salida)",
             page3Step2: "2. Comparte lo que aprendiste (Edificación)",
             page3Step3: "3. Informes semanales de IA (Reflexión)",
+            page3ContentSuffix: " apoyamos el mejor hábito de estudio de las escrituras de {username}.",
             page4Title: "Nuestra Visión",
             page4Quote: "\"De manera que, el que la predica y el que la recibe se comprenden el uno al otro, y ambos son edificados y se regocijan juntamente.\" - Jesucristo",
             page4Content: "Si puedes sentir gozo a través de esta aplicación como dice esta escritura, seré muy feliz. Es el deleite de un desarrollador.",
@@ -1629,6 +1694,8 @@ export const translations = {
             inspirationQuote: "\"Vậy nên, người thuyết giảng và người nhận hiểu được nhau, và cả hai được gây dựng và cùng nhau vui vẻ.\"",
             inspirationSource: "— Chúa Giê Su Ky Tô (Giáo Lý và Giao Ước 50:22)",
             shareLearningCall: "Bạn có muốn chia sẻ những gì bạn đã học hôm nay không?",
+            goToByuSpeech: "Đi đến Bài phát biểu BYU",
+            readStudyMaterial: "Đọc Tài liệu Nghiên cứu",
             todaysComeFollowMe: "'Hãy Đến Mà Theo Ta' Hôm Nay",
             noReadingPlan: "Không có kế hoạch cho hôm nay."
         },
@@ -1714,7 +1781,15 @@ export const translations = {
             delete: "Xóa ghi chép",
             searchPlaceholder: "Tìm kiếm ghi chép...",
             readInGospelLibrary: "Đọc trong Thư viện Phúc âm",
-            weeklyReflectionCall: "Bạn có muốn suy ngẫm về tuần này không?"
+            goToByuSpeech: "Đi đến Bài phát biểu BYU",
+            readStudyMaterial: "Đọc Tài liệu Nghiên cứu",
+            generateRecap: "✨ Tạo Tóm tắt Hàng tuần",
+            generatingRecap: "Đang tạo tóm tắt hàng tuần... Việc này có thể mất một chút thời gian.",
+            recapSuccess: "Đã tạo tóm tắt hàng tuần! Xem lại và lưu nó.",
+            noNotesForRecap: "Không tìm thấy ghi chú nào trong tuần này.",
+            recapError: "Không thể tạo tóm tắt.",
+            weeklyReflectionCall: "Bạn có muốn suy ngẫm về tuần này không?",
+            sharedActivity: "Hoạt động được chia sẻ"
         },
         recapModal: {
             title: "Thư hàng tuần của bạn",
@@ -1755,10 +1830,14 @@ export const translations = {
             post: "Đăng ghi chép",
             successUpdate: "Cập nhật ghi chép thành công!",
             successPost: "Đăng ghi chép thành công!",
-            errorSave: "Lưu ghi chép thất bại. Vui lòng thử lại.",
-            urlLabel: "URL / Phiên",
-            askAiQuestion: "✨ Yêu cầu AI đặt câu hỏi",
-            surpriseMe: "✨ Ngẫu nhiên",
+            errorSave: "Không thể lưu ghi chú. Vui lòng thử lại.",
+            urlLabel: "URL / Buổi",
+            byuUrlLabel: "URL",
+            byuUrlPlaceholder: "https://speeches.byu.edu/talks/...",
+            otherUrlLabel: "URL",
+            otherUrlPlaceholder: "https://example.com/study-material",
+            askAiQuestion: "✨ Hỏi AI câu hỏi",
+            surpriseMe: "✨ Làm tôi ngạc nhiên",
             aiQuestion: "✨ Câu hỏi AI:"
         },
         scriptures: {
@@ -1767,6 +1846,7 @@ export const translations = {
             bookOfMormon: "Sách Mặc Môn",
             doctrineAndCovenants: "Giáo Lý và Giao Ước",
             pearlOfGreatPrice: "Trân Châu Vô Giá",
+            ordinancesAndProclamations: "Các Giáo Lễ và Tuyên Ngôn",
             generalConference: "Đại Hội Trung Ương",
             byuSpeeches: "BYU Speeches",
             other: "Khác"
@@ -1854,7 +1934,11 @@ export const translations = {
             errorSaveProfile: "Lưu hồ sơ thất bại. Liên hệ hỗ trợ.",
             errorEmailInUse: "Email đã được sử dụng. Vui lòng đăng nhập hoặc sử dụng email khác.",
             hasAccount: "Đã có tài khoản?",
-            loginLink: "Đăng nhập"
+            loginLink: "Đăng nhập",
+            googleButton: "Đăng ký bằng Google",
+            verificationSent: "Email xác minh đã được gửi! Vui lòng kiểm tra hộp thư đến của bạn.",
+            completeProfile: "Hoàn thành Hồ sơ của bạn",
+            finishSignup: "Hoàn tất Đăng ký"
         },
         groupCard: {
             members: "thành viên",
@@ -1874,9 +1958,11 @@ export const translations = {
             scripture: "Thánh Thư",
             chapter: "Chương",
             title: "Tiêu đề",
-            comment: "Nhận xét",
-            newStudyNote: "Ghi chú học tập mới",
-            newStudyEntry: "Mục học tập mới"
+            comment: "Bình luận",
+            newStudyNote: "Ghi Chú Nghiên Cứu Mới",
+            newStudyEntry: "Mục Nghiên Cứu Mới",
+            talk: "Bài nói chuyện",
+            speech: "Bài phát biểu"
         },
         signOut: {
             title: "Đăng xuất",
@@ -1893,6 +1979,7 @@ export const translations = {
             page3Step1: "1. Viết ra những gì bạn đã học (Đầu ra)",
             page3Step2: "2. Chia sẻ những gì bạn đã học (Gây dựng)",
             page3Step3: "3. Báo cáo AI hàng tuần (Suy ngẫm)",
+            page3ContentSuffix: " chúng tôi hỗ trợ thói quen học thánh thư tốt hơn của {username}.",
             page4Title: "Tầm nhìn của chúng tôi",
             page4Quote: "\"Vậy nên, người thuyết giảng và người nhận hiểu được nhau, và cả hai được gây dựng và cùng nhau vui vẻ.\" - Chúa Giê Su Ky Tô",
             page4Content: "Nếu bạn có thể cảm thấy niềm vui qua ứng dụng này như câu thánh thư này nói, tôi sẽ rất hạnh phúc. Đó là niềm vui của một nhà phát triển.",
@@ -1929,6 +2016,8 @@ export const translations = {
             inspirationQuote: "\"ดังนั้น, คนที่สั่งสอนและคนที่รับ, เข้าใจกัน, และทั้งสองได้รับการจรรโลงใจและชื่นชมยินดีด้วยกัน.\"",
             inspirationSource: "— พระเยซูคริสต์ (หลักคำสอนและพันธสัญญา 50:22)",
             shareLearningCall: "คุณต้องการแบ่งปันสิ่งที่คุณเรียนรู้วันนี้หรือไม่?",
+            goToByuSpeech: "ไปที่สุนทรพจน์ BYU",
+            readStudyMaterial: "อ่านเอกสารการศึกษา",
             todaysComeFollowMe: "'จงตามเรามา' ของวันนี้",
             noReadingPlan: "ไม่มีแผนสำหรับวันนี้"
         },
@@ -2014,7 +2103,15 @@ export const translations = {
             delete: "ลบบันทึก",
             searchPlaceholder: "ค้นหาบันทึก...",
             readInGospelLibrary: "อ่านในคลังค้นคว้าพระกิตติคุณ",
-            weeklyReflectionCall: "คุณต้องการทบทวนสัปดาห์นี้หรือไม่?"
+            goToByuSpeech: "ไปที่สุนทรพจน์ BYU",
+            readStudyMaterial: "อ่านเอกสารการศึกษา",
+            generateRecap: "✨ สร้างสรุปรายสัปดาห์",
+            generatingRecap: "กำลังสร้างสรุปรายสัปดาห์... อาจใช้เวลาสักครู่",
+            recapSuccess: "สร้างสรุปรายสัปดาห์แล้ว! ตรวจสอบและบันทึก",
+            noNotesForRecap: "ไม่พบโน้ตในสัปดาห์นี้",
+            recapError: "สร้างสรุปไม่สำเร็จ",
+            weeklyReflectionCall: "คุณต้องการทบทวนสัปดาห์ของคุณหรือไม่?",
+            sharedActivity: "กิจกรรมที่แชร์"
         },
         recapModal: {
             title: "จดหมายรายสัปดาห์ของคุณ",
@@ -2055,11 +2152,15 @@ export const translations = {
             post: "โพสต์บันทึก",
             successUpdate: "อัปเดตบันทึกสำเร็จ!",
             successPost: "โพสต์บันทึกสำเร็จ!",
-            errorSave: "บันทึกไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
+            errorSave: "บันทึกโน้ตไม่สำเร็จ โปรดลองอีกครั้ง",
             urlLabel: "URL / เซสชัน",
-            askAiQuestion: "✨ ขอคำถามจาก AI",
-            surpriseMe: "✨ สุ่ม",
-            aiQuestion: "✨ คำถามจาก AI:"
+            byuUrlLabel: "URL",
+            byuUrlPlaceholder: "https://speeches.byu.edu/talks/...",
+            otherUrlLabel: "URL",
+            otherUrlPlaceholder: "https://example.com/study-material",
+            askAiQuestion: "✨ ถาม AI for คำถาม",
+            surpriseMe: "✨ เซอร์ไพรส์ฉัน",
+            aiQuestion: "✨ คำถาม AI:"
         },
         scriptures: {
             oldTestament: "พันธสัญญาเดิม",
@@ -2067,6 +2168,7 @@ export const translations = {
             bookOfMormon: "พระคัมภีร์มอรมอน",
             doctrineAndCovenants: "หลักคำสอนและพันธสัญญา",
             pearlOfGreatPrice: "ไข่มุกอันล้ำค่า",
+            ordinancesAndProclamations: "พิธีการและถ้อยแถลง",
             generalConference: "การประชุมใหญ่สามัญ",
             byuSpeeches: "BYU Speeches",
             other: "อื่นๆ"
@@ -2154,7 +2256,11 @@ export const translations = {
             errorSaveProfile: "บันทึกโปรไฟล์ไม่สำเร็จ กรุณาติดต่อฝ่ายสนับสนุน",
             errorEmailInUse: "ที่อยู่อีเมลนี้ถูกใช้แล้ว กรุณาเข้าสู่ระบบหรือใช้อีเมลอื่น",
             hasAccount: "มีบัญชีอยู่แล้ว?",
-            loginLink: "เข้าสู่ระบบ"
+            loginLink: "เข้าสู่ระบบ",
+            googleButton: "ลงทะเบียนด้วย Google",
+            verificationSent: "ส่งอีเมลยืนยันแล้ว! โปรดตรวจสอบกล่องจดหมายของคุณ",
+            completeProfile: "กรอกข้อมูลโปรไฟล์ของคุณให้สมบูรณ์",
+            finishSignup: "เสร็จสิ้นการลงทะเบียน"
         },
         groupCard: {
             members: "สมาชิก",
@@ -2175,8 +2281,10 @@ export const translations = {
             chapter: "บท",
             title: "หัวข้อ",
             comment: "ความคิดเห็น",
-            newStudyNote: "บันทึกการศึกษาใหม่",
-            newStudyEntry: "รายการศึกษาใหม่"
+            newStudyNote: "โน้ตการศึกษาใหม่",
+            newStudyEntry: "รายการการศึกษาใหม่",
+            talk: "คำปราศรัย",
+            speech: "สุนทรพจน์"
         },
         signOut: {
             title: "ออกจากระบบ",
@@ -2191,8 +2299,9 @@ export const translations = {
             page2Content: "จากการศึกษาของ Dominican University of California คุณมีแนวโน้มที่จะประสบความสำเร็จในการสร้างนิสัยใหม่ได้ <strong style='color: #E53E3E; font-size: 1.2em;'>ประมาณสองเท่า</strong> เมื่อร่วมมือกับเพื่อน เทียบกับการทำคนเดียว!",
             page3Title: "วิธีการทำงานสำหรับ {username}",
             page3Step1: "1. เขียนสิ่งที่คุณได้เรียนรู้ (ผลลัพธ์)",
-            page3Step2: "2. แบ่งปันสิ่งที่คุณได้เรียนรู้ (การจรรโลงใจ)",
-            page3Step3: "3. รายงาน AI รายสัปดาห์ (การสะท้อนกลับ)",
+            page3Step2: "2. แบ่งปันสิ่งที่คุณได้เรียนรู้ (การเสริมสร้าง)",
+            page3Step3: "3. รายงาน AI รายสัปดาห์ (การไตร่ตรอง)",
+            page3ContentSuffix: " เราสนับสนุน {username} ให้มีนิสัยการศึกษาพระคัมภีร์ที่ดีขึ้น",
             page4Title: "วิสัยทัศน์ของเรา",
             page4Quote: "\"ดังนั้น, คนที่สั่งสอนและคนที่รับ, เข้าใจกัน, และทั้งสองได้รับการจรรโลงใจและชื่นชมยินดีด้วยกัน.\" - พระเยซูคริสต์",
             page4Content: "หากคุณรู้สึกถึงความสุขผ่านแอปนี้ตามที่พระคัมภีร์ข้อนี้กล่าวไว้ ผมจะมีความสุขมาก เป็นความปิติยินดีของนักพัฒนา",
@@ -2229,6 +2338,8 @@ export const translations = {
             inspirationQuote: "\"그런즉 전도하는 자와 받는 자는 서로를 이해하고 둘 다 교화되며, 함께 기뻐하느니라.\"",
             inspirationSource: "— 예수 그리스도 (교리와 성약 50:22)",
             shareLearningCall: "오늘 배운 것을 공유하시겠습니까?",
+            goToByuSpeech: "BYU 연설로 이동",
+            readStudyMaterial: "학습 자료 읽기",
             todaysComeFollowMe: "오늘의 '와서 나를 따르라'",
             noReadingPlan: "오늘의 계획이 없습니다."
         },
@@ -2314,7 +2425,15 @@ export const translations = {
             delete: "노트 삭제",
             searchPlaceholder: "노트 검색...",
             readInGospelLibrary: "복음 자료실에서 읽기",
-            weeklyReflectionCall: "이번 주를 되돌아보시겠습니까?"
+            goToByuSpeech: "BYU 연설로 이동",
+            readStudyMaterial: "학습 자료 읽기",
+            generateRecap: "✨ 주간 요약 생성",
+            generatingRecap: "주간 요약을 생성 중입니다... 잠시만 기다려주세요.",
+            recapSuccess: "주간 요약이 생성되었습니다! 검토하고 저장하세요.",
+            noNotesForRecap: "이번 주 노트를 찾을 수 없습니다.",
+            recapError: "요약을 생성하지 못했습니다.",
+            weeklyReflectionCall: "한 주를 되돌아보시겠습니까?",
+            sharedActivity: "공유 활동"
         },
         recapModal: {
             title: "당신의 주간 편지",
@@ -2355,10 +2474,14 @@ export const translations = {
             post: "노트 게시",
             successUpdate: "노트가 업데이트되었습니다!",
             successPost: "노트가 게시되었습니다!",
-            errorSave: "노트 저장 실패. 다시 시도해주세요.",
+            errorSave: "노트를 저장하지 못했습니다. 다시 시도해주세요.",
             urlLabel: "URL / 세션",
+            byuUrlLabel: "URL",
+            byuUrlPlaceholder: "https://speeches.byu.edu/talks/...",
+            otherUrlLabel: "URL",
+            otherUrlPlaceholder: "https://example.com/study-material",
             askAiQuestion: "✨ AI에게 질문 요청",
-            surpriseMe: "✨ 랜덤 선택",
+            surpriseMe: "✨ 나를 놀라게 해줘",
             aiQuestion: "✨ AI 질문:"
         },
         scriptures: {
@@ -2367,6 +2490,7 @@ export const translations = {
             bookOfMormon: "몰몬경",
             doctrineAndCovenants: "교리와 성약",
             pearlOfGreatPrice: "값진 진주",
+            ordinancesAndProclamations: "의식 및 선언",
             generalConference: "연차 대회",
             byuSpeeches: "BYU Speeches",
             other: "기타"
@@ -2454,7 +2578,11 @@ export const translations = {
             errorSaveProfile: "프로필 저장 실패. 지원팀에 문의하세요.",
             errorEmailInUse: "이미 사용 중인 이메일 주소입니다. 로그인하거나 다른 이메일을 사용하세요.",
             hasAccount: "이미 계정이 있으신가요?",
-            loginLink: "로그인"
+            loginLink: "로그인",
+            googleButton: "Google로 가입",
+            verificationSent: "확인 이메일이 전송되었습니다! 받은 편지함을 확인해주세요.",
+            completeProfile: "프로필 완성하기",
+            finishSignup: "가입 완료"
         },
         groupCard: {
             members: "멤버",
@@ -2476,7 +2604,9 @@ export const translations = {
             title: "제목",
             comment: "코멘트",
             newStudyNote: "새 학습 노트",
-            newStudyEntry: "새 학습 항목"
+            newStudyEntry: "새 학습 항목",
+            talk: "말씀",
+            speech: "연설"
         },
         signOut: {
             title: "로그아웃",
@@ -2491,8 +2621,9 @@ export const translations = {
             page2Content: "도미니칸 대학교 캘리포니아의 연구에 따르면, 친구와 협력할 때 혼자 할 때보다 새로운 습관을 형성하는 데 성공할 확률이 <strong style='color: #E53E3E; font-size: 1.2em;'>약 2배</strong> 더 높다고 합니다!",
             page3Title: "{username}님을 위한 사용법",
             page3Step1: "1. 배운 것을 기록하기 (아웃풋)",
-            page3Step2: "2. 배운 것을 공유하기 (교화)",
-            page3Step3: "3. 주간 AI 리포트 (성찰)",
+            page3Step2: "2. 배운 것을 나누십시오 (교화)",
+            page3Step3: "3. 주간 AI 보고서 (반성)",
+            page3ContentSuffix: " {username}님의 더 나은 경전 공부 습관을 지원합니다.",
             page4Title: "우리의 비전",
             page4Quote: "\"그런즉 전도하는 자와 받는 자는 서로를 이해하고 둘 다 교화되며, 함께 기뻐하느니라.\" - 예수 그리스도",
             page4Content: "이 성구 말씀처럼 이 앱을 통해 기쁨을 느끼실 수 있다면 정말 행복하겠습니다. 그것이 개발자의 기쁨입니다.",
@@ -2528,7 +2659,9 @@ export const translations = {
             readInGospelLibrary: "Basahin sa Gospel Library",
             inspirationQuote: "\"Samakatwid, siya na nangangaral at siya na nakatatanggap ay nauunawaan ang isa't isa, at sila ay kapwa pinabuti at nagsasaya nang magkasama.\"",
             inspirationSource: "— Jesucristo (Doktrina at mga Tipan 50:22)",
-            shareLearningCall: "Gusto mo bang ibahagi ang natutunan mo ngayon?",
+            shareLearningCall: "Gusto mo bang ibahagi ang iyong natutunan ngayon?",
+            goToByuSpeech: "Pumunta sa BYU Speech",
+            readStudyMaterial: "Basahin ang Study Material",
             todaysComeFollowMe: "'Pumarito Ka, Sumunod Ka sa Akin' Ngayon",
             noReadingPlan: "Walang plano para sa araw na ito."
         },
@@ -2614,7 +2747,15 @@ export const translations = {
             delete: "Tanggalin ang Tala",
             searchPlaceholder: "Maghanap ng mga tala...",
             readInGospelLibrary: "Basahin sa Gospel Library",
-            weeklyReflectionCall: "Gusto mo bang magnilay sa iyong linggo?"
+            goToByuSpeech: "Pumunta sa BYU Speech",
+            readStudyMaterial: "Basahin ang Study Material",
+            generateRecap: "✨ Bumuo ng Lingguhang Buod",
+            generatingRecap: "Bumubuo ng lingguhang buod... Maaaring tumagal ito ng sandali.",
+            recapSuccess: "Nakabuo na ng lingguhang buod! Suriin at i-save ito.",
+            noNotesForRecap: "Walang natagpuang mga tala para sa linggong ito.",
+            recapError: "Nabigo sa pagbuo ng buod.",
+            weeklyReflectionCall: "Gusto mo bang magnilay sa iyong linggo?",
+            sharedActivity: "Ibinahaging Aktibidad"
         },
         recapModal: {
             title: "Ang Iyong Lingguhang Sulat",
@@ -2656,9 +2797,13 @@ export const translations = {
             successUpdate: "Matagumpay na na-update ang tala!",
             successPost: "Matagumpay na nai-post ang tala!",
             errorSave: "Nabigong i-save ang tala. Pakisubukan muli.",
-            urlLabel: "URL / Session",
-            askAiQuestion: "✨ Humiling ng Tanong sa AI",
-            surpriseMe: "✨ Surprise Me",
+            urlLabel: "URL / Sesyon",
+            byuUrlLabel: "URL",
+            byuUrlPlaceholder: "https://speeches.byu.edu/talks/...",
+            otherUrlLabel: "URL",
+            otherUrlPlaceholder: "https://example.com/study-material",
+            askAiQuestion: "✨ Magtanong sa AI",
+            surpriseMe: "✨ Sorpresahin Ako",
             aiQuestion: "✨ Tanong ng AI:"
         },
         scriptures: {
@@ -2667,8 +2812,9 @@ export const translations = {
             bookOfMormon: "Aklat ni Mormon",
             doctrineAndCovenants: "Doktrina at mga Tipan",
             pearlOfGreatPrice: "Mahalagang Perlas",
+            ordinancesAndProclamations: "Mga Ordenansa at Pagpapahayag",
             generalConference: "Pangkalahatang Kumperensya",
-            byuSpeeches: "BYU Speeches",
+            byuSpeeches: "Mga Talumpati sa BYU",
             other: "Iba pa"
         },
         groupOptions: {
@@ -2754,7 +2900,11 @@ export const translations = {
             errorSaveProfile: "Nabigong i-save ang profile. Makipag-ugnayan sa suporta.",
             errorEmailInUse: "Ginagamit na ang email na ito. Mag-log in o gumamit ng ibang email.",
             hasAccount: "May account na?",
-            loginLink: "Mag-log In"
+            loginLink: "Mag-log In",
+            googleButton: "Mag-sign up gamit ang Google",
+            verificationSent: "Naipadala na ang verification email! Pakitingnan ang iyong inbox.",
+            completeProfile: "Kumpletuhin ang Iyong Profile",
+            finishSignup: "Tapusin ang Pag-sign Up"
         },
         groupCard: {
             members: "miyembro",
@@ -2776,7 +2926,9 @@ export const translations = {
             title: "Pamagat",
             comment: "Komento",
             newStudyNote: "Bagong Tala sa Pag-aaral",
-            newStudyEntry: "Bagong Entry sa Pag-aaral"
+            newStudyEntry: "Bagong Entry sa Pag-aaral",
+            talk: "Mensahe",
+            speech: "Talumpati"
         },
         signOut: {
             title: "Mag-sign Out",
@@ -2791,8 +2943,9 @@ export const translations = {
             page2Content: "Ayon sa isang pag-aaral ng Dominican University of California, ikaw ay may <strong style='color: #E53E3E; font-size: 1.2em;'>humigit-kumulang dalawang beses</strong> na mas malaking posibilidad na magtagumpay sa pagbuo ng bagong gawi kapag nakikipagtulungan ka sa isang kaibigan kumpara sa paggawa nito nang mag-isa!",
             page3Title: "Paano ito gumagana para kay {username}",
             page3Step1: "1. Isulat ang iyong natutunan (Output)",
-            page3Step2: "2. Ibahagi ang iyong natutunan (Edification)",
-            page3Step3: "3. Lingguhang mga ulat ng AI (Reflection)",
+            page3Step2: "2. Ibahagi ang iyong natutunan (Pagpapatibay)",
+            page3Step3: "3. Lingguhang ulat ng AI (Pagninilay)",
+            page3ContentSuffix: " sinusuportahan namin ang mas mahusay na ugali ng pag-aaral ng {username} ng mga banal na kasulatan.",
             page4Title: "Ang Aming Bisyon",
             page4Quote: "\"Samakatwid, siya na nangangaral at siya na nakatatanggap ay nauunawaan ang isa't isa, at sila ay kapwa pinabuti at nagsasaya nang magkasama.\" - Jesucristo",
             page4Content: "Kung makakaramdam ka ng kagalakan sa pamamagitan ng app na ito gaya ng sinasabi ng banal na kasulatang ito, ako ay magiging napakasaya. Ito ay kaluguran ng isang developer.",
@@ -2829,6 +2982,8 @@ export const translations = {
             inspirationQuote: "\"Kwa sababu hiyo, yule ambaye huhubiri na yule apokeaye, huelewana, na wote hujengana na kufurahi kwa pamoja.\"",
             inspirationSource: "— Yesu Kristo (Mafundisho na Maagano 50:22)",
             shareLearningCall: "Je, ungependa kushiriki ulichojifunza leo?",
+            goToByuSpeech: "Nenda kwenye Hotuba ya BYU",
+            readStudyMaterial: "Soma Nyenzo za Kujifunza",
             todaysComeFollowMe: "'Njoo, Unifuate' ya Leo",
             noReadingPlan: "Hakuna mpango wa leo."
         },
@@ -2913,8 +3068,16 @@ export const translations = {
             cancel: "Ghairi",
             delete: "Futa Ujumbe",
             searchPlaceholder: "Tafuta maelezo...",
-            readInGospelLibrary: "Soma katika Gospel Library",
-            weeklyReflectionCall: "Je, ungependa kutafakari wiki yako?"
+            readInGospelLibrary: "Soma katika Maktaba ya Injili",
+            goToByuSpeech: "Nenda kwenye Hotuba ya BYU",
+            readStudyMaterial: "Soma Nyenzo za Kujifunza",
+            generateRecap: "✨ Tengeneza Muhtasari wa Kila Wiki",
+            generatingRecap: "Inatengeneza muhtasari wa kila wiki... Hii inaweza kuchukua muda.",
+            recapSuccess: "Muhtasari wa kila wiki umetengenezwa! Ukague na uuhifadhi.",
+            noNotesForRecap: "Hakuna maelezo yaliyopatikana kwa wiki hii.",
+            recapError: "Imeshindwa kutengeneza muhtasari.",
+            weeklyReflectionCall: "Je, ungependa kutafakari wiki yako?",
+            sharedActivity: "Shughuli Iliyoshirikiwa"
         },
         recapModal: {
             title: "Barua Yako ya Wiki",
@@ -2955,10 +3118,14 @@ export const translations = {
             post: "Chapisha Ujumbe",
             successUpdate: "Ujumbe umesasishwa kikamilifu!",
             successPost: "Ujumbe umechapishwa kikamilifu!",
-            errorSave: "Imeshindwa kuhifadhi ujumbe. Tafadhali jaribu tena.",
-            urlLabel: "URL / Kipindi",
+            errorSave: "Imeshindwa kuhifadhi dokezo. Tafadhali jaribu tena.",
+            urlLabel: "URL / Kikao",
+            byuUrlLabel: "URL",
+            byuUrlPlaceholder: "https://speeches.byu.edu/talks/...",
+            otherUrlLabel: "URL",
+            otherUrlPlaceholder: "https://example.com/study-material",
             askAiQuestion: "✨ Uliza AI Swali",
-            surpriseMe: "✨ Surprise Me",
+            surpriseMe: "✨ Nishangaze",
             aiQuestion: "✨ Swali la AI:"
         },
         scriptures: {
@@ -2967,6 +3134,7 @@ export const translations = {
             bookOfMormon: "Kitabu cha Mormoni",
             doctrineAndCovenants: "Mafundisho na Maagano",
             pearlOfGreatPrice: "Lulu ya Thamani Kuu",
+            ordinancesAndProclamations: "Ibada na Matangazo",
             generalConference: "Mkutano Mkuu",
             byuSpeeches: "BYU Speeches",
             other: "Nyingine"
@@ -3054,7 +3222,11 @@ export const translations = {
             errorSaveProfile: "Imeshindwa kuhifadhi wasifu. Wasiliana na usaidizi.",
             errorEmailInUse: "Anwani hii ya barua pepe tayari inatumika. Tafadhali ingia au tumia barua pepe nyingine.",
             hasAccount: "Tayari una akaunti?",
-            loginLink: "Ingia"
+            loginLink: "Ingia",
+            googleButton: "Jisajili na Google",
+            verificationSent: "Barua pepe ya uthibitishaji imetumwa! Tafadhali angalia kikasha chako.",
+            completeProfile: "Kamilisha Wasifu Wako",
+            finishSignup: "Maliza Kujisajili"
         },
         groupCard: {
             members: "wanachama",
@@ -3075,8 +3247,10 @@ export const translations = {
             chapter: "Sura",
             title: "Kichwa",
             comment: "Maoni",
-            newStudyNote: "Ujumbe Mpya wa Kujifunza",
-            newStudyEntry: "Ingizo Jipya la Kujifunza"
+            newStudyNote: "Dokezo Jipya la Kujifunza",
+            newStudyEntry: "Dokezo Jipya la Kujifunza",
+            talk: "Hotuba",
+            speech: "Hotuba"
         },
         signOut: {
             title: "Ondoka",
@@ -3092,7 +3266,8 @@ export const translations = {
             page3Title: "Jinsi inavyofanya kazi kwa {username}",
             page3Step1: "1. Andika ulichojifunza (Matokeo)",
             page3Step2: "2. Shiriki ulichojifunza (Kujengana)",
-            page3Step3: "3. Ripoti za AI za kila wiki (Tafakari)",
+            page3Step3: "3. Ripoti za kila wiki za AI (Tafakari)",
+            page3ContentSuffix: " tunaunga mkono tabia bora ya {username} ya kujifunza maandiko.",
             page4Title: "Maono Yetu",
             page4Quote: "\"Kwa sababu hiyo, yule ambaye huhubiri na yule apokeaye, huelewana, na wote hujengana na kufurahi kwa pamoja.\" - Yesu Kristo",
             page4Content: "Ikiwa unaweza kuhisi furaha kupitia programu hii kama andiko hili linavyosema, nitafurahi sana. Hiyo ni furaha ya msanidi programu.",
