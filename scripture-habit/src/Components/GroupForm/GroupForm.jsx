@@ -70,7 +70,7 @@ export default function GroupForm() {
   return (
     <div className="App GroupForm">
       <div className="AppGlass">
-        <h1>{t('groupForm.title')}</h1>
+        <h2>{t('groupForm.title')}</h2>
         <p className="subtitle">
           {t('groupForm.subtitle')}
         </p>

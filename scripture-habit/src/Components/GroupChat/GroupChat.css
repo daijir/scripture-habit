@@ -622,9 +622,13 @@
         top: 0;
         left: 0;
         right: 0;
-        padding: 0.75rem 1rem;
+        /* Add top padding for safe area + small buffer */
+        padding-top: calc(env(safe-area-inset-top, 24px) + 8px);
+        padding-bottom: 0.5rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
         border-radius: 0;
-        height: 50px;
+        height: auto;
         z-index: 100;
         background: linear-gradient(135deg, #FF919D 0%, #fc6777 100%) !important;
         backdrop-filter: blur(10px);
@@ -712,7 +716,8 @@
     }
 
     .messages-container {
-        padding-top: 70px;
+        /* Adjusted for tighter header: Safe Area + approx 60px */
+        padding-top: calc(env(safe-area-inset-top, 24px) + 65px);
         padding-bottom: 120px;
         /* Clear fixed input */
     }
