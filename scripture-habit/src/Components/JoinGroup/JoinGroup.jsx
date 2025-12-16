@@ -1,4 +1,5 @@
 import './JoinGroup.css';
+import { Capacitor } from '@capacitor/core';
 import { useState, useEffect } from "react";
 import { auth, db } from '../../firebase';
 import { doc, getDoc, writeBatch, onSnapshot, increment, arrayUnion, collection, query, where, getDocs } from 'firebase/firestore';
@@ -12,6 +13,7 @@ import { useLanguage } from '../../Context/LanguageContext';
 
 export default function JoinGroup() {
   const { t } = useLanguage();
+  const API_BASE = Capacitor.isNativePlatform() ? 'https://scripture-habit.vercel.app' : '';
   const [groupCode, setGroupCode] = useState("");
   const [error, setError] = useState("");
   const [user, setUser] = useState(null);
@@ -37,7 +39,7 @@ export default function JoinGroup() {
 
     const fetchPublicGroups = async () => {
       try {
-        const resp = await fetch('/api/groups');
+        const resp = await fetch(`${API_BASE}/api/groups`);
         if (resp.ok) {
           const groups = await resp.json();
           setPublicGroups(groups || []);
@@ -99,7 +101,7 @@ export default function JoinGroup() {
 
     try {
       const idToken = await user.getIdToken();
-      const resp = await fetch('/api/join-group', {
+      const resp = await fetch(`${API_BASE}/api/join-group`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

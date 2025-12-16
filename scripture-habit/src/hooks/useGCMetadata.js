@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Capacitor } from '@capacitor/core';
 
 // Cache in memory as well to avoid reading localStorage constantly for the same session
 const memoryCache = {};
@@ -57,7 +58,8 @@ export const useGCMetadata = (urlOrSlug, language) => {
                     fetchUrl = `https://www.churchofjesuschrist.org${fetchUrl.startsWith('/') ? '' : '/'}${fetchUrl}`;
                 }
 
-                const apiUrl = `/api/fetch-gc-metadata?url=${encodeURIComponent(fetchUrl)}&lang=${language === 'ja' ? 'jpn' : 'eng'}`;
+                const API_BASE = Capacitor.isNativePlatform() ? 'https://scripture-habit.vercel.app' : '';
+                const apiUrl = `${API_BASE}/api/fetch-gc-metadata?url=${encodeURIComponent(fetchUrl)}&lang=${language === 'ja' ? 'jpn' : 'eng'}`;
                 // defaulting to eng if not ja, logic can be expanded. 
                 // The user supports many languages now. We need a map.
 
@@ -78,7 +80,7 @@ export const useGCMetadata = (urlOrSlug, language) => {
                 let apiLang = langMap[language] || 'eng';
                 // For Chinese, Church often uses ?lang=zho for Traditional.
 
-                const finalApiUrl = `/api/fetch-gc-metadata?url=${encodeURIComponent(fetchUrl)}&lang=${apiLang}`;
+                const finalApiUrl = `${API_BASE}/api/fetch-gc-metadata?url=${encodeURIComponent(fetchUrl)}&lang=${apiLang}`;
 
                 const response = await fetch(finalApiUrl);
                 if (!response.ok) {

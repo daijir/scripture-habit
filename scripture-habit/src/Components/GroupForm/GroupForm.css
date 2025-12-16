@@ -11,6 +11,13 @@
   align-items: center;
 }
 
+.GroupForm .AppGlass {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .create-group-submit-btn {
   background: linear-gradient(135deg, #8E9EFA 0%, #B088D9 100%) !important;
   color: white !important;

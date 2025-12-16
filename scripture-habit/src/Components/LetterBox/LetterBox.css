@@ -39,6 +39,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    /* Generally centers items vertically */
+    /* Add min-height to help with alignment */
+    min-height: 40px;
 }
 
 .letterbox-header h2 {
@@ -197,5 +200,19 @@
 @media (max-width: 600px) {
     .LetterBoxContent {
         max-width: 100%;
+    }
+
+    .letterbox-header {
+        /* Adequate padding: Safe area + buffer */
+        padding-top: calc(env(safe-area-inset-top, 24px) + 8px);
+        padding-bottom: 1rem;
+        align-items: center;
+    }
+
+    .letterbox-header .close-btn {
+        /* Use relative positioning to nudge the button down to match text baseline */
+        position: relative;
+        top: 2px;
+        margin: 0;
     }
 }
