@@ -738,8 +738,8 @@ ${notesText}`;
     }
 });
 
-// Repair Activity Logs (One-time or manual tool)
-app.get('/api/repair-activity-logs', async (req, res) => {
+// Check Inactive Users (Cron Job)
+app.get('/api/check-inactive-users', async (req, res) => {
     // Optional: Protect with secret
     const authHeader = req.headers.authorization;
     const cronSecret = process.env.CRON_SECRET;
