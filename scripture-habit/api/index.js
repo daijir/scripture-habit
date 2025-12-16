@@ -117,7 +117,10 @@ app.use(
 const allowedOrigins = [
     'https://scripture-habit.vercel.app',
     'http://localhost:3000', // For local development
-    'http://localhost:5173'  // Vite default port
+    'http://localhost:5173',  // Vite default port
+    'https://localhost',      // Android Capacitor
+    'capacitor://localhost',  // iOS Capacitor
+    'http://localhost'        // Android Capacitor (http)
 ];
 
 app.use(cors({
