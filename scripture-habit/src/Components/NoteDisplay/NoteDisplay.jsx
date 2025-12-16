@@ -4,6 +4,8 @@ import { useLanguage } from '../../Context/LanguageContext';
 import { useGCMetadata } from '../../hooks/useGCMetadata';
 import { translateChapterField } from '../../Utils/bookNameTranslations';
 import { NOTE_HEADER_REGEX, removeNoteHeader } from '../../Utils/noteUtils';
+import LinkPreview from '../LinkPreview/LinkPreview';
+
 
 // Helper to check if a string is likely a GC URL or Shortcode
 const isGCUrl = (str) => {
@@ -15,7 +17,7 @@ const isGCUrl = (str) => {
     return /^\d{4}\/\d{2}\/.+$/.test(str);
 };
 
-const GCNoteRenderer = ({ parts, url, language, t, isSent }) => {
+const GCNoteRenderer = ({ parts, url, language, t, isSent, linkColor }) => {
     const { data, loading } = useGCMetadata(url, language);
 
     const content = useMemo(() => {
@@ -51,6 +53,9 @@ const GCNoteRenderer = ({ parts, url, language, t, isSent }) => {
         const talkLabel = t('noteLabels.talk'); // "Talk" or "話"
         const commentLabel = t('noteLabels.comment');
 
+        // Allow URLs in comments to be clickable
+        const commentWithLinks = parts.comment.replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)');
+
         return `
 ${headerTrans}
 
@@ -59,7 +64,7 @@ ${headerTrans}
 **${talkLabel}:** ${displayContent}
 
 **${commentLabel}:**
-${parts.comment}
+${commentWithLinks}
         `.trim();
 
     }, [data, loading, parts, url, language, t]);
@@ -77,7 +82,7 @@ ${parts.comment}
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{
-                                color: 'black',
+                                color: linkColor || 'black', // GC Renderer uses black usually, or use linkColor
                                 textDecoration: 'none'
                             }}
                             onClick={(e) => e.stopPropagation()}
@@ -101,23 +106,21 @@ ${parts.comment}
     );
 };
 
-import LinkPreview from '../LinkPreview/LinkPreview';
+// ... imports ...
 
 // Helper to extract URLs
 const extractUrls = (text) => {
     if (!text) return [];
-    // Improved regex to capture URLs, then clean trailing punctuation
     const urlPattern = /(https?:\/\/[^\s]+)/g;
     const matches = text.match(urlPattern);
     if (!matches) return [];
 
     return matches.map(url => {
-        // Remove common trailing punctuation that might be part of the sentence
         return url.replace(/[.,:;"')\]]+$/, '');
     });
 };
 
-const NoteDisplay = ({ text, isSent }) => {
+const NoteDisplay = ({ text, isSent, linkColor }) => {
     const { language, t } = useLanguage();
 
     // 1. Parse content to see if it matches the structure
@@ -133,8 +136,10 @@ const NoteDisplay = ({ text, isSent }) => {
         // Extract URLs for plain messages
         const simpleUrls = extractUrls(text);
 
-        // Render as standard text with link detection
-        // We can use ReactMarkdown directly for regular messages too!
+        // Auto-linkify plain text for valid markdown rendering
+        // Careful not to break existing markdown links
+        const processedText = text.replace(/(?<!\]\()https?:\/\/[^\s]+/g, '[$&]($&)');
+
         return (
             <>
                 <ReactMarkdown
@@ -145,7 +150,7 @@ const NoteDisplay = ({ text, isSent }) => {
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
-                                    color: isSent ? 'white' : 'var(--purple)',
+                                    color: linkColor || (isSent ? 'white' : 'var(--purple)'),
                                     textDecoration: 'underline'
                                 }}
                                 onClick={(e) => e.stopPropagation()}
@@ -153,7 +158,7 @@ const NoteDisplay = ({ text, isSent }) => {
                         )
                     }}
                 >
-                    {text}
+                    {processedText}
                 </ReactMarkdown>
                 {simpleUrls.length > 0 && (
                     <div className="note-link-previews" style={{ marginTop: '0.5rem' }}>
@@ -168,27 +173,10 @@ const NoteDisplay = ({ text, isSent }) => {
 
     const body = removeNoteHeader(text);
 
-    // Extract fields
-    // NOTE: This regex needs to match what is saved in NewNote.jsx aka "Original English" or localized if saved localized.
-    // The current app saves in English tokens: "**Scripture:**", "**Chapter:**" etc?
-    // Let's check NewNote.jsx: 
-    // `messageText = \`📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**${label}:** ${chapter}\n\n${comment}\`;`
-    // So it saves in mostly English tokens: "**Scripture:**", "**Chapter:**", "**Speech:**", "**Title:**".
-    // Also handles "Other" which has no chapter.
+    // ... extraction logic ...
 
     const scriptureMatch = body.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
     const chapterMatch = body.match(/\*\*(?:Chapter|Title|Speech):\*\* (.*?)(?:\n|$)/);
-
-    // Detect if "Scripture" is "General Conference" (or localized variants if legacy)
-    // The user's NewNote.jsx saves using the `scripture` variable which comes from `translatedScripturesOptions`.
-    // Wait, `NewNote.jsx`: `translatedScripturesOptions` maps value to `label`.
-    // But `setScripture(option.value)`. `option` comes from `translatedScripturesOptions`? 
-    // `Select` value is whole option object. `onChange` sets `setScripture(option?.value)`.
-    // `ScripturesOptions` in `Data/Data.js` usually has English values "General Conference".
-    // `translatedScripturesOptions` *labels* are translated, but *values* should ideally be stable constants.
-    // Checking `NewNote.jsx`: 
-    // `const translatedScripturesOptions = ScripturesOptions.map(option => ({ ...option, label: ... }))`
-    // So value is likely English "General Conference".
 
     const scriptureName = scriptureMatch ? scriptureMatch[1].trim() : '';
     const chapterValue = chapterMatch ? chapterMatch[1].trim() : '';
@@ -203,12 +191,11 @@ const NoteDisplay = ({ text, isSent }) => {
                 chapterValueOriginal: chapterValue,
                 comment: body.substring(chapterMatch.index + chapterMatch[0].length).trim()
             };
-            return <GCNoteRenderer parts={parts} url={chapterValue} language={language} t={t} isSent={isSent} />;
+            return <GCNoteRenderer parts={parts} url={chapterValue} language={language} t={t} isSent={isSent} linkColor={linkColor} />;
         }
     }
 
     // Default formatting for non-GC or non-URL-GC notes
-    // Use the existing format logic, but localized
     // We can reconstruct the string here using translations and render MD
 
     let headerTrans = headerMatch[0].trim();
@@ -257,6 +244,9 @@ const NoteDisplay = ({ text, isSent }) => {
     // Extract URLs from comment for preview
     const commentUrls = extractUrls(comment);
 
+    // Linkify URLs in comments
+    const commentWithLinks = comment.replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)');
+
     const constructedMd = `
 ${headerTrans}
 
@@ -265,7 +255,7 @@ ${headerTrans}
 **${chapLabel}:** ${chapValTrans}
 
 **${commentLabel}:**
-${comment}
+${commentWithLinks}
     `.trim();
 
     return (
@@ -278,7 +268,7 @@ ${comment}
                             target="_blank"
                             rel="noopener noreferrer"
                             style={{
-                                color: isSent ? 'white' : 'var(--purple)',
+                                color: linkColor || (isSent ? 'white' : 'var(--purple)'),
                                 textDecoration: 'underline'
                             }}
                             onClick={(e) => e.stopPropagation()}

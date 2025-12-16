@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './LinkPreview.css';
 
+import { Capacitor } from '@capacitor/core';
+
 const LinkPreview = ({ url, isSent }) => {
     const [preview, setPreview] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
+
+    // TODO: Replace with your actual production URL
+    const API_BASE_URL = 'https://scripture-habit.vercel.app';
 
     useEffect(() => {
         const fetchPreview = async () => {
@@ -12,7 +17,8 @@ const LinkPreview = ({ url, isSent }) => {
                 setLoading(true);
                 setError(false);
 
-                const response = await fetch(`/api/url-preview?url=${encodeURIComponent(url)}`);
+                const baseUrl = Capacitor.isNativePlatform() ? API_BASE_URL : '';
+                const response = await fetch(`${baseUrl}/api/url-preview?url=${encodeURIComponent(url)}`);
 
                 if (!response.ok) {
                     throw new Error('Failed to fetch preview');

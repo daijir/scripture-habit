@@ -86,7 +86,7 @@ const NoteDetailModal = ({ isOpen, onClose, note, userData, userGroups, onEdit, 
                     </div>
 
                     <div className="note-body">
-                        <NoteDisplay text={note.text} isSent={true} />
+                        <NoteDisplay text={note.text} isSent={false} linkColor="#1E88E5" />
                         {/* Show Scripture Reference/Link if acceptable, maybe modify NoteDisplay or add here */}
                         <div className="note-scripture-ref">
                             {note.scripture !== 'Other' && (
