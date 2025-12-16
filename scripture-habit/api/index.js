@@ -3,9 +3,54 @@ import admin from 'firebase-admin';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import axios from 'axios';
+import rateLimit from 'express-rate-limit';
 import * as cheerio from 'cheerio';
+import { z } from 'zod';
+import helmet from 'helmet';
 
 dotenv.config();
+
+// --- Zod Schemas ---
+const verifyLoginSchema = z.object({
+    token: z.string().min(1)
+});
+
+const joinGroupSchema = z.object({
+    token: z.string().min(1).optional(), // Can match bearer logic if needed, but schema validates body
+    groupId: z.string().min(1)
+});
+
+const leaveGroupSchema = z.object({
+    token: z.string().min(1).optional(),
+    groupId: z.string().optional() // Optional in logic
+});
+
+const deleteGroupSchema = z.object({
+    token: z.string().min(1).optional(),
+    groupId: z.string().min(1)
+});
+
+const supportedLanguages = ['en', 'ja', 'es', 'pt', 'zh', 'vi', 'th', 'ko', 'tl', 'sw'];
+
+const ponderQuestionsSchema = z.object({
+    scripture: z.string().min(1).max(100),
+    chapter: z.string().min(1).max(50),
+    language: z.enum(supportedLanguages).optional()
+});
+
+const discussionTopicSchema = z.object({
+    language: z.enum(supportedLanguages).optional()
+});
+
+const weeklyRecapSchema = z.object({
+    groupId: z.string().min(1),
+    language: z.enum(supportedLanguages).optional()
+});
+
+const personalRecapSchema = z.object({
+    uid: z.string().min(1),
+    language: z.enum(supportedLanguages).optional()
+});
 
 // Initialize Firebase Admin SDK
 // Check if already initialized to avoid "default app already exists" error in serverless environment
@@ -31,47 +76,149 @@ if (!admin.apps.length) {
 
 const app = express();
 
-// Allow CORS from anywhere (or restrict to your Vercel app domain in production)
-app.use(cors({ origin: true }));
-app.use(express.json());
+// Important for Vercel/proxies so that rate limiter sees the real IP
+app.set('trust proxy', 1);
+
+// Security Headers with Custom CSP
+app.use(
+    helmet({
+        contentSecurityPolicy: {
+            directives: {
+                defaultSrc: ["'self'"],
+                scriptSrc: [
+                    "'self'",
+                    "https://apis.google.com",
+                    "https://www.googleapis.com",
+                    "https://www.gstatic.com",
+                    // "'unsafe-inline'" is often needed for React apps unless nonce is used
+                    "'unsafe-inline'",
+                ],
+                styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+                imgSrc: ["'self'", "data:", "https://*.googleusercontent.com", "https://*.ggpht.com"], // Google profile images
+                connectSrc: [
+                    "'self'",
+                    "https://identitytoolkit.googleapis.com",
+                    "https://securetoken.googleapis.com",
+                    "https://firestore.googleapis.com",
+                    "https://www.googleapis.com",
+                    // Add your backend URL if it's different in production, but 'self' covers relative API calls
+                    "https://scripture-habit.vercel.app",
+                    "http://localhost:3000"
+                ],
+                fontSrc: ["'self'", "https://fonts.gstatic.com"],
+                objectSrc: ["'none'"],
+                upgradeInsecureRequests: [], // Disable auto-upgrade for localhost dev
+            },
+        },
+    })
+);
+
+// CORS Configuration
+const allowedOrigins = [
+    'https://scripture-habit.vercel.app',
+    'http://localhost:3000', // For local development
+    'http://localhost:5173'  // Vite default port
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests) if you want, 
+        // OR strict mode: keys must be protected otherwise.
+        // For web apps, origin is usually present.
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.indexOf(origin) === -1) {
+            // If origin is not in allowed list, you can block it,
+            // OR if you want to allow preview deployments (e.g. vercel preview urls), you might need regex.
+            // For now, strict allow list for security.
+            // If you have preview URLs, consider allowing *.vercel.app check.
+            if (process.env.NODE_ENV !== 'production') {
+                return callback(null, true); // Allow all in dev
+            }
+            var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    }
+}));
+
+// Body Parsing with Size Limit (DoS Protection)
+app.use(express.json({ limit: '10kb' }));
+
+// ... (rest of code)
+
+// --- Rate Limiters ---
+// General Limiter: 100 requests per 15 minutes
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100, // Limit each IP to 100 requests per windowMs
+    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    message: 'Too many requests from this IP, please try again after 15 minutes.'
+});
+
+// AI Endpoint Limiter: Stricter limits (e.g., 20 requests per 15 minutes) to save costs
+const aiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    message: 'Too many AI generations requests, please wait a while.'
+});
+
+// Apply general limiter to all requests
+app.use(limiter);
 
 // --- Routes ---
 
 app.post('/api/verify-login', async (req, res) => {
-    const { token } = req.body;
-
-    if (!token) {
-        return res.status(400).send('ID token is required.');
+    const validation = verifyLoginSchema.safeParse(req.body);
+    if (!validation.success) {
+        return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
     }
+    const { token } = validation.data;
+
 
     try {
         const decodedToken = await admin.auth().verifyIdToken(token);
+
+        // Enforce Email Verification
+        if (!decodedToken.email_verified) {
+            return res.status(403).send('Email not verified. Please check your email inbox.');
+        }
+
         const uid = decodedToken.uid;
         const email = decodedToken.email;
 
         console.log('Verified user:', { uid, email });
 
+
         res.status(200).send({ message: 'Login verified successfully.', user: { uid, email } });
     } catch (error) {
-        console.error('Error verifying ID token:', error);
-        res.status(401).send('Unauthorized: Invalid ID token.');
+        console.error('Error verifying ID token:', error); // Log full error internally
+        res.status(401).send('Unauthorized: Invalid or expired token.'); // Generic message
     }
 });
 
 
 app.post('/api/join-group', async (req, res) => {
+    // Validate Body first
+    const validation = joinGroupSchema.safeParse(req.body);
+    if (!validation.success) {
+        return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
+    }
+    const { groupId } = validation.data;
+
     const authHeader = req.headers.authorization;
     let idToken;
     if (authHeader && authHeader.startsWith('Bearer ')) {
         idToken = authHeader.split('Bearer ')[1];
-    } else if (req.body.token) {
-        idToken = req.body.token;
+    } else if (validation.data.token) {
+        idToken = validation.data.token;
     } else {
         return res.status(401).send('Unauthorized: No token provided.');
     }
 
-    const { groupId } = req.body;
-    if (!groupId) return res.status(400).send('Group ID is required.');
+    // groupId is already from validation.data
+
 
     try {
         const decodedToken = await admin.auth().verifyIdToken(idToken);
@@ -133,17 +280,24 @@ app.post('/api/join-group', async (req, res) => {
 
 
 app.post('/api/leave-group', async (req, res) => {
+    const validation = leaveGroupSchema.safeParse(req.body);
+    if (!validation.success) {
+        return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
+    }
+    const { groupId } = validation.data;
+
     const authHeader = req.headers.authorization;
     let idToken;
     if (authHeader && authHeader.startsWith('Bearer ')) {
         idToken = authHeader.split('Bearer ')[1];
-    } else if (req.body.token) {
-        idToken = req.body.token;
+    } else if (validation.data.token) {
+        idToken = validation.data.token;
     } else {
         return res.status(401).send('Unauthorized: No token provided.');
     }
 
-    const { groupId } = req.body;
+    // groupId logic is handled later (const targetGroupId = groupId || userData.groupId)
+
 
     try {
         const decodedToken = await admin.auth().verifyIdToken(idToken);
@@ -212,18 +366,24 @@ app.post('/api/leave-group', async (req, res) => {
 });
 
 app.post('/api/delete-group', async (req, res) => {
+    const validation = deleteGroupSchema.safeParse(req.body);
+    if (!validation.success) {
+        return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
+    }
+    const { groupId } = validation.data;
+
     const authHeader = req.headers.authorization;
     let idToken;
     if (authHeader && authHeader.startsWith('Bearer ')) {
         idToken = authHeader.split('Bearer ')[1];
-    } else if (req.body.token) {
-        idToken = req.body.token;
+    } else if (validation.data.token) {
+        idToken = validation.data.token;
     } else {
         return res.status(401).send('Unauthorized: No token provided.');
     }
 
-    const { groupId } = req.body;
-    if (!groupId) return res.status(400).send('Group ID is required.');
+    // groupId is already validated as required string
+
 
     try {
         const decodedToken = await admin.auth().verifyIdToken(idToken);
@@ -382,6 +542,15 @@ app.get('/api/fetch-gc-metadata', async (req, res) => {
 
     try {
         const targetUrl = new URL(url);
+
+        // SSRF Protection: Validate Hostname
+        if (targetUrl.hostname !== 'www.churchofjesuschrist.org' && targetUrl.hostname !== 'churchofjesuschrist.org') {
+            return res.status(400).json({ error: 'Invalid URL domain. Must be churchofjesuschrist.org' });
+        }
+        if (targetUrl.protocol !== 'https:') {
+            return res.status(400).json({ error: 'Invalid protocol. Must be https.' });
+        }
+
         if (lang) {
             targetUrl.searchParams.set('lang', lang);
         }
@@ -417,17 +586,20 @@ app.get('/api/fetch-gc-metadata', async (req, res) => {
     }
 });
 
-// AI Ponder Questions Endpoint
-app.post('/api/generate-ponder-questions', async (req, res) => {
-    const { scripture, chapter, language } = req.body;
+// AI Ponder Questions Endpoint - Apply AI Rate Limit
+app.post('/api/generate-ponder-questions', aiLimiter, async (req, res) => {
+    const validation = ponderQuestionsSchema.safeParse(req.body);
+    if (!validation.success) {
+        return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
+    }
+    const { scripture, chapter, language } = validation.data;
 
     if (!process.env.GEMINI_API_KEY) {
         return res.status(500).json({ error: 'Gemini API Key is not configured.' });
     }
 
-    if (!scripture || !chapter) {
-        return res.status(400).json({ error: 'Scripture and chapter are required.' });
-    }
+    // Scripture/Chapter checks already handled by Zod schema
+
 
     try {
         const langCode = language || 'en';
@@ -470,13 +642,18 @@ Make it spiritually thought-provoking.`;
         if (error.response) {
             console.error('Gemini API Error:', error.response.data);
         }
-        res.status(500).json({ error: 'Failed to generate questions.' });
+        res.status(500).json({ error: 'Failed to generate questions. Please try again later.' });
     }
 });
 
 // AI Discussion Starter Endpoint
-app.post('/api/generate-discussion-topic', async (req, res) => {
-    const { language } = req.body;
+app.post('/api/generate-discussion-topic', aiLimiter, async (req, res) => {
+    const validation = discussionTopicSchema.safeParse(req.body);
+    if (!validation.success) {
+        return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
+    }
+    const { language } = validation.data;
+
 
     if (!process.env.GEMINI_API_KEY) {
         return res.status(500).json({ error: 'Gemini API Key is not configured.' });
@@ -519,17 +696,20 @@ Do NOT use bullet points or markdown (*, -). Output only the question text.`;
 
     } catch (error) {
         console.error('Error generating discussion topic:', error.message);
-        res.status(500).json({ error: 'Failed to generate topic.' });
+        res.status(500).json({ error: 'Failed to generate topic. Please try again later.' });
     }
 });
 
 // AI Weekly Recap Endpoint
-app.post('/api/generate-weekly-recap', async (req, res) => {
-    const { groupId, language } = req.body;
-
-    if (!groupId) {
-        return res.status(400).json({ error: 'Group ID is required.' });
+app.post('/api/generate-weekly-recap', aiLimiter, async (req, res) => {
+    const validation = weeklyRecapSchema.safeParse(req.body);
+    if (!validation.success) {
+        return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
     }
+    const { groupId, language } = validation.data;
+
+    // GroupId check handled by Zod
+
     if (!process.env.GEMINI_API_KEY) {
         return res.status(500).json({ error: 'Gemini API Key is not configured.' });
     }
@@ -636,17 +816,20 @@ ${notesText}`;
 
     } catch (error) {
         console.error('Error generating weekly recap:', error.message);
-        res.status(500).json({ error: 'Failed to generate recap.', details: error.message });
+        res.status(500).json({ error: 'Failed to generate recap. Please try again later.' });
     }
 });
 
 // AI Personal Weekly Recap Endpoint
-app.post('/api/generate-personal-weekly-recap', async (req, res) => {
-    const { uid, language } = req.body;
-
-    if (!uid) {
-        return res.status(400).json({ error: 'User ID is required.' });
+app.post('/api/generate-personal-weekly-recap', aiLimiter, async (req, res) => {
+    const validation = personalRecapSchema.safeParse(req.body);
+    if (!validation.success) {
+        return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
     }
+    const { uid, language } = validation.data;
+
+    // Uid check handled by Zod
+
     if (!process.env.GEMINI_API_KEY) {
         return res.status(500).json({ error: 'Gemini API Key is not configured.' });
     }
@@ -734,7 +917,7 @@ ${notesText}`;
 
     } catch (error) {
         console.error('Error generating personal weekly recap:', error.message);
-        res.status(500).json({ error: 'Failed to generate recap.', details: error.message });
+        res.status(500).json({ error: 'Failed to generate recap. Please try again later.' });
     }
 });
 

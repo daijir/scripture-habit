@@ -376,7 +376,7 @@ const Dashboard = () => {
   }
 
   if (!user) {
-    return <div className='App Dashboard'>Please log in to view the dashboard.</div>;
+    return <Navigate to="/login" replace />;
   }
 
   if (!userData) {

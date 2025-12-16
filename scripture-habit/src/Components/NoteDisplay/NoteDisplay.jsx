@@ -176,7 +176,7 @@ const NoteDisplay = ({ text, isSent, linkColor }) => {
     // ... extraction logic ...
 
     const scriptureMatch = body.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
-    const chapterMatch = body.match(/\*\*(?:Chapter|Title|Speech):\*\* (.*?)(?:\n|$)/);
+    const chapterMatch = body.match(/\*\*(?:Chapter|Title|Speech|Talk):\*\* (.*?)(?:\n|$)/);
 
     const scriptureName = scriptureMatch ? scriptureMatch[1].trim() : '';
     const chapterValue = chapterMatch ? chapterMatch[1].trim() : '';

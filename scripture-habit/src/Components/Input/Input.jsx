@@ -2,25 +2,27 @@ import React from 'react';
 import './Input.css';
 
 const Input = ({
-  id, 
-  label, 
-  type = 'text', 
-  value, 
-  onChange, 
+  id,
+  label,
+  type = 'text',
+  value,
+  onChange,
   required = false,
-  as ='input',
+  as = 'input',
   placeholder = '',
   min,
 }) => {
 
   const Component = as === 'textarea' ? 'textarea' : 'input';
 
+  const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
+
   return (
     <div className="GlassInputContainer">
-      {label && <label>{label}</label>}
+      {label && <label htmlFor={inputId}>{label}</label>}
 
       <Component
-        id={id}
+        id={inputId}
         type={as === 'textarea' ? undefined : type}
         value={value}
         onChange={onChange}

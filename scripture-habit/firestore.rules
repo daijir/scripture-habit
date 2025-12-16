@@ -32,29 +32,26 @@ service cloud.firestore {
     
     // Rules for the 'groups' collection
     match /groups/{groupId} {
-      // Any authenticated user can read group data.
-      allow read: if request.auth != null;
+      // Secure Read: Only allow if group is public OR user is a member/owner
+      allow read: if request.auth != null && (
+        resource.data.isPublic == true ||
+        request.auth.uid in resource.data.members ||
+        resource.data.ownerUserId == request.auth.uid
+      );
 
       // A user can create a group, but they must set themselves as the owner.
       allow create: if request.auth != null &&
                     request.auth.uid == request.resource.data.ownerUserId;
       
       // Rules for updating a group
+      // CRITICAL SECURITY FIX: Removed client-side JOIN logic to force use of API (which checks invite codes)
       allow update: if request.auth != null && (
-        // 1. JOINING: A user can update to add themselves
-        (
-           get(/databases/$(database)/documents/users/$(request.auth.uid)).data.groupId == "" &&
-           resource.data.membersCount < resource.data.maxMembers &&
-           request.resource.data.members == resource.data.members.concat([request.auth.uid]) &&
-           request.resource.data.membersCount == resource.data.membersCount + 1
-        )
-        ||
-        // 2. SETTINGS: The owner can update other fields (like isPublic)
+        // 1. SETTINGS: The owner can update other fields (like isPublic)
         (
            resource.data.ownerUserId == request.auth.uid
         )
         ||
-        // 3. MESSAGE COUNT: Members can update messageCount and lastMessageAt
+        // 2. MESSAGE COUNT: Members can update messageCount and lastMessageAt
         (
            request.auth.uid in resource.data.members &&
            request.resource.data.diff(resource.data).affectedKeys().hasOnly(['messageCount', 'lastMessageAt', 'dailyActivity', 'memberLastActive'])
