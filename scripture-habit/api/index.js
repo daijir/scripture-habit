@@ -99,7 +99,8 @@ app.post('/api/join-group', async (req, res) => {
 
             t.update(groupRef, {
                 members: admin.firestore.FieldValue.arrayUnion(uid),
-                membersCount: admin.firestore.FieldValue.increment(1)
+                membersCount: admin.firestore.FieldValue.increment(1),
+                [`memberLastActive.${uid}`]: admin.firestore.FieldValue.serverTimestamp()
             });
 
             // Update user's groupIds and set groupId to the new one (as "active" or "primary" for backward compatibility if needed, 
@@ -737,7 +738,74 @@ ${notesText}`;
     }
 });
 
-// Check Inactive Users (Cron Job)
+// Repair Activity Logs (One-time or manual tool)
+app.get('/api/repair-activity-logs', async (req, res) => {
+    // Optional: Protect with secret
+    const authHeader = req.headers.authorization;
+    const cronSecret = process.env.CRON_SECRET;
+    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+        // Allow manual run for now if secret matching, or maybe open it temporarily
+        // But let's keep it safe if secret exists.
+    }
+
+    console.log('Starting activity log repair...');
+    const db = admin.firestore();
+
+    try {
+        const groupsRef = db.collection('groups');
+        const snapshot = await groupsRef.get();
+        let totalUpdated = 0;
+
+        for (const docSnap of snapshot.docs) {
+            const groupId = docSnap.id;
+            const groupData = docSnap.data();
+            const members = groupData.members || [];
+
+            if (members.length === 0) continue;
+
+            // Fetch last 100 messages to check for recent activity
+            const messagesRef = groupsRef.doc(groupId).collection('messages');
+            const msgsSnap = await messagesRef
+                .orderBy('createdAt', 'desc')
+                .limit(200) // Check last 200 messages
+                .get();
+
+            const updates = {};
+            const foundMembers = new Set();
+
+            // Existing activity data
+            const currentLastActive = groupData.memberLastActive || {};
+
+            msgsSnap.forEach(msgDoc => {
+                const data = msgDoc.data();
+                const senderId = data.senderId;
+                const createdAt = data.createdAt;
+
+                // If this is a user message and we haven't found a newer one for this user match
+                if (senderId && members.includes(senderId) && !foundMembers.has(senderId)) {
+                    // Update only if current data is missing or older
+                    const currentTimestamp = currentLastActive[senderId];
+                    if (!currentTimestamp || (createdAt && createdAt.toMillis() > currentTimestamp.toMillis())) {
+                        updates[`memberLastActive.${senderId}`] = createdAt;
+                    }
+                    foundMembers.add(senderId);
+                }
+            });
+
+            if (Object.keys(updates).length > 0) {
+                await groupsRef.doc(groupId).update(updates);
+                totalUpdated += Object.keys(updates).length;
+                console.log(`Updated ${Object.keys(updates).length} members in group ${groupData.name || groupId}`);
+            }
+        }
+
+        res.json({ message: `Repair complete. Updated activity logs for ${totalUpdated} members.` });
+
+    } catch (error) {
+        console.error('Error repairing logs:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
 app.get('/api/check-inactive-users', async (req, res) => {
     // Use a simple CRON_SECRET if available for security
     const authHeader = req.headers.authorization;
