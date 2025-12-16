@@ -21,8 +21,8 @@
 }
 
 .link-preview.received {
-    background: #f8f9fa;
-    border: 1px solid #e9ecef;
+    background: #f0f2f5;
+    border: 1px solid #e1e4e8;
     margin-left: auto;
     margin-right: 0;
 }
@@ -62,7 +62,7 @@
 }
 
 .link-preview.received .link-preview-site span {
-    color: #6c757d;
+    color: #65676b !important;
     font-size: 0.7rem;
 }
 
@@ -83,7 +83,7 @@
 }
 
 .link-preview.received .link-preview-title {
-    color: #212529;
+    color: #050505 !important;
 }
 
 .link-preview-description {
@@ -101,7 +101,7 @@
 }
 
 .link-preview.received .link-preview-description {
-    color: #6c757d;
+    color: #65676b !important;
 }
 
 /* Loading skeleton */
