@@ -806,6 +806,124 @@ app.get('/api/repair-activity-logs', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+// FORCE PURGE: Remove users who were just initialized but have no history (Ghost buster)
+app.get('/api/purge-initialized-users', async (req, res) => {
+    // Optional: Protect with secret
+    const authHeader = req.headers.authorization;
+    const cronSecret = process.env.CRON_SECRET;
+    if (cronSecret && authHeader !== `Bearer ${cronSecret}`) {
+        // Security check
+    }
+
+    console.log('Starting ghost purge...');
+    const db = admin.firestore();
+
+    try {
+        const groupsRef = db.collection('groups');
+        const snapshot = await groupsRef.get();
+        let totalRemoved = 0;
+        let batch = db.batch();
+        let batchOpCount = 0;
+        const now = new Date();
+        const TWO_HOURS_MS = 2 * 60 * 60 * 1000;
+
+        for (const groupDoc of snapshot.docs) {
+            const groupId = groupDoc.id;
+            const groupData = groupDoc.data();
+            const members = groupData.members || [];
+            const memberLastActive = groupData.memberLastActive || {};
+
+            if (members.length === 0) continue;
+
+            // Fetch history to confirm they are really ghosts (no messages)
+            const messagesRef = groupsRef.doc(groupId).collection('messages');
+            const msgsSnap = await messagesRef.orderBy('createdAt', 'desc').limit(200).get();
+            const activeUserIds = new Set();
+            msgsSnap.forEach(m => {
+                if (m.data().senderId) activeUserIds.add(m.data().senderId);
+            });
+
+            const ghostsToRemove = [];
+
+            for (const uid of members) {
+                // SKIP if they have spoken
+                if (activeUserIds.has(uid)) continue;
+                // SKIP if they are the owner (don't delete owner blindly)
+                if (uid === groupData.ownerUserId) continue;
+
+                const lastActive = memberLastActive[uid];
+                if (lastActive) {
+                    const lastActiveDate = lastActive.toDate();
+                    const diff = now - lastActiveDate;
+
+                    // IF it was updated very recently (within 2 hours), 
+                    // it means they were likely just "Initialized" by our check-inactive script
+                    // because they had NO prior record.
+                    if (diff < TWO_HOURS_MS) {
+                        ghostsToRemove.push(uid);
+                    }
+                }
+            }
+
+            if (ghostsToRemove.length > 0) {
+                // REMOVE THEM
+                totalRemoved += ghostsToRemove.length;
+
+                // Update Group
+                batch.update(groupsRef.doc(groupId), {
+                    members: admin.firestore.FieldValue.arrayRemove(...ghostsToRemove),
+                    membersCount: admin.firestore.FieldValue.increment(-ghostsToRemove.length)
+                });
+                ghostsToRemove.forEach(uid => {
+                    batch.update(groupsRef.doc(groupId), {
+                        [`memberLastActive.${uid}`]: admin.firestore.FieldValue.delete()
+                    });
+                });
+                batchOpCount++;
+
+                // System Message
+                const msgRef = messagesRef.doc();
+                batch.set(msgRef, {
+                    text: `👋 **${ghostsToRemove.length} inactive member(s)** were removed.`,
+                    createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                    senderId: 'system',
+                    isSystemMessage: true,
+                    type: 'leave'
+                });
+                batchOpCount++;
+
+                // Update Users
+                for (const uid of ghostsToRemove) {
+                    const userRef = db.collection('users').doc(uid);
+                    const userSnap = await userRef.get();
+                    if (userSnap.exists) {
+                        batch.update(userRef, {
+                            groupIds: admin.firestore.FieldValue.arrayRemove(groupId)
+                        });
+                        const gsRef = userRef.collection('groupStates').doc(groupId);
+                        batch.delete(gsRef);
+                        batchOpCount += 2;
+                    }
+                }
+            }
+
+            if (batchOpCount > 300) {
+                await batch.commit();
+                batch = db.batch();
+                batchOpCount = 0;
+            }
+        }
+
+        if (batchOpCount > 0) await batch.commit();
+
+        res.json({ message: `Purge complete. Removed ${totalRemoved} ghost users.` });
+
+    } catch (error) {
+        console.error('Error purging:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
 app.get('/api/check-inactive-users', async (req, res) => {
     // Use a simple CRON_SECRET if available for security
     const authHeader = req.headers.authorization;
