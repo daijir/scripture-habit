@@ -972,14 +972,21 @@ app.get('/api/check-inactive-users', async (req, res) => {
                 // Update Users
                 for (const uid of removeUidList) {
                     const userRef = db.collection('users').doc(uid);
-                    batch.update(userRef, {
-                        groupIds: admin.firestore.FieldValue.arrayRemove(groupId)
-                    });
-                    batchOpCount++;
+                    // Check if user exists before updating to avoid NOT_FOUND error in batch
+                    const userSnap = await userRef.get();
 
-                    const groupStateRef = userRef.collection('groupStates').doc(groupId);
-                    batch.delete(groupStateRef);
-                    batchOpCount++;
+                    if (userSnap.exists) {
+                        batch.update(userRef, {
+                            groupIds: admin.firestore.FieldValue.arrayRemove(groupId)
+                        });
+                        batchOpCount++;
+
+                        const groupStateRef = userRef.collection('groupStates').doc(groupId);
+                        batch.delete(groupStateRef);
+                        batchOpCount++;
+                    } else {
+                        console.log(`Skipping inactivity cleanup for non-existent user: ${uid}`);
+                    }
                 }
             }
 
