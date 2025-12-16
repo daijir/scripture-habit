@@ -72,6 +72,25 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     localStorage.setItem('hasDismissedInactivityPolicy', 'true');
   };
 
+  // Robust ownership check
+  const isOwner = useMemo(() => {
+    if (!groupData?.ownerUserId || !userData?.uid) return false;
+    return String(groupData.ownerUserId).trim() === String(userData.uid).trim();
+  }, [groupData, userData]);
+
+  // Debug ownership
+  useEffect(() => {
+    if (groupData && userData) {
+      console.log('Ownership Check:', {
+        groupName: groupData.name,
+        ownerId: groupData.ownerUserId,
+        myId: userData.uid,
+        isOwner,
+        rawMatch: groupData.ownerUserId === userData.uid
+      });
+    }
+  }, [groupData, userData, isOwner]);
+
   const handleDismissWelcomeGuide = () => {
     setShowWelcomeGuide(false);
   };
@@ -1197,7 +1216,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
           <>
             {/* Desktop header - hidden on mobile */}
             <div className="header-right desktop-only">
-              {userData.uid === groupData.ownerUserId && (
+              {isOwner && (
                 <div className="group-status-toggle">
                   <span className="status-label">{groupData.isPublic ? t('groupChat.public') : t('groupChat.private')}</span>
                   <label className="switch">
@@ -1220,7 +1239,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                 <span className="desktop-members-label">{t('groupChat.members')}</span>
               </div>
 
-              {userData.uid === groupData.ownerUserId && (
+              {isOwner && (
                 <div
                   className={`invite-code-display members-btn-desktop ${!isRecapAvailable ? 'disabled' : ''}`}
                   onClick={handleRecapClick}
@@ -1236,7 +1255,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                 </div>
               )}
 
-              {userData.uid === groupData.ownerUserId ? (
+              {isOwner ? (
                 <button className="leave-group-btn delete-group-btn" onClick={() => setShowDeleteModal(true)} title={t('groupChat.deleteGroup')}>
                   <UilTrashAlt size="20" />
                 </button>
@@ -1287,7 +1306,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
               </div>
 
               {/* Public/Private Toggle (Owner only) */}
-              {userData.uid === groupData.ownerUserId && (
+              {isOwner && (
                 <div className="mobile-menu-item toggle-section">
                   <div className="menu-item-content">
                     <span className="menu-item-label">{groupData.isPublic ? t('groupChat.public') : t('groupChat.private')}</span>
@@ -1304,7 +1323,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
               )}
 
               {/* Change Group Name (Owner only) */}
-              {userData.uid === groupData.ownerUserId && (
+              {isOwner && (
                 <div className="mobile-menu-item" onClick={() => {
                   setNewGroupName(groupData.name);
                   setShowMobileMenu(false);
@@ -1332,7 +1351,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
               <div className="mobile-menu-divider"></div>
 
               {/* Weekly Recap - Owner Only */}
-              {userData.uid === groupData.ownerUserId && (
+              {isOwner && (
                 <div
                   className={`mobile-menu-item ${!isRecapAvailable ? 'disabled' : ''}`}
                   onClick={(e) => {
@@ -1367,7 +1386,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
               <div className="mobile-menu-divider"></div>
 
               {/* Leave/Delete Group */}
-              {userData.uid === groupData.ownerUserId ? (
+              {isOwner ? (
                 <div
                   className="mobile-menu-item danger"
                   onClick={() => { setShowMobileMenu(false); setShowDeleteModal(true); }}
