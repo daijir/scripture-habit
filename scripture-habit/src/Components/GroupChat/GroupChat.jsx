@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useLayoutEffect, useMemo } from 'react';
+import { Capacitor } from '@capacitor/core';
 import { db, auth } from '../../firebase';
 import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle, UilUsersAlt, UilPen } from '@iconscout/react-unicons';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc, getDoc } from 'firebase/firestore';
@@ -16,6 +17,7 @@ import confetti from 'canvas-confetti';
 
 const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFocusChange, onBack, onGroupSelect }) => {
   const { language, t } = useLanguage();
+  const API_BASE = Capacitor.isNativePlatform() ? 'https://scripture-habit.vercel.app' : '';
   const navigate = useNavigate();
   const location = useLocation();
   const [messages, setMessages] = useState([]);
@@ -494,7 +496,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     try {
       const idToken = await auth.currentUser.getIdToken();
 
-      const response = await fetch('/api/leave-group', {
+      const response = await fetch(`${API_BASE}/api/leave-group`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -536,7 +538,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     try {
       const idToken = await auth.currentUser.getIdToken();
 
-      const response = await fetch('/api/delete-group', {
+      const response = await fetch(`${API_BASE}/api/delete-group`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -602,7 +604,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     setShowMobileMenu(false);
 
     try {
-      const response = await fetch('/api/generate-weekly-recap', {
+      const response = await fetch(`${API_BASE}/api/generate-weekly-recap`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

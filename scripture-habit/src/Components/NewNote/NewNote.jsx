@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Capacitor } from '@capacitor/core';
 import { db } from '../../firebase';
 import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment, query, where, getDocs, Timestamp, arrayUnion } from 'firebase/firestore';
 import { toast } from 'react-toastify';
@@ -172,7 +173,12 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             // The user added backend/index.js recently.
             // Let's assume relative path works (Vercel convention).
 
-            const response = await axios.post('/api/generate-ponder-questions', {
+
+            const apiUrl = Capacitor.isNativePlatform()
+                ? 'https://scripture-habit.vercel.app/api/generate-ponder-questions'
+                : '/api/generate-ponder-questions';
+
+            const response = await axios.post(apiUrl, {
                 scripture: selectedOption?.label || scripture,
                 chapter,
                 language

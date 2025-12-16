@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Capacitor } from '@capacitor/core';
 import { db } from '../../firebase';
 import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc, updateDoc, increment, addDoc, serverTimestamp } from 'firebase/firestore';
 import ReactMarkdown from 'react-markdown';
@@ -99,7 +100,11 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
     setRecapLoading(true);
     toast.info(t('myNotes.generatingRecap'));
     try {
-      const response = await axios.post('/api/generate-personal-weekly-recap', {
+      const apiUrl = Capacitor.isNativePlatform()
+        ? 'https://scripture-habit.vercel.app/api/generate-personal-weekly-recap'
+        : '/api/generate-personal-weekly-recap';
+
+      const response = await axios.post(apiUrl, {
         uid: userData.uid,
         language: language
       });
