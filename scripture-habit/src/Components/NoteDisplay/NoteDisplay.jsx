@@ -73,7 +73,7 @@ ${commentWithLinks}
     const commentUrls = extractUrls(parts.comment);
 
     return (
-        <>
+        <div style={{ textAlign: 'left' }}>
             <ReactMarkdown
                 components={{
                     a: ({ node, ...props }) => (
@@ -90,6 +90,9 @@ ${commentWithLinks}
                     ),
                     strong: ({ node, ...props }) => (
                         <strong {...props} style={{ color: 'inherit' }} />
+                    ),
+                    p: ({ node, ...props }) => (
+                        <p {...props} style={{ margin: '0.4rem 0', lineHeight: '1.4' }} />
                     )
                 }}
             >
@@ -102,7 +105,7 @@ ${commentWithLinks}
                     ))}
                 </div>
             )}
-        </>
+        </div>
     );
 };
 
@@ -141,7 +144,7 @@ const NoteDisplay = ({ text, isSent, linkColor }) => {
         const processedText = text.replace(/(?<!\]\()https?:\/\/[^\s]+/g, '[$&]($&)');
 
         return (
-            <>
+            <div style={{ textAlign: 'left' }}>
                 <ReactMarkdown
                     components={{
                         a: ({ node, ...props }) => (
@@ -167,7 +170,7 @@ const NoteDisplay = ({ text, isSent, linkColor }) => {
                         ))}
                     </div>
                 )}
-            </>
+            </div>
         );
     }
 
@@ -259,7 +262,7 @@ ${commentWithLinks}
     `.trim();
 
     return (
-        <>
+        <div style={{ textAlign: 'left' }}>
             <ReactMarkdown
                 components={{
                     a: ({ node, ...props }) => (
@@ -273,6 +276,9 @@ ${commentWithLinks}
                             }}
                             onClick={(e) => e.stopPropagation()}
                         />
+                    ),
+                    p: ({ node, ...props }) => (
+                        <p {...props} style={{ margin: '0.4rem 0', lineHeight: '1.4' }} />
                     )
                 }}
             >
@@ -285,7 +291,7 @@ ${commentWithLinks}
                     ))}
                 </div>
             )}
-        </>
+        </div>
     );
 
 };

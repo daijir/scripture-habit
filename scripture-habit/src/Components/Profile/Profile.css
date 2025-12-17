@@ -1,0 +1,147 @@
+.Profile {
+    padding-bottom: 80px;
+    /* Space for mobile nav */
+    color: var(--text-color);
+}
+
+.profile-section {
+    margin-bottom: 2rem;
+    background: rgba(255, 255, 255, 0.4);
+    padding: 1.5rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.profile-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    gap: 0.5rem;
+}
+
+.input-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.profile-input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+    box-sizing: border-box;
+    /* Ensure padding doesn't overflow width */
+}
+
+/* Override or remove .nickname-form if not used, but keeping it clean */
+
+.save-btn {
+    display: block;
+    /* Ensure it takes up space for margin auto to work */
+    margin-left: auto;
+    margin-top: 1rem;
+}
+
+.message {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    text-align: right;
+    /* Align message with button */
+}
+
+.message.success {
+    color: #38A169;
+}
+
+.message.error {
+    color: #E53E3E;
+}
+
+.profile-stats {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 1rem;
+    border-radius: 12px;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--gray);
+    margin-top: 0.2rem;
+}
+
+/* Reuse Language Options Styles */
+.language-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.language-option {
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    padding: 1rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.language-option:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.language-option.active {
+    background: rgba(255, 145, 157, 0.2);
+    border-color: var(--pink);
+    color: var(--black);
+}
+
+.lang-flag {
+    font-size: 2rem;
+}
+
+.lang-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .language-options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

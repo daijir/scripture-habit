@@ -13,7 +13,7 @@ import Button from '../Button/Button';
 import GalleryImages from '../GalleryImages/GalleryImages';
 import NewNote from '../NewNote/NewNote';
 import MyNotes from '../MyNotes/MyNotes';
-import Languages from '../Languages/Languages';
+import Profile from '../Profile/Profile';
 import { getGospelLibraryUrl, getScriptureInfoFromText } from '../../Utils/gospelLibraryMapper';
 import { translateChapterField } from '../../Utils/bookNameTranslations';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
@@ -524,7 +524,7 @@ const Dashboard = () => {
                 <h3>{t('dashboard.totalNotes')}</h3>
                 <div className="streak-value">
                   <span className="number">
-                    {personalNotesCount !== null ? personalNotesCount : (userData.totalNotes || 0)}
+                    {personalNotesCount !== null ? personalNotesCount : 0}
                   </span>
                   <span className="label">{t('dashboard.notes')}</span>
                 </div>
@@ -741,7 +741,13 @@ const Dashboard = () => {
           />
         )}
         {selectedView === 3 && (
-          <Languages />
+          <Profile
+            userData={userData}
+            stats={{
+              streak: userData?.streakCount || 0,
+              totalNotes: personalNotesCount !== null ? personalNotesCount : 0
+            }}
+          />
         )}
 
         <NewNote isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} userGroups={userGroups} currentGroupId={activeGroupId} />

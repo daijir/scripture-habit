@@ -691,6 +691,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         const currentActivity = gData.dailyActivity || {};
                         const updatePayload = {
                             messageCount: increment(1),
+                            noteCount: increment(1), // Increment note count
                             lastMessageAt: serverTimestamp(),
                             [`memberLastActive.${userData.uid}`]: serverTimestamp()
                         };

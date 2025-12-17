@@ -174,7 +174,8 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
             // Decrement message count
             const groupRef = doc(db, 'groups', groupId);
             await updateDoc(groupRef, {
-              messageCount: increment(-1)
+              messageCount: increment(-1),
+              noteCount: increment(-1) // Decrement note count since shared notes are always notes
             });
           } catch (err) {
             console.log(`Could not delete message ${messageId} from group ${groupId}:`, err);
@@ -184,6 +185,13 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
 
       // Delete the personal note
       await deleteDoc(doc(db, 'users', userData.uid, 'notes', selectedNote.id));
+
+      // Decrement totalNotes
+      const userRef = doc(db, 'users', userData.uid);
+      await updateDoc(userRef, {
+        totalNotes: increment(-1)
+      });
+
       toast.success("Note deleted successfully");
       setIsDeleteModalOpen(false);
       setIsEditModalOpen(false);

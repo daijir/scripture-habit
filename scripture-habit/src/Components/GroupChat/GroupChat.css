@@ -363,10 +363,13 @@
     background: linear-gradient(135deg, #FF919D 0%, #fc6777 100%);
     color: white;
     border-bottom-right-radius: 0.2rem;
+    text-align: left;
+    /* Force text to be left aligned inside the bubble */
 }
 
 .message.received .message-content {
     align-items: flex-start;
+    text-align: left;
     background: white;
     color: var(--black);
     border-bottom-left-radius: 0.2rem;

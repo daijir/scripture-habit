@@ -2,7 +2,7 @@ import {
     UilEstate,
     UilClipboardAlt,
     UilUsersAlt,
-    UilGlobe,
+    UilUser,
 } from "@iconscout/react-unicons";
 
 import scripture1 from '../assets/images/scrip1.jpg'
@@ -19,8 +19,8 @@ export const SidebarData = [
         heading: "My Notes",
     },
     {
-        icon: UilGlobe,
-        heading: "Languages",
+        icon: UilUser,
+        heading: "Profile",
     },
     {
         icon: UilUsersAlt,

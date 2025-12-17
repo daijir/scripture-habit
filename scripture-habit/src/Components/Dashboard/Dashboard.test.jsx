@@ -20,7 +20,7 @@ vi.mock('../Button/Button', () => ({ default: ({ children, ...props }) => <butto
 vi.mock('../GalleryImages/GalleryImages', () => ({ default: () => <div data-testid="gallery-images">GalleryImages</div> }));
 vi.mock('../NewNote/NewNote', () => ({ default: () => <div data-testid="new-note-modal">NewNote Modal</div> }));
 vi.mock('../MyNotes/MyNotes', () => ({ default: () => <div data-testid="my-notes">MyNotes</div> }));
-vi.mock('../Languages/Languages', () => ({ default: () => <div data-testid="languages">Languages</div> }));
+vi.mock('../Profile/Profile', () => ({ default: () => <div data-testid="profile">Profile</div> }));
 vi.mock('../NoteCard/NoteCard', () => ({ default: ({ note }) => <div data-testid="note-card">{note.text}</div> }));
 vi.mock('../WelcomeStoryModal/WelcomeStoryModal', () => ({ default: () => <div data-testid="welcome-story">WelcomeStory</div> }));
 vi.mock('react-markdown', () => ({ default: ({ children }) => <div>{children}</div> }));

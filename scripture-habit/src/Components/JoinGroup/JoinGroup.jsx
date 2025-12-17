@@ -2,7 +2,7 @@ import './JoinGroup.css';
 import { Capacitor } from '@capacitor/core';
 import { useState, useEffect } from "react";
 import { auth, db } from '../../firebase';
-import { doc, getDoc, writeBatch, onSnapshot, increment, arrayUnion, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, writeBatch, onSnapshot, increment, arrayUnion, collection, query, where, getDocs, getCountFromServer } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import { onAuthStateChanged } from "firebase/auth";
 import '../GroupForm/GroupForm.css';
@@ -10,6 +10,7 @@ import Button from '../Button/Button';
 import Input from '../Input/Input';
 import GroupCard from '../../groups/GroupCard';
 import { useLanguage } from '../../Context/LanguageContext';
+import UserProfileModal from '../UserProfileModal/UserProfileModal';
 
 export default function JoinGroup() {
   const { t } = useLanguage();
@@ -21,6 +22,7 @@ export default function JoinGroup() {
   const [publicGroups, setPublicGroups] = useState([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(null);
+  const [selectedMemberForProfile, setSelectedMemberForProfile] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -145,12 +147,14 @@ export default function JoinGroup() {
 
   const [memberNames, setMemberNames] = useState([]);
   const [loadingMembers, setLoadingMembers] = useState(false);
+  const [groupNoteCount, setGroupNoteCount] = useState(0);
 
   const handleJoinClick = async (groupId, groupData) => {
     setSelectedGroup({ id: groupId, ...groupData });
     setShowConfirmModal(true);
     setMemberNames([]); // Reset
     setLoadingMembers(true);
+    setGroupNoteCount(groupData.noteCount || 0);
 
     if (groupData.members && groupData.members.length > 0) {
       try {
@@ -160,7 +164,7 @@ export default function JoinGroup() {
           try {
             const uSnap = await getDoc(doc(db, 'users', uid));
             if (uSnap.exists()) {
-              return uSnap.data().nickname;
+              return { uid, ...uSnap.data() };
             }
           } catch (e) {
             console.warn("Failed to fetch user", uid);
@@ -294,23 +298,37 @@ export default function JoinGroup() {
             )}
 
             <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
-              <h4 style={{ fontSize: '0.9rem', color: '#4A5568', marginBottom: '0.5rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '0.25rem' }}>
-                {t('groupChat.members')} ({selectedGroup.membersCount || 0})
-              </h4>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '0.25rem' }}>
+                <h4 style={{ fontSize: '0.9rem', color: '#4A5568', margin: 0 }}>
+                  {t('groupChat.members')} ({selectedGroup.membersCount || 0})
+                </h4>
+                <span style={{ fontSize: '0.8rem', color: '#718096', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <span style={{ fontSize: '1rem' }}>📄</span> {groupNoteCount} {t('joinGroup.notes')}
+                </span>
+              </div>
               {loadingMembers ? (
                 <p style={{ fontSize: '0.8rem', color: '#718096' }}>Loading members...</p>
               ) : (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                   {memberNames.length > 0 ? (
-                    memberNames.map((name, idx) => (
-                      <span key={idx} style={{
-                        backgroundColor: '#EDF2F7',
-                        color: '#4A5568',
-                        padding: '0.25rem 0.5rem',
-                        borderRadius: '9999px',
-                        fontSize: '0.8rem'
-                      }}>
-                        {name}
+                    memberNames.map((userObj, idx) => (
+                      <span
+                        key={idx}
+                        onClick={() => setSelectedMemberForProfile(userObj)}
+                        style={{
+                          backgroundColor: '#EDF2F7',
+                          color: '#4A5568',
+                          padding: '0.25rem 0.5rem',
+                          borderRadius: '9999px',
+                          fontSize: '0.8rem',
+                          cursor: 'pointer',
+                          transition: 'background-color 0.2s',
+                          border: '1px solid transparent'
+                        }}
+                        onMouseOver={(e) => e.target.style.borderColor = '#cbd5e0'}
+                        onMouseOut={(e) => e.target.style.borderColor = 'transparent'}
+                      >
+                        {userObj.nickname || 'Unknown'}
                       </span>
                     ))
                   ) : (
@@ -319,6 +337,16 @@ export default function JoinGroup() {
                 </div>
               )}
             </div>
+
+            {/* Profile Modal inside Confirm Modal */}
+            {selectedMemberForProfile && (
+              <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', zIndex: 3000 }}>
+                <UserProfileModal
+                  user={selectedMemberForProfile}
+                  onClose={() => setSelectedMemberForProfile(null)}
+                />
+              </div>
+            )}
 
             <p style={{ marginBottom: '1.5rem' }}>{t('joinGroup.joinConfirmMessage')}</p>
 
