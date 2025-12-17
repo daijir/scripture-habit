@@ -9,7 +9,25 @@ export const translations = {
             joinCreateGroup: "Join/Create Group",
             signOut: "Sign Out",
             selectGroup: "Select Group",
-            close: "Close"
+            close: "Close",
+            donate: "Donate"
+        },
+        donate: {
+            title: "Support Us",
+            description: "Join us in our mission to help others build a habit of daily scripture study.",
+            header: "KEEP US GOING",
+            subHeader: "Scripture Habit is a labor of love. Your donation directly funds server costs, AI features, and future development to keep this tool available for everyone's daily spiritual growth.",
+            suggestionTitle: "Suggested Amounts (Feel free to choose any amount):",
+            suggestion1: "🥤 $2 (Coffee) - A quick boost!",
+            suggestion2: "🍱 $10 (Lunch) - Keeps the servers running.",
+            suggestion3: "🚀 $20 (Feature) - Fuels new development.",
+            methodsHeader: "Donations can be made by the following:",
+            onlineTitle: "Support via PayPay or PayPal",
+            onlineDesc: "Scan the QR code for PayPay, or click the button below for PayPal.",
+            payPayButton: "Donate via PayPay",
+            button: "Donate via PayPal",
+            contactTitle: "CONTACT US FOR HELP WITH YOUR DONATION",
+            contactDesc: "For help or questions about your donation, please contact us at dazhilangxianggen@gmail.com."
         },
         dashboard: {
             welcomeBack: "Welcome back",
@@ -21,7 +39,7 @@ export const translations = {
             recentNotes: "Recent Notes",
             seeAll: "See All",
             noRecentNotes: "No recent notes.",
-            randomPhoto: "Random Scripture Photo from Developer",
+
             readInGospelLibrary: "Read in Gospel Library",
             inspirationQuote: "\"Wherefore, he that preacheth and he that receiveth, understand one another, and both are edified and rejoice together.\"",
             inspirationSource: "— Jesus Christ (Doctrine and Covenants 50:22)",
@@ -365,7 +383,25 @@ export const translations = {
             joinCreateGroup: "グループに参加/作成",
             signOut: "サインアウト",
             selectGroup: "グループを選択",
-            close: "閉じる"
+            close: "閉じる",
+            donate: "寄付"
+        },
+        donate: {
+            title: "ご支援のお願い",
+            description: "日々の聖典学習の習慣を築くという私たちの使命にご協力ください。",
+            header: "運営を支える",
+            subHeader: "Scripture Habitは情熱を持って開発されています。皆様のご寄付は、サーバー費用やおなじみのAI機能、そして今後の開発に直接充てられ、毎日の霊的な成長のためのこのツールを維持するために使われます。",
+            suggestionTitle: "寄付額の目安（金額は自由にご決定いただけます）：",
+            suggestion1: "🥤 240円 (ドリンク1杯分) - 気軽な応援に！",
+            suggestion2: "🍱 1,000円 (ランチ1回分) - サーバー費用の支えに！",
+            suggestion3: "🚀 3,000円 (新機能の開発) - 開発の大きな力に！",
+            methodsHeader: "寄付は以下の方法で行えます：",
+            onlineTitle: "PayPay または PayPal で支援",
+            onlineDesc: "PayPayの場合はQRコードをスキャン、PayPalの場合は下のボタンをクリックしてください。",
+            payPayButton: "PayPayで寄付する",
+            button: "PayPalで寄付する",
+            contactTitle: "寄付に関するお問い合わせ",
+            contactDesc: "寄付に関するヘルプやご質問は、dazhilangxianggen@gmail.com までお問い合わせください。"
         },
         dashboard: {
             welcomeBack: "おかえりなさい",
@@ -377,7 +413,7 @@ export const translations = {
             recentNotes: "最近のノート",
             seeAll: "すべて見る",
             noRecentNotes: "最近のノートはありません。",
-            randomPhoto: "開発者からのランダムな聖句写真",
+
             readInGospelLibrary: "福音ライブラリーで読む",
             inspirationQuote: "「それゆえ、説く者と受ける者は互いに理解し合い、ともに教化されて、ともに喜ぶのである。」",
             inspirationSource: "— イエス・キリスト (教義と聖約50:22)",
@@ -782,7 +818,25 @@ export const translations = {
             joinCreateGroup: "Entrar/Criar Grupo",
             signOut: "Sair",
             selectGroup: "Selecionar Grupo",
-            close: "Fechar"
+            close: "Fechar",
+            donate: "Doar"
+        },
+        donate: {
+            title: "Apoie-nos",
+            description: "Junte-se a nós em nossa missão de ajudar outros a construir o hábito de estudo diário das escrituras.",
+            header: "MANTENHA-NOS NO AR",
+            subHeader: "O Scripture Habit é um trabalho de amor. Sua doação financia diretamente os custos do servidor, recursos de IA e desenvolvimento futuro para manter esta ferramenta disponível para o crescimento espiritual diário de todos.",
+            suggestionTitle: "Sugestões de Valor (Sinta-se livre para escolher):",
+            suggestion1: "🥤 R$ 10 (Café) - Um apoio rápido!",
+            suggestion2: "🍱 R$ 30 (Almoço) - Mantém os servidores rodando.",
+            suggestion3: "🚀 R$ 60 (Recurso) - Abastece o desenvolvimento.",
+            methodsHeader: "As doações podem ser feitas da seguinte forma:",
+            onlineTitle: "Apoiar via PayPay ou PayPal",
+            onlineDesc: "Digitalize o código QR para PayPay, ou clique no botão abaixo para PayPal.",
+            payPayButton: "Doar via PayPay",
+            button: "Doar via PayPal",
+            contactTitle: "CONTATE-NOS PARA AJUDA COM SUA DOAÇÃO",
+            contactDesc: "Para ajuda ou dúvidas sobre sua doação, entre em contato conosco em dazhilangxianggen@gmail.com."
         },
         dashboard: {
             welcomeBack: "Bem-vindo de volta",
@@ -794,7 +848,7 @@ export const translations = {
             recentNotes: "Anotações Recentes",
             seeAll: "Ver Tudo",
             noRecentNotes: "Nenhuma anotação recente.",
-            randomPhoto: "Foto Aleatória das Escrituras",
+
             readInGospelLibrary: "Ler na Biblioteca do Evangelho",
             inspirationQuote: "\"Portanto, aquele que prega e aquele que recebe se compreendem um ao outro e ambos são edificados e juntos se regozijam\"",
             inspirationSource: "— Jesus Cristo (Doutrina e Convênios 50:22)",
@@ -1140,7 +1194,25 @@ export const translations = {
             joinCreateGroup: "加入/建立群組",
             signOut: "登出",
             selectGroup: "選擇群組",
-            close: "關閉"
+            close: "關閉",
+            donate: "捐款"
+        },
+        donate: {
+            title: "支持我們",
+            description: "加入我們的使命，幫助他人建立每天研讀經文的習慣。",
+            header: "支持我們繼續前行",
+            subHeader: "Scripture Habit 是一個充滿熱忱的項目。您的捐款將直接用於資助伺服器成本、AI 功能和未來的開發，確保這個工具能持續為大家的每日靈性成長服務。",
+            suggestionTitle: "建議金額（您可以自由決定）：",
+            suggestion1: "🥤 $15 (咖啡) - 快速的支持！",
+            suggestion2: "🍱 $70 (午餐) - 維持伺服器運作。",
+            suggestion3: "🚀 $150 (新功能) - 推動未來開發。",
+            methodsHeader: "可以通過以下方式進行捐款：",
+            onlineTitle: "通過 PayPay 或 PayPal 支持",
+            onlineDesc: "掃描 QR 碼使用 PayPay，或點擊下方按鈕使用 PayPal。",
+            payPayButton: "通過 PayPay 捐款",
+            button: "通過 PayPal 捐款",
+            contactTitle: "聯繫我們獲取捐款幫助",
+            contactDesc: "有關捐款的幫助或疑問，請聯繫我們 dazhilangxianggen@gmail.com。"
         },
         dashboard: {
             welcomeBack: "歡迎回來",
@@ -1152,7 +1224,7 @@ export const translations = {
             recentNotes: "最近的筆記",
             seeAll: "查看全部",
             noRecentNotes: "最近沒有筆記。",
-            randomPhoto: "來自開發者的隨機經文照片",
+
             readInGospelLibrary: "在福音圖書館閱讀",
             inspirationQuote: "「因此，那宣講的和接受的，彼此了解，雙方都被啟發，並一起快樂。」",
             inspirationSource: "— 耶穌基督(教義和聖約50:22)",
@@ -1498,7 +1570,25 @@ export const translations = {
             joinCreateGroup: "Unirse/Crear Grupo",
             signOut: "Cerrar Sesión",
             selectGroup: "Seleccionar Grupo",
-            close: "Cerrar"
+            close: "Cerrar",
+            donate: "Donar"
+        },
+        donate: {
+            title: "Apóyanos",
+            description: "Únete a nosotros en nuestra misión de ayudar a otros a construir el hábito del estudio diario de las escrituras.",
+            header: "AYÚDANOS A CONTINUAR",
+            subHeader: "Scripture Habit es una labor de amor. Su donación financia directamente los costos del servidor, las funciones de IA y el desarrollo futuro para mantener esta herramienta disponible para el crecimiento espiritual diario de todos.",
+            suggestionTitle: "Montos Sugeridos (Siéntete libre de elegir):",
+            suggestion1: "🥤 $2 (Café) - ¡Un apoyo rápido!",
+            suggestion2: "🍱 $10 (Almuerzo) - Mantiene los servidores funcionando.",
+            suggestion3: "🚀 $20 (Función) - Impulsa el desarrollo.",
+            methodsHeader: "Las donaciones se pueden hacer de la siguiente manera:",
+            onlineTitle: "Apoyar vía PayPay o PayPal",
+            onlineDesc: "Escanea el código QR para PayPay, o haz clic en el botón de abajo para PayPal.",
+            payPayButton: "Donar vía PayPay",
+            button: "Donar vía PayPal",
+            contactTitle: "CONTÁCTANOS PARA AYUDA CON TU DONACIÓN",
+            contactDesc: "Para ayuda o preguntas sobre tu donación, contáctanos en dazhilangxianggen@gmail.com."
         },
         dashboard: {
             welcomeBack: "Bienvenido de nuevo",
@@ -1510,7 +1600,7 @@ export const translations = {
             recentNotes: "Notas Recientes",
             seeAll: "Ver Todo",
             noRecentNotes: "No hay notas recientes.",
-            randomPhoto: "Foto Aleatoria de las Escrituras",
+
             readInGospelLibrary: "Leer en Biblioteca del Evangelio",
             inspirationQuote: "\"“De manera que, el que la predica y el que la recibe se comprenden el uno al otro, y ambos son edificados y se regocijan juntamente.\"",
             inspirationSource: "— Jesucristo (Doctrina y Convenios 50:22)",
@@ -1856,7 +1946,25 @@ export const translations = {
             joinCreateGroup: "Tham gia/Tạo nhóm",
             signOut: "Đăng xuất",
             selectGroup: "Chọn Nhóm",
-            close: "Đóng"
+            close: "Đóng",
+            donate: "Quyên góp"
+        },
+        donate: {
+            title: "Ủng hộ chúng tôi",
+            description: "Tham gia cùng chúng tôi trong sứ mệnh giúp đỡ người khác xây dựng thói quen học thánh thư hàng ngày.",
+            header: "GIÚP CHÚNG TÔI DUY TRÌ",
+            subHeader: "Scripture Habit là một công trình của tình yêu thương. Khoản quyên góp của bạn trực tiếp tài trợ cho chi phí máy chủ, các tính năng AI và sự phát triển trong tương lai để giữ cho công cụ này luôn sẵn có cho sự phát triển tâm linh hàng ngày của mọi người.",
+            suggestionTitle: "Số tiền gợi ý (Bạn có thể tùy chọn):",
+            suggestion1: "🥤 50k (Cà phê) - Một sự ủng hộ nhanh chóng!",
+            suggestion2: "🍱 200k (Bữa trưa) - Duy trì máy chủ hoạt động.",
+            suggestion3: "🚀 500k (Tính năng) - Thúc đẩy phát triển.",
+            methodsHeader: "Quyên góp có thể được thực hiện bằng cách sau:",
+            onlineTitle: "Hỗ trợ qua PayPay hoặc PayPal",
+            onlineDesc: "Quét mã QR cho PayPay, hoặc nhấp vào nút bên dưới cho PayPal.",
+            payPayButton: "Quyên góp qua PayPay",
+            button: "Quyên góp qua PayPal",
+            contactTitle: "LIÊN HỆ VỚI CHÚNG TÔI ĐỂ ĐƯỢC HỖ TRỢ VỀ KHOẢN QUYÊN GÓP CỦA BẠN",
+            contactDesc: "Để được trợ giúp hoặc có câu hỏi về khoản quyên góp của bạn, vui lòng liên hệ với chúng tôi tại dazhilangxianggen@gmail.com."
         },
         dashboard: {
             welcomeBack: "Chào mừng trở lại",
@@ -1868,7 +1976,7 @@ export const translations = {
             recentNotes: "Ghi chép gần đây",
             seeAll: "Xem tất cả",
             noRecentNotes: "Không có ghi chép gần đây.",
-            randomPhoto: "Ảnh thánh thư ngẫu nhiên",
+
             readInGospelLibrary: "Đọc trong Thư viện Phúc âm",
             inspirationQuote: "\"Vậy nên, người thuyết giảng và người nhận hiểu được nhau, và cả hai được gây dựng và cùng nhau vui vẻ.\"",
             inspirationSource: "— Chúa Giê Su Ky Tô (Giáo Lý và Giao Ước 50:22)",
@@ -2214,7 +2322,25 @@ export const translations = {
             joinCreateGroup: "เข้าร่วม/สร้างกลุ่ม",
             signOut: "ออกจากระบบ",
             selectGroup: "เลือกกลุ่ม",
-            close: "ปิด"
+            close: "ปิด",
+            donate: "บริจาค"
+        },
+        donate: {
+            title: "สนับสนุนเรา",
+            description: "เข้าร่วมกับเราในภารกิจเพื่อช่วยให้ผู้อื่นสร้างนิสัยการศึกษาพระคัมภีร์ทุกวัน",
+            header: "ช่วยให้เราก้าวต่อไป",
+            subHeader: "Scripture Habit เกิดขึ้นจากความรักและความทุ่มเท การบริจาคของคุณจะนำไปใช้โดยตรงสำหรับค่าเซิร์ฟเวอร์ ฟีเจอร์ AI และการพัฒนาในอนาคต เพื่อให้เครื่องมือนี้ยังคงอยู่เพื่อการเติบโตทางวิญญาณของทุกคนในทุกๆ วัน",
+            suggestionTitle: "จำนวนเงินที่แนะนำ (ตามความสมัครใจ):",
+            suggestion1: "🥤 70฿ (กาแฟ) - สนับสนุนเล็กน้อย!",
+            suggestion2: "🍱 300฿ (อาหารกลางวัน) - ช่วยค่าเซิร์ฟเวอร์",
+            suggestion3: "🚀 700฿ (ฟีเจอร์ใหม่) - สนับสนุนการพัฒนา",
+            methodsHeader: "สามารถบริจาคได้โดยวิธีต่อไปนี้:",
+            onlineTitle: "สนับสนุนผ่าน PayPay หรือ PayPal",
+            onlineDesc: "สแกนรหัส QR สำหรับ PayPay หรือคลิกปุ่มด้านล่างสำหรับ PayPal",
+            payPayButton: "บริจาคผ่าน PayPay",
+            button: "บริจาคผ่าน PayPal",
+            contactTitle: "ติดต่อเราเพื่อขอความช่วยเหลือเกี่ยวกับการบริจาคของคุณ",
+            contactDesc: "สำหรับความช่วยเหลือหรือคำถามเกี่ยวกับการบริจาคของคุณ โปรดติดต่อเราที่ dazhilangxianggen@gmail.com"
         },
         dashboard: {
             welcomeBack: "ยินดีต้อนรับกลับ",
@@ -2226,7 +2352,7 @@ export const translations = {
             recentNotes: "บันทึกล่าสุด",
             seeAll: "ดูทั้งหมด",
             noRecentNotes: "ไม่มีบันทึกล่าสุด",
-            randomPhoto: "รูปภาพพระคัมภีร์สุ่มจากผู้พัฒนา",
+
             readInGospelLibrary: "อ่านในคลังค้นคว้าพระกิตติคุณ",
             inspirationQuote: "\"ดังนั้น, คนที่สั่งสอนและคนที่รับ, เข้าใจกัน, และทั้งสองได้รับการจรรโลงใจและชื่นชมยินดีด้วยกัน.\"",
             inspirationSource: "— พระเยซูคริสต์ (หลักคำสอนและพันธสัญญา 50:22)",
@@ -2572,7 +2698,25 @@ export const translations = {
             joinCreateGroup: "그룹 가입/생성",
             signOut: "로그아웃",
             selectGroup: "그룹 선택",
-            close: "닫기"
+            close: "닫기",
+            donate: "후원"
+        },
+        donate: {
+            title: "후원하기",
+            description: "다른 사람들이 매일 경전 공부 습관을 기르도록 돕는 우리의 사명에 동참해 주십시오.",
+            header: "운영을 지원해주세요",
+            subHeader: "Scripture Habit은 사랑으로 만들어진 노력의 결실입니다. 귀하의 후원은 서버 비용, AI 기능 및 향후 개발에 직접 사용되어, 모든 사람의 매일의 영적 성장을 위해 이 도구를 계속 제공할 수 있게 합니다.",
+            suggestionTitle: "추천 후원금 (자유롭게 선택 가능):",
+            suggestion1: "🥤 3,000원 (커피) - 가벼운 응원!",
+            suggestion2: "🍱 10,000원 (점심) - 서버 운영 지원.",
+            suggestion3: "🚀 25,000원 (기능) - 새로운 개발 후원.",
+            methodsHeader: "다음과 같은 방법으로 후원할 수 있습니다:",
+            onlineTitle: "PayPay 또는 PayPal로 후원하기",
+            onlineDesc: "PayPay는 QR 코드를 스캔하고, PayPal은 아래 버튼을 클릭하세요.",
+            payPayButton: "PayPay로 후원하기",
+            button: "PayPal로 후원하기",
+            contactTitle: "후원 관련 문의",
+            contactDesc: "후원에 대한 도움이나 질문이 있으시면 dazhilangxianggen@gmail.com으로 문의해 주십시오."
         },
         dashboard: {
             welcomeBack: "환영합니다",
@@ -2584,7 +2728,7 @@ export const translations = {
             recentNotes: "최근 노트",
             seeAll: "모두 보기",
             noRecentNotes: "최근 노트가 없습니다.",
-            randomPhoto: "개발자의 랜덤 경전 사진",
+
             readInGospelLibrary: "복음 자료실에서 읽기",
             inspirationQuote: "\"그런즉 전도하는 자와 받는 자는 서로를 이해하고 둘 다 교화되며, 함께 기뻐하느니라.\"",
             inspirationSource: "— 예수 그리스도 (교리와 성약 50:22)",
@@ -2930,7 +3074,25 @@ export const translations = {
             joinCreateGroup: "Sumali/Lumikha ng Grupo",
             signOut: "Mag-sign Out",
             selectGroup: "Pumili ng Grupo",
-            close: "Isara"
+            close: "Isara",
+            donate: "Mag-donate"
+        },
+        donate: {
+            title: "Suportahan Kami",
+            description: "Sumali sa amin sa aming misyon na tulungan ang iba na bumuo ng ugali ng araw-araw na pag-aaral ng banal na kasulatan.",
+            header: "PANATILIHIN KAMING NAGPAPATULOY",
+            subHeader: "Ang Scripture Habit ay bunga ng pagmamahal. Ang iyong donasyon ay direktang popondo sa mga gastos sa server, mga feature ng AI, at pagpapaunlad sa hinaharap upang mapanatiling magagamit ang tool na ito para sa araw-araw na espirituwal na paglago ng lahat.",
+            suggestionTitle: "Mungkahing Halaga (Malaya kang pumili):",
+            suggestion1: "🥤 ₱100 (Kape) - Mabilis na tulong!",
+            suggestion2: "🍱 ₱400 (Tanghalian) - Panatilihing tumatakbo ang servers.",
+            suggestion3: "🚀 ₱1,000 (Feature) - Pondo para sa development.",
+            methodsHeader: "Ang mga donasyon ay maaaring gawin sa pamamagitan ng sumusunod:",
+            onlineTitle: "Suportahan gamit ang PayPay o PayPal",
+            onlineDesc: "I-scan ang QR code para sa PayPay, o i-click ang button sa ibaba para sa PayPal.",
+            payPayButton: "Mag-donate gamit ang PayPay",
+            button: "Mag-donate gamit ang PayPal",
+            contactTitle: "MAKIPAG-UGNAYAN SA AMIN PARA SA TULONG SA IYONG DONASYON",
+            contactDesc: "Para sa tulong o mga katanungan tungkol sa iyong donasyon, mangyaring makipag-ugnayan sa amin sa dazhilangxianggen@gmail.com."
         },
         dashboard: {
             welcomeBack: "Maligayang pagbabalik",
@@ -2942,7 +3104,7 @@ export const translations = {
             recentNotes: "Kamakailang mga Tala",
             seeAll: "Tingnan Lahat",
             noRecentNotes: "Walang kamakailang mga tala.",
-            randomPhoto: "Random na Larawan ng Banal na Kasulatan mula sa Developer",
+
             readInGospelLibrary: "Basahin sa Gospel Library",
             inspirationQuote: "\"Samakatwid, siya na nangangaral at siya na nakatatanggap ay nauunawaan ang isa't isa, at sila ay kapwa pinabuti at nagsasaya nang magkasama.\"",
             inspirationSource: "— Jesucristo (Doktrina at mga Tipan 50:22)",
@@ -3288,7 +3450,25 @@ export const translations = {
             joinCreateGroup: "Jiunge/Unda Kikundi",
             signOut: "Ondoka",
             selectGroup: "Chagua Kikundi",
-            close: "Funga"
+            close: "Funga",
+            donate: "Changia"
+        },
+        donate: {
+            title: "Tusaidie",
+            description: "Jiunge nasi katika dhamira yetu ya kusaidia wengine kujenga tabia ya kujifunza maandiko kila siku.",
+            header: "TUSAIDIE KUENDELEA",
+            subHeader: "Scripture Habit ni kazi ya upendo. Mchango wako unafadhili moja kwa moja gharama za seva, vipengele vya AI, na maendeleo ya baadaye ili kuweka zana hii inapatikana kwa ukuaji wa kiroho wa kila siku wa kila mtu.",
+            suggestionTitle: "Kiasi Kilichopendekezwa (Jisikie huru kuchagua):",
+            suggestion1: "🥤 TZS 5,000 (Kahawa) - Msaada wa haraka!",
+            suggestion2: "🍱 TZS 20,000 (Chakula) - Dumisha seva.",
+            suggestion3: "🚀 TZS 50,000 (Kipengele) - Kuchochea maendeleo.",
+            methodsHeader: "Michango inaweza kufanywa kwa njia zifuatazo:",
+            onlineTitle: "Saidiana kupitia PayPay au PayPal",
+            onlineDesc: "Changanua msimbo wa QR kwa PayPay, au bofya kitufe hapa chini kwa PayPal.",
+            payPayButton: "Changia kupitia PayPay",
+            button: "Changia kupitia PayPal",
+            contactTitle: "WASILIANA NASI KWA MSAADA WA MCHANGO WAKO",
+            contactDesc: "Kwa msaada au maswali kuhusu mchango wako, tafadhali wasiliana nasi kwa dazhilangxianggen@gmail.com."
         },
         dashboard: {
             welcomeBack: "Karibu tena",
@@ -3300,7 +3480,7 @@ export const translations = {
             recentNotes: "Maelezo ya Hivi Karibuni",
             seeAll: "Ona Yote",
             noRecentNotes: "Hakuna maelezo ya hivi karibuni.",
-            randomPhoto: "Picha ya Maandiko ya Kubahatisha kutoka kwa Msanidi",
+
             readInGospelLibrary: "Soma katika Gospel Library",
             inspirationQuote: "\"Kwa sababu hiyo, yule ambaye huhubiri na yule apokeaye, huelewana, na wote hujengana na kufurahi kwa pamoja.\"",
             inspirationSource: "— Yesu Kristo (Mafundisho na Maagano 50:22)",

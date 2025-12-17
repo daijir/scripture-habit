@@ -2,17 +2,21 @@ import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 import { auth, db } from '../../firebase';
+import { useNavigate } from 'react-router-dom';
+import { UilSignOutAlt } from '@iconscout/react-unicons';
 import { doc, updateDoc } from 'firebase/firestore';
 import Button from '../Button/Button';
 
 const Profile = ({ userData, stats }) => {
     const { language, setLanguage, t } = useLanguage();
+    const navigate = useNavigate();
     const [nickname, setNickname] = useState('');
     const [stake, setStake] = useState('');
     const [ward, setWard] = useState('');
     const [bio, setBio] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [message, setMessage] = useState({ type: '', text: '' });
+    const [showSignOutModal, setShowSignOutModal] = useState(false);
 
     useEffect(() => {
         if (userData?.nickname) {
@@ -61,6 +65,16 @@ const Profile = ({ userData, stats }) => {
         } finally {
             setIsSaving(false);
         }
+    };
+
+    const handleSignOut = () => {
+        setShowSignOutModal(true);
+    };
+
+    const confirmSignOut = () => {
+        auth.signOut();
+        navigate('/login');
+        setShowSignOutModal(false);
     };
 
     return (
@@ -135,6 +149,15 @@ const Profile = ({ userData, stats }) => {
                         </div>
                     </div>
                 )}
+            </div>
+
+
+
+            <div className="profile-section" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--red)', marginTop: '20px', marginBottom: '20px' }} onClick={handleSignOut}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <UilSignOutAlt />
+                    <span style={{ fontSize: '1.1rem', fontWeight: '500' }}>{t('signOut.title')}</span>
+                </div>
             </div>
 
             <div className="profile-section">
@@ -212,6 +235,41 @@ const Profile = ({ userData, stats }) => {
                     </div>
                 </div>
             </div>
+
+
+            {/* Sign Out Confirmation Modal */}
+            {
+                showSignOutModal && (
+                    <div className="group-modal-overlay" onClick={() => setShowSignOutModal(false)}>
+                        <div className="group-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '300px', textAlign: 'center' }}>
+                            <h3>{t('signOut.title')}</h3>
+                            <p>{t('signOut.message')}</p>
+                            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}>
+                                <button
+                                    className="close-modal-btn"
+                                    onClick={() => setShowSignOutModal(false)}
+                                    style={{ marginTop: 0, flex: 1 }}
+                                >
+                                    {t('signOut.cancel')}
+                                </button>
+                                <button
+                                    className="close-modal-btn"
+                                    onClick={confirmSignOut}
+                                    style={{
+                                        marginTop: 0,
+                                        flex: 1,
+                                        background: 'var(--pink)',
+                                        color: 'white',
+                                        border: 'none'
+                                    }}
+                                >
+                                    {t('signOut.confirm')}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
         </div >
     );
 };
