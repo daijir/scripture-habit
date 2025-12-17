@@ -49,17 +49,24 @@
 
 .active {
     background: var(--activeItem);
-    margin-left: 0;
+    margin-left: 2rem;
     color: var(--white);
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    min-width: 2.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.active span {
+    display: none;
 }
 
 .active::before {
-    content: '';
-    width: 8px;
-    height: 100%;
-    background: var(--white);
-    margin-right: calc(1rem - 8px);
-
+    display: none;
+    /* Remove the white strip to make it purely the shape */
 }
 
 .menu .menuItem:last-child {

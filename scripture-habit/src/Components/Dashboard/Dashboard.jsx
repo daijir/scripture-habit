@@ -10,7 +10,7 @@ import Sidebar from '../Sidebar/Sidebar';
 import GroupChat from '../GroupChat/GroupChat';
 import './Dashboard.css';
 import Button from '../Button/Button';
-import GalleryImages from '../GalleryImages/GalleryImages';
+
 import NewNote from '../NewNote/NewNote';
 import MyNotes from '../MyNotes/MyNotes';
 import Profile from '../Profile/Profile';
@@ -21,6 +21,7 @@ import NoteDisplay from '../NoteDisplay/NoteDisplay';
 import NoteCard from '../NoteCard/NoteCard';
 import { getTodayReadingPlan } from '../../Data/DailyReadingPlan';
 import WelcomeStoryModal from '../WelcomeStoryModal/WelcomeStoryModal';
+import Donate from '../Donate/Donate';
 
 
 const Dashboard = () => {
@@ -715,14 +716,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="dashboard-section">
-              <div className="section-header">
-                <h3>{t('dashboard.randomPhoto')}</h3>
-              </div>
-              <div className="gallery-container">
-                <GalleryImages />
-              </div>
-            </div>
+
 
           </div>
         )}
@@ -748,6 +742,9 @@ const Dashboard = () => {
               totalNotes: personalNotesCount !== null ? personalNotesCount : 0
             }}
           />
+        )}
+        {selectedView === 4 && (
+          <Donate />
         )}
 
         <NewNote isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} userGroups={userGroups} currentGroupId={activeGroupId} />
