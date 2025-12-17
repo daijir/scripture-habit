@@ -4,6 +4,7 @@ export const translations = {
             dashboard: "Dashboard",
             myNotes: "My Notes",
             languages: "Languages",
+            profile: "Profile",
             myGroups: "My Groups",
             joinCreateGroup: "Join/Create Group",
             signOut: "Sign Out",
@@ -43,6 +44,19 @@ export const translations = {
             korean: "Korean (Korean)",
             tagalog: "Tagalog (Tagalog)",
             swahili: "Swahili (Swahili)"
+        },
+        profile: {
+            title: "Profile",
+            description: "Manage your profile settings.",
+            nickname: "Nickname",
+            save: "Save",
+            language: "Language",
+            stake: "Stake/District",
+            enterStake: "Enter Stake/District",
+            ward: "Ward/Branch/Group",
+            enterWard: "Enter Ward/Branch/Group",
+            bio: "Bio",
+            enterBio: "Enter a short bio"
         },
         myNotes: {
             description: "Note Collection",
@@ -223,7 +237,8 @@ export const translations = {
             joinConfirmTitle: "Join Group",
             joinConfirmMessage: "Are you sure you want to join this group?",
             confirmJoin: "Join",
-            cancelJoin: "Cancel"
+            cancelJoin: "Cancel",
+            notes: "Notes"
         },
         groupForm: {
             title: "Create a Study Group",
@@ -345,6 +360,7 @@ export const translations = {
             dashboard: "ダッシュボード",
             myNotes: "私のノート",
             languages: "言語設定",
+            profile: "プロフィール",
             myGroups: "私のグループ",
             joinCreateGroup: "グループに参加/作成",
             signOut: "サインアウト",
@@ -354,7 +370,7 @@ export const translations = {
         dashboard: {
             welcomeBack: "おかえりなさい",
             newNote: "ノート作成",
-            streak: "連続達成日数",
+            streak: "連続達成",
             days: "日",
             totalNotes: "総ノート数",
             notes: "ノート",
@@ -384,6 +400,19 @@ export const translations = {
             korean: "韓国語 (Korean)",
             tagalog: "タガログ語 (Tagalog)",
             swahili: "スワヒリ語 (Swahili)"
+        },
+        profile: {
+            title: "プロフィール",
+            description: "プロフィール設定を管理します。",
+            nickname: "ニックネーム",
+            save: "保存",
+            language: "言語",
+            stake: "ステーク/地方部",
+            enterStake: "ステーク/地方部を入力",
+            ward: "ワード/支部/グループ",
+            enterWard: "ワード/支部/グループを入力",
+            bio: "なんでも一言",
+            enterBio: "なんでも一言を入力"
         },
         groupChat: {
             send: "送信",
@@ -625,7 +654,8 @@ export const translations = {
             joinConfirmTitle: "グループに参加",
             joinConfirmMessage: "本当にこのグループに参加しますか？",
             confirmJoin: "参加",
-            cancelJoin: "キャンセル"
+            cancelJoin: "キャンセル",
+            notes: "ノート"
         },
         groupForm: {
             title: "学習グループを作成",
@@ -747,6 +777,7 @@ export const translations = {
             dashboard: "Painel",
             myNotes: "Minhas Anotações",
             languages: "Idiomas",
+            profile: "Perfil",
             myGroups: "Meus Grupos",
             joinCreateGroup: "Entrar/Criar Grupo",
             signOut: "Sair",
@@ -786,6 +817,19 @@ export const translations = {
             korean: "Coreano (Korean)",
             tagalog: "Tagalo (Tagalog)",
             swahili: "Suaíli (Swahili)"
+        },
+        profile: {
+            title: "Perfil",
+            description: "Gerencie as configurações do seu perfil.",
+            nickname: "Apelido",
+            save: "Salvar",
+            language: "Idioma",
+            stake: "Estaca/Distrito",
+            enterStake: "Insira Estaca/Distrito",
+            ward: "Ala/Ramo",
+            enterWard: "Insira Ala/Ramo",
+            bio: "Biografia",
+            enterBio: "Insira uma biografia curta"
         },
         groupChat: {
             send: "Enviar",
@@ -966,7 +1010,8 @@ export const translations = {
             joinConfirmTitle: "Entrar no Grupo",
             joinConfirmMessage: "Tem certeza de que deseja entrar neste grupo?",
             confirmJoin: "Entrar",
-            cancelJoin: "Cancelar"
+            cancelJoin: "Cancelar",
+            notes: "Anotações"
         },
         groupForm: {
             title: "Criar um Grupo de Estudo",
@@ -1001,7 +1046,9 @@ export const translations = {
             facebookButton: "Entrar com Facebook",
             githubButton: "Entrar com GitHub",
             inAppBrowserWarning: "O login do Google não é suportado neste navegador no aplicativo. Abra no Chrome ou Safari.",
-            emailNotVerified: "Por favor, verifique seu endereço de e-mail antes de fazer login."
+            emailNotVerified: "Por favor, verifique seu endereço de e-mail antes de fazer login.",
+            resendVerification: "Reenviar e-mail de verificação",
+            verificationResent: "E-mail de verificação reenviado."
         },
         forgotPasswordPage: {
             title: "Redefinir sua senha",
@@ -1026,7 +1073,8 @@ export const translations = {
             githubButton: "Inscrever-se com GitHub",
             verificationSent: "E-mail de verificação enviado! Por favor, verifique sua caixa de entrada.",
             completeProfile: "Complete Seu Perfil",
-            finishSignup: "Concluir Inscrição"
+            finishSignup: "Concluir Inscrição",
+            errorAccountExistsWithDifferentCredential: "Este e-mail está associado a outro método de login. Por favor, use o método original (ex: Google ou E-mail)."
         },
         groupCard: {
             members: "membros",
@@ -1087,6 +1135,7 @@ export const translations = {
             dashboard: "儀表板",
             myNotes: "我的筆記",
             languages: "語言",
+            profile: "個人檔案",
             myGroups: "我的群組",
             joinCreateGroup: "加入/建立群組",
             signOut: "登出",
@@ -1126,6 +1175,19 @@ export const translations = {
             korean: "韓文 (Korean)",
             tagalog: "塔加洛文 (Tagalog)",
             swahili: "斯瓦希里文 (Swahili)"
+        },
+        profile: {
+            title: "個人檔案",
+            description: "管理您的個人檔案設定。",
+            nickname: "暱稱",
+            save: "儲存",
+            language: "語言",
+            stake: "支聯會/區會",
+            enterStake: "輸入支聯會/區會",
+            ward: "支會/分會",
+            enterWard: "輸入支會/分會",
+            bio: "簡介",
+            enterBio: "輸入簡介"
         },
         groupChat: {
             send: "發送",
@@ -1306,7 +1368,8 @@ export const translations = {
             joinConfirmTitle: "加入群組",
             joinConfirmMessage: "您確定要加入此群組嗎？",
             confirmJoin: "加入",
-            cancelJoin: "取消"
+            cancelJoin: "取消",
+            notes: "筆記"
         },
         groupForm: {
             title: "建立研讀群組",
@@ -1341,7 +1404,9 @@ export const translations = {
             facebookButton: "使用 Facebook 登入",
             githubButton: "使用 GitHub 登入",
             inAppBrowserWarning: "此應用程式內瀏覽器不支援 Google 登入。請在 Chrome 或 Safari 中開啟。",
-            emailNotVerified: "請在登錄前驗證您的電子郵件地址。"
+            emailNotVerified: "請在登錄前驗證您的電子郵件地址。",
+            resendVerification: "重新發送驗證郵件",
+            verificationResent: "驗證郵件已重新發送。"
         },
         forgotPasswordPage: {
             title: "重設您的密碼",
@@ -1366,7 +1431,8 @@ export const translations = {
             githubButton: "使用 GitHub 註冊",
             verificationSent: "驗證信已發送！請檢查您的收件匣。",
             completeProfile: "完成您的個人資料",
-            finishSignup: "完成註冊"
+            finishSignup: "完成註冊",
+            errorAccountExistsWithDifferentCredential: "此電子郵件已與另一個登入方式關聯。請使用原始方式（例如 Google 或電子郵件）登入。"
         },
         groupCard: {
             members: "成員",
@@ -1427,6 +1493,7 @@ export const translations = {
             dashboard: "Tablero",
             myNotes: "Mis Notas",
             languages: "Idiomas",
+            profile: "Perfil",
             myGroups: "Mis Grupos",
             joinCreateGroup: "Unirse/Crear Grupo",
             signOut: "Cerrar Sesión",
@@ -1466,6 +1533,19 @@ export const translations = {
             korean: "Coreano (Korean)",
             tagalog: "Tagalo (Tagalog)",
             swahili: "Suajili (Swahili)"
+        },
+        profile: {
+            title: "Perfil",
+            description: "Administra la configuración de tu perfil.",
+            nickname: "Apodo",
+            save: "Guardar",
+            language: "Idioma",
+            stake: "Estaca/Distrito",
+            enterStake: "Ingresar Estaca/Distrito",
+            ward: "Barrio/Rama",
+            enterWard: "Ingresar Barrio/Rama",
+            bio: "Biografía",
+            enterBio: "Ingresar biografía corta"
         },
         groupChat: {
             send: "Enviar",
@@ -1646,7 +1726,8 @@ export const translations = {
             joinConfirmTitle: "Unirse al Grupo",
             joinConfirmMessage: "¿Estás seguro de que quieres unirte a este grupo?",
             confirmJoin: "Unirse",
-            cancelJoin: "Cancelar"
+            cancelJoin: "Cancelar",
+            notes: "Notas"
         },
         groupForm: {
             title: "Crear un Grupo de Estudio",
@@ -1681,7 +1762,9 @@ export const translations = {
             facebookButton: "Iniciar sesión con Facebook",
             githubButton: "Iniciar sesión con GitHub",
             inAppBrowserWarning: "El inicio de sesión con Google no es compatible en este navegador de la aplicación. Por favor, ábrelo en Chrome o Safari.",
-            emailNotVerified: "Por favor, verifique su dirección de correo electrónico antes de iniciar sesión."
+            emailNotVerified: "Por favor, verifique su dirección de correo electrónico antes de iniciar sesión.",
+            resendVerification: "Reenviar correo de verificación",
+            verificationResent: "Correo de verificación reenviado."
         },
         forgotPasswordPage: {
             title: "Restablecer tu contraseña",
@@ -1706,7 +1789,8 @@ export const translations = {
             githubButton: "Registrarse con GitHub",
             verificationSent: "¡Correo de verificación enviado! Por favor revise su bandeja de entrada.",
             completeProfile: "Completa tu Perfil",
-            finishSignup: "Terminar Registro"
+            finishSignup: "Terminar Registro",
+            errorAccountExistsWithDifferentCredential: "Este correo electrónico está asociado con otro método de inicio de sesión. Utilice el método original (por ejemplo, Google o Correo electrónico)."
         },
         groupCard: {
             members: "miembros",
@@ -1767,6 +1851,7 @@ export const translations = {
             dashboard: "Trang chủ",
             myNotes: "Ghi chép của tôi",
             languages: "Ngôn ngữ",
+            profile: "Hồ sơ",
             myGroups: "Nhóm của tôi",
             joinCreateGroup: "Tham gia/Tạo nhóm",
             signOut: "Đăng xuất",
@@ -1806,6 +1891,19 @@ export const translations = {
             korean: "Tiếng Hàn (Korean)",
             tagalog: "Tiếng Tagalog (Tagalog)",
             swahili: "Tiếng Swahili (Swahili)"
+        },
+        profile: {
+            title: "Hồ sơ",
+            description: "Quản lý cài đặt hồ sơ của bạn.",
+            nickname: "Biệt danh",
+            save: "Lưu",
+            language: "Ngôn ngữ",
+            stake: "Giáo khu/Giáo hạt",
+            enterStake: "Nhập Giáo khu/Giáo hạt",
+            ward: "Tiểu khu/Chi nhánh",
+            enterWard: "Nhập Tiểu khu/Chi nhánh",
+            bio: "Tiểu sử",
+            enterBio: "Nhập tiểu sử ngắn"
         },
         groupChat: {
             send: "Gửi",
@@ -1986,7 +2084,8 @@ export const translations = {
             joinConfirmTitle: "Tham gia nhóm",
             joinConfirmMessage: "Bạn có chắc chắn muốn tham gia nhóm này không?",
             confirmJoin: "Tham gia",
-            cancelJoin: "Hủy"
+            cancelJoin: "Hủy",
+            notes: "Ghi chép"
         },
         groupForm: {
             title: "Tạo nhóm học tập",
@@ -2021,7 +2120,9 @@ export const translations = {
             facebookButton: "Đăng nhập bằng Facebook",
             githubButton: "Đăng nhập bằng GitHub",
             inAppBrowserWarning: "Đăng nhập Google không được hỗ trợ trong trình duyệt ứng dụng này. Vui lòng mở trong Chrome hoặc Safari.",
-            emailNotVerified: "Vui lòng xác minh địa chỉ email của bạn trước khi đăng nhập."
+            emailNotVerified: "Vui lòng xác minh địa chỉ email của bạn trước khi đăng nhập.",
+            resendVerification: "Gửi lại email xác minh",
+            verificationResent: "Email xác minh đã được gửi lại."
         },
         forgotPasswordPage: {
             title: "Đặt lại mật khẩu của bạn",
@@ -2046,7 +2147,8 @@ export const translations = {
             githubButton: "Đăng ký bằng GitHub",
             verificationSent: "Email xác minh đã được gửi! Vui lòng kiểm tra hộp thư đến của bạn.",
             completeProfile: "Hoàn thành Hồ sơ của bạn",
-            finishSignup: "Hoàn tất Đăng ký"
+            finishSignup: "Hoàn tất Đăng ký",
+            errorAccountExistsWithDifferentCredential: "Email này được liên kết với một phương thức đăng nhập khác. Vui lòng sử dụng phương thức ban đầu (vd: Google hoặc Email)."
         },
         groupCard: {
             members: "thành viên",
@@ -2107,6 +2209,7 @@ export const translations = {
             dashboard: "แผงควบคุม",
             myNotes: "บันทึกของฉัน",
             languages: "ภาษา",
+            profile: "โปรไฟล์",
             myGroups: "กลุ่มของฉัน",
             joinCreateGroup: "เข้าร่วม/สร้างกลุ่ม",
             signOut: "ออกจากระบบ",
@@ -2146,6 +2249,19 @@ export const translations = {
             korean: "เกาหลี (Korean)",
             tagalog: "ตากาล็อก (Tagalog)",
             swahili: "สวาฮีลี (Swahili)"
+        },
+        profile: {
+            title: "โปรไฟล์",
+            description: "จัดการการตั้งค่าโปรไฟล์ของคุณ",
+            nickname: "ชื่อเล่น",
+            save: "บันทึก",
+            language: "ภาษา",
+            stake: "สเตค/ท้องถิ่น",
+            enterStake: "ป้อนสเตค/ท้องถิ่น",
+            ward: "วอร์ด/สาขา",
+            enterWard: "ป้อนวอร์ด/สาขา",
+            bio: "ประวัติย่อ",
+            enterBio: "ป้อนประวัติย่อ"
         },
         groupChat: {
             send: "ส่ง",
@@ -2326,7 +2442,8 @@ export const translations = {
             joinConfirmTitle: "เข้าร่วมกลุ่ม",
             joinConfirmMessage: "คุณแน่ใจหรือไม่ว่าต้องการเข้าร่วมกลุ่มนี้?",
             confirmJoin: "เข้าร่วม",
-            cancelJoin: "ยกเลิก"
+            cancelJoin: "ยกเลิก",
+            notes: "บันทึก"
         },
         groupForm: {
             title: "สร้างกลุ่มศึกษา",
@@ -2361,7 +2478,9 @@ export const translations = {
             facebookButton: "เข้าสู่ระบบด้วย Facebook",
             githubButton: "เข้าสู่ระบบด้วย GitHub",
             inAppBrowserWarning: "การเข้าสู่ระบบด้วย Google ไม่รองรับในเบราว์เซอร์ในแอปนี้ กรุณาเปิดใน Chrome หรือ Safari",
-            emailNotVerified: "กรุณายืนยันที่อยู่อีเมลของคุณก่อนเข้าสู่ระบบ"
+            emailNotVerified: "กรุณายืนยันที่อยู่อีเมลของคุณก่อนเข้าสู่ระบบ",
+            resendVerification: "ส่งอีเมลยืนยันอีกครั้ง",
+            verificationResent: "ส่งอีเมลยืนยันอีกครั้งแล้ว"
         },
         forgotPasswordPage: {
             title: "รีเซ็ตรหัสผ่านของคุณ",
@@ -2386,7 +2505,8 @@ export const translations = {
             githubButton: "สมัครสมาชิกด้วย GitHub",
             verificationSent: "ส่งอีเมลยืนยันแล้ว! โปรดตรวจสอบกล่องจดหมายของคุณ",
             completeProfile: "กรอกข้อมูลโปรไฟล์ของคุณให้สมบูรณ์",
-            finishSignup: "เสร็จสิ้นการลงทะเบียน"
+            finishSignup: "เสร็จสิ้นการลงทะเบียน",
+            errorAccountExistsWithDifferentCredential: "อีเมลนี้เชื่อมโยงกับวิธีการลงชื่อเข้าใช้อื่น โปรดใช้วิธีการเดิม (เช่น Google หรืออีเมล)"
         },
         groupCard: {
             members: "สมาชิก",
@@ -2447,6 +2567,7 @@ export const translations = {
             dashboard: "대시보드",
             myNotes: "내 노트",
             languages: "언어",
+            profile: "프로필",
             myGroups: "내 그룹",
             joinCreateGroup: "그룹 가입/생성",
             signOut: "로그아웃",
@@ -2486,6 +2607,19 @@ export const translations = {
             korean: "한국어 (Korean)",
             tagalog: "타갈로그어 (Tagalog)",
             swahili: "스와힐리어 (Swahili)"
+        },
+        profile: {
+            title: "프로필",
+            description: "프로필 설정을 관리합니다.",
+            nickname: "닉네임",
+            save: "저장",
+            language: "언어",
+            stake: "스테이크/지방부",
+            enterStake: "스테이크/지방부 입력",
+            ward: "와드/지부",
+            enterWard: "와드/지부 입력",
+            bio: "한마디",
+            enterBio: "한마디를 입력하세요"
         },
         groupChat: {
             send: "전송",
@@ -2666,7 +2800,8 @@ export const translations = {
             joinConfirmTitle: "그룹 가입",
             joinConfirmMessage: "이 그룹에 가입하시겠습니까?",
             confirmJoin: "가입",
-            cancelJoin: "취소"
+            cancelJoin: "취소",
+            notes: "노트"
         },
         groupForm: {
             title: "학습 그룹 생성",
@@ -2701,7 +2836,9 @@ export const translations = {
             facebookButton: "Facebook으로 로그인",
             githubButton: "GitHub로 로그인",
             inAppBrowserWarning: "Google 로그인은 이 인앱 브라우저에서 지원되지 않습니다. Chrome 또는 Safari에서 열어주세요.",
-            emailNotVerified: "로그인하기 전에 이메일 주소를 확인해주세요."
+            emailNotVerified: "로그인하기 전에 이메일 주소를 확인해주세요.",
+            resendVerification: "인증 이메일 재전송",
+            verificationResent: "인증 이메일이 다시 전송되었습니다."
         },
         forgotPasswordPage: {
             title: "비밀번호 재설정",
@@ -2726,7 +2863,8 @@ export const translations = {
             githubButton: "GitHub로 가입",
             verificationSent: "확인 이메일이 전송되었습니다! 받은 편지함을 확인해주세요.",
             completeProfile: "프로필 완성하기",
-            finishSignup: "가입 완료"
+            finishSignup: "가입 완료",
+            errorAccountExistsWithDifferentCredential: "이 이메일은 다른 로그인 방법과 연결되어 있습니다. 원래 방법(예: Google 또는 이메일)을 사용해주세요."
         },
         groupCard: {
             members: "멤버",
@@ -2787,6 +2925,7 @@ export const translations = {
             dashboard: "Dashboard",
             myNotes: "Aking mga Tala",
             languages: "Mga Wika",
+            profile: "Profile",
             myGroups: "Aking mga Grupo",
             joinCreateGroup: "Sumali/Lumikha ng Grupo",
             signOut: "Mag-sign Out",
@@ -2826,6 +2965,19 @@ export const translations = {
             korean: "Koreano (Korean)",
             tagalog: "Tagalog (Tagalog)",
             swahili: "Swahili (Swahili)"
+        },
+        profile: {
+            title: "Profile",
+            description: "Pamahalaan ang mga setting ng iyong profile.",
+            nickname: "Palayaw",
+            save: "I-save",
+            language: "Wika",
+            stake: "Stake/Distrito",
+            enterStake: "Ilagay ang Stake/Distrito",
+            ward: "Ward/Branch",
+            enterWard: "Ilagay ang Ward/Branch",
+            bio: "Talambuhay",
+            enterBio: "Ilagay ang talambuhay"
         },
         groupChat: {
             send: "Ipadala",
@@ -3006,7 +3158,8 @@ export const translations = {
             joinConfirmTitle: "Sumali sa Grupo",
             joinConfirmMessage: "Sigurado ka bang gusto mong sumali sa grupong ito?",
             confirmJoin: "Sumali",
-            cancelJoin: "Kanselahin"
+            cancelJoin: "Kanselahin",
+            notes: "Mga Tala"
         },
         groupForm: {
             title: "Lumikha ng Study Group",
@@ -3041,7 +3194,9 @@ export const translations = {
             facebookButton: "Mag-login gamit ang Facebook",
             githubButton: "Mag-login gamit ang GitHub",
             inAppBrowserWarning: "Hindi suportado ang Google Login sa in-app browser na ito. Pakibuksan sa Chrome o Safari.",
-            emailNotVerified: "Pakiberipika ang iyong email address bago mag-login."
+            emailNotVerified: "Pakiberipika ang iyong email address bago mag-login.",
+            resendVerification: "Ipadala Muli ang Verification Email",
+            verificationResent: "Naipadala muli ang verification email."
         },
         forgotPasswordPage: {
             title: "I-reset ang Iyong Password",
@@ -3066,7 +3221,8 @@ export const translations = {
             githubButton: "Mag-sign up gamit ang GitHub",
             verificationSent: "Naipadala na ang verification email! Pakitingnan ang iyong inbox.",
             completeProfile: "Kumpletuhin ang Iyong Profile",
-            finishSignup: "Tapusin ang Pag-sign Up"
+            finishSignup: "Tapusin ang Pag-sign Up",
+            errorAccountExistsWithDifferentCredential: "Ang email na ito ay nauugnay sa ibang paraan ng pag-sign in. Mangyaring gamitin ang orihinal na paraan (hal. Google o Email)."
         },
         groupCard: {
             members: "miyembro",
@@ -3127,6 +3283,7 @@ export const translations = {
             dashboard: "Dashibodi",
             myNotes: "Maelezo Yangu",
             languages: "Lugha",
+            profile: "Wasifu",
             myGroups: "Vikundi Vyangu",
             joinCreateGroup: "Jiunge/Unda Kikundi",
             signOut: "Ondoka",
@@ -3166,6 +3323,19 @@ export const translations = {
             korean: "Kikorea (Korean)",
             tagalog: "Kitagalog (Tagalog)",
             swahili: "Kiswahili (Swahili)"
+        },
+        profile: {
+            title: "Wasifu",
+            description: "Dhibiti mipangilio ya wasifu wako.",
+            nickname: "Jina la Utani",
+            save: "Hifadhi",
+            language: "Lugha",
+            stake: "Bunge/Wilaya",
+            enterStake: "Ingiza Bunge/Wilaya",
+            ward: "Kata/Tawi",
+            enterWard: "Ingiza Kata/Tawi",
+            bio: "Wasifu",
+            enterBio: "Weka wasifu mfupi"
         },
         groupChat: {
             send: "Tuma",
@@ -3346,7 +3516,8 @@ export const translations = {
             joinConfirmTitle: "Jiunge na Kikundi",
             joinConfirmMessage: "Je, una uhakika unataka kujiunga na kikundi hiki?",
             confirmJoin: "Jiunge",
-            cancelJoin: "Ghairi"
+            cancelJoin: "Ghairi",
+            notes: "Maelezo"
         },
         groupForm: {
             title: "Unda Kikundi cha Kujifunza",
@@ -3381,7 +3552,9 @@ export const translations = {
             facebookButton: "Ingia na Facebook",
             githubButton: "Ingia na GitHub",
             inAppBrowserWarning: "Kuingia kwa Google hakutumiki katika kivinjari hiki cha ndani ya programu. Tafadhali fungua kwenye Chrome au Safari.",
-            emailNotVerified: "Tafadhali thibitisha anwani yako ya barua pepe kabla ya kuingia."
+            emailNotVerified: "Tafadhali thibitisha anwani yako ya barua pepe kabla ya kuingia.",
+            resendVerification: "Tuma Tena Barua Pepe ya Uthibitishaji",
+            verificationResent: "Barua pepe ya uthibitishaji imetumwa tena."
         },
         forgotPasswordPage: {
             title: "Weka Upya Nenosiri Lako",
@@ -3406,7 +3579,8 @@ export const translations = {
             githubButton: "Jisajili na GitHub",
             verificationSent: "Barua pepe ya uthibitishaji imetumwa! Tafadhali angalia kikasha chako.",
             completeProfile: "Kamilisha Wasifu Wako",
-            finishSignup: "Maliza Kujisajili"
+            finishSignup: "Maliza Kujisajili",
+            errorAccountExistsWithDifferentCredential: "Barua pepe hii imehusishwa na njia nyingine ya kuingia. Tafadhali tumia njia ya asili (mf. Google au Barua pepe)."
         },
         groupCard: {
             members: "wanachama",

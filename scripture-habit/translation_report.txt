@@ -1,5 +1,5 @@
 Checking against base language: ja
-Total base keys: 282
+Total base keys: 312
 
 [en] OK
 

@@ -14,7 +14,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
 
   const DashboardIcon = SidebarData[0].icon;
   const NotesIcon = SidebarData[1].icon;
-  const LanguagesIcon = SidebarData[2].icon;
+  const ProfileIcon = SidebarData[2].icon;
 
   const handleGroupClick = (groupId) => {
     setActiveGroupId(groupId);
@@ -83,8 +83,8 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
           <div className={selected === 3 ? 'menuItem active' : 'menuItem'}
             onClick={() => setSelected(3)}
           >
-            <LanguagesIcon />
-            <span>{t('sidebar.languages')}</span>
+            <ProfileIcon />
+            <span>{t('sidebar.profile')}</span>
           </div>
 
           {/* Desktop Groups Section */}

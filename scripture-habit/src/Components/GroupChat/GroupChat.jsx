@@ -14,6 +14,7 @@ import './GroupChat.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 import NoteDisplay from '../NoteDisplay/NoteDisplay';
 import confetti from 'canvas-confetti';
+import UserProfileModal from '../UserProfileModal/UserProfileModal';
 
 const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFocusChange, onBack, onGroupSelect }) => {
   const { language, t } = useLanguage();
@@ -50,6 +51,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const [showWelcomeGuide, setShowWelcomeGuide] = useState(false);
   const [showEditNameModal, setShowEditNameModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
+  const [selectedMember, setSelectedMember] = useState(null);
   const longPressTimer = useRef(null);
   const containerRef = useRef(null);
 
@@ -762,22 +764,14 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     try {
       const messageRef = doc(db, 'groups', groupId, 'messages', messageToDelete.id);
 
-      // If this is a note with originalNoteId, also delete the personal note
-      if ((messageToDelete.isNote || messageToDelete.isEntry) && messageToDelete.originalNoteId) {
-        try {
-          const noteRef = doc(db, 'users', userData.uid, 'notes', messageToDelete.originalNoteId);
-          await deleteDoc(noteRef);
-        } catch (err) {
-          console.log("Could not delete personal note:", err);
-        }
-      }
-
+      // Only delete the group message, NOT the personal note
       await deleteDoc(messageRef);
 
       // Decrement message count
       const groupRef = doc(db, 'groups', groupId);
       await updateDoc(groupRef, {
-        messageCount: increment(-1)
+        messageCount: increment(-1),
+        ...(messageToDelete.isNote ? { noteCount: increment(-1) } : {}) // Decrement noteCount if it was a note
       });
 
       toast.success(t('groupChat.messageDeleted'));
@@ -2022,7 +2016,12 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                   <p style={{ textAlign: 'center', padding: '1rem', color: 'var(--gray)' }}>Loading members...</p>
                 ) : (
                   membersList.map((member) => (
-                    <div key={member.id} className="member-item" style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.5rem', borderRadius: '8px', background: 'var(--glass)' }}>
+                    <div
+                      key={member.id}
+                      className="member-item"
+                      onClick={() => setSelectedMember(member)}
+                      style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.5rem', borderRadius: '8px', background: 'var(--glass)', cursor: 'pointer' }}
+                    >
                       <div className="member-avatar" style={{
                         width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg, #FF919D 0%, #fc6777 100%)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.2rem'
@@ -2064,6 +2063,14 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
           </div>
         )
       }
+
+      {/* User Profile Modal */}
+      {selectedMember && (
+        <UserProfileModal
+          user={selectedMember}
+          onClose={() => setSelectedMember(null)}
+        />
+      )}
 
       <form
         onSubmit={handleSendMessage}
