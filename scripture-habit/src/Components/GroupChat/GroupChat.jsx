@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useLayoutEffect, useMemo } from 're
 import { Capacitor } from '@capacitor/core';
 import { db, auth } from '../../firebase';
 import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle, UilUsersAlt, UilPen } from '@iconscout/react-unicons';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc, getDoc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc, getDoc, limit, startAfter, startAt, endBefore } from 'firebase/firestore';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import ReactMarkdown from 'react-markdown';
@@ -54,6 +54,9 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const [selectedMember, setSelectedMember] = useState(null);
   const longPressTimer = useRef(null);
   const containerRef = useRef(null);
+  const [isLoadingOlder, setIsLoadingOlder] = useState(false);
+  const [hasMoreOlder, setHasMoreOlder] = useState(true);
+  const latestMessageRef = useRef(null);
 
   useEffect(() => {
     const hasDismissed = localStorage.getItem('hasDismissedInactivityPolicy');
@@ -102,7 +105,9 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const firstUnreadRef = useRef(null);
   const messagesEndRef = useRef(null);
   const currentGroupIdRef = useRef(groupId);
+
   const scrollDebounceRef = useRef(null);
+  const previousScrollHeightRef = useRef(0);
 
 
   useEffect(() => {
@@ -117,37 +122,129 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     setGroupData(null);
     setInitialScrollDone(false);
     setUserReadCount(null);
+    setHasMoreOlder(true);
     prevMessageCountRef.current = 0;
+    latestMessageRef.current = null;
+
+    let unsubscribeGroup = () => { };
+    let unsubscribeNewMessages = () => { };
 
     const groupRef = doc(db, 'groups', groupId);
-    const unsubscribeGroup = onSnapshot(groupRef, (docSnap) => {
+    unsubscribeGroup = onSnapshot(groupRef, (docSnap) => {
       if (docSnap.exists()) {
         // Include groupId with the data so we can validate it later
         setGroupData({ ...docSnap.data(), _groupId: groupId });
       }
     });
 
-    const messagesRef = collection(db, 'groups', groupId, 'messages');
-    const q = query(messagesRef, orderBy('createdAt'));
+    const initMessages = async () => {
+      try {
+        const messagesRef = collection(db, 'groups', groupId, 'messages');
+        const lastViewedMsgId = userData?.uid ? localStorage.getItem(`last_viewed_msg_${groupId}_${userData.uid}`) : null;
 
-    const unsubscribeMessages = onSnapshot(q, (querySnapshot) => {
-      const msgs = [];
-      querySnapshot.forEach((doc) => {
-        msgs.push({ id: doc.id, ...doc.data() });
-      });
-      setMessages(msgs);
-      setLoading(false);
-    }, (err) => {
-      if (err.code !== 'permission-denied') {
-        console.error("Error fetching messages:", err);
-        setError("Failed to load messages.");
+        let initialMsgs = [];
+        let anchorSnapshot = null;
+
+        // Strategy: 
+        // 1. Try to fetch the 'last viewed' message to establish an anchor.
+        // 2. If it exists, fetch surrounding messages (e.g. 5 before, 15 after).
+        // 3. If not, fetch the latest 20 messages.
+
+        if (lastViewedMsgId) {
+          try {
+            // We need to get the actual document snapshot to use as a cursor
+            const anchorRef = doc(db, 'groups', groupId, 'messages', lastViewedMsgId);
+            anchorSnapshot = await getDoc(anchorRef);
+          } catch (e) {
+            console.log("Could not fetch anchor", e);
+          }
+        }
+
+        if (anchorSnapshot && anchorSnapshot.exists()) {
+          // Restoring position from anchor
+          // Newer context (including anchor) - "startAt" includes the anchor
+          const nextQuery = query(messagesRef, orderBy('createdAt', 'asc'), startAt(anchorSnapshot), limit(15));
+          const nextSnaps = await getDocs(nextQuery);
+          const nextMsgs = nextSnaps.docs.map(d => ({ id: d.id, ...d.data() }));
+
+          // Older context - "startAfter" excludes anchor (going backwards, so older than anchor)
+          // We use 'desc' to get the immediately preceding messages
+          const prevQuery = query(messagesRef, orderBy('createdAt', 'desc'), startAfter(anchorSnapshot), limit(5));
+          const prevSnaps = await getDocs(prevQuery);
+          const prevMsgs = prevSnaps.docs.map(d => ({ id: d.id, ...d.data() })).reverse();
+
+          initialMsgs = [...prevMsgs, ...nextMsgs];
+        } else {
+          // Fallback: Latest 20
+          // We query descending to get the newest, then reverse to display chronologically
+          const latestQuery = query(messagesRef, orderBy('createdAt', 'desc'), limit(20));
+          const latestSnaps = await getDocs(latestQuery);
+          initialMsgs = latestSnaps.docs.map(d => ({ id: d.id, ...d.data() })).reverse();
+        }
+
+        setMessages(initialMsgs);
+        setLoading(false);
+
+        // Setup Real-time listener for NEW messages
+        // Listen for messages created AFTER the last message in our initial list
+        if (initialMsgs.length > 0) {
+          const lastMsg = initialMsgs[initialMsgs.length - 1];
+          latestMessageRef.current = lastMsg;
+
+          if (lastMsg.createdAt) {
+            const newMsgsQuery = query(
+              messagesRef,
+              orderBy('createdAt', 'asc'),
+              startAfter(lastMsg.createdAt)
+            );
+
+            unsubscribeNewMessages = onSnapshot(newMsgsQuery, (snapshot) => {
+              const newIncoming = [];
+              snapshot.docChanges().forEach((change) => {
+                if (change.type === "added") {
+                  // Check if we already have it (dedupe)
+                  newIncoming.push({ id: change.doc.id, ...change.doc.data() });
+                }
+                if (change.type === "modified") {
+                  setMessages(prev => prev.map(m => m.id === change.doc.id ? { id: change.doc.id, ...change.doc.data() } : m));
+                }
+                if (change.type === "removed") {
+                  setMessages(prev => prev.filter(m => m.id !== change.doc.id));
+                }
+              });
+
+              if (newIncoming.length > 0) {
+                setMessages(prev => {
+                  const cleanIncoming = newIncoming.filter(n => !prev.some(p => p.id === n.id));
+                  return [...prev, ...cleanIncoming];
+                });
+              }
+            });
+          }
+        } else {
+          // If no messages at all, simply listen for any new messages
+          const allNewQuery = query(messagesRef, orderBy('createdAt', 'asc'));
+          unsubscribeNewMessages = onSnapshot(allNewQuery, (snapshot) => {
+            const msgs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            setMessages(msgs);
+            setLoading(false);
+          });
+        }
+
+      } catch (err) {
+        if (err.code !== 'permission-denied') {
+          console.error("Error fetching messages:", err);
+          setError("Failed to load messages.");
+        }
+        setLoading(false);
       }
-      setLoading(false);
-    });
+    };
+
+    initMessages();
 
     return () => {
       unsubscribeGroup();
-      unsubscribeMessages();
+      unsubscribeNewMessages();
     };
   }, [groupId]);
 
@@ -341,13 +438,23 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     }
   }, [messages, userReadCount, loading, initialScrollDone, groupData?.messageCount, groupId, userData?.uid]);
 
-  // Handle new messages - scroll to bottom
+  // Handle new messages - scroll to bottom ONLY if a new message arrived at the bottom
   useEffect(() => {
-    if (initialScrollDone && messages.length > prevMessageCountRef.current) {
-      scrollToBottom();
+    if (!initialScrollDone || messages.length === 0) return;
+
+    const lastMsg = messages[messages.length - 1];
+    const prevLastMsgId = latestMessageRef.current?.id;
+
+    // If we have more messages than before AND the last message is different, it means a new message came in.
+    if (messages.length > prevMessageCountRef.current) {
+      if (lastMsg.id !== prevLastMsgId) {
+        scrollToBottom();
+      }
     }
+
     prevMessageCountRef.current = messages.length;
-  }, [messages.length, initialScrollDone]);
+    latestMessageRef.current = lastMsg;
+  }, [messages, initialScrollDone]);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -387,8 +494,15 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   };
 
   const handleScroll = () => {
-    // Do not save scroll position if we are still initializing
-    if (!initialScrollDone) return;
+    // Check for load previous trigger
+    if (initialScrollDone && containerRef.current) {
+      if (containerRef.current.scrollTop === 0 && hasMoreOlder && !isLoadingOlder) {
+        loadMoreOlderMessages();
+      }
+    }
+
+    // Do not save scroll position if we are still initializing or loading older
+    if (!initialScrollDone || isLoadingOlder) return;
 
     if (scrollDebounceRef.current) clearTimeout(scrollDebounceRef.current);
 
@@ -415,6 +529,56 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         localStorage.setItem(`last_viewed_msg_${groupId}_${userData.uid}`, topMessageId);
       }
     }, 200); // 200ms debounce
+  };
+
+  useLayoutEffect(() => {
+    if (previousScrollHeightRef.current > 0 && containerRef.current) {
+      const newHeight = containerRef.current.scrollHeight;
+      const diff = newHeight - previousScrollHeightRef.current;
+      if (diff > 0) {
+        containerRef.current.scrollTop = diff;
+      }
+      previousScrollHeightRef.current = 0;
+    }
+  }, [messages]);
+
+  const loadMoreOlderMessages = async () => {
+    if (isLoadingOlder || !hasMoreOlder || messages.length === 0) return;
+
+    if (containerRef.current) {
+      previousScrollHeightRef.current = containerRef.current.scrollHeight;
+    }
+
+    setIsLoadingOlder(true);
+    try {
+      const oldestMsg = messages[0];
+      if (!oldestMsg.createdAt) {
+        setIsLoadingOlder(false);
+        return;
+      }
+
+      const messagesRef = collection(db, 'groups', groupId, 'messages');
+      const q = query(
+        messagesRef,
+        orderBy('createdAt', 'desc'),
+        startAfter(oldestMsg.createdAt),
+        limit(20)
+      );
+
+      const snaps = await getDocs(q);
+      if (snaps.empty) {
+        setHasMoreOlder(false);
+        previousScrollHeightRef.current = 0;
+      } else {
+        const newOlderMsgs = snaps.docs.map(d => ({ id: d.id, ...d.data() })).reverse();
+        setMessages(prev => [...newOlderMsgs, ...prev]);
+      }
+    } catch (e) {
+      console.error("Error loading older messages", e);
+      previousScrollHeightRef.current = 0;
+    } finally {
+      setIsLoadingOlder(false);
+    }
   };
 
   const handleSendMessage = async (e) => {
@@ -738,6 +902,13 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         editedAt: serverTimestamp(),
         isEdited: true
       });
+
+      setMessages(prev => prev.map(m =>
+        m.id === editingMessage.id
+          ? { ...m, text: editText, isEdited: true, editedAt: { seconds: Date.now() / 1000 } }
+          : m
+      ));
+
       toast.success(t('groupChat.messageEdited'));
       setEditingMessage(null);
       setEditText('');
@@ -774,6 +945,8 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         ...(messageToDelete.isNote ? { noteCount: increment(-1) } : {}) // Decrement noteCount if it was a note
       });
 
+      setMessages(prev => prev.filter(m => m.id !== messageToDelete.id));
+
       toast.success(t('groupChat.messageDeleted'));
     } catch (error) {
       console.error('Error deleting message:', error);
@@ -799,6 +972,15 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         await updateDoc(messageRef, {
           reactions: arrayRemove(existingReaction)
         });
+
+        // Optimistic Remove
+        setMessages(prev => prev.map(m => {
+          if (m.id === msg.id) {
+            return { ...m, reactions: (m.reactions || []).filter(r => r.odU !== userData.uid) };
+          }
+          return m;
+        }));
+
       } else {
         // Add reaction
         await updateDoc(messageRef, {
@@ -808,6 +990,16 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
             emoji: '👍'
           })
         });
+
+        // Optimistic Add
+        setMessages(prev => prev.map(m => {
+          if (m.id === msg.id) {
+            const newReactions = m.reactions ? [...m.reactions] : [];
+            newReactions.push({ odU: userData.uid, nickname: userData.nickname, emoji: '👍' });
+            return { ...m, reactions: newReactions };
+          }
+          return m;
+        }));
       }
     } catch (error) {
       console.error('Error toggling reaction:', error);
@@ -1610,7 +1802,13 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         }}
       >
 
+
         {loading && <p>Loading messages...</p>}
+        {isLoadingOlder && (
+          <div className="loading-older-messages" style={{ textAlign: 'center', padding: '10px', color: 'var(--gray)' }}>
+            <i className="spinner-mini"></i>
+          </div>
+        )}
         {error && <p className="error-message">{error}</p>}
         {messages.map((msg, index) => {
           const prevMsg = messages[index - 1];
