@@ -567,7 +567,28 @@ app.get('/api/fetch-gc-metadata', async (req, res) => {
         const $ = cheerio.load(response.data);
 
         // Attempt to find title
-        let title = $('h1').first().text().trim();
+        // 1. Try Open Graph Title first (usually most accurate and clean)
+        let title = $('meta[property="og:title"]').attr('content');
+
+        // 2. If no OG title, try H1 but check length to avoid capturing full body text
+        if (!title) {
+            const h1Text = $('h1').first().text().trim();
+            // Only use H1 if it's a reasonable title length (e.g., < 200 chars)
+            if (h1Text && h1Text.length < 200) {
+                title = h1Text;
+            }
+        }
+
+        // 3. Fallback to HTML title tag
+        if (!title) {
+            title = $('title').text().trim();
+            // Remove common suffixes like " | The Church of Jesus Christ..."
+            if (title.includes('|')) {
+                title = title.split('|')[0].trim();
+            }
+        }
+
+        title = title || '';
 
         // Attempt to find speaker
         let speaker = '';
