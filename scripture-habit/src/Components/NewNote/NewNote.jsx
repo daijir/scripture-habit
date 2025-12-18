@@ -686,6 +686,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 if (streakUpdated) {
                     await updateDoc(userRef, {
                         streakCount: newStreak,
+                        daysStudiedCount: increment(1),
                         lastPostDate: serverTimestamp(),
                         totalNotes: increment(1)
                     });
@@ -801,12 +802,48 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 }
 
                 toast.success(t('newNote.successPost'));
-                // Trigger celebratory confetti
-                confetti({
-                    particleCount: 150,
-                    spread: 70,
-                    origin: { y: 0.6 }
-                });
+
+                // Handle Level Up Celebration
+                const currentDays = currentUserData.daysStudiedCount || 0;
+                const willLevelUp = streakUpdated && (currentDays + 1) % 7 === 0;
+
+                if (willLevelUp) {
+                    const newLevel = Math.floor((currentDays + 1) / 7) + 1;
+                    toast.success(`🎊 Congratulations! You reached Level ${newLevel}! 🎊`, {
+                        position: "top-center",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
+
+                    // Level up confetti (bigger blast)
+                    const duration = 5 * 1000;
+                    const animationEnd = Date.now() + duration;
+                    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+                    const randomInRange = (min, max) => Math.random() * (max - min) + min;
+
+                    const interval = setInterval(function () {
+                        const timeLeft = animationEnd - Date.now();
+
+                        if (timeLeft <= 0) {
+                            return clearInterval(interval);
+                        }
+
+                        const particleCount = 50 * (timeLeft / duration);
+                        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+                        confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+                    }, 250);
+                } else {
+                    // Normal note confetti
+                    confetti({
+                        particleCount: 150,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                }
             }
 
             setLoading(false);

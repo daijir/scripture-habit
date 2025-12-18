@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
 import { auth, db } from '../../firebase';
-import { doc, onSnapshot, collection, query, where, orderBy, limit, updateDoc } from 'firebase/firestore';
+import { doc, onSnapshot, collection, query, where, orderBy, limit, updateDoc, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import ReactMarkdown from 'react-markdown';
 import { UilPlus, UilPen } from '@iconscout/react-unicons';
@@ -142,6 +142,53 @@ const Dashboard = () => {
 
     return () => unsubscribe();
   }, []);
+
+  // --- Just-In-Time Data Migration (Level Initialization) ---
+  useEffect(() => {
+    const migrateLevelData = async () => {
+      // Trigger migration if missing OR if it's clearly incorrect (less than streak)
+      const needsMigration = userData && (
+        userData.daysStudiedCount === undefined ||
+        (userData.daysStudiedCount < (userData.streakCount || 0))
+      );
+
+      if (!user || !userData || !needsMigration) return;
+
+      console.log("Migration/Fix triggered: calculating accurate daysStudiedCount...");
+      try {
+        const notesRef = collection(db, 'users', user.uid, 'notes');
+        const notesSnapshot = await getDocs(notesRef);
+
+        const studyDays = new Set();
+        notesSnapshot.forEach(docSnap => {
+          const data = docSnap.data();
+          if (data.createdAt) {
+            const date = data.createdAt.toDate();
+            // Use local date string (YYYY-MM-DD) instead of UTC to avoid shifting days
+            const dateStr = date.toLocaleDateString('sv-SE'); // 'sv-SE' gives YYYY-MM-DD
+            studyDays.add(dateStr);
+          }
+        });
+
+        // The real count should be the maximum of unique days with notes OR the current streak
+        const initialDaysCount = Math.max(studyDays.size, userData.streakCount || 0);
+
+        // Only update if the value is different from what we currently have
+        if (initialDaysCount !== userData.daysStudiedCount) {
+          await updateDoc(doc(db, 'users', user.uid), {
+            daysStudiedCount: initialDaysCount,
+            totalNotes: userData.totalNotes || notesSnapshot.size
+          });
+          console.log(`Level data corrected: ${initialDaysCount} days studied.`);
+        }
+      } catch (err) {
+        console.error("Error during level data migration:", err);
+      }
+    };
+
+    migrateLevelData();
+  }, [user, userData?.daysStudiedCount, userData?.streakCount, userData?.uid]);
+  // -----------------------------------------------------------
 
 
 
@@ -523,13 +570,19 @@ const Dashboard = () => {
                 </div>
 
               </div>
-              <div className="stat-card">
-                <h3>{t('dashboard.totalNotes')}</h3>
+              <div className="stat-card level-card">
+                <h3>{t('profile.level')}</h3>
                 <div className="streak-value">
                   <span className="number">
-                    {personalNotesCount !== null ? personalNotesCount : 0}
+                    {Math.floor((userData.daysStudiedCount || 0) / 7) + 1}
                   </span>
-                  <span className="label">{t('dashboard.notes')}</span>
+                  <span className="label">Lv</span>
+                </div>
+                <div className="mini-progress-bar">
+                  <div
+                    className="mini-progress-fill"
+                    style={{ width: `${((userData.daysStudiedCount || 0) % 7) / 7 * 100}%` }}
+                  ></div>
                 </div>
               </div>
             </div>
@@ -733,7 +786,8 @@ const Dashboard = () => {
             userData={userData}
             stats={{
               streak: userData?.streakCount || 0,
-              totalNotes: personalNotesCount !== null ? personalNotesCount : 0
+              totalNotes: personalNotesCount !== null ? personalNotesCount : 0,
+              daysStudied: userData?.daysStudiedCount || 0
             }}
           />
         )}

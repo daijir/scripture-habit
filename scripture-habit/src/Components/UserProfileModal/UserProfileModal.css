@@ -163,6 +163,11 @@
     color: #4bc0c8;
 }
 
+.stat-icon.level {
+    background: rgba(255, 145, 157, 0.1);
+    color: var(--pink);
+}
+
 .stat-info {
     display: flex;
     flex-direction: column;

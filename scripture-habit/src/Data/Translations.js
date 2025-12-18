@@ -74,7 +74,10 @@ export const translations = {
             ward: "Ward/Branch/Group",
             enterWard: "Enter Ward/Branch/Group",
             bio: "Bio",
-            enterBio: "Enter a short bio"
+            enterBio: "Enter a short bio",
+            level: "Level",
+            nextLevel: "Next Level",
+            daysStudied: "Days Studied"
         },
         myNotes: {
             description: "Note Collection",
@@ -463,7 +466,10 @@ export const translations = {
             ward: "ワード/支部/グループ",
             enterWard: "ワード/支部/グループを入力",
             bio: "なんでも一言",
-            enterBio: "なんでも一言を入力"
+            enterBio: "なんでも一言を入力",
+            level: "レベル",
+            nextLevel: "レベルアップまであと",
+            daysStudied: "合計学習日数"
         },
         groupChat: {
             send: "送信",
@@ -913,7 +919,10 @@ export const translations = {
             ward: "Ala/Ramo",
             enterWard: "Insira Ala/Ramo",
             bio: "Biografia",
-            enterBio: "Insira uma biografia curta"
+            enterBio: "Insira uma biografia curta",
+            level: "Nível",
+            nextLevel: "Para o próximo nível",
+            daysStudied: "Dias Estudados"
         },
         groupChat: {
             send: "Enviar",
@@ -1304,7 +1313,10 @@ export const translations = {
             ward: "支會/分會",
             enterWard: "輸入支會/分會",
             bio: "簡介",
-            enterBio: "輸入簡介"
+            enterBio: "輸入簡介",
+            level: "等級",
+            nextLevel: "距離下一級",
+            daysStudied: "已學習天數"
         },
         groupChat: {
             send: "發送",
@@ -1695,7 +1707,10 @@ export const translations = {
             ward: "Barrio/Rama",
             enterWard: "Ingresar Barrio/Rama",
             bio: "Biografía",
-            enterBio: "Ingresar biografía corta"
+            enterBio: "Ingresar biografía corta",
+            level: "Nivel",
+            nextLevel: "Para el siguiente nivel",
+            daysStudied: "Días estudiados"
         },
         groupChat: {
             send: "Enviar",
@@ -2086,7 +2101,10 @@ export const translations = {
             ward: "Tiểu khu/Chi nhánh",
             enterWard: "Nhập Tiểu khu/Chi nhánh",
             bio: "Tiểu sử",
-            enterBio: "Nhập tiểu sử ngắn"
+            enterBio: "Nhập tiểu sử ngắn",
+            level: "Cấp độ",
+            nextLevel: "Đến cấp độ tiếp theo",
+            daysStudied: "Số ngày đã học"
         },
         groupChat: {
             send: "Gửi",
@@ -2477,7 +2495,10 @@ export const translations = {
             ward: "วอร์ด/สาขา",
             enterWard: "ป้อนวอร์ด/สาขา",
             bio: "ประวัติย่อ",
-            enterBio: "ป้อนประวัติย่อ"
+            enterBio: "ป้อนประวัติย่อ",
+            level: "ระดับ",
+            nextLevel: "สู่ระดับถัดไป",
+            daysStudied: "จำนวนวันที่ศึกษา"
         },
         groupChat: {
             send: "ส่ง",
@@ -2868,7 +2889,10 @@ export const translations = {
             ward: "와드/지부",
             enterWard: "와드/지부 입력",
             bio: "한마디",
-            enterBio: "한마디를 입력하세요"
+            enterBio: "한마디를 입력하세요",
+            level: "레벨",
+            nextLevel: "다음 레벨까지",
+            daysStudied: "학습한 일수"
         },
         groupChat: {
             send: "전송",
@@ -3259,7 +3283,10 @@ export const translations = {
             ward: "Ward/Branch",
             enterWard: "Ilagay ang Ward/Branch",
             bio: "Talambuhay",
-            enterBio: "Ilagay ang talambuhay"
+            enterBio: "Ilagay ang talambuhay",
+            level: "Antas",
+            nextLevel: "Para sa susunod na antas",
+            daysStudied: "Mga Araw na Nag-aral"
         },
         groupChat: {
             send: "Ipadala",
@@ -3650,7 +3677,10 @@ export const translations = {
             ward: "Kata/Tawi",
             enterWard: "Ingiza Kata/Tawi",
             bio: "Wasifu",
-            enterBio: "Weka wasifu mfupi"
+            enterBio: "Weka wasifu mfupi",
+            level: "Kiwango",
+            nextLevel: "Kuelekea kiwango kijacho",
+            daysStudied: "Siku Ulizosoma"
         },
         groupChat: {
             send: "Tuma",
