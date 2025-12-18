@@ -382,7 +382,9 @@ export const translations = {
             streakCelebration: "Amazing! {streak} day streak!",
             doneToday: "Great job today!\nSee you tomorrow!",
             promptToday: "Have you read today?\nLet's study together!",
-            weeklyRecapPrompt: "Let's reflect on\nyour learning this week!"
+            weeklyRecapPrompt: "Let's reflect on\nyour learning this week!",
+            groupOptionsPrompt: "Let's find a community\nto study together!",
+            createGroupPrompt: "Create a new group and\ninvite your friends!"
         }
     },
     ja: {
@@ -829,7 +831,9 @@ export const translations = {
             streakCelebration: "すごい！{streak}日連続だよ！",
             doneToday: "今日の学習お疲れ様！\n明日も待ってるよ！",
             promptToday: "今日の聖典はもう読んだ？\n一緒に学ぼう！",
-            weeklyRecapPrompt: "今週の学びを\n振り返ってみない？"
+            weeklyRecapPrompt: "今週の学びを\n振り返ってみない？",
+            groupOptionsPrompt: "一緒に聖典を学ぶ\n仲間を見つけよう！",
+            createGroupPrompt: "新しいグループを作って\n友達を誘ってみよう！"
         }
     },
     pt: {
@@ -1216,8 +1220,10 @@ export const translations = {
         mascot: {
             streakCelebration: "Incrível! Sequência de {streak} dias!",
             doneToday: "Bom trabalho hoje!\nAté amanhã!",
-            promptToday: "Já leu hoje?\nVamos estudar juntos!",
-            weeklyRecapPrompt: "Vamos refletir sobre\nsua leitura desta semana!"
+            promptToday: "Já leu hoy?\nVamos estudar juntos!",
+            weeklyRecapPrompt: "Vamos refletir sobre\nsua leitura desta semana!",
+            groupOptionsPrompt: "Vamos encontrar uma comunidade\npara estudar juntos!",
+            createGroupPrompt: "Crie um novo grupo e\nconvide seus amigos!"
         }
     },
     zho: {
@@ -1605,7 +1611,9 @@ export const translations = {
             streakCelebration: "太棒了！連續 {streak} 天達成！",
             doneToday: "今天辛苦了！\n明天見！",
             promptToday: "今天讀經文了嗎？\n我們一起學習吧！",
-            weeklyRecapPrompt: "讓我們來回顧一下\n你這週的學習吧！"
+            weeklyRecapPrompt: "讓我們來回顧一下\n你這週的學習吧！",
+            groupOptionsPrompt: "讓我們找個社群\n一起學習吧！",
+            createGroupPrompt: "建立一個新群組並\n邀請您的朋友！"
         }
     },
     es: {
@@ -1993,7 +2001,9 @@ export const translations = {
             streakCelebration: "¡Increíble! ¡Racha de {streak} días!",
             doneToday: "¡Buen trabajo hoy!\n¡Nos vemos mañana!",
             promptToday: "¿Ya leíste hoy?\n¡Estudiemos juntos!",
-            weeklyRecapPrompt: "¡Reflexionemos sobre\ntu aprendizaje de esta semana!"
+            weeklyRecapPrompt: "¡Reflexionemos sobre\ntu aprendizaje de esta semana!",
+            groupOptionsPrompt: "¡Busquemos una comunidad\npara estudiar juntos!",
+            createGroupPrompt: "¡Crea un nuevo grupo e\ninvita a tus amigos!"
         }
     },
     vi: {
@@ -2381,7 +2391,9 @@ export const translations = {
             streakCelebration: "Tuyệt vời! Chuỗi {streak} ngày!",
             doneToday: "Hôm nay làm tốt lắm!\nHẹn gặp lại ngày mai!",
             promptToday: "Bạn đã đọc hôm nay chưa?\nCùng nhau học nào!",
-            weeklyRecapPrompt: "Hãy cùng nhìn lại\nviệc học của bạn tuần này nhé!"
+            weeklyRecapPrompt: "Hãy cùng nhìn lại\nviệc học của bạn tuần này nhé!",
+            groupOptionsPrompt: "Hãy tìm một cộng đồng\nđể cùng nhau học tập nhé!",
+            createGroupPrompt: "Tạo một nhóm mới và\nmời bạn bè của bạn!"
         }
     },
     th: {
@@ -2769,7 +2781,9 @@ export const translations = {
             streakCelebration: "สุดยอด! ต่อเนื่อง {streak} วันแล้ว!",
             doneToday: "วันนี้ทำได้ดีมาก!\nแล้วเจอกันพรุ่งนี้นะ!",
             promptToday: "วันนี้อ่านหรือยัง?\nมาเรียนด้วยกันเถอะ!",
-            weeklyRecapPrompt: "มาทบทวนสิ่งที่คุณเรียนรู้\nในสัปดาห์นี้กันเถอะ!"
+            weeklyRecapPrompt: "มาทบทวนสิ่งที่คุณเรียนรู้\nในสัปดาห์นี้กันเถอะ!",
+            groupOptionsPrompt: "มาหาชุมชนเพื่อ\nศึกษาด้วยกันเถอะ!",
+            createGroupPrompt: "สร้างกลุ่มใหม่และ\nชวนเพื่อนของคุณ!"
         }
     },
     ko: {
@@ -3157,7 +3171,9 @@ export const translations = {
             streakCelebration: "대단해요! {streak}일 연속 달성!",
             doneToday: "오늘도 수고했어요!\n내일 또 만나요!",
             promptToday: "오늘 경전은 읽었나요?\n함께 공부해요!",
-            weeklyRecapPrompt: "이번 주 배운 내용을\n함께 돌아볼까요?"
+            weeklyRecapPrompt: "이번 주 배운 내용을\n함께 돌아볼까요?",
+            groupOptionsPrompt: "함께 공부할\n커뮤니ティ를 찾아볼까요?",
+            createGroupPrompt: "새로운 그룹을 만들고\n친구들을 초대해보세요!"
         }
     },
     tl: {
@@ -3545,7 +3561,9 @@ export const translations = {
             streakCelebration: "Kamangha-mangha! {streak} araw na streak!",
             doneToday: "Mahusay ang ginawa mo ngayong araw!\nKita-kita tayo bukas!",
             promptToday: "Nagbasa ka na ba ngayong araw?\nMag-aral tayo nang magkasama!",
-            weeklyRecapPrompt: "Magmuni-muni tayo sa\niyong natutunan ngayong linggo!"
+            weeklyRecapPrompt: "Magmuni-muni tayo sa\niyong natutunan ngayong linggo!",
+            groupOptionsPrompt: "Humanap tayo ng komunidad\npara mag-aral nang sabay!",
+            createGroupPrompt: "Lumikha ng bagong grupo at\nimbitahan ang iyong mga kaibigan!"
         }
     },
     sw: {
@@ -3933,7 +3951,9 @@ export const translations = {
             streakCelebration: "Inashangaza! Mfululizo wa siku {streak}!",
             doneToday: "Kazi nzuri leo!\nTuonane kesho!",
             promptToday: "Je, umesoma leo?\nTujifunze pamoja!",
-            weeklyRecapPrompt: "Hebu tutafakari kuhusu\numachojifunza wiki hii!"
+            weeklyRecapPrompt: "Hebu tutafakari kuhusu\numachojifunza wiki hii!",
+            groupOptionsPrompt: "Hebu tupate jumuiya ya\nkujifunza pamoja!",
+            createGroupPrompt: "Unda kikundi kipya na\nualike marafiki zako!"
         }
     }
 };

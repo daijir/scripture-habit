@@ -8,6 +8,7 @@ import Button from '../Button/Button';
 import Checkbox from '../Input/Checkbox';
 import { toast } from "react-toastify";
 import { useLanguage } from '../../Context/LanguageContext';
+import Mascot from '../Mascot/Mascot';
 
 export default function GroupForm() {
   const { t } = useLanguage();
@@ -71,9 +72,10 @@ export default function GroupForm() {
     <div className="App GroupForm">
       <div className="AppGlass">
         <h2>{t('groupForm.title')}</h2>
-        <p className="subtitle">
-          {t('groupForm.subtitle')}
-        </p>
+        <Mascot
+          userData={null} // GroupForm doesn't fetch userData locally, but auth.currentUser is enough for default streak logic if we wanted. But here we use customMessage anyway.
+          customMessage={t('mascot.createGroupPrompt')}
+        />
 
         <form onSubmit={handleSubmit} className="group-form">
           <Input

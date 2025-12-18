@@ -11,6 +11,7 @@ import Input from '../Input/Input';
 import GroupCard from '../../groups/GroupCard';
 import { useLanguage } from '../../Context/LanguageContext';
 import UserProfileModal from '../UserProfileModal/UserProfileModal';
+import Mascot from '../Mascot/Mascot';
 
 export default function JoinGroup() {
   const { t } = useLanguage();
@@ -249,6 +250,12 @@ export default function JoinGroup() {
             </Button>
           </form>
         </div>
+
+        <Mascot
+          userData={userData}
+          customMessage={t('mascot.groupOptionsPrompt')}
+          reversed={true}
+        />
 
         <div className="public-groups-section">
           <div className="section-header">

@@ -6,6 +6,7 @@ import { auth, db } from '../../firebase';
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import WelcomeStoryModal from '../WelcomeStoryModal/WelcomeStoryModal';
+import Mascot from '../Mascot/Mascot';
 
 const GroupOptions = () => {
     const { t } = useLanguage();
@@ -61,7 +62,10 @@ const GroupOptions = () => {
         <div className="App GroupOptions">
             <div className="AppGlass options-container">
                 <h2>{t('groupOptions.title')}</h2>
-                <p className="subtitle">{t('groupOptions.subtitle')}</p>
+                <Mascot
+                    userData={userData}
+                    customMessage={t('mascot.groupOptionsPrompt')}
+                />
 
                 <div className="options-grid">
                     <Link to="/join-group" className="option-card join-card">

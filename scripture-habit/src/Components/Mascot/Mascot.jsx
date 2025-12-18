@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import './Mascot.css';
 import { useLanguage } from '../../Context/LanguageContext';
 
-const Mascot = ({ userData, onClick, customMessage = null }) => {
+const Mascot = ({ userData, onClick, customMessage = null, reversed = false }) => {
   const { t, language } = useLanguage();
   const mascotImg = '/images/mascot.png';
 
@@ -48,7 +48,7 @@ const Mascot = ({ userData, onClick, customMessage = null }) => {
   };
 
   return (
-    <div className={`mascot-container ${isDoneToday ? 'is-done' : ''}`} onClick={onClick}>
+    <div className={`mascot-container ${isDoneToday ? 'is-done' : ''} ${reversed ? 'reversed' : ''}`} onClick={onClick}>
       <div className="mascot-image-wrapper">
         <img src={mascotImg} alt="Mascot" className="mascot-image" />
         {isDoneToday && <div className="mascot-sparkles">✨</div>}
