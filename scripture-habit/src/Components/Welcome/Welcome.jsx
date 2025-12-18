@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../Button/Button';
+import Mascot from '../Mascot/Mascot';
 import { useLanguage } from '../../Context/LanguageContext';
 import './Welcome.css';
 
@@ -10,6 +11,8 @@ const Welcome = () => {
     return (
         <div className="AppGlass welcome-container">
             <h1>{t('welcome.title')}</h1>
+
+            <Mascot customMessage={t('mascot.welcomeMessage')} />
 
             <div className="language-selection">
                 <p className="language-instruction">
