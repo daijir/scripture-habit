@@ -58,6 +58,7 @@
     color: #4A5568;
     line-height: 1.4;
     font-weight: 500;
+    white-space: pre-line;
 }
 
 /* Side tail for the bubble */

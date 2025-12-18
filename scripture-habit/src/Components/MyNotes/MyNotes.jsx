@@ -14,8 +14,8 @@ import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
 import { translateChapterField } from '../../Utils/bookNameTranslations';
 import './MyNotes.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
-import NoteDisplay from '../NoteDisplay/NoteDisplay';
 import NoteDetailModal from './NoteDetailModal';
+import Mascot from '../Mascot/Mascot';
 
 const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
   const { language, t } = useLanguage();
@@ -241,9 +241,11 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
       </div>
 
 
-
+      <Mascot
+        userData={userData}
+        customMessage={t('mascot.weeklyRecapPrompt')}
+      />
       <div className="my-notes-recap-cta">
-        <p>{t('myNotes.weeklyReflectionCall')}</p>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', width: '100%' }}>
           <button
             className={`new-note-btn cta-btn ${!canGenerateRecap || notes.length === 0 ? 'disabled-btn' : ''}`}
