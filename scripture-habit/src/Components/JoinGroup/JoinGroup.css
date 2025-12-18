@@ -1,11 +1,15 @@
 .join-group-container {
   display: flex;
   flex-direction: column;
-  gap: 40px;
-  padding: 20px;
+  gap: 20px;
+  padding: 2rem 20px 20px 20px;
   box-sizing: border-box;
   justify-content: center;
   height: 100%;
+}
+
+.join-group-container .mascot-container {
+  margin-bottom: 0;
 }
 
 .join-group-container p {

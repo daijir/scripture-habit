@@ -16,6 +16,19 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-top: 2rem;
+}
+
+.GroupForm h2 {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: var(--black);
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+.GroupForm .mascot-container {
+  margin-bottom: 2rem;
 }
 
 .create-group-submit-btn {

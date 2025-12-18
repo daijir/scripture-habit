@@ -10,20 +10,22 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 3rem;
+    padding: 2rem 3rem 3rem 3rem;
     text-align: center;
     max-width: 800px;
     width: 90%;
 }
 
-.options-container h2 {
-    margin-bottom: 0.5rem;
-    color: var(--black);
+.options-container .mascot-container {
+    margin-bottom: 3rem;
 }
 
-.subtitle {
-    color: var(--gray);
-    margin-bottom: 3rem;
+.options-container h2 {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: var(--black);
+    font-size: 2.2rem;
+    font-weight: 700;
 }
 
 .options-grid {

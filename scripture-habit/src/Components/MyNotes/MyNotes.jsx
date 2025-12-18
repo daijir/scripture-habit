@@ -244,6 +244,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
       <Mascot
         userData={userData}
         customMessage={t('mascot.weeklyRecapPrompt')}
+        reversed={true}
       />
       <div className="my-notes-recap-cta">
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', width: '100%' }}>

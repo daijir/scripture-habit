@@ -12,6 +12,10 @@
     width: 100%;
 }
 
+.mascot-container.reversed {
+    flex-direction: row-reverse;
+}
+
 .mascot-container:hover {
     transform: translateY(-2px);
 }
@@ -47,6 +51,11 @@
     animation: bounceHorizontal 2s ease-in-out infinite;
 }
 
+.mascot-container.reversed .mascot-bubble {
+    margin-left: 0;
+    margin-right: 12px;
+}
+
 .is-done .mascot-bubble {
     border-color: #4FD1C5;
     background: #F0FFF4;
@@ -72,6 +81,12 @@
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
     border-top: 8px solid #E2E8F0;
+}
+
+.mascot-container.reversed .mascot-bubble-tail {
+    left: auto;
+    right: -8px;
+    transform: translateY(-50%) rotate(-90deg);
 }
 
 .mascot-bubble-tail::after {
@@ -143,6 +158,10 @@
         padding-right: 0;
         margin-top: 0;
         margin-bottom: 1rem;
+    }
+
+    .mascot-container.reversed {
+        padding-left: 0;
     }
 
     .mascot-bubble {
