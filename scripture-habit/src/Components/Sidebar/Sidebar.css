@@ -47,7 +47,7 @@
 
 }
 
-.active {
+.menuItem.active {
     background: var(--activeItem);
     margin-left: 2rem;
     color: var(--white);
@@ -60,11 +60,11 @@
     align-items: center;
 }
 
-.active span {
+.menuItem.active span {
     display: none;
 }
 
-.active::before {
+.menuItem.active::before {
     display: none;
     /* Remove the white strip to make it purely the shape */
 }
@@ -132,12 +132,12 @@
         display: none;
     }
 
-    .active {
+    .menuItem.active {
         background: var(--pink);
         color: white;
     }
 
-    .active::before {
+    .menuItem.active::before {
         display: none;
     }
 
