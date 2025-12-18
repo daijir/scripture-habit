@@ -792,7 +792,7 @@ const Dashboard = () => {
           />
         )}
         {selectedView === 4 && (
-          <Donate />
+          <Donate userData={userData} />
         )}
 
         <NewNote isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} userGroups={userGroups} currentGroupId={activeGroupId} />

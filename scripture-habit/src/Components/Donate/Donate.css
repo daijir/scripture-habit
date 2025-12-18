@@ -2,11 +2,49 @@
     padding-bottom: 80px;
 }
 
+.donate-mascot-wrapper {
+    margin: 1.5rem 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* Remove default mascot bottom margin to achieve perfect vertical symmetry in this view */
+.donate-mascot-wrapper .mascot-container {
+    margin: 0;
+}
+
+/* Increase bubble size and font size for the mission statement on the Donate page */
+.donate-mascot-wrapper .mascot-bubble {
+    max-width: 700px;
+    padding: 1.2rem 1.8rem;
+}
+
+.donate-mascot-wrapper .mascot-text {
+    font-size: 1.2rem;
+    /* Larger font size as requested */
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .donate-mascot-wrapper {
+        margin: 1.5rem 0;
+    }
+
+    .donate-mascot-wrapper .mascot-bubble {
+        max-width: 90%;
+        padding: 0.8rem 1rem;
+    }
+
+    .donate-mascot-wrapper .mascot-text {
+        font-size: 1rem;
+    }
+}
+
 .donate-container {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 2rem;
 }
 
 .donate-card {
@@ -174,7 +212,7 @@
     background: #F7FAFC;
     padding: 1.5rem;
     border-radius: 12px;
-    text-align: left;
+    text-align: center;
     border: 1px solid #E2E8F0;
 }
 
@@ -197,10 +235,13 @@
     color: #4A5568;
     font-size: 1rem;
     line-height: 1.5;
-    padding: 0.5rem;
+    padding: 0.6rem 1rem;
     background: white;
     border-radius: 8px;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    white-space: pre-line;
+    /* Handle \n from translations */
+    text-align: center;
 }
 
 .donate-suggestions li:last-child {
