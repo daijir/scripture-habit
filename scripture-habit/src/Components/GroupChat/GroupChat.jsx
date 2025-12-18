@@ -1703,7 +1703,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
           <div className="leave-modal-overlay guide-modal-overlay">
             <div className="leave-modal-content guide-modal-content">
               <div className="guide-image-container">
-                <img src="/images/welcome-bird.png" alt="Welcome Bird" className="guide-bird-image" />
+                <img src="/images/mascot.png" alt="Welcome Bird" className="guide-bird-image" />
               </div>
               <h3>{t('groupChat.welcomeGuideTitle')}</h3>
               <p className="guide-intro">{t('groupChat.welcomeGuideMessage')}</p>

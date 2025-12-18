@@ -22,63 +22,57 @@
 }
 
 .menu {
-    margin-top: 4rem;
+    margin-top: 3rem;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.2rem;
     flex: 1;
-    /* Allow menu to grow and fill space */
 }
 
 .menuItem {
     display: flex;
     align-items: center;
     gap: 1rem;
-    height: 2.5rem;
-    margin-left: 2rem;
+    height: 3rem;
+    padding: 0 1rem;
     position: relative;
     transition: all 300ms ease;
-    font-size: 14px;
+    font-size: 1rem;
     border-radius: 0.7rem;
+    color: var(--black);
+    cursor: pointer;
 }
 
 .menuItem:hover {
-    cursor: pointer;
-
+    background: rgba(255, 255, 255, 0.3);
 }
 
+/* Base Active Style (Shared) */
 .menuItem.active {
     background: var(--activeItem);
-    margin-left: 2rem;
-    color: var(--white);
-    border-radius: 50%;
-    width: 2.5rem;
-    height: 2.5rem;
-    min-width: 2.5rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    color: var(--black);
+    font-weight: bold;
 }
 
-.menuItem.active span {
-    display: none;
+/* Desktop Styles */
+@media screen and (min-width: 769px) {
+    .menuItem {
+        margin: 0.4rem 1rem;
+    }
+
+    .menuItem span {
+        display: block;
+    }
+
+    /* Push last item to bottom of sidebar on desktop */
+    .menu>.menuItem:last-of-type {
+        margin-top: auto;
+        margin-bottom: 2rem;
+        width: calc(100% - 2rem);
+    }
 }
 
-.menuItem.active::before {
-    display: none;
-    /* Remove the white strip to make it purely the shape */
-}
-
-.menu .menuItem:last-child {
-    /* position: absolute; REMOVED */
-    /* bottom: 2.3rem; REMOVED */
-    margin-top: auto;
-    /* Push to bottom */
-    margin-bottom: 2.3rem;
-    /* Keep the bottom spacing */
-    width: 100%;
-}
-
+/* Mobile Styles */
 @media screen and (max-width: 768px) {
     .Sidebar {
         position: fixed;
@@ -98,9 +92,6 @@
         border-radius: 0;
         border-top: 1px solid rgba(0, 0, 0, 0.1);
         box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.05);
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
     }
 
     .logo {
@@ -113,23 +104,24 @@
         width: 100%;
         justify-content: space-evenly;
         gap: 0;
-        padding: 0 1rem;
+        padding: 0 0.5rem;
+        align-items: center;
     }
 
     .menuItem {
-        margin-left: 0;
+        margin: 0 !important;
         height: 50px;
         width: 50px;
-        display: flex;
         justify-content: center;
-        align-items: center;
-        border-radius: 50%;
         padding: 0;
+        border-radius: 50%;
         color: #242d49 !important;
+        flex: 0 0 auto;
+        /* Stop items from stretching */
     }
 
-    .menuItem>span {
-        display: none;
+    .menuItem span {
+        display: none !important;
     }
 
     .menuItem.active {
@@ -137,34 +129,22 @@
         color: white;
     }
 
-    .menuItem.active::before {
-        display: none;
-    }
-
-    .menu .menuItem:last-child {
-        position: static;
-        width: auto;
-        bottom: auto;
-        margin-top: 0;
-        margin-bottom: 0;
+    /* Override any desktop specific last-child push */
+    .menu>.menuItem:last-of-type {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        width: 50px !important;
     }
 
     .groups-section {
-        display: none;
-    }
-
-    /* Hide desktop groups section */
-    .desktop-groups {
         display: none !important;
     }
 
-    /* Show mobile groups trigger */
     .mobile-groups-trigger {
         display: flex !important;
         position: relative;
     }
 
-    /* Pink dot for unread messages */
     .mobile-groups-trigger .unread-dot {
         position: absolute;
         top: 5px;
@@ -179,7 +159,6 @@
         display: block;
     }
 
-    /* Hide sidebar when input is focused */
     .Sidebar.hide-mobile {
         transform: translateY(100%);
         opacity: 0;
@@ -188,8 +167,7 @@
     }
 }
 
-
-
+/* Shared Groups / Badge / Modal Styles */
 .groups-section {
     display: flex;
     flex-direction: column;
@@ -211,7 +189,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 120px;
-    /* Slightly reduced to make room for badge */
 }
 
 .unread-badge {
@@ -237,12 +214,10 @@
     font-weight: 500;
 }
 
-/* Mobile Groups Trigger - Hidden by default on desktop */
 .mobile-groups-trigger {
     display: none;
 }
 
-/* Group Selection Modal Styles */
 .group-modal-overlay {
     position: fixed;
     top: 0;

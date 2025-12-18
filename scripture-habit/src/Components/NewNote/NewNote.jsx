@@ -22,6 +22,7 @@ import { getTodayReadingPlan } from '../../Data/DailyReadingPlan';
 import { localizeLdsUrl } from '../../Utils/urlLocalizer';
 import { UilBookOpen } from '@iconscout/react-unicons';
 import { useGCMetadata } from '../../hooks/useGCMetadata';
+import confetti from 'canvas-confetti';
 
 const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups = [], isGroupContext = false, currentGroupId = null, initialData = null }) => {
     const { t, language } = useLanguage();
@@ -800,6 +801,12 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 }
 
                 toast.success(t('newNote.successPost'));
+                // Trigger celebratory confetti
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
             }
 
             setLoading(false);
