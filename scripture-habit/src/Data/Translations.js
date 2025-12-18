@@ -279,7 +279,7 @@ export const translations = {
             errorCreateFailed: "Failed to create group. Please try again."
         },
         welcome: {
-            title: "Welcome to Scripture Habit",
+            title: "Scripture Habit",
             chooseLanguage: "Choose your language (you can change language setting later as well.)",
             login: "Log in",
             signup: "Sign Up"
@@ -384,7 +384,8 @@ export const translations = {
             promptToday: "Have you read today?\nLet's study together!",
             weeklyRecapPrompt: "Let's reflect on\nyour learning this week!",
             groupOptionsPrompt: "Let's find a community\nto study together!",
-            createGroupPrompt: "Create a new group and\ninvite your friends!"
+            createGroupPrompt: "Create a new group and\ninvite your friends!",
+            welcomeMessage: "Welcome to\nScripture Habit!"
         }
     },
     ja: {
@@ -728,7 +729,7 @@ export const translations = {
             errorCreateFailed: "グループの作成に失敗しました。もう一度お試しください。"
         },
         welcome: {
-            title: "Scripture Habitへようこそ",
+            title: "Scripture Habit",
             chooseLanguage: "言語を選択してください（後で変更することも可能です）。",
             login: "ログイン",
             signup: "サインアップ"
@@ -833,7 +834,8 @@ export const translations = {
             promptToday: "今日の聖典はもう読んだ？\n一緒に学ぼう！",
             weeklyRecapPrompt: "今週の学びを\n振り返ってみない？",
             groupOptionsPrompt: "一緒に聖典を学ぶ\n仲間を見つけよう！",
-            createGroupPrompt: "新しいグループを作って\n友達を誘ってみよう！"
+            createGroupPrompt: "新しいグループを作って\n友達を誘ってみよう！",
+            welcomeMessage: "Scripture Habitへ\nようこそ！"
         }
     },
     pt: {
@@ -1116,7 +1118,7 @@ export const translations = {
             errorCreateFailed: "Falha ao criar grupo. Tente novamente."
         },
         welcome: {
-            title: "Bem-vindo ao Scripture Habit",
+            title: "Scripture Habit",
             chooseLanguage: "Escolha seu idioma (você pode alterar depois).",
             login: "Entrar",
             signup: "Inscrever-se"
@@ -1223,7 +1225,8 @@ export const translations = {
             promptToday: "Já leu hoy?\nVamos estudar juntos!",
             weeklyRecapPrompt: "Vamos refletir sobre\nsua leitura desta semana!",
             groupOptionsPrompt: "Vamos encontrar uma comunidade\npara estudar juntos!",
-            createGroupPrompt: "Crie um novo grupo e\nconvide seus amigos!"
+            createGroupPrompt: "Crie um novo grupo e\nconvide seus amigos!",
+            welcomeMessage: "Bem-vindo ao\nScripture Habit!"
         }
     },
     zho: {
@@ -1506,7 +1509,7 @@ export const translations = {
             errorCreateFailed: "建立群組失敗。請重試。"
         },
         welcome: {
-            title: "歡迎來到 Scripture Habit",
+            title: "Scripture Habit",
             chooseLanguage: "選擇您的語言 (您稍後也可以更改)。",
             login: "登入",
             signup: "註冊"
@@ -1613,7 +1616,8 @@ export const translations = {
             promptToday: "今天讀經文了嗎？\n我們一起學習吧！",
             weeklyRecapPrompt: "讓我們來回顧一下\n你這週的學習吧！",
             groupOptionsPrompt: "讓我們找個社群\n一起學習吧！",
-            createGroupPrompt: "建立一個新群組並\n邀請您的朋友！"
+            createGroupPrompt: "建立一個新群組並\n邀請您的朋友！",
+            welcomeMessage: "歡迎來到\nScripture Habit！"
         }
     },
     es: {
@@ -1896,7 +1900,7 @@ export const translations = {
             errorCreateFailed: "Error al crear el grupo. Por favor, inténtalo de nuevo."
         },
         welcome: {
-            title: "Bienvenido a Scripture Habit",
+            title: "Scripture Habit",
             chooseLanguage: "Elige tu idioma (puedes cambiarlo más tarde).",
             login: "Iniciar Sesión",
             signup: "Registrarse"
@@ -2003,7 +2007,8 @@ export const translations = {
             promptToday: "¿Ya leíste hoy?\n¡Estudiemos juntos!",
             weeklyRecapPrompt: "¡Reflexionemos sobre\ntu aprendizaje de esta semana!",
             groupOptionsPrompt: "¡Busquemos una comunidad\npara estudiar juntos!",
-            createGroupPrompt: "¡Crea un nuevo grupo e\ninvita a tus amigos!"
+            createGroupPrompt: "¡Crea un nuevo grupo e\ninvita a tus amigos!",
+            welcomeMessage: "¡Bienvenido a\nScripture Habit!"
         }
     },
     vi: {
@@ -2286,7 +2291,7 @@ export const translations = {
             errorCreateFailed: "Tạo nhóm thất bại. Vui lòng thử lại."
         },
         welcome: {
-            title: "Chào mừng đến với Scripture Habit",
+            title: "Scripture Habit",
             chooseLanguage: "Chọn ngôn ngữ của bạn (bạn có thể thay đổi sau).",
             login: "Đăng nhập",
             signup: "Đăng ký"
@@ -2393,7 +2398,8 @@ export const translations = {
             promptToday: "Bạn đã đọc hôm nay chưa?\nCùng nhau học nào!",
             weeklyRecapPrompt: "Hãy cùng nhìn lại\nviệc học của bạn tuần này nhé!",
             groupOptionsPrompt: "Hãy tìm một cộng đồng\nđể cùng nhau học tập nhé!",
-            createGroupPrompt: "Tạo một nhóm mới và\nmời bạn bè của bạn!"
+            createGroupPrompt: "Tạo một nhóm mới và\nmời bạn bè của bạn!",
+            welcomeMessage: "Chào mừng bạn đến với\nScripture Habit!"
         }
     },
     th: {
@@ -2676,7 +2682,7 @@ export const translations = {
             errorCreateFailed: "สร้างกลุ่มไม่สำเร็จ กรุณาลองใหม่อีกครั้ง"
         },
         welcome: {
-            title: "ยินดีต้อนรับสู่ Scripture Habit",
+            title: "Scripture Habit",
             chooseLanguage: "เลือกภาษาของคุณ (คุณสามารถเปลี่ยนภาษาได้ในภายหลัง)",
             login: "เข้าสู่ระบบ",
             signup: "ลงทะเบียน"
@@ -2783,7 +2789,8 @@ export const translations = {
             promptToday: "วันนี้อ่านหรือยัง?\nมาเรียนด้วยกันเถอะ!",
             weeklyRecapPrompt: "มาทบทวนสิ่งที่คุณเรียนรู้\nในสัปดาห์นี้กันเถอะ!",
             groupOptionsPrompt: "มาหาชุมชนเพื่อ\nศึกษาด้วยกันเถอะ!",
-            createGroupPrompt: "สร้างกลุ่มใหม่และ\nชวนเพื่อนของคุณ!"
+            createGroupPrompt: "สร้างกลุ่มใหม่และ\nชวนเพื่อนของคุณ!",
+            welcomeMessage: "ยินดีต้อนรับสู่\nScripture Habit!"
         }
     },
     ko: {
@@ -3066,7 +3073,7 @@ export const translations = {
             errorCreateFailed: "그룹 생성 실패. 다시 시도해주세요."
         },
         welcome: {
-            title: "Scripture Habit에 오신 것을 환영합니다",
+            title: "Scripture Habit",
             chooseLanguage: "언어를 선택하세요 (나중에 변경할 수 있습니다).",
             login: "로그인",
             signup: "회원가입"
@@ -3173,7 +3180,8 @@ export const translations = {
             promptToday: "오늘 경전은 읽었나요?\n함께 공부해요!",
             weeklyRecapPrompt: "이번 주 배운 내용을\n함께 돌아볼까요?",
             groupOptionsPrompt: "함께 공부할\n커뮤니ティ를 찾아볼까요?",
-            createGroupPrompt: "새로운 그룹을 만들고\n친구들을 초대해보세요!"
+            createGroupPrompt: "새로운 그룹을 만들고\n친구들을 초대해보세요!",
+            welcomeMessage: "Scripture Habit에 오신 것을\n환영합니다!"
         }
     },
     tl: {
@@ -3456,7 +3464,7 @@ export const translations = {
             errorCreateFailed: "Nabigong lumikha ng grupo. Pakisubukan muli."
         },
         welcome: {
-            title: "Maligayang pagdating sa Scripture Habit",
+            title: "Scripture Habit",
             chooseLanguage: "Piliin ang iyong wika (maaari mo itong baguhin mamaya).",
             login: "Mag-log In",
             signup: "Mag-sign Up"
@@ -3563,7 +3571,8 @@ export const translations = {
             promptToday: "Nagbasa ka na ba ngayong araw?\nMag-aral tayo nang magkasama!",
             weeklyRecapPrompt: "Magmuni-muni tayo sa\niyong natutunan ngayong linggo!",
             groupOptionsPrompt: "Humanap tayo ng komunidad\npara mag-aral nang sabay!",
-            createGroupPrompt: "Lumikha ng bagong grupo at\nimbitahan ang iyong mga kaibigan!"
+            createGroupPrompt: "Lumikha ng bagong grupo at\nimbitahan ang iyong mga kaibigan!",
+            welcomeMessage: "Maligayang pagdating sa\nScripture Habit!"
         }
     },
     sw: {
@@ -3846,7 +3855,7 @@ export const translations = {
             errorCreateFailed: "Imeshindwa kuunda kikundi. Tafadhali jaribu tena."
         },
         welcome: {
-            title: "Karibu kwenye Scripture Habit",
+            title: "Scripture Habit",
             chooseLanguage: "Chagua lugha yako (unaweza kubadilisha baadaye).",
             login: "Ingia",
             signup: "Jisajili"
@@ -3953,7 +3962,8 @@ export const translations = {
             promptToday: "Je, umesoma leo?\nTujifunze pamoja!",
             weeklyRecapPrompt: "Hebu tutafakari kuhusu\numachojifunza wiki hii!",
             groupOptionsPrompt: "Hebu tupate jumuiya ya\nkujifunza pamoja!",
-            createGroupPrompt: "Unda kikundi kipya na\nualike marafiki zako!"
+            createGroupPrompt: "Unda kikundi kipya na\nualike marafiki zako!",
+            welcomeMessage: "Karibu kwenye\nScripture Habit!"
         }
     }
 };
