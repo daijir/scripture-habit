@@ -493,6 +493,29 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     }
   };
 
+  const handleUserProfileClick = async (userId) => {
+    if (!userId || userId === 'system') return;
+
+    // Check if we already have this user in our membersList
+    const cachedMember = membersList.find(m => m.id === userId);
+    if (cachedMember) {
+      setSelectedMember(cachedMember);
+      return;
+    }
+
+    try {
+      const userDoc = await getDoc(doc(db, 'users', userId));
+      if (userDoc.exists()) {
+        setSelectedMember({ id: userDoc.id, ...userDoc.data() });
+      } else {
+        toast.error("User profile not found");
+      }
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      toast.error("Failed to load user profile");
+    }
+  };
+
   const handleScroll = () => {
     // Check for load previous trigger
     if (initialScrollDone && containerRef.current) {
@@ -1973,7 +1996,13 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                         </>
                       )}
                     </div>
-                    <span className="sender-name">{msg.senderNickname}{msg.isEdited && <span className="edited-indicator"> ({t('groupChat.messageEdited')})</span>}</span>
+                    <span
+                      className="sender-name"
+                      onClick={(e) => { e.stopPropagation(); handleUserProfileClick(msg.senderId); }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {msg.senderNickname}{msg.isEdited && <span className="edited-indicator"> ({t('groupChat.messageEdited')})</span>}
+                    </span>
                     <div className="message-bubble-row" style={{ display: 'flex', alignItems: 'flex-end', gap: '5px' }}>
                       {msg.senderId === userData?.uid && (
                         <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', marginBottom: '2px', whiteSpace: 'nowrap' }}>
@@ -2179,7 +2208,12 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
               <h3>👍 Reactions</h3>
               <div className="reactions-list">
                 {reactionsToShow.map((reaction, idx) => (
-                  <div key={idx} className="reaction-user">
+                  <div
+                    key={idx}
+                    className="reaction-user"
+                    onClick={() => handleUserProfileClick(reaction.odU)}
+                    style={{ cursor: 'pointer' }}
+                  >
                     <span className="reaction-user-emoji">👍</span>
                     <span className="reaction-user-name">{reaction.nickname}</span>
                   </div>

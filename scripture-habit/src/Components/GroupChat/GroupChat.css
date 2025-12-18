@@ -334,6 +334,12 @@
     margin-bottom: 0.2rem;
     margin-left: 0.8rem;
     font-weight: 500;
+    transition: color 0.1s ease;
+}
+
+.sender-name:hover {
+    color: var(--pink);
+    text-decoration: underline;
 }
 
 .message.sent .sender-name {
@@ -1204,6 +1210,14 @@ input:checked+.slider:before {
     padding: 10px 12px;
     background: #f5f5f5;
     border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.reaction-user:hover {
+    background: #eef2ff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .reaction-user-emoji {
