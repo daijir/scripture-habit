@@ -38,6 +38,15 @@ const UserProfileModal = ({ user, onClose }) => {
 
                     <div className="user-stats">
                         <div className="stat-box">
+                            <div className="stat-icon level">
+                                <span style={{ fontWeight: '800', fontSize: '1.2rem' }}>L</span>
+                            </div>
+                            <div className="stat-info">
+                                <span className="stat-value">{Math.floor((user.daysStudiedCount || 0) / 7) + 1}</span>
+                                <span className="stat-label">{t('profile.level')}</span>
+                            </div>
+                        </div>
+                        <div className="stat-box">
                             <div className="stat-icon fire">
                                 <UilFire />
                             </div>

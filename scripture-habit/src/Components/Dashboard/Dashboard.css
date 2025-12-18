@@ -152,6 +152,32 @@
   color: var(--gray);
 }
 
+.streak-card .number {
+  color: #FEAC5E;
+  /* Fire orange */
+}
+
+.level-card .number {
+  color: var(--pink);
+  /* Level pink */
+}
+
+.mini-progress-bar {
+  width: 80%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  margin-top: 10px;
+  overflow: hidden;
+}
+
+.mini-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #ff919d, var(--pink));
+  border-radius: 10px;
+  transition: width 0.8s ease;
+}
+
 
 
 /* Inspiration Section */

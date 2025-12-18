@@ -139,13 +139,38 @@ const Profile = ({ userData, stats }) => {
                 )}
                 {stats && (
                     <div className="profile-stats">
-                        <div className="stat-item">
-                            <span className="stat-value">{stats.streak}</span>
-                            <span className="stat-label">{t('dashboard.streak')} ({t('dashboard.days')})</span>
+                        <div className="level-section">
+                            <div className="level-badge">
+                                <span className="level-number">{Math.floor((stats.daysStudied || 0) / 7) + 1}</span>
+                                <span className="level-text">{t('profile.level')}</span>
+                            </div>
+                            <div className="level-progress-container">
+                                <div className="level-progress-info">
+                                    <span>{t('profile.nextLevel')}</span>
+                                    <span>{(stats.daysStudied || 0) % 7} / 7</span>
+                                </div>
+                                <div className="level-progress-bar">
+                                    <div
+                                        className="level-progress-fill"
+                                        style={{ width: `${((stats.daysStudied || 0) % 7) / 7 * 100}%` }}
+                                    ></div>
+                                </div>
+                            </div>
                         </div>
-                        <div className="stat-item">
-                            <span className="stat-value">{stats.totalNotes}</span>
-                            <span className="stat-label">{t('dashboard.totalNotes')}</span>
+
+                        <div className="stat-row">
+                            <div className="stat-item">
+                                <span className="stat-value">{stats.streak}</span>
+                                <span className="stat-label">{t('dashboard.streak')} ({t('dashboard.days')})</span>
+                            </div>
+                            <div className="stat-item">
+                                <span className="stat-value">{stats.totalNotes}</span>
+                                <span className="stat-label">{t('dashboard.totalNotes')}</span>
+                            </div>
+                            <div className="stat-item">
+                                <span className="stat-value">{stats.daysStudied || 0}</span>
+                                <span className="stat-label">{t('profile.daysStudied')}</span>
+                            </div>
                         </div>
                     </div>
                 )}
