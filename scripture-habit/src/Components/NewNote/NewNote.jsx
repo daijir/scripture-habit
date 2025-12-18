@@ -8,6 +8,10 @@ import { UilTrashAlt, UilShuffle } from '@iconscout/react-unicons';
 import Select from 'react-select';
 import { ScripturesOptions } from '../../Data/Data';
 import { MasteryScriptures } from '../../Data/MasteryScriptures';
+import { PeaceScriptures } from '../../Data/PeaceScriptures';
+import { AdversityScriptures } from '../../Data/AdversityScriptures';
+import { RelationshipScriptures } from '../../Data/RelationshipScriptures';
+import { JoyScriptures } from '../../Data/JoyScriptures';
 import Input from '../Input/Input';
 import './NewNote.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
@@ -15,7 +19,9 @@ import { removeNoteHeader } from '../../Utils/noteUtils';
 import { translateChapterField } from '../../Utils/bookNameTranslations';
 import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
 import { getTodayReadingPlan } from '../../Data/DailyReadingPlan';
+import { localizeLdsUrl } from '../../Utils/urlLocalizer';
 import { UilBookOpen } from '@iconscout/react-unicons';
+import { useGCMetadata } from '../../hooks/useGCMetadata';
 
 const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups = [], isGroupContext = false, currentGroupId = null, initialData = null }) => {
     const { t, language } = useLanguage();
@@ -30,6 +36,10 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
     const [shareOption, setShareOption] = useState('all'); // 'all', 'specific', 'none', 'current'
     const [selectedShareGroups, setSelectedShareGroups] = useState([]);
 
+    // Fetch metadata for GC/Other URLs
+    const isUrl = chapter && (chapter.startsWith('http') || chapter.includes('churchofjesuschrist.org'));
+    const { data: gcMeta, loading: gcLoading } = useGCMetadata(isUrl ? chapter : null, language);
+
     // Randomized placeholders state
     const [currentChapterPlaceholder, setCurrentChapterPlaceholder] = useState('');
     const [currentCommentPlaceholder, setCurrentCommentPlaceholder] = useState('');
@@ -41,6 +51,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
     const [error, setError] = useState(null);
     const [lastAiResponse, setLastAiResponse] = useState('');
     const [showScriptureSelectionModal, setShowScriptureSelectionModal] = useState(false);
+    const [showRandomMenu, setShowRandomMenu] = useState(false);
     const [availableReadingPlanScripts, setAvailableReadingPlanScripts] = useState([]);
 
     const getTranslatedScriptureLabel = (value) => {
@@ -200,19 +211,63 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
 
     const handleSurpriseMe = () => {
+        setShowRandomMenu(true);
+    };
+
+    const handlePickRandomMastery = () => {
         const randomIndex = Math.floor(Math.random() * MasteryScriptures.length);
         const randomScripture = MasteryScriptures[randomIndex];
+        pickAndFillRandom(randomScripture);
+        setShowRandomMenu(false);
+    };
 
+    const handlePickRandomPeace = () => {
+        const randomIndex = Math.floor(Math.random() * PeaceScriptures.length);
+        const randomScripture = PeaceScriptures[randomIndex];
+        pickAndFillRandom(randomScripture);
+        setShowRandomMenu(false);
+    };
+
+    const handlePickRandomAdversity = () => {
+        const randomIndex = Math.floor(Math.random() * AdversityScriptures.length);
+        const randomScripture = AdversityScriptures[randomIndex];
+        pickAndFillRandom(randomScripture);
+        setShowRandomMenu(false);
+    };
+
+    const handlePickRandomRelationship = () => {
+        const randomIndex = Math.floor(Math.random() * RelationshipScriptures.length);
+        const randomScripture = RelationshipScriptures[randomIndex];
+        pickAndFillRandom(randomScripture);
+        setShowRandomMenu(false);
+    };
+
+    const handlePickRandomJoy = () => {
+        const randomIndex = Math.floor(Math.random() * JoyScriptures.length);
+        const randomScripture = JoyScriptures[randomIndex];
+        pickAndFillRandom(randomScripture);
+        setShowRandomMenu(false);
+    };
+
+    const pickAndFillRandom = (randomScripture) => {
         // Find the option that matches the category
-        // Note: translatedScripturesOptions rely on 'value' being English (e.g. 'Old Testament') which matches our data
         const option = translatedScripturesOptions.find(opt => opt.value === randomScripture.scripture);
 
         if (option) {
             setSelectedOption(option);
             setScripture(randomScripture.scripture);
-            // Translate the chapter field if possible (e.g. Proverbs 3:5-6 -> 箴言 3:5-6)
-            const translatedChapter = translateChapterField(randomScripture.chapter, language);
-            setChapter(translatedChapter);
+
+            let finalChapter = randomScripture.chapter;
+
+            // If it's a URL, localize it
+            if (finalChapter.startsWith('http')) {
+                finalChapter = localizeLdsUrl(finalChapter, language);
+            } else {
+                // Otherwise translate as a normal chapter (e.g. Proverbs 3:5-6 -> 箴言 3:5-6)
+                finalChapter = translateChapterField(finalChapter, language);
+            }
+
+            setChapter(finalChapter);
         }
     };
 
@@ -405,8 +460,10 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
         if (plan.scripts.length > 1) {
             setAvailableReadingPlanScripts(plan.scripts);
             setShowScriptureSelectionModal(true);
+            setShowRandomMenu(false);
         } else {
             fillScriptureData(plan.scripts[0]);
+            setShowRandomMenu(false);
         }
     };
 
@@ -758,6 +815,224 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
         }
     };
 
+    if (showRandomMenu) {
+        return (
+            <div className="ModalOverlay" onClick={onClose}>
+                <div className="ModalContent" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '500px', textAlign: 'center' }}>
+                    <div className="modal-header" style={{ justifyContent: 'center' }}>
+                        <h1>{t('newNote.surpriseMe')}</h1>
+                    </div>
+                    <p style={{ marginBottom: '1.5rem', color: '#666' }}>{t('newNote.chooseScripturePlaceholder')}</p>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', width: '100%', padding: '0.5rem' }}>
+                        <button
+                            onClick={handleTodaysReading}
+                            style={{
+                                padding: '1.2rem',
+                                borderRadius: '16px',
+                                border: '1px solid #e2e8f0',
+                                background: 'white',
+                                cursor: 'pointer',
+                                fontSize: '1.1rem',
+                                fontWeight: '600',
+                                color: '#2d3748',
+                                boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+                                transition: 'all 0.2s',
+                                textAlign: 'left',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '1rem'
+                            }}
+                            onMouseOver={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.borderColor = '#667eea';
+                                e.currentTarget.style.boxShadow = '0 6px 12px rgba(102, 126, 234, 0.15)';
+                            }}
+                            onMouseOut={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.borderColor = '#e2e8f0';
+                                e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.05)';
+                            }}
+                        >
+                            <span style={{ fontSize: '1.5rem' }}>📅</span>
+                            {t('dashboard.todaysComeFollowMe')}
+                        </button>
+
+                        <button
+                            onClick={handlePickRandomMastery}
+                            style={{
+                                padding: '1.2rem',
+                                borderRadius: '16px',
+                                border: '1px solid #e2e8f0',
+                                background: 'white',
+                                cursor: 'pointer',
+                                fontSize: '1.1rem',
+                                fontWeight: '600',
+                                color: '#2d3748',
+                                boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+                                transition: 'all 0.2s',
+                                textAlign: 'left',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '1rem'
+                            }}
+                            onMouseOver={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.borderColor = '#667eea';
+                                e.currentTarget.style.boxShadow = '0 6px 12px rgba(102, 126, 234, 0.15)';
+                            }}
+                            onMouseOut={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.borderColor = '#e2e8f0';
+                                e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.05)';
+                            }}
+                        >
+                            <span style={{ fontSize: '1.5rem' }}>🎓</span>
+                            {t('newNote.masteryScriptures')}
+                        </button>
+
+                        <button
+                            onClick={handlePickRandomPeace}
+                            style={{
+                                padding: '1.2rem',
+                                borderRadius: '16px',
+                                border: '1px solid #e2e8f0',
+                                background: 'white',
+                                cursor: 'pointer',
+                                fontSize: '1.1rem',
+                                fontWeight: '600',
+                                color: '#2d3748',
+                                boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+                                transition: 'all 0.2s',
+                                textAlign: 'left',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '1rem'
+                            }}
+                            onMouseOver={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.borderColor = '#667eea';
+                                e.currentTarget.style.boxShadow = '0 6px 12px rgba(102, 126, 234, 0.15)';
+                            }}
+                            onMouseOut={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.borderColor = '#e2e8f0';
+                                e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.05)';
+                            }}
+                        >
+                            <span style={{ fontSize: '1.5rem' }}>🕊️</span>
+                            {t('newNote.peaceScriptures')}
+                        </button>
+
+                        <button
+                            onClick={handlePickRandomAdversity}
+                            style={{
+                                padding: '1.2rem',
+                                borderRadius: '16px',
+                                border: '1px solid #e2e8f0',
+                                background: 'white',
+                                cursor: 'pointer',
+                                fontSize: '1.1rem',
+                                fontWeight: '600',
+                                color: '#2d3748',
+                                boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+                                transition: 'all 0.2s',
+                                textAlign: 'left',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '1rem'
+                            }}
+                            onMouseOver={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.borderColor = '#667eea';
+                                e.currentTarget.style.boxShadow = '0 6px 12px rgba(102, 126, 234, 0.15)';
+                            }}
+                            onMouseOut={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.borderColor = '#e2e8f0';
+                                e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.05)';
+                            }}
+                        >
+                            <span style={{ fontSize: '1.5rem' }}>⛓️</span>
+                            {t('newNote.adversityScriptures')}
+                        </button>
+
+                        <button
+                            onClick={handlePickRandomRelationship}
+                            style={{
+                                padding: '1.2rem',
+                                borderRadius: '16px',
+                                border: '1px solid #e2e8f0',
+                                background: 'white',
+                                cursor: 'pointer',
+                                fontSize: '1.1rem',
+                                fontWeight: '600',
+                                color: '#2d3748',
+                                boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+                                transition: 'all 0.2s',
+                                textAlign: 'left',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '1rem'
+                            }}
+                            onMouseOver={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.borderColor = '#667eea';
+                                e.currentTarget.style.boxShadow = '0 6px 12px rgba(102, 126, 234, 0.15)';
+                            }}
+                            onMouseOut={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.borderColor = '#e2e8f0';
+                                e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.05)';
+                            }}
+                        >
+                            <span style={{ fontSize: '1.5rem' }}>🤝</span>
+                            {t('newNote.relationshipScriptures')}
+                        </button>
+                        <button
+                            onClick={handlePickRandomJoy}
+                            style={{
+                                padding: '1.2rem',
+                                borderRadius: '16px',
+                                border: '1px solid #e2e8f0',
+                                background: 'white',
+                                cursor: 'pointer',
+                                fontSize: '1.1rem',
+                                fontWeight: '600',
+                                color: '#2d3748',
+                                boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
+                                transition: 'all 0.2s',
+                                textAlign: 'left',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '1rem'
+                            }}
+                            onMouseOver={(e) => {
+                                e.currentTarget.style.transform = 'translateY(-2px)';
+                                e.currentTarget.style.borderColor = '#667eea';
+                                e.currentTarget.style.boxShadow = '0 6px 12px rgba(102, 126, 234, 0.15)';
+                            }}
+                            onMouseOut={(e) => {
+                                e.currentTarget.style.transform = 'translateY(0)';
+                                e.currentTarget.style.borderColor = '#e2e8f0';
+                                e.currentTarget.style.boxShadow = '0 4px 6px rgba(0,0,0,0.05)';
+                            }}
+                        >
+                            <span style={{ fontSize: '1.5rem' }}>😊</span>
+                            {t('newNote.joyScriptures')}
+                        </button>
+                    </div>
+                    <button
+                        onClick={() => setShowRandomMenu(false)}
+                        className="cancel-btn"
+                        style={{ marginTop: '2rem', alignSelf: 'center', width: 'auto', background: '#e2e8f0', color: '#4a5568' }}
+                    >
+                        {t('newNote.cancel')}
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     if (showScriptureSelectionModal) {
         return (
             <div className="ModalOverlay" onClick={onClose}>
@@ -894,26 +1169,6 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
                         <button
                             type="button"
-                            onClick={handleTodaysReading}
-                            style={{
-                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '20px',
-                                padding: '0.3rem 0.8rem',
-                                fontSize: '0.8rem',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.3rem',
-                                fontWeight: 'bold',
-                                boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-                            }}
-                        >
-                            <UilBookOpen size="16" /> ✨ {t('dashboard.todaysComeFollowMe')}
-                        </button>
-                        <button
-                            type="button"
                             onClick={handleSurpriseMe}
                             style={{
                                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -935,10 +1190,38 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     </div>
                 )}
 
-                {scripture && chapter && (['Old Testament', 'New Testament', 'Book of Mormon', 'Doctrine and Covenants', 'Pearl of Great Price', 'Ordinances and Proclamations'].includes(scripture)) && (
+                {isUrl && (gcLoading || gcMeta) && (
+                    <div style={{
+                        marginTop: '0.2rem',
+                        marginBottom: '1rem',
+                        padding: '0.5rem 0.8rem',
+                        backgroundColor: '#f7fafc',
+                        borderRadius: '8px',
+                        border: '1px solid #edf2f7',
+                        fontSize: '0.85rem'
+                    }}>
+                        {gcLoading ? (
+                            <span style={{ color: '#a0aec0', fontStyle: 'italic' }}>Fetching title...</span>
+                        ) : gcMeta && (
+                            <div style={{ color: '#4a5568', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                    <span style={{ fontWeight: 'bold', minWidth: 'fit-content' }}>{t('newNote.titleLabel')}</span>
+                                    <span style={{ color: '#2d3748' }}>{gcMeta.title}</span>
+                                </div>
+                                {gcMeta.speaker && (
+                                    <div style={{ fontSize: '0.8rem', opacity: 0.8, paddingLeft: 'calc(1.5rem + 0.5rem)' }}>
+                                        {gcMeta.speaker}
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                )}
+
+                {scripture && chapter && (['Old Testament', 'New Testament', 'Book of Mormon', 'Doctrine and Covenants', 'Pearl of Great Price', 'Ordinances and Proclamations'].includes(scripture) || (typeof chapter === 'string' && chapter.startsWith('http'))) && (
                     <div className="gospel-link-container">
                         <a
-                            href={getGospelLibraryUrl(scripture, chapter, language)}
+                            href={typeof chapter === 'string' && chapter.startsWith('http') ? localizeLdsUrl(chapter, language) : getGospelLibraryUrl(scripture, chapter, language)}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="gospel-library-link"
