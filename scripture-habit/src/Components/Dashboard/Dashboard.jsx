@@ -22,6 +22,8 @@ import NoteCard from '../NoteCard/NoteCard';
 import { getTodayReadingPlan } from '../../Data/DailyReadingPlan';
 import WelcomeStoryModal from '../WelcomeStoryModal/WelcomeStoryModal';
 import Donate from '../Donate/Donate';
+import Mascot from '../Mascot/Mascot';
+
 
 
 const Dashboard = () => {
@@ -533,44 +535,40 @@ const Dashboard = () => {
             </div>
 
             <div className="inspiration-section">
-              <div
-                className="inspiration-card"
+              <Mascot
+                userData={userData}
+                onClick={() => setShowWelcomeStory(true)}
+              />
+
+              <div className="inspiration-card"
                 style={{ position: 'relative', cursor: 'pointer', transition: 'transform 0.2s' }}
                 onClick={() => setShowWelcomeStory(true)}
               >
-                <div style={{
-                  position: 'absolute',
-                  top: '-10px',
-                  right: '-10px',
-                  width: '40px',
-                  height: '40px',
-                  background: 'white',
-                  color: '#2D3748',
-                  borderRadius: '50% 50% 50% 0',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontSize: '1.5rem',
-                  fontWeight: 'bold',
-                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.2)',
-                  zIndex: 10,
-                  border: '2px solid #2D3748',
-                  paddingBottom: '8px'
-                }}>
-                  <span className="typing-dots" style={{ position: 'relative', top: '-1px' }}></span>
-                </div>
-
                 <blockquote className="inspiration-quote">
                   {t('dashboard.inspirationQuote')}
                 </blockquote>
                 <p className="inspiration-source">{t('dashboard.inspirationSource')}</p>
-
+                <div style={{
+                  position: 'absolute',
+                  top: '-10px',
+                  right: '10px',
+                  background: 'white',
+                  padding: '2px 8px',
+                  borderRadius: '12px 12px 12px 0',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                  fontSize: '0.8rem',
+                  fontWeight: 'bold',
+                  color: '#4A5568',
+                  border: '1px solid #E2E8F0',
+                  minWidth: '24px',
+                  textAlign: 'center'
+                }}>
+                  <span className="typing-dots"></span>
+                </div>
               </div>
             </div>
 
-            {/* Today's Reading Plan & New Note Split Row */}
             <div className="dashboard-split-row">
-              {/* Today's Reading Plan Section */}
               <div className="reading-plan-section">
                 <div className="reading-plan-card" style={{
                   background: 'rgba(255, 255, 255, 0.4)',
@@ -657,12 +655,10 @@ const Dashboard = () => {
                           };
 
                           let displayScript = script;
-
-                          // Check each key in translations to see if it exists in the script
                           for (const [key, langMap] of Object.entries(translations)) {
                             if (script.includes(key) && langMap[language]) {
                               displayScript = script.replace(key, langMap[language]);
-                              break; // Assume only one match per script string
+                              break;
                             }
                           }
                           return (
@@ -715,11 +711,9 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-
-
-
           </div>
         )}
+
         {selectedView === 1 && (
           <MyNotes userData={userData} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} userGroups={userGroups} />
         )}
