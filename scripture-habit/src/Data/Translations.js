@@ -210,7 +210,13 @@ export const translations = {
             otherUrlPlaceholder: "https://example.com/study-material",
             askAiQuestion: "✨ Ask AI for a Question",
             surpriseMe: "✨ Surprise Me",
-            aiQuestion: "✨ AI Question:"
+            masteryScriptures: "✨ Mastery Scriptures",
+            peaceScriptures: "✨ Peace",
+            adversityScriptures: "✨ Adversity",
+            relationshipScriptures: "✨ Relationship Scriptures",
+            joyScriptures: "✨ Joy",
+            aiQuestion: "✨ AI Question:",
+            titleLabel: "Title:"
         },
         scriptures: {
             oldTestament: "Old Testament",
@@ -645,7 +651,13 @@ export const translations = {
             otherUrlPlaceholder: "https://example.com/study-material",
             askAiQuestion: "✨ AIに質問してもらう",
             surpriseMe: "✨ おまかせ聖句",
-            aiQuestion: "✨ AIからの質問:"
+            masteryScriptures: "✨ マスター聖句",
+            peaceScriptures: "✨ 平安",
+            adversityScriptures: "✨ 逆境",
+            relationshipScriptures: "✨ 人間関係",
+            joyScriptures: "✨ 喜び",
+            aiQuestion: "✨ AIからの質問:",
+            titleLabel: "タイトル:"
         },
         scriptures: {
             oldTestament: "旧約聖書",
@@ -1019,7 +1031,13 @@ export const translations = {
             otherUrlPlaceholder: "https://example.com/study-material",
             askAiQuestion: "✨ Pedir uma pergunta à IA",
             surpriseMe: "✨ Surpreenda-me",
-            aiQuestion: "✨ Pergunta da IA:"
+            masteryScriptures: "✨ Escrituras de Domínio",
+            peaceScriptures: "✨ Paz",
+            adversityScriptures: "✨ Adversidade",
+            relationshipScriptures: "✨ Relacionamento",
+            joyScriptures: "✨ Alegria",
+            aiQuestion: "✨ Pergunta da IA:",
+            titleLabel: "Título:"
         },
         scriptures: {
             oldTestament: "Velho Testamento",
@@ -1395,7 +1413,13 @@ export const translations = {
             otherUrlPlaceholder: "https://example.com/study-material",
             askAiQuestion: "✨ 向 AI 提問",
             surpriseMe: "✨ 給我驚喜",
-            aiQuestion: "✨ AI 提問："
+            masteryScriptures: "✨ 精通經文",
+            peaceScriptures: "✨ 平安",
+            adversityScriptures: "✨ 逆境",
+            relationshipScriptures: "✨ 人際關係",
+            joyScriptures: "✨ 喜樂",
+            aiQuestion: "✨ AI 提問：",
+            titleLabel: "標題："
         },
         scriptures: {
             oldTestament: "舊約",
@@ -1769,9 +1793,15 @@ export const translations = {
             byuUrlPlaceholder: "https://speeches.byu.edu/talks/...",
             otherUrlLabel: "URL",
             otherUrlPlaceholder: "https://example.com/study-material",
-            askAiQuestion: "✨ Pedir Pregunta a la IA",
+            askAiQuestion: "✨ Pedir una pregunta a la IA",
             surpriseMe: "✨ Sorpréndeme",
-            aiQuestion: "✨ Pregunta de IA:"
+            masteryScriptures: "✨ Escrituras de Dominio",
+            peaceScriptures: "✨ Paz",
+            adversityScriptures: "✨ Adversidad",
+            relationshipScriptures: "✨ Relaciones",
+            joyScriptures: "✨ Gozo",
+            aiQuestion: "✨ Pregunta de IA:",
+            titleLabel: "Título:"
         },
         scriptures: {
             oldTestament: "Antiguo Testamento",
@@ -2145,9 +2175,15 @@ export const translations = {
             byuUrlPlaceholder: "https://speeches.byu.edu/talks/...",
             otherUrlLabel: "URL",
             otherUrlPlaceholder: "https://example.com/study-material",
-            askAiQuestion: "✨ Hỏi AI câu hỏi",
+            askAiQuestion: "✨ Yêu cầu AI đặt câu hỏi",
             surpriseMe: "✨ Làm tôi ngạc nhiên",
-            aiQuestion: "✨ Câu hỏi AI:"
+            masteryScriptures: "✨ Thông Thạo Giáo Lý",
+            peaceScriptures: "✨ Bình An",
+            adversityScriptures: "✨ Nghịch Cảnh",
+            relationshipScriptures: "✨ Mối Quan Hệ",
+            joyScriptures: "✨ Niềm Vui",
+            aiQuestion: "✨ Câu Hỏi AI:",
+            titleLabel: "Tiêu đề:"
         },
         scriptures: {
             oldTestament: "Cựu Ước",
@@ -2521,9 +2557,15 @@ export const translations = {
             byuUrlPlaceholder: "https://speeches.byu.edu/talks/...",
             otherUrlLabel: "URL",
             otherUrlPlaceholder: "https://example.com/study-material",
-            askAiQuestion: "✨ ถาม AI for คำถาม",
+            askAiQuestion: "✨ ขอคำถามจาก AI",
             surpriseMe: "✨ เซอร์ไพรส์ฉัน",
-            aiQuestion: "✨ คำถาม AI:"
+            masteryScriptures: "✨ พระคัมภีร์ที่เชี่ยวชาญ",
+            peaceScriptures: "✨ สันติสุข",
+            adversityScriptures: "✨ ความยากลำบาก",
+            relationshipScriptures: "✨ ความสัมพันธ์",
+            joyScriptures: "✨ ความหรรษา",
+            aiQuestion: "✨ คำถาม AI:",
+            titleLabel: "หัวข้อ:"
         },
         scriptures: {
             oldTestament: "พันธสัญญาเดิม",
@@ -2897,9 +2939,15 @@ export const translations = {
             byuUrlPlaceholder: "https://speeches.byu.edu/talks/...",
             otherUrlLabel: "URL",
             otherUrlPlaceholder: "https://example.com/study-material",
-            askAiQuestion: "✨ AI에게 질문 요청",
-            surpriseMe: "✨ 나를 놀라게 해줘",
-            aiQuestion: "✨ AI 질문:"
+            askAiQuestion: "✨ AI에게 질문 요청하기",
+            surpriseMe: "✨ 나를 놀라게 해주세요",
+            masteryScriptures: "✨ 성구 익히기",
+            peaceScriptures: "✨ 평안",
+            adversityScriptures: "✨ 역경",
+            relationshipScriptures: "✨ 대인 관계",
+            joyScriptures: "✨ 기쁨",
+            aiQuestion: "✨ AI 질문:",
+            titleLabel: "제목:"
         },
         scriptures: {
             oldTestament: "구약전서",
@@ -3273,9 +3321,15 @@ export const translations = {
             byuUrlPlaceholder: "https://speeches.byu.edu/talks/...",
             otherUrlLabel: "URL",
             otherUrlPlaceholder: "https://example.com/study-material",
-            askAiQuestion: "✨ Magtanong sa AI",
+            askAiQuestion: "✨ Magtanong sa AI para sa Tanong",
             surpriseMe: "✨ Sorpresahin Ako",
-            aiQuestion: "✨ Tanong ng AI:"
+            masteryScriptures: "✨ Mastery Scriptures",
+            peaceScriptures: "✨ Kapayapaan",
+            adversityScriptures: "✨ Adversidad",
+            relationshipScriptures: "✨ Relasyon",
+            joyScriptures: "✨ Kagalakan",
+            aiQuestion: "✨ AI Tanong:",
+            titleLabel: "Pamagat:"
         },
         scriptures: {
             oldTestament: "Lumang Tipan",
@@ -3651,7 +3705,13 @@ export const translations = {
             otherUrlPlaceholder: "https://example.com/study-material",
             askAiQuestion: "✨ Uliza AI Swali",
             surpriseMe: "✨ Nishangaze",
-            aiQuestion: "✨ Swali la AI:"
+            masteryScriptures: "✨ Maandiko ya Ustadi",
+            peaceScriptures: "✨ Amani",
+            adversityScriptures: "✨ Taabu",
+            relationshipScriptures: "✨ Mahusiano",
+            joyScriptures: "✨ Furaha",
+            aiQuestion: "✨ Swali la AI:",
+            titleLabel: "Kichwa:"
         },
         scriptures: {
             oldTestament: "Agano la Kale",
