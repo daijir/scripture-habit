@@ -377,6 +377,12 @@ export const translations = {
             startButton: "Start",
             nextButton: "Next",
             skipButton: "Skip"
+        },
+        mascot: {
+            streakCelebration: "Amazing! {streak} day streak!",
+            doneToday: "Great job today!\nSee you tomorrow!",
+            promptToday: "Have you read today?\nLet's study together!",
+            weeklyRecapPrompt: "Let's reflect on\nyour learning this week!"
         }
     },
     ja: {
@@ -818,6 +824,12 @@ export const translations = {
             startButton: "はじめる",
             nextButton: "次へ",
             skipButton: "スキップ"
+        },
+        mascot: {
+            streakCelebration: "すごい！{streak}日連続だよ！",
+            doneToday: "今日の学習お疲れ様！\n明日も待ってるよ！",
+            promptToday: "今日の聖典はもう読んだ？\n一緒に学ぼう！",
+            weeklyRecapPrompt: "今週の学びを\n振り返ってみない？"
         }
     },
     pt: {
@@ -1200,6 +1212,12 @@ export const translations = {
             startButton: "Começar",
             nextButton: "Próximo",
             skipButton: "Pular"
+        },
+        mascot: {
+            streakCelebration: "Incrível! Sequência de {streak} dias!",
+            doneToday: "Bom trabalho hoje!\nAté amanhã!",
+            promptToday: "Já leu hoje?\nVamos estudar juntos!",
+            weeklyRecapPrompt: "Vamos refletir sobre\nsua leitura desta semana!"
         }
     },
     zho: {
@@ -1582,6 +1600,12 @@ export const translations = {
             startButton: "開始",
             nextButton: "下一步",
             skipButton: "跳過"
+        },
+        mascot: {
+            streakCelebration: "太棒了！連續 {streak} 天達成！",
+            doneToday: "今天辛苦了！\n明天見！",
+            promptToday: "今天讀經文了嗎？\n我們一起學習吧！",
+            weeklyRecapPrompt: "讓我們來回顧一下\n你這週的學習吧！"
         }
     },
     es: {
@@ -1964,6 +1988,12 @@ export const translations = {
             startButton: "Empezar",
             nextButton: "Siguiente",
             skipButton: "Omitir"
+        },
+        mascot: {
+            streakCelebration: "¡Increíble! ¡Racha de {streak} días!",
+            doneToday: "¡Buen trabajo hoy!\n¡Nos vemos mañana!",
+            promptToday: "¿Ya leíste hoy?\n¡Estudiemos juntos!",
+            weeklyRecapPrompt: "¡Reflexionemos sobre\ntu aprendizaje de esta semana!"
         }
     },
     vi: {
@@ -2346,6 +2376,12 @@ export const translations = {
             startButton: "Bắt đầu",
             nextButton: "Tiếp theo",
             skipButton: "Bỏ qua"
+        },
+        mascot: {
+            streakCelebration: "Tuyệt vời! Chuỗi {streak} ngày!",
+            doneToday: "Hôm nay làm tốt lắm!\nHẹn gặp lại ngày mai!",
+            promptToday: "Bạn đã đọc hôm nay chưa?\nCùng nhau học nào!",
+            weeklyRecapPrompt: "Hãy cùng nhìn lại\nviệc học của bạn tuần này nhé!"
         }
     },
     th: {
@@ -2728,6 +2764,12 @@ export const translations = {
             startButton: "เริ่ม",
             nextButton: "ถัดไป",
             skipButton: "ข้าม"
+        },
+        mascot: {
+            streakCelebration: "สุดยอด! ต่อเนื่อง {streak} วันแล้ว!",
+            doneToday: "วันนี้ทำได้ดีมาก!\nแล้วเจอกันพรุ่งนี้นะ!",
+            promptToday: "วันนี้อ่านหรือยัง?\nมาเรียนด้วยกันเถอะ!",
+            weeklyRecapPrompt: "มาทบทวนสิ่งที่คุณเรียนรู้\nในสัปดาห์นี้กันเถอะ!"
         }
     },
     ko: {
@@ -3110,6 +3152,12 @@ export const translations = {
             startButton: "시작",
             nextButton: "다음",
             skipButton: "건너뛰기"
+        },
+        mascot: {
+            streakCelebration: "대단해요! {streak}일 연속 달성!",
+            doneToday: "오늘도 수고했어요!\n내일 또 만나요!",
+            promptToday: "오늘 경전은 읽었나요?\n함께 공부해요!",
+            weeklyRecapPrompt: "이번 주 배운 내용을\n함께 돌아볼까요?"
         }
     },
     tl: {
@@ -3492,6 +3540,12 @@ export const translations = {
             startButton: "Magsimula",
             nextButton: "Susunod",
             skipButton: "Laktawan"
+        },
+        mascot: {
+            streakCelebration: "Kamangha-mangha! {streak} araw na streak!",
+            doneToday: "Mahusay ang ginawa mo ngayong araw!\nKita-kita tayo bukas!",
+            promptToday: "Nagbasa ka na ba ngayong araw?\nMag-aral tayo nang magkasama!",
+            weeklyRecapPrompt: "Magmuni-muni tayo sa\niyong natutunan ngayong linggo!"
         }
     },
     sw: {
@@ -3874,6 +3928,12 @@ export const translations = {
             startButton: "Anza",
             nextButton: "Inayofuata",
             skipButton: "Ruka"
+        },
+        mascot: {
+            streakCelebration: "Inashangaza! Mfululizo wa siku {streak}!",
+            doneToday: "Kazi nzuri leo!\nTuonane kesho!",
+            promptToday: "Je, umesoma leo?\nTujifunze pamoja!",
+            weeklyRecapPrompt: "Hebu tutafakari kuhusu\numachojifunza wiki hii!"
         }
     }
 };

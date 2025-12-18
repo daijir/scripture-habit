@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import './Mascot.css';
 import { useLanguage } from '../../Context/LanguageContext';
 
-const Mascot = ({ userData, onClick }) => {
+const Mascot = ({ userData, onClick, customMessage = null }) => {
   const { t, language } = useLanguage();
   const mascotImg = '/images/mascot.png';
 
@@ -35,19 +35,15 @@ const Mascot = ({ userData, onClick }) => {
   const streak = userData?.streakCount || 0;
 
   const getMessage = () => {
+    if (customMessage) return customMessage;
+
     if (isDoneToday) {
       if (streak >= 7) {
-        return language === 'ja'
-          ? `すごい！${streak}日連続だよ！`
-          : `Amazing! ${streak} day streak!`;
+        return t('mascot.streakCelebration', { streak });
       }
-      return language === 'ja'
-        ? "今日の学習お疲れ様！明日も待ってるよ！"
-        : "Great job today! See you tomorrow!";
+      return t('mascot.doneToday');
     } else {
-      return language === 'ja'
-        ? "今日の聖典はもう読んだ？一緒に学ぼう！"
-        : "Have you read today? Let's study together!";
+      return t('mascot.promptToday');
     }
   };
 
