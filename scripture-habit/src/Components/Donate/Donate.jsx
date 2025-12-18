@@ -1,8 +1,9 @@
 import React from 'react';
 import './Donate.css';
 import { useLanguage } from '../../Context/LanguageContext';
+import Mascot from '../Mascot/Mascot';
 
-const Donate = () => {
+const Donate = ({ userData }) => {
     const { t } = useLanguage();
     const [showQR, setShowQR] = React.useState(false);
 
@@ -10,20 +11,22 @@ const Donate = () => {
         <div className="Donate DashboardContent">
             <div className="dashboard-header">
                 <h1>{t('donate.title')}</h1>
-                <p className="welcome-text">{t('donate.description')}</p>
+                <div className="donate-mascot-wrapper">
+                    <Mascot
+                        userData={userData}
+                        customMessage={t('donate.description')}
+                    />
+                </div>
             </div>
             <div className="donate-container">
                 <div className="donate-card">
-                    <h2 className="donate-main-header">{t('donate.header')}</h2>
-                    <div className="donate-separator"></div>
-
                     <p className="donate-subheader">
                         {t('donate.subHeader')}
                     </p>
 
                     <div className="donate-suggestions">
                         <h3>{t('donate.suggestionTitle')}</h3>
-                        <ul>
+                        <ul className="donate-suggestions-list">
                             <li>{t('donate.suggestion1')}</li>
                             <li>{t('donate.suggestion2')}</li>
                             <li>{t('donate.suggestion3')}</li>
