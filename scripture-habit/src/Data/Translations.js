@@ -265,7 +265,8 @@ export const translations = {
             joinConfirmMessage: "Are you sure you want to join this group?",
             confirmJoin: "Join",
             cancelJoin: "Cancel",
-            notes: "Notes"
+            notes: "Notes",
+            createdAt: "Created at"
         },
         groupForm: {
             title: "Create a Study Group",
@@ -718,7 +719,8 @@ export const translations = {
             joinConfirmMessage: "本当にこのグループに参加しますか？",
             confirmJoin: "参加",
             cancelJoin: "キャンセル",
-            notes: "ノート"
+            notes: "ノート",
+            createdAt: "作成日"
         },
         groupForm: {
             title: "学習グループを作成",

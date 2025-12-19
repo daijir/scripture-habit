@@ -14,7 +14,7 @@ import UserProfileModal from '../UserProfileModal/UserProfileModal';
 import Mascot from '../Mascot/Mascot';
 
 export default function JoinGroup() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const API_BASE = Capacitor.isNativePlatform() ? 'https://scripture-habit.vercel.app' : '';
   const [groupCode, setGroupCode] = useState("");
   const [error, setError] = useState("");
@@ -299,8 +299,28 @@ export default function JoinGroup() {
           <div className="group-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '400px', textAlign: 'center' }}>
             <h3>{selectedGroup.name}</h3>
             {selectedGroup.description && (
-              <p style={{ color: '#718096', marginBottom: '1rem', fontStyle: 'italic' }}>
+              <p style={{ color: '#718096', marginBottom: '0.5rem', fontStyle: 'italic' }}>
                 {selectedGroup.description}
+              </p>
+            )}
+
+            {selectedGroup.createdAt && (
+              <p style={{ fontSize: '0.8rem', color: '#a0aec0', marginBottom: '1rem' }}>
+                {t('joinGroup.createdAt')}: {(() => {
+                  let date;
+                  const c = selectedGroup.createdAt;
+                  if (c?.toDate) date = c.toDate();
+                  else if (c?.seconds) date = new Date(c.seconds * 1000);
+                  else if (c?._seconds) date = new Date(c._seconds * 1000);
+                  else date = new Date(c);
+
+                  if (isNaN(date.getTime())) return '';
+                  return date.toLocaleDateString(language === 'ja' ? 'ja-JP' : undefined, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                  });
+                })()}
               </p>
             )}
 
