@@ -20,6 +20,9 @@ const Donate = ({ userData }) => {
             </div>
             <div className="donate-container">
                 <div className="donate-card">
+                    <p className="donate-vision-statement">
+                        {t('donate.vision')}
+                    </p>
                     <p className="donate-subheader">
                         {t('donate.subHeader')}
                     </p>

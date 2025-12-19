@@ -66,6 +66,61 @@
     letter-spacing: 0.05em;
 }
 
+.donate-vision-statement {
+    font-family: 'Noto Serif JP', 'Crimson Pro', serif;
+    font-size: 1.3rem;
+    line-height: 2.2;
+    color: #1A202C;
+    margin-bottom: 3rem;
+    font-weight: 500;
+    padding: 2.5rem 3rem;
+    background: linear-gradient(to right, rgba(107, 70, 193, 0.03), rgba(107, 70, 193, 0.08));
+    border-radius: 20px;
+    border-left: 6px solid #6B46C1;
+    text-align: left;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(107, 70, 193, 0.05);
+    letter-spacing: 0.03em;
+    overflow: hidden;
+}
+
+.donate-vision-statement::before {
+    content: "“";
+    position: absolute;
+    top: 5px;
+    left: 10px;
+    font-size: 4rem;
+    color: rgba(107, 70, 193, 0.08);
+    font-family: serif;
+    z-index: 0;
+    line-height: 1;
+}
+
+.donate-vision-statement::after {
+    content: "”";
+    position: absolute;
+    bottom: -10px;
+    right: 10px;
+    font-size: 4rem;
+    color: rgba(107, 70, 193, 0.08);
+    font-family: serif;
+    z-index: 0;
+    line-height: 1;
+}
+
+@media (max-width: 768px) {
+    .donate-vision-statement {
+        font-size: 1.1rem;
+        padding: 1.5rem 1.8rem;
+        line-height: 1.8;
+    }
+
+    .donate-vision-statement::before,
+    .donate-vision-statement::after {
+        font-size: 3rem;
+    }
+}
+
 .donate-separator {
     height: 1px;
     background-color: #E2E8F0;

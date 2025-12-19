@@ -1,22 +1,30 @@
 Checking against base language: ja
-Total base keys: 343
+Total base keys: 345
 
 [en] OK
 
-[pt] OK
+[pt] Missing 1 keys:
+  - joinGroup.createdAt
 
-[zho] OK
+[zho] Missing 1 keys:
+  - joinGroup.createdAt
 
-[es] OK
+[es] Missing 1 keys:
+  - joinGroup.createdAt
 
-[vi] OK
+[vi] Missing 1 keys:
+  - joinGroup.createdAt
 
-[th] OK
+[th] Missing 1 keys:
+  - joinGroup.createdAt
 
-[ko] OK
+[ko] Missing 1 keys:
+  - joinGroup.createdAt
 
-[tl] OK
+[tl] Missing 1 keys:
+  - joinGroup.createdAt
 
-[sw] OK
+[sw] Missing 1 keys:
+  - joinGroup.createdAt
 
-Success: All languages match Japanese.
+Found total 8 missing translations.

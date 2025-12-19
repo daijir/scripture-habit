@@ -14,7 +14,8 @@ export const translations = {
         },
         donate: {
             title: "Support Us",
-            description: "To those who resonate with our mission to build a habit of scripture study and raise as many disciples of the Lord as possible in this confused world.",
+            description: "To those who resonate with our beliefs,",
+            vision: "We believe that, as recorded scriptures and history demonstrate, the spiritual, mental, and emotional growth of individuals through continuous scripture study can prevent cultural decline, social division, war, and discord, and create peace.",
             header: "Support",
             subHeader: "Donations to Scripture Habit are directly applied to future development and maintaining this tool for your spiritual growth.",
             suggestionTitle: "Suggested Amounts (Feel free to choose any amount):",
@@ -407,7 +408,8 @@ export const translations = {
         },
         donate: {
             title: "支援する",
-            description: "混乱する世の中にあって聖典学習の習慣を築くことによって一人でも多くの主の弟子を育てるという私たちの使命に共感していただいた方へ",
+            description: "私たちの信念に共感していただいた方へ",
+            vision: "私たちはこれまで記されてきた聖典や歴史が示すように、継続的な聖典学習による個人の霊的、精神的、情緒的な成長によって文化の衰退、社会の分断、戦争、不和を防ぎ、平和を創りだせると信じてます。",
             header: "支える",
             subHeader: "Scripture Habitに充てられた皆様からのご寄付は、今後の機能開発に直接充てられ、皆様の霊的な成長のためのこのツールを維持するために使われます。",
             suggestionTitle: "寄付額の目安（金額は自由にご決定いただけます）：",
@@ -861,7 +863,8 @@ export const translations = {
         },
         donate: {
             title: "Apoie-nos",
-            description: "Para aqueles que ressoam com a nossa missão de construir o hábito do estudo das escrituras e formar o maior número possível de discípulos do Senhor neste mundo confuso.",
+            description: "Para aqueles que ressoam com as nossas crenças,",
+            vision: "Acreditamos que, como demonstram as escrituras e a história, o crescimento espiritual, mental e emocional dos indivíduos através do estudo contínuo das escrituras pode prevenir o declínio cultural, a divisão social, a guerra e a discórdia, e criar a paz.",
             header: "Apoio",
             subHeader: "As doações ao Scripture Habit são aplicadas diretamente no desenvolvimento futuro e na manutenção desta ferramenta para o seu crescimento espiritual.",
             suggestionTitle: "Sugestões de Valor (Sinta-se livre para escolher):",
@@ -1112,7 +1115,8 @@ export const translations = {
             joinConfirmMessage: "Tem certeza de que deseja entrar neste grupo?",
             confirmJoin: "Entrar",
             cancelJoin: "Cancelar",
-            notes: "Anotações"
+            notes: "Anotações",
+            createdAt: "Criado em"
         },
         groupForm: {
             title: "Criar um Grupo de Estudo",
@@ -1255,7 +1259,8 @@ export const translations = {
         },
         donate: {
             title: "支持我們",
-            description: "給那些認同我們的使命、希望在混亂的世界中建立研讀經文的習慣並培養更多主門徒的人。",
+            description: "給那些認同我們信念的人，",
+            vision: "我們相信，正如經文和歷史所顯示的，個人透過持續研讀經文而在靈性、智力及情感上的成長，能夠防止文化衰退、社會分裂、戰爭與不和，並創造和平。",
             header: "支持",
             subHeader: "捐贈給 Scripture Habit 的款項將直接用於未來的功能開發，並維護這個促進您靈性成長的工具。",
             suggestionTitle: "建議金額（您可以自由決定）：",
@@ -1506,7 +1511,8 @@ export const translations = {
             joinConfirmMessage: "您確定要加入此群組嗎？",
             confirmJoin: "加入",
             cancelJoin: "取消",
-            notes: "筆記"
+            notes: "筆記",
+            createdAt: "建立於"
         },
         groupForm: {
             title: "建立研讀群組",
@@ -1649,7 +1655,8 @@ export const translations = {
         },
         donate: {
             title: "Apóyanos",
-            description: "Para aquellos que se identifican con nuestra misión de crear el hábito del estudio de las Escrituras y formar a tantos discípulos del Señor como sea posible en este mundo confuso.",
+            description: "Para aquellos que se identifican con nuestras creencias,",
+            vision: "Creemos que, como demuestran las escrituras y la historia, el crecimiento espiritual, mental y emocional de las personas a través del estudio continuo de las Escrituras puede prevenir el declive cultural, la división social, la guerra y la discordia, y crear la paz.",
             header: "Apoyo",
             subHeader: "Las donaciones a Scripture Habit se aplican directamente al desarrollo futuro y al mantenimiento de esta herramienta para tu crecimiento espiritual.",
             suggestionTitle: "Montos Sugeridos (Siéntete libre de elegir):",
@@ -1900,7 +1907,8 @@ export const translations = {
             joinConfirmMessage: "¿Estás seguro de que quieres unirte a este grupo?",
             confirmJoin: "Unirse",
             cancelJoin: "Cancelar",
-            notes: "Notas"
+            notes: "Notas",
+            createdAt: "Creado el"
         },
         groupForm: {
             title: "Crear un Grupo de Estudio",
@@ -2043,7 +2051,8 @@ export const translations = {
         },
         donate: {
             title: "Hỗ trợ chúng tôi",
-            description: "Dành cho những ai đồng cảm với sứ mệnh xây dựng thói quen học tập thánh thư và đào tạo thêm nhiều môn đồ của Chúa trong thế giới hỗn loạn này.",
+            description: "Dành cho những ai đồng cảm với niềm tin của chúng tôi,",
+            vision: "Chúng tôi tin rằng, như thánh thư và lịch sử đã ghi lại, sự tăng trưởng về mặt tâm linh, trí tuệ và cảm xúc của cá nhân thông qua việc kiên trì học tập thánh thư có thể ngăn chặn sự suy tàn của văn hóa, chia rẽ xã hội, chiến tranh, bất hòa và tạo ra hòa bình.",
             header: "Hỗ trợ",
             subHeader: "Các khoản đóng góp cho Scripture Habit sẽ được sử dụng trực tiếp cho việc phát triển chức năng trong tương lai và duy trì công cụ này cho sự phát triển thuộc linh của bạn.",
             suggestionTitle: "Số tiền gợi ý (Bạn có thể tùy chọn):",
@@ -2294,7 +2303,8 @@ export const translations = {
             joinConfirmMessage: "Bạn có chắc chắn muốn tham gia nhóm này không?",
             confirmJoin: "Tham gia",
             cancelJoin: "Hủy",
-            notes: "Ghi chép"
+            notes: "Ghi chép",
+            createdAt: "Ngày tạo"
         },
         groupForm: {
             title: "Tạo nhóm học tập",
@@ -2437,7 +2447,8 @@ export const translations = {
         },
         donate: {
             title: "สนับสนุนเรา",
-            description: "สำหรับผู้ที่เห็นด้วยกับภารกิจของเราในการสร้างนิสัยการศึกษาพระคัมภีร์และพัฒนาสานุศิษย์ของพระเจ้าให้มากที่สุดเท่าที่จะเป็นไปได้ในโลกที่วุ่นวายนี้",
+            description: "สำหรับผู้ที่เชื่อมั่นในอุดมการณ์เดียวกับเรา",
+            vision: "เราเชื่อว่า ดังที่พระคัมภีร์และประวัติศาสตร์ได้แสดงให้เห็น การเติบโตทางวิญญาณ จิตใจ และอารมณ์ของบุคคลผ่านการศึกษาพระคัมภีร์อย่างต่อเนื่อง สามารถป้องกันความเสื่อมโทรมทางวัฒนธรรม ความแตกแยกทางสังคม สงคราม และความขัดแย้ง และสร้างสันติภาพได้",
             header: "สนับสนุน",
             subHeader: "เงินบริจาคให้กับ Scripture Habit จะถูกนำไปใช้โดยตรงในการพัฒนาฟีเจอร์ในอนาคตและดูแลรักษาเครื่องมือนี้เพื่อการเติบโตทางวิญญาณของคุณ",
             suggestionTitle: "จำนวนเงินที่แนะนำ (ตามความสมัครใจ):",
@@ -2688,7 +2699,8 @@ export const translations = {
             joinConfirmMessage: "คุณแน่ใจหรือไม่ว่าต้องการเข้าร่วมกลุ่มนี้?",
             confirmJoin: "เข้าร่วม",
             cancelJoin: "ยกเลิก",
-            notes: "บันทึก"
+            notes: "บันทึก",
+            createdAt: "สร้างเมื่อ"
         },
         groupForm: {
             title: "สร้างกลุ่มศึกษา",
@@ -2831,7 +2843,8 @@ export const translations = {
         },
         donate: {
             title: "후원하기",
-            description: "경전 공부 습관을 형성하고, 혼란스러운 세상 속에서 한 명이라도 더 많은 주님의 제자를 키우겠다는 우리의 사명에 공감해주시는 분들께.",
+            description: "우리의 신념에 공감해 주시는 분들께,",
+            vision: "우리는 지금까지 기록된 경전과 역사가 보여주듯이, 지속적인 경전 공부를 통한 개인의 영적, 정신적, 정서적 성장이 문화의 쇠퇴, 사회적 분열, 전쟁, 불화를 방지하고 평화를 창조할 수 있다고 믿습니다.",
             header: "후원",
             subHeader: "Scripture Habit에 보내주신 기부금은 향후 기능 개발에 직접 사용되며, 여러분의 영적 성장을 위한 이 도구를 유지하는 데 사용됩니다.",
             suggestionTitle: "추천 후원금 (자유롭게 선택 가능):",
@@ -3082,7 +3095,8 @@ export const translations = {
             joinConfirmMessage: "이 그룹에 가입하시겠습니까?",
             confirmJoin: "가입",
             cancelJoin: "취소",
-            notes: "노트"
+            notes: "노트",
+            createdAt: "생성일"
         },
         groupForm: {
             title: "학습 그룹 생성",
@@ -3225,7 +3239,8 @@ export const translations = {
         },
         donate: {
             title: "Suportahan Kami",
-            description: "Para sa mga nakiisa sa aming misyon na bumuo ng gawi sa pag-aaral ng kasulatan at magpalaki ng maraming alagad ng Panginoon sa magulong mundong ito.",
+            description: "Para sa mga nakiisa sa aming mga paniniwala,",
+            vision: "Naniniwala kami na, gaya ng ipinapakita ng mga kasulatan at kasaysayan, ang espirituwal, mental, at emosyonal na pag-unlad ng mga indibidwal sa pamamagitan ng patuloy na pag-aaral ng kasulatan ay makakapigil sa paghina ng kultura, pagkakahati-hati ng lipunan, digmaan, at hidwaan, at makakalikha ng kapayapaan.",
             header: "Suporta",
             subHeader: "Ang mga donasyon sa Scripture Habit ay direktang gagamitin sa pagbuo ng mga bagong feature at pagpapanatili ng tool na ito para sa inyong espirituwal na paglago.",
             suggestionTitle: "Mungkahing Halaga (Malaya kang pumili):",
@@ -3476,7 +3491,8 @@ export const translations = {
             joinConfirmMessage: "Sigurado ka bang gusto mong sumali sa grupong ito?",
             confirmJoin: "Sumali",
             cancelJoin: "Kanselahin",
-            notes: "Mga Tala"
+            notes: "Mga Tala",
+            createdAt: "Nilikha noong"
         },
         groupForm: {
             title: "Lumikha ng Study Group",
@@ -3619,7 +3635,8 @@ export const translations = {
         },
         donate: {
             title: "Tusaidie",
-            description: "Kwa wale wanaokubaliana na utume wetu wa kujenga tabia ya kujifunza maandiko na kukuza wanafunzi wengi wa Bwana iwezekanavyo katika ulimwengu huu uliojaa vurugu.",
+            description: "Kwa wale wanaokubaliana na imani zetu,",
+            vision: "Tunaamini kwamba, kama maandiko na historia yanavyoonyesha, ukuaji wa kiroho, kiakili, na kihisia wa watu kupitia ujifunzaji endelevu wa maandiko unaweza kuzuia kuzorota kwa utamaduni, migawanyiko ya kijamii, vita, na ugomvi, na kuunda amani.",
             header: "Saidia",
             subHeader: "Michango kwa Scripture Habit itatumika moja kwa moja kwa maendeleo ya baadaye na kudumisha chombo hiki kwa ukuaji wako wa kiroho.",
             suggestionTitle: "Kiasi Kilichopendekezwa (Jisikie huru kuchagua):",
@@ -3870,7 +3887,8 @@ export const translations = {
             joinConfirmMessage: "Je, una uhakika unataka kujiunga na kikundi hiki?",
             confirmJoin: "Jiunge",
             cancelJoin: "Ghairi",
-            notes: "Maelezo"
+            notes: "Maelezo",
+            createdAt: "Imeundwa mnamo"
         },
         groupForm: {
             title: "Unda Kikundi cha Kujifunza",
