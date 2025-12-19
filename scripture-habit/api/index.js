@@ -447,6 +447,10 @@ app.post('/api/delete-group', async (req, res) => {
             t.delete(groupRef);
         });
 
+        // Recursively delete all subcollections (like messages) to fully remove the group
+        const groupRef = db.collection('groups').doc(groupId);
+        await db.recursiveDelete(groupRef);
+
         res.status(200).send({ message: 'Group deleted successfully.' });
 
     } catch (error) {
@@ -1223,8 +1227,8 @@ app.get('/api/check-inactive-users', async (req, res) => {
                 } else {
                     // No active members to transfer to.
                     // DELETE GROUP
-                    batch.delete(groupsRef.doc(groupId));
-                    batchOpCount++;
+                    // We must use recursiveDelete to remove subcollections like 'messages'
+                    await db.recursiveDelete(groupsRef.doc(groupId));
                     deletedGroupCount++;
                     isGroupDeleted = true;
 

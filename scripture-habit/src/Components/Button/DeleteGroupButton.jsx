@@ -11,12 +11,26 @@ export default function DeleteGroupButton({ groupId, ownerUserId }) {
     if (!confirm("Are you sure you want to delete this group?")) return;
 
     try {
-      await deleteDoc(doc(db, 'groups', groupId));
-      alert("Group deleted");
-          
+      const idToken = await user.getIdToken();
+      const response = await fetch('/api/delete-group', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ groupId })
+      });
+
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+
+      alert("Group deleted successfully");
+      window.location.href = '/dashboard';
+
     } catch (err) {
       console.error(err);
-      alert("Failed to delete group");
+      alert("Failed to delete group: " + err.message);
     }
   };
 
