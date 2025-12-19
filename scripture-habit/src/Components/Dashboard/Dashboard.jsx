@@ -624,8 +624,8 @@ const Dashboard = () => {
             <div className="dashboard-split-row">
               <div className="reading-plan-section">
                 <div className="reading-plan-card" style={{
-                  background: 'rgba(255, 255, 255, 0.4)',
-                  padding: '0.8rem',
+                  background: 'rgba(255, 255, 255, 0.6)',
+                  padding: '1.2rem',
                   borderRadius: '16px',
                   border: '1px solid rgba(255, 255, 255, 0.3)',
                   backdropFilter: 'blur(10px)',
