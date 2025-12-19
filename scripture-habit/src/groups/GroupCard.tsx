@@ -137,7 +137,7 @@ export default function GroupCard({ group, currentUser, onJoin, onOpen }: Props)
           }}
           disabled={joining}
         >
-          {isMember ? t('groupCard.open') : joining ? t('groupCard.joining') : t('groupCard.details')}
+          {joining ? t('groupCard.joining') : t('groupCard.details')}
         </button>
       </div>
     </div>

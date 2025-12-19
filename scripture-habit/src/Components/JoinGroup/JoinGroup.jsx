@@ -273,7 +273,7 @@ export default function JoinGroup() {
                   group={group}
                   currentUser={user}
                   onJoin={() => handleJoinClick(group.id, group)}
-                  onOpen={() => handleOpenGroup(group.id)}
+                  onOpen={() => handleJoinClick(group.id, group)}
                 />
               ))}
             </div>
@@ -355,7 +355,11 @@ export default function JoinGroup() {
               </div>
             )}
 
-            <p style={{ marginBottom: '1.5rem' }}>{t('joinGroup.joinConfirmMessage')}</p>
+            <p style={{ marginBottom: '1.5rem' }}>
+              {userData?.groupIds?.includes(selectedGroup.id)
+                ? t('joinGroup.errorAlreadyMember')
+                : t('joinGroup.joinConfirmMessage')}
+            </p>
 
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1rem' }}>
               <button
@@ -365,16 +369,30 @@ export default function JoinGroup() {
               >
                 {t('joinGroup.cancelJoin')}
               </button>
-              <button
-                className="close-modal-btn confirm-join-btn"
-                onClick={confirmJoin}
-                style={{
-                  marginTop: 0,
-                  flex: 1
-                }}
-              >
-                {t('joinGroup.confirmJoin')}
-              </button>
+              {userData?.groupIds?.includes(selectedGroup.id) ? (
+                <button
+                  className="close-modal-btn confirm-join-btn"
+                  onClick={() => handleOpenGroup(selectedGroup.id)}
+                  style={{
+                    marginTop: 0,
+                    flex: 1,
+                    backgroundColor: 'var(--blue-gradient-start)'
+                  }}
+                >
+                  {t('groupCard.open')}
+                </button>
+              ) : (
+                <button
+                  className="close-modal-btn confirm-join-btn"
+                  onClick={confirmJoin}
+                  style={{
+                    marginTop: 0,
+                    flex: 1
+                  }}
+                >
+                  {t('joinGroup.confirmJoin')}
+                </button>
+              )}
             </div>
           </div>
         </div>
