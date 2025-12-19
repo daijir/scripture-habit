@@ -51,6 +51,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const [showWelcomeGuide, setShowWelcomeGuide] = useState(false);
   const [showEditNameModal, setShowEditNameModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
+  const [newGroupDescription, setNewGroupDescription] = useState('');
   const [selectedMember, setSelectedMember] = useState(null);
   const longPressTimer = useRef(null);
   const containerRef = useRef(null);
@@ -768,11 +769,13 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     try {
       const groupRef = doc(db, 'groups', groupId);
       await updateDoc(groupRef, {
-        name: newGroupName.trim()
+        name: newGroupName.trim(),
+        description: newGroupDescription.trim()
       });
       toast.success(t('groupChat.groupNameChanged'));
       setShowEditNameModal(false);
       setNewGroupName('');
+      setNewGroupDescription('');
     } catch (error) {
       console.error("Error updating group name:", error);
       toast.error(t('groupChat.errorChangeGroupName'));
@@ -1382,6 +1385,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                 className="edit-group-name-btn"
                 onClick={() => {
                   setNewGroupName(groupData.name);
+                  setNewGroupDescription(groupData.description || '');
                   setShowEditNameModal(true);
                 }}
                 style={{
@@ -1537,6 +1541,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
               {isOwner && (
                 <div className="mobile-menu-item" onClick={() => {
                   setNewGroupName(groupData.name);
+                  setNewGroupDescription(groupData.description || '');
                   setShowMobileMenu(false);
                   setShowEditNameModal(true);
                 }}>
@@ -1780,22 +1785,42 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       {
         showEditNameModal && (
           <div className="leave-modal-overlay">
-            <div className="leave-modal-content">
+            <div className="leave-modal-content edit-group-modal">
               <h3>{t('groupChat.changeGroupName')}</h3>
-              <input
-                type="text"
-                className="delete-confirmation-input" // Reusing this class for styling
-                value={newGroupName}
-                onChange={(e) => setNewGroupName(e.target.value)}
-                placeholder={t('groupChat.enterNewGroupName')}
-                style={{ marginTop: '1rem', marginBottom: '1rem' }}
-              />
-              <div className="leave-modal-actions">
-                <button className="modal-btn cancel" onClick={() => { setShowEditNameModal(false); setNewGroupName(''); }}>{t('groupChat.cancel')}</button>
+
+              <div className="edit-group-field" style={{ width: '100%', textAlign: 'left', marginTop: '1rem' }}>
+                <label style={{ fontSize: '0.8rem', color: 'var(--gray)', fontWeight: 'bold', marginBottom: '4px', display: 'block' }}>
+                  {t('groupForm.groupNameLabel')}
+                </label>
+                <input
+                  type="text"
+                  className="delete-confirmation-input"
+                  value={newGroupName}
+                  onChange={(e) => setNewGroupName(e.target.value)}
+                  placeholder={t('groupChat.enterNewGroupName')}
+                  style={{ marginBottom: '1rem' }}
+                />
+              </div>
+
+              <div className="edit-group-field" style={{ width: '100%', textAlign: 'left' }}>
+                <label style={{ fontSize: '0.8rem', color: 'var(--gray)', fontWeight: 'bold', marginBottom: '4px', display: 'block' }}>
+                  {t('groupForm.descriptionLabel')}
+                </label>
+                <textarea
+                  className="delete-confirmation-input"
+                  value={newGroupDescription}
+                  onChange={(e) => setNewGroupDescription(e.target.value)}
+                  placeholder={t('groupForm.descriptionLabel')}
+                  style={{ minHeight: '80px', resize: 'vertical', padding: '10px' }}
+                />
+              </div>
+
+              <div className="leave-modal-actions" style={{ marginTop: '1.5rem' }}>
+                <button className="modal-btn cancel" onClick={() => { setShowEditNameModal(false); setNewGroupName(''); setNewGroupDescription(''); }}>{t('groupChat.cancel')}</button>
                 <button
                   className="modal-btn primary"
                   onClick={handleUpdateGroupName}
-                  disabled={!newGroupName.trim() || newGroupName === groupData?.name}
+                  disabled={!newGroupName.trim() || (newGroupName === groupData?.name && newGroupDescription === (groupData?.description || ''))}
                 >
                   {t('groupChat.save')}
                 </button>
@@ -2268,7 +2293,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                         </span>
                         <span style={{ fontSize: '0.75rem', color: 'var(--gray)' }}>
                           {(() => {
-                            const lastActive = member.lastPostDate;
+                            const lastActive = (groupData?.memberLastActive && groupData.memberLastActive[member.id]) || member.lastPostDate;
                             if (!lastActive) return t('groupChat.noActivity') || "No recent activity";
 
                             let dateObj;

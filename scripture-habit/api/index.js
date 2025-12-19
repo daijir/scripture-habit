@@ -988,8 +988,8 @@ app.get('/api/check-inactive-users', async (req, res) => {
                 const senderId = data.senderId;
                 const createdAt = data.createdAt;
 
-                // If this is a user message and we haven't found a newer one for this user match
-                if (senderId && members.includes(senderId) && !foundMembers.has(senderId)) {
+                // If this is a user message (specifically a NOTE/ENTRY) and we haven't found a newer one for this user match
+                if (senderId && (data.isNote || data.isEntry) && members.includes(senderId) && !foundMembers.has(senderId)) {
                     // Update only if current data is missing or older
                     const currentTimestamp = currentLastActive[senderId];
                     if (!currentTimestamp || (createdAt && createdAt.toMillis() > currentTimestamp.toMillis())) {
