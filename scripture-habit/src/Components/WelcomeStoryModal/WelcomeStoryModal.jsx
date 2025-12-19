@@ -77,7 +77,6 @@ const WelcomeStoryModal = ({ isOpen, onClose, userData }) => {
 
         // Page 4: The Rule (New)
         <div className="story-page" key="p3-rule">
-            <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🤝🔥</div>
             <h2 className="story-title">{t('welcomeStory.page3RuleTitle')}</h2>
             <div className="story-highlight-box" style={{ background: 'rgba(255, 100, 100, 0.1)', borderLeft: '4px solid #ff6b6b' }}>
                 <p className="story-text" dangerouslySetInnerHTML={{ __html: t('welcomeStory.page3RuleContent1') }} />
@@ -85,9 +84,7 @@ const WelcomeStoryModal = ({ isOpen, onClose, userData }) => {
             <p className="story-text" style={{ marginTop: '1rem', fontSize: '0.95rem' }}>
                 {t('welcomeStory.page3RuleContent2')}
             </p>
-            <p className="story-text" style={{ marginTop: '1rem', fontWeight: 'bold' }}>
-                {t('welcomeStory.page3RuleContent3')}
-            </p>
+
         </div>,
 
         // Page 5: Vision
