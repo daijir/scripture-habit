@@ -53,6 +53,8 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const [newGroupName, setNewGroupName] = useState('');
   const [newGroupDescription, setNewGroupDescription] = useState('');
   const [selectedMember, setSelectedMember] = useState(null);
+  const [showUnityModal, setShowUnityModal] = useState(false);
+  const [unityModalData, setUnityModalData] = useState({ posted: [], notPosted: [] });
   const longPressTimer = useRef(null);
   const containerRef = useRef(null);
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
@@ -524,6 +526,58 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     } catch (error) {
       console.error("Error fetching members:", error);
       toast.error("Failed to load members list");
+    } finally {
+      setMembersLoading(false);
+    }
+  };
+
+  const handleShowUnityModal = async () => {
+    if (!groupData || !groupData.members) return;
+
+    setShowUnityModal(true);
+
+    const todayStr = new Date().toDateString();
+    let postedUids = [];
+    if (groupData.dailyActivity && groupData.dailyActivity.date === todayStr && groupData.dailyActivity.activeMembers) {
+      postedUids = groupData.dailyActivity.activeMembers;
+    } else {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const todayTime = today.getTime();
+      const uniquePosters = new Set();
+      messages.forEach(msg => {
+        let msgTime = 0;
+        if (msg.createdAt?.toDate) msgTime = msg.createdAt.toDate().getTime();
+        else if (msg.createdAt?.seconds) msgTime = msg.createdAt.seconds * 1000;
+        if (msgTime >= todayTime && msg.senderId !== 'system' && !msg.isSystemMessage && msg.isNote) {
+          uniquePosters.add(msg.senderId);
+        }
+      });
+      postedUids = Array.from(uniquePosters);
+    }
+
+    const notPostedUids = groupData.members.filter(uid => !postedUids.includes(uid));
+
+    setMembersLoading(true);
+    try {
+      const allUids = Array.from(new Set([...postedUids, ...notPostedUids]));
+      const missingUids = allUids.filter(uid => !membersList.some(m => m.id === uid));
+
+      let updatedMembersList = [...membersList];
+      if (missingUids.length > 0) {
+        const memberPromises = missingUids.map(uid => getDoc(doc(db, 'users', uid)));
+        const memberSnapshots = await Promise.all(memberPromises);
+        const newMembers = memberSnapshots.map(snap => snap.exists() ? { id: snap.id, ...snap.data() } : { id: snap.id, nickname: 'Unknown' });
+        updatedMembersList = [...membersList, ...newMembers];
+        setMembersList(updatedMembersList);
+      }
+
+      const posted = postedUids.map(uid => ({ id: uid, nickname: updatedMembersList.find(m => m.id === uid)?.nickname || 'Unknown' }));
+      const notPosted = notPostedUids.map(uid => ({ id: uid, nickname: updatedMembersList.find(m => m.id === uid)?.nickname || 'Unknown' }));
+
+      setUnityModalData({ posted, notPosted });
+    } catch (error) {
+      console.error("Error fetching unity modal data:", error);
     } finally {
       setMembersLoading(false);
     }
@@ -1264,7 +1318,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     handleGenerateWeeklyRecap();
   };
 
-  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit || showEditNameModal || showMembersModal;
+  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit || showEditNameModal || showMembersModal || showUnityModal;
 
   // Calculate Unity Score (Percentage of members who posted today)
   const unityPercentage = useMemo(() => {
@@ -1388,9 +1442,27 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
 
         // Mark as seen for today
         localStorage.setItem(storageKey, todayStr);
+
+        // EXTRA: Send a system message to the chat if not already sent today
+        const hasAlreadyAnnounced = messages.some(msg =>
+          msg.messageType === 'unityAnnouncement' &&
+          msg.createdAt &&
+          (msg.createdAt.toDate ? msg.createdAt.toDate().toDateString() :
+            (msg.createdAt.seconds ? new Date(msg.createdAt.seconds * 1000).toDateString() : null)) === todayStr
+        );
+
+        if (!hasAlreadyAnnounced) {
+          const messagesRef = collection(db, 'groups', groupId, 'messages');
+          addDoc(messagesRef, {
+            senderId: 'system',
+            isSystemMessage: true,
+            messageType: 'unityAnnouncement',
+            createdAt: serverTimestamp()
+          }).catch(err => console.error("Error sending unity announcement:", err));
+        }
       }
     }
-  }, [unityPercentage, groupId, userData?.uid]);
+  }, [unityPercentage, groupId, userData?.uid, messages]);
 
   return (
     <div className="GroupChat" >
@@ -1442,21 +1514,29 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
             )}
             {groupData?.members && <span className="member-count-badge">({groupData.members.length})</span>}
             {groupData && (
-              <span className="unity-score-badge" style={{
-                marginLeft: '8px',
-                fontSize: '1.0rem',
-                display: 'flex',
-                alignItems: 'center',
-                color: unityPercentage === 100 ? '#B8860B' : 'var(--text-color)',
-                fontWeight: unityPercentage === 100 ? 'bold' : 'normal',
-                textShadow: unityPercentage === 100 ? '0 0 8px rgba(255, 215, 0, 0.4)' : 'none',
-                transition: 'all 0.3s ease'
-              }} title="Unity Score: members active today">
-                {unityPercentage === 100 ? '🌕' :
-                  unityPercentage >= 75 ? '🌔' :
-                    unityPercentage >= 50 ? '🌓' :
-                      unityPercentage >= 25 ? '🌒' :
-                        '🌑'} {unityPercentage}%
+              <span
+                className="unity-score-badge clickable"
+                onClick={handleShowUnityModal}
+                style={{
+                  marginLeft: '8px',
+                  fontSize: '1.0rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  color: unityPercentage === 100 ? '#B8860B' : 'var(--text-color)',
+                  fontWeight: unityPercentage === 100 ? 'bold' : 'normal',
+                  textShadow: unityPercentage === 100 ? '0 0 8px rgba(255, 215, 0, 0.4)' : 'none',
+                  transition: 'all 0.3s ease',
+                  cursor: 'pointer',
+                  padding: '2px 6px',
+                  borderRadius: '12px',
+                  backgroundColor: 'rgba(0,0,0,0.05)'
+                }}
+                title="Unity Score: members active today"
+              >
+                {unityPercentage === 100 ? '☀️' :
+                  unityPercentage >= 66 ? '🌕' :
+                    unityPercentage >= 33 ? '🌠' :
+                      '🌑'} {unityPercentage}%
               </span>
             )}
 
@@ -1913,8 +1993,13 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                 </div>
               )}
               {msg.senderId === 'system' || msg.isSystemMessage ? (
-                <div id={`message-${msg.id}`} className={`message system-message ${msg.messageType === 'streakAnnouncement' ? 'streak-announcement' : ''}`}>
+                <div id={`message-${msg.id}`} className={`message system-message ${msg.messageType === 'streakAnnouncement' ? 'streak-announcement' : ''} ${msg.messageType === 'unityAnnouncement' ? 'unity-announcement' : ''}`}>
                   <div className="message-content">
+                    {msg.messageType === 'unityAnnouncement' && (
+                      <div className="unity-announcement-body">
+                        <img src="/images/mascot.png" alt="Mascot" className="mascot-avatar-celestial" />
+                      </div>
+                    )}
                     <ReactMarkdown>
                       {(() => {
                         // New format: has messageType and messageData
@@ -1932,6 +2017,10 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                         if (msg.messageType === 'userLeft' && msg.messageData) {
                           return t('groupChat.userLeft')
                             .replace('{nickname}', msg.messageData.nickname);
+                        }
+
+                        if (msg.messageType === 'unityAnnouncement') {
+                          return t('groupChat.unityAnnouncement');
                         }
 
                         if (msg.messageType === 'weeklyRecap') {
@@ -2355,6 +2444,142 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
           </div>
         )
       }
+
+      {/* Unity Percentage Modal */}
+      {showUnityModal && (
+        <div className="leave-modal-overlay" onClick={() => setShowUnityModal(false)}>
+          <div className="leave-modal-content unity-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '380px', maxHeight: '85vh', display: 'flex', flexDirection: 'column', padding: '1.5rem' }}>
+            <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ fontSize: '1.8rem' }}>
+                  {unityPercentage === 100 ? '☀️' :
+                    unityPercentage >= 66 ? '🌕' :
+                      unityPercentage >= 33 ? '🌠' :
+                        '🌑'}
+                </span>
+                <h3 style={{ margin: 0, fontSize: '1.3rem' }}>{t('groupChat.unityModalTitle') || "Unity Percentage"}</h3>
+              </div>
+              <button className="close-menu-btn" onClick={() => setShowUnityModal(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gray)' }}>
+                <UilTimes size="24" />
+              </button>
+            </div>
+
+            <div className="unity-modal-body" style={{ overflowY: 'auto', flex: 1, paddingRight: '5px' }}>
+              <p className="unity-description" style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--black)', textAlign: 'center', margin: '1rem 0', lineHeight: '1.4' }}>
+                {t('groupChat.unityModalDescription') || "Let's all aim for the Celestial Kingdom together!"}
+              </p>
+
+              <div className="unity-percentage-display" style={{ textAlign: 'center', margin: '1.5rem 0' }}>
+                <div style={{ fontSize: '3.5rem', fontWeight: '800', color: 'var(--pink)', lineHeight: '1' }}>{unityPercentage}%</div>
+                <div className="unity-progress-container" style={{ width: '100%', height: '14px', background: 'rgba(0,0,0,0.05)', borderRadius: '7px', overflow: 'hidden', marginTop: '12px' }}>
+                  <div className="unity-progress-bar" style={{ width: `${unityPercentage}%`, height: '100%', background: 'linear-gradient(90deg, #FF919D 0%, #fc6777 100%)', transition: 'width 1s cubic-bezier(0.34, 1.56, 0.64, 1)' }}></div>
+                </div>
+
+                <div className="unity-legend" style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(0,0,0,0.02)', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.05)' }}>
+                  <h5 style={{ margin: '0 0 10px 0', fontSize: '0.8rem', color: 'var(--gray)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '600' }}>{t('groupChat.unityModalLegendTitle') || "Progress Guide"}</h5>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem' }}>
+                      <span style={{ fontSize: '1.1rem' }}>☀️</span>
+                      <span style={{ color: unityPercentage === 100 ? 'var(--pink)' : 'var(--black)', fontWeight: unityPercentage === 100 ? 'bold' : 'normal' }}>{t('groupChat.unityModalLegendCelestial') || "Celestial (100%)"}</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem' }}>
+                      <span style={{ fontSize: '1.1rem' }}>🌕</span>
+                      <span style={{ color: (unityPercentage >= 66 && unityPercentage < 100) ? 'var(--pink)' : 'var(--black)', fontWeight: (unityPercentage >= 66 && unityPercentage < 100) ? 'bold' : 'normal' }}>{t('groupChat.unityModalLegendTerrestrial') || "Terrestrial (66%~)"}</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem' }}>
+                      <span style={{ fontSize: '1.1rem' }}>🌠</span>
+                      <span style={{ color: (unityPercentage >= 33 && unityPercentage < 66) ? 'var(--pink)' : 'var(--black)', fontWeight: (unityPercentage >= 33 && unityPercentage < 66) ? 'bold' : 'normal' }}>{t('groupChat.unityModalLegendTelestial') || "Telestial (33%~)"}</span>
+                    </div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem' }}>
+                      <span style={{ fontSize: '1.1rem' }}>🌑</span>
+                      <span style={{ color: unityPercentage < 33 ? 'var(--pink)' : 'var(--black)', fontWeight: unityPercentage < 33 ? 'bold' : 'normal' }}>{t('groupChat.unityModalLegendEmpty') || "Starting (0%~)"}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {membersLoading ? (
+                <div style={{ textAlign: 'center', padding: '2rem' }}>
+                  <div className="spinner-mini" style={{ margin: '0 auto', width: '30px', height: '30px', border: '3px solid rgba(255,145,157,0.3)', borderTopColor: 'var(--pink)' }}></div>
+                  <p style={{ marginTop: '10px', color: 'var(--gray)' }}>Loading members...</p>
+                </div>
+              ) : (
+                <div className="unity-lists" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                  <div className="unity-list-section">
+                    <h4 style={{ color: '#27ae60', display: 'flex', alignItems: 'center', gap: '6px', margin: '0 0 10px 0', fontSize: '1rem' }}>
+                      <span style={{ fontSize: '1.2rem' }}>✅</span> {t('groupChat.unityModalPosted') || "Members who posted notes"}
+                    </h4>
+                    <div className="unity-nicknames" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                      {unityModalData.posted.length > 0 ? (
+                        unityModalData.posted.map((member, i) => (
+                          <span
+                            key={i}
+                            className="unity-nickname-chip"
+                            onClick={() => handleUserProfileClick(member.id)}
+                            style={{
+                              background: '#e8f8f0',
+                              color: '#27ae60',
+                              padding: '6px 12px',
+                              borderRadius: '20px',
+                              fontSize: '0.9rem',
+                              fontWeight: '500',
+                              boxShadow: '0 2px 4px rgba(39, 174, 96, 0.1)',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {member.nickname}
+                          </span>
+                        ))
+                      ) : (
+                        <span style={{ fontStyle: 'italic', color: 'var(--gray)', fontSize: '0.9rem', padding: '5px 0' }}>{t('groupChat.unityModalNoPostsYet') || "No posts yet today"}</span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="unity-list-section">
+                    <h4 style={{ color: 'var(--pink)', display: 'flex', alignItems: 'center', gap: '6px', margin: '0 0 10px 0', fontSize: '1rem' }}>
+                      <span style={{ fontSize: '1.2rem' }}>💪</span> {t('groupChat.unityModalNotPosted') || "Let's encourage those who haven't posted yet!"}
+                    </h4>
+                    <div className="unity-nicknames" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                      {unityModalData.notPosted.length > 0 ? (
+                        unityModalData.notPosted.map((member, i) => (
+                          <span
+                            key={i}
+                            className="unity-nickname-chip"
+                            onClick={() => handleUserProfileClick(member.id)}
+                            style={{
+                              background: '#fff0f3',
+                              color: 'var(--pink)',
+                              padding: '6px 12px',
+                              borderRadius: '20px',
+                              fontSize: '0.9rem',
+                              fontWeight: '500',
+                              boxShadow: '0 2px 4px rgba(255, 145, 157, 0.1)',
+                              cursor: 'pointer'
+                            }}
+                          >
+                            {member.nickname}
+                          </span>
+                        ))
+                      ) : (
+                        <div style={{ background: '#fff9e6', color: '#B8860B', padding: '10px 15px', borderRadius: '12px', fontSize: '0.95rem', fontWeight: 'bold', width: '100%', textAlign: 'center', border: '1px solid #ffeeba' }}>
+                          ✨ {t('groupChat.unityModalAllPosted') || 'Everyone has posted today! Amazing unity!'} ✨
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="leave-modal-actions" style={{ marginTop: '1.5rem' }}>
+              <button className="modal-btn primary" onClick={() => setShowUnityModal(false)} style={{ width: '100%', maxWidth: 'none' }}>
+                {t('groupChat.welcomeGuideButton') || t('welcomeGuideButton') || "Got it!"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* User Profile Modal */}
       {selectedMember && (

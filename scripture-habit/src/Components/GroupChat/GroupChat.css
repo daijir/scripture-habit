@@ -476,6 +476,42 @@
     animation: pulseCelebration 2s infinite ease-in-out;
 }
 
+.message.system-message.unity-announcement p {
+    background: linear-gradient(135deg, #fff9e6 0%, #fffdf5 100%);
+    color: #B8860B;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    font-weight: 700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    padding: 0.8rem 1.5rem;
+    animation: celestialRadiance 3s infinite alternate ease-in-out;
+}
+
+.unity-announcement-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.mascot-avatar-celestial {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+}
+
+@keyframes celestialRadiance {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+        transform: scale(1);
+    }
+
+    100% {
+        box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+        transform: scale(1.03);
+    }
+}
+
 @keyframes pulseCelebration {
     0% {
         transform: scale(1);

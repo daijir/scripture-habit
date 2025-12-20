@@ -24,10 +24,9 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
   const getGroupStatusEmoji = (group) => {
     const percentage = getUnityPercentage(group);
 
-    if (percentage === 100) return '🌕';
-    if (percentage >= 75) return '🌔';
-    if (percentage >= 50) return '🌓';
-    if (percentage >= 25) return '🌒';
+    if (percentage === 100) return '☀️';
+    if (percentage >= 66) return '🌕';
+    if (percentage >= 33) return '🌠';
     return '🌑';
   };
 
