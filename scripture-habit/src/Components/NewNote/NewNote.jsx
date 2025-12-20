@@ -795,6 +795,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                             messageType: 'streakAnnouncement',
                             messageData: {
                                 nickname: userData.nickname,
+                                userId: userData.uid,
                                 streak: newStreak
                             }
                         });

@@ -466,6 +466,33 @@
     text-align: center;
 }
 
+.message.system-message.streak-announcement p {
+    background: rgba(255, 255, 255, 0.85);
+    color: var(--gray);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 0.6rem 1.2rem;
+    animation: pulseCelebration 2s infinite ease-in-out;
+}
+
+@keyframes pulseCelebration {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    50% {
+        transform: scale(1.02);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+}
+
 .message-image {
     max-width: 100%;
     border-radius: 1rem;
