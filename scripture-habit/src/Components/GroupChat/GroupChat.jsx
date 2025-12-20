@@ -203,8 +203,19 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
               const newIncoming = [];
               snapshot.docChanges().forEach((change) => {
                 if (change.type === "added") {
-                  // Check if we already have it (dedupe)
-                  newIncoming.push({ id: change.doc.id, ...change.doc.data() });
+                  const data = change.doc.data();
+
+                  // Trigger confetti for streaks!
+                  if (data.messageType === 'streakAnnouncement' && data.messageData?.userId !== userData?.uid) {
+                    confetti({
+                      particleCount: 150,
+                      spread: 70,
+                      origin: { y: 0.6 },
+                      zIndex: 10000
+                    });
+                  }
+
+                  newIncoming.push({ id: change.doc.id, ...data });
                 }
                 if (change.type === "modified") {
                   setMessages(prev => prev.map(m => m.id === change.doc.id ? { id: change.doc.id, ...change.doc.data() } : m));
@@ -226,8 +237,32 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
           // If no messages at all, simply listen for any new messages
           const allNewQuery = query(messagesRef, orderBy('createdAt', 'asc'));
           unsubscribeNewMessages = onSnapshot(allNewQuery, (snapshot) => {
-            const msgs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-            setMessages(msgs);
+            snapshot.docChanges().forEach((change) => {
+              if (change.type === "added") {
+                const data = change.doc.data();
+
+                // Trigger confetti for streaks (avoiding local user duplication)
+                if (data.messageType === 'streakAnnouncement' && data.messageData?.userId !== userData?.uid) {
+                  confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    zIndex: 10000
+                  });
+                }
+
+                setMessages(prev => {
+                  if (prev.some(m => m.id === change.doc.id)) return prev;
+                  return [...prev, { id: change.doc.id, ...data }];
+                });
+              }
+              if (change.type === "modified") {
+                setMessages(prev => prev.map(m => m.id === change.doc.id ? { id: change.doc.id, ...change.doc.data() } : m));
+              }
+              if (change.type === "removed") {
+                setMessages(prev => prev.filter(m => m.id !== change.doc.id));
+              }
+            });
             setLoading(false);
           });
         }
@@ -1878,7 +1913,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                 </div>
               )}
               {msg.senderId === 'system' || msg.isSystemMessage ? (
-                <div id={`message-${msg.id}`} className="message system-message">
+                <div id={`message-${msg.id}`} className={`message system-message ${msg.messageType === 'streakAnnouncement' ? 'streak-announcement' : ''}`}>
                   <div className="message-content">
                     <ReactMarkdown>
                       {(() => {
