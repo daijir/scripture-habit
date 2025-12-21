@@ -82,6 +82,10 @@ const Welcome = () => {
                 </div>
             </div>
 
+            <div className="browser-warning">
+                {t('welcome.browserWarning')}
+            </div>
+
             <div className="auth-buttons">
                 <Link to="/login">
                     <Button className="login-btn">{t('welcome.login')}</Button>

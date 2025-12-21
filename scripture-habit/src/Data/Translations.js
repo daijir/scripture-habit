@@ -299,7 +299,8 @@ export const translations = {
             title: "Scripture Habit",
             chooseLanguage: "Choose your language (you can change language setting later as well.)",
             login: "Log in",
-            signup: "Sign Up"
+            signup: "Sign Up",
+            browserWarning: "Please log in or sign up using your default browser (Chrome, Safari, etc.). In-app browsers like LINE, Messenger, or Instagram may prevent login due to security restrictions."
         },
         login: {
             title: "Log In",
@@ -312,6 +313,7 @@ export const translations = {
             googleButton: "Log in with Google",
             facebookButton: "Log in with Facebook",
             githubButton: "Log in with GitHub",
+            browserWarning: "Please log in or sign up using your default browser (Chrome, Safari, etc.). In-app browsers like LINE, Messenger, or Instagram may prevent login due to security restrictions.",
             inAppBrowserWarning: "Google Login is not supported in this in-app browser. Please open in Chrome or Safari.",
             emailNotVerified: "Please verify your email address before logging in.",
             resendVerification: "Resend Verification Email",
@@ -337,6 +339,8 @@ export const translations = {
             googleButton: "Sign up with Google",
             facebookButton: "Sign up with Facebook",
             githubButton: "Sign up with GitHub",
+            browserWarning: "Please log in or sign up using your default browser (Chrome, Safari, etc.). In-app browsers like LINE, Messenger, or Instagram may prevent login due to security restrictions.",
+            spamWarning: "If you do not receive the verification email, please check your spam folder.",
             verificationSent: "Verification email sent! Please check your inbox.",
             completeProfile: "Complete Your Profile",
             finishSignup: "Finish Sign Up",
@@ -765,7 +769,8 @@ export const translations = {
             title: "Scripture Habit",
             chooseLanguage: "言語を選択してください（後で変更することも可能です）。",
             login: "ログイン",
-            signup: "サインアップ"
+            signup: "サインアップ",
+            browserWarning: "必ずお使いのデフォルトブラウザ（Chrome, Safariなど）からログイン・サインアップしてください。LINE, メッセンジャー, インスタグラムなどのアプリ内ブラウザでは、セキュリティの関係でログインできないことがございます。"
         },
         login: {
             title: "ログイン",
@@ -778,6 +783,7 @@ export const translations = {
             googleButton: "Googleでログイン",
             facebookButton: "Facebookでログイン",
             githubButton: "GitHubでログイン",
+            browserWarning: "必ずお使いのデフォルトブラウザ（Chrome, Safariなど）からログイン・サインアップしてください。LINE, メッセンジャー, インスタグラムなどのアプリ内ブラウザでは、セキュリティの関係でログインできないことがございます。",
             inAppBrowserWarning: "このアプリ内ブラウザではGoogleログインが利用できません。右上のメニュー等からChromeやSafariで開いてください。",
             emailNotVerified: "ログインする前にメールアドレスの確認を行ってください。",
             resendVerification: "確認メールを再送信",
@@ -803,6 +809,8 @@ export const translations = {
             googleButton: "Googleで登録",
             facebookButton: "Facebookで登録",
             githubButton: "GitHubで登録",
+            browserWarning: "必ずお使いのデフォルトブラウザ（Chrome, Safariなど）からログイン・サインアップしてください。LINE, メッセンジャー, インスタグラムなどのアプリ内ブラウザでは、セキュリティの関係でログインできないことがございます。",
+            spamWarning: "確認メールが届かない場合、迷惑メールの受信箱をご確認ください。",
             verificationSent: "確認メールを送信しました！受信トレイを確認してください。",
             completeProfile: "プロフィールを完成させる",
             finishSignup: "登録を完了する",
@@ -1175,7 +1183,8 @@ export const translations = {
             title: "Scripture Habit",
             chooseLanguage: "Escolha seu idioma (você pode alterar depois).",
             login: "Entrar",
-            signup: "Inscrever-se"
+            signup: "Inscrever-se",
+            browserWarning: "Por favor, faça login ou inscreva-se usando seu navegador padrão (Chrome, Safari, etc.). Navegadores internos de aplicativos como LINE, Messenger ou Instagram podem impedir o login devido a restrições de segurança."
         },
         login: {
             title: "Entrar",
@@ -1189,6 +1198,7 @@ export const translations = {
             googleButton: "Entrar com o Google",
             facebookButton: "Entrar com Facebook",
             githubButton: "Entrar com GitHub",
+            browserWarning: "Por favor, faça login ou inscreva-se usando seu navegador padrão (Chrome, Safari, etc.). Navegadores internos de aplicativos como LINE, Messenger ou Instagram podem impedir o login devido a restrições de segurança.",
             inAppBrowserWarning: "O login do Google não é suportado neste navegador no aplicativo. Abra no Chrome ou Safari.",
             emailNotVerified: "Por favor, verifique seu endereço de e-mail antes de fazer login.",
             resendVerification: "Reenviar e-mail de verificação",
@@ -1215,6 +1225,8 @@ export const translations = {
             googleButton: "Inscrever-se com o Google",
             facebookButton: "Inscrever-se com Facebook",
             githubButton: "Inscrever-se com GitHub",
+            browserWarning: "Por favor, faça login ou inscreva-se usando seu navegador padrão (Chrome, Safari, etc.). Navegadores internos de aplicativos como LINE, Messenger ou Instagram podem impedir o login devido a restrições de segurança.",
+            spamWarning: "Se você não receber o e-mail de verificação, verifique sua pasta de spam.",
             verificationSent: "E-mail de verificação enviado! Por favor, verifique sua caixa de entrada.",
             completeProfile: "Complete Seu Perfil",
             finishSignup: "Concluir Inscrição",
@@ -1582,7 +1594,8 @@ export const translations = {
             title: "Scripture Habit",
             chooseLanguage: "選擇您的語言 (您稍後也可以更改)。",
             login: "登入",
-            signup: "註冊"
+            signup: "註冊",
+            browserWarning: "請使用您的預設瀏覽器（Chrome、Safari 等）進行登入或註冊。LINE、Messenger 或 Instagram 等應用程式內瀏覽器可能會因安全性限制而導致登入失敗。"
         },
         login: {
             title: "登入",
@@ -1596,6 +1609,7 @@ export const translations = {
             googleButton: "使用 Google 登入",
             facebookButton: "使用 Facebook 登入",
             githubButton: "使用 GitHub 登入",
+            browserWarning: "請使用您的預設瀏覽器（Chrome、Safari 等）進行登入或註冊。LINE、Messenger 或 Instagram 等應用程式內瀏覽器可能會因安全性限制而導致登入失敗。",
             inAppBrowserWarning: "此應用程式內瀏覽器不支援 Google 登入。請在 Chrome 或 Safari 中開啟。",
             emailNotVerified: "請在登錄前驗證您的電子郵件地址。",
             resendVerification: "重新發送驗證郵件",
@@ -1622,6 +1636,8 @@ export const translations = {
             googleButton: "使用 Google 註冊",
             facebookButton: "使用 Facebook 註冊",
             githubButton: "使用 GitHub 註冊",
+            browserWarning: "請使用您的預設瀏覽器（Chrome、Safari 等）進行登入或註冊。LINE、Messenger 或 Instagram 等應用程式內瀏覽器可能會因安全性限制而導致登入失敗。",
+            spamWarning: "如果您沒有收到驗證郵件，請檢查您的垃圾郵件箱。",
             verificationSent: "驗證信已發送！請檢查您的收件匣。",
             completeProfile: "完成您的個人資料",
             finishSignup: "完成註冊",
@@ -1989,7 +2005,8 @@ export const translations = {
             title: "Scripture Habit",
             chooseLanguage: "Elige tu idioma (puedes cambiarlo más tarde).",
             login: "Iniciar Sesión",
-            signup: "Registrarse"
+            signup: "Registrarse",
+            browserWarning: "Inicie sesión o regístrese con su navegador predeterminado (Chrome, Safari, etc.). Los navegadores integrados en aplicaciones como LINE, Messenger o Instagram pueden fallar debido a restricciones de seguridad."
         },
         login: {
             title: "Iniciar Sesión",
@@ -2003,6 +2020,7 @@ export const translations = {
             googleButton: "Iniciar sesión con Google",
             facebookButton: "Iniciar sesión con Facebook",
             githubButton: "Iniciar sesión con GitHub",
+            browserWarning: "Inicie sesión o regístrese con su navegador predeterminado (Chrome, Safari, etc.). Los navegadores integrados en aplicaciones como LINE, Messenger o Instagram pueden fallar debido a restricciones de seguridad.",
             inAppBrowserWarning: "El inicio de sesión con Google no es compatible en este navegador de la aplicación. Por favor, ábrelo en Chrome o Safari.",
             emailNotVerified: "Por favor, verifique su dirección de correo electrónico antes de iniciar sesión.",
             resendVerification: "Reenviar correo de verificación",
@@ -2029,6 +2047,8 @@ export const translations = {
             googleButton: "Registrarse con Google",
             facebookButton: "Registrarse con Facebook",
             githubButton: "Registrarse con GitHub",
+            browserWarning: "Inicie sesión o regístrese con su navegador predeterminado (Chrome, Safari, etc.). Los navegadores integrados en aplicaciones como LINE, Messenger o Instagram pueden fallar debido a restricciones de seguridad.",
+            spamWarning: "Si no recibe el correo electrónico de verificación, consulte su carpeta de correo no deseado.",
             verificationSent: "¡Correo de verificación enviado! Por favor revise su bandeja de entrada.",
             completeProfile: "Completa tu Perfil",
             finishSignup: "Terminar Registro",
@@ -2396,7 +2416,8 @@ export const translations = {
             title: "Scripture Habit",
             chooseLanguage: "Chọn ngôn ngữ của bạn (bạn có thể thay đổi sau).",
             login: "Đăng nhập",
-            signup: "Đăng ký"
+            signup: "Đăng ký",
+            browserWarning: "Vui lòng đăng nhập hoặc đăng ký bằng trình duyệt mặc định của bạn (Chrome, Safari, v.v.). Các trình duyệt trong ứng dụng như LINE, Messenger hoặc Instagram có thể thất bại do các hạn chế về bảo mật."
         },
         login: {
             title: "Đăng nhập",
@@ -2410,6 +2431,7 @@ export const translations = {
             googleButton: "Đăng nhập bằng Google",
             facebookButton: "Đăng nhập bằng Facebook",
             githubButton: "Đăng nhập bằng GitHub",
+            browserWarning: "Vui lòng đăng nhập hoặc đăng ký bằng trình duyệt mặc định của bạn (Chrome, Safari, v.v.). Các trình duyệt trong ứng dụng như LINE, Messenger hoặc Instagram có thể thất bại do các hạn chế về bảo mật.",
             inAppBrowserWarning: "Đăng nhập Google không được hỗ trợ trong trình duyệt ứng dụng này. Vui lòng mở trong Chrome hoặc Safari.",
             emailNotVerified: "Vui lòng xác minh địa chỉ email của bạn trước khi đăng nhập.",
             resendVerification: "Gửi lại email xác minh",
@@ -2436,6 +2458,8 @@ export const translations = {
             googleButton: "Đăng ký bằng Google",
             facebookButton: "Đăng ký bằng Facebook",
             githubButton: "Đăng ký bằng GitHub",
+            browserWarning: "Vui lòng đăng nhập hoặc đăng ký bằng trình duyệt mặc định của bạn (Chrome, Safari, v.v.). Các trình duyệt trong ứng dụng như LINE, Messenger hoặc Instagram có thể thất bại do các hạn chế về bảo mật.",
+            spamWarning: "Nếu bạn không nhận được email xác minh, vui lòng kiểm tra thư mục thư rác của bạn.",
             verificationSent: "Email xác minh đã được gửi! Vui lòng kiểm tra hộp thư đến của bạn.",
             completeProfile: "Hoàn thành Hồ sơ của bạn",
             finishSignup: "Hoàn tất Đăng ký",
@@ -2803,7 +2827,8 @@ export const translations = {
             title: "Scripture Habit",
             chooseLanguage: "เลือกภาษาของคุณ (คุณสามารถเปลี่ยนภาษาได้ในภายหลัง)",
             login: "เข้าสู่ระบบ",
-            signup: "ลงทะเบียน"
+            signup: "ลงทะเบียน",
+            browserWarning: "กรุณาเข้าสู่ระบบหรือลงทะเบียนโดยใช้เบราว์เซอร์เริ่มต้นของคุณ (Chrome, Safari ฯลฯ) เบราว์เซอร์ในแอป เช่น LINE, Messenger หรือ Instagram อาจทำงานล้มเหลวเนื่องจากข้อจำกัดด้านความปลอดภัย"
         },
         login: {
             title: "เข้าสู่ระบบ",
@@ -2817,6 +2842,7 @@ export const translations = {
             googleButton: "เข้าสู่ระบบด้วย Google",
             facebookButton: "เข้าสู่ระบบด้วย Facebook",
             githubButton: "เข้าสู่ระบบด้วย GitHub",
+            browserWarning: "กรุณาเข้าสู่ระบบหรือลงทะเบียนโดยใช้เบราว์เซอร์เริ่มต้นของคุณ (Chrome, Safari ฯลฯ) เบราว์เซอร์ในแอป เช่น LINE, Messenger หรือ Instagram อาจทำงานล้มเหลวเนื่องจากข้อจำกัดด้านความปลอดภัย",
             inAppBrowserWarning: "การเข้าสู่ระบบด้วย Google ไม่รองรับในเบราว์เซอร์ในแอปนี้ กรุณาเปิดใน Chrome หรือ Safari",
             emailNotVerified: "กรุณายืนยันที่อยู่อีเมลของคุณก่อนเข้าสู่ระบบ",
             resendVerification: "ส่งอีเมลยืนยันอีกครั้ง",
@@ -2843,6 +2869,8 @@ export const translations = {
             googleButton: "ลงทะเบียนด้วย Google",
             facebookButton: "สมัครสมาชิกด้วย Facebook",
             githubButton: "สมัครสมาชิกด้วย GitHub",
+            browserWarning: "กรุณาเข้าสู่ระบบหรือลงทะเบียนโดยใช้เบราว์เซอร์เริ่มต้นของคุณ (Chrome, Safari ฯลฯ) เบราว์เซอร์ในแอป เช่น LINE, Messenger หรือ Instagram อาจทำงานล้มเหลวเนื่องจากข้อจำกัดด้านความปลอดภัย",
+            spamWarning: "หากคุณไม่ได้รับอีเมลยืนยัน โปรดตรวจสอบโฟลเดอร์สแปมของคุณ",
             verificationSent: "ส่งอีเมลยืนยันแล้ว! โปรดตรวจสอบกล่องจดหมายของคุณ",
             completeProfile: "กรอกข้อมูลโปรไฟล์ของคุณให้สมบูรณ์",
             finishSignup: "เสร็จสิ้นการลงทะเบียน",
@@ -3210,7 +3238,8 @@ export const translations = {
             title: "Scripture Habit",
             chooseLanguage: "언어를 선택하세요 (나중에 변경할 수 있습니다).",
             login: "로그인",
-            signup: "회원가입"
+            signup: "회원가입",
+            browserWarning: "기본 브라우저(Chrome, Safari 등)를 사용하여 로그인하거나 가입하십시오. LINE, Messenger, Instagram과 같은 인앱 브라우저는 보안 제한으로 인해 로그인이 실패할 수 있습니다."
         },
         login: {
             title: "로그인",
@@ -3224,6 +3253,7 @@ export const translations = {
             googleButton: "Google로 로그인",
             facebookButton: "Facebook으로 로그인",
             githubButton: "GitHub로 로그인",
+            browserWarning: "기본 브라우저(Chrome, Safari 등)를 사용하여 로그인하거나 가입하십시오. LINE, Messenger, Instagram과 같은 인앱 브라우저는 보안 제한으로 인해 로그인이 실패할 수 있습니다.",
             inAppBrowserWarning: "Google 로그인은 이 인앱 브라우저에서 지원되지 않습니다. Chrome 또는 Safari에서 열어주세요.",
             emailNotVerified: "로그인하기 전에 이메일 주소를 확인해주세요.",
             resendVerification: "인증 이메일 재전송",
@@ -3250,6 +3280,8 @@ export const translations = {
             googleButton: "Google로 가입",
             facebookButton: "Facebook으로 가입",
             githubButton: "GitHub로 가입",
+            browserWarning: "기본 브라우저(Chrome, Safari 등)를 사용하여 로그인하거나 가입하십시오. LINE, Messenger, Instagram과 같은 인앱 브라우저는 보안 제한으로 인해 로그인이 실패할 수 있습니다.",
+            spamWarning: "인증 이메일을 받지 못한 경우 스팸함을 확인해 주세요.",
             verificationSent: "확인 이메일이 전송되었습니다! 받은 편지함을 확인해주세요.",
             completeProfile: "프로필 완성하기",
             finishSignup: "가입 완료",
@@ -3617,7 +3649,8 @@ export const translations = {
             title: "Scripture Habit",
             chooseLanguage: "Piliin ang iyong wika (maaari mo itong baguhin mamaya).",
             login: "Mag-log In",
-            signup: "Mag-sign Up"
+            signup: "Mag-sign Up",
+            browserWarning: "Mangyaring mag-log in o mag-sign up gamit ang iyong default na browser (Chrome, Safari, atbp.). Ang mga in-app browser tulad ng LINE, Messenger, o Instagram ay maaaring mabigo dahil sa mga restriksyon sa seguridad."
         },
         login: {
             title: "Mag-log In",
@@ -3631,6 +3664,7 @@ export const translations = {
             googleButton: "Mag-log in gamit ang Google",
             facebookButton: "Mag-login gamit ang Facebook",
             githubButton: "Mag-login gamit ang GitHub",
+            browserWarning: "Mangyaring mag-log in o mag-sign up gamit ang iyong default na browser (Chrome, Safari, atbp.). Ang mga in-app browser tulad ng LINE, Messenger, o Instagram ay maaaring mabigo dahil sa mga restriksyon sa seguridad.",
             inAppBrowserWarning: "Hindi suportado ang Google Login sa in-app browser na ito. Pakibuksan sa Chrome o Safari.",
             emailNotVerified: "Pakiberipika ang iyong email address bago mag-login.",
             resendVerification: "Ipadala Muli ang Verification Email",
@@ -3657,6 +3691,8 @@ export const translations = {
             googleButton: "Mag-sign up gamit ang Google",
             facebookButton: "Mag-sign up gamit ang Facebook",
             githubButton: "Mag-sign up gamit ang GitHub",
+            browserWarning: "Mangyaring mag-log in o mag-sign up gamit ang iyong default na browser (Chrome, Safari, atbp.). Ang mga in-app browser tulad ng LINE, Messenger, o Instagram ay maaaring mabigo dahil sa mga restriksyon sa seguridad.",
+            spamWarning: "Kung hindi mo natanggap ang verification email, mangyaring suriin ang iyong spam folder.",
             verificationSent: "Naipadala na ang verification email! Pakitingnan ang iyong inbox.",
             completeProfile: "Kumpletuhin ang Iyong Profile",
             finishSignup: "Tapusin ang Pag-sign Up",
@@ -4024,7 +4060,8 @@ export const translations = {
             title: "Scripture Habit",
             chooseLanguage: "Chagua lugha yako (unaweza kubadilisha baadaye).",
             login: "Ingia",
-            signup: "Jisajili"
+            signup: "Jisajili",
+            browserWarning: "Tafadhali ingia au ujisajili ukitumia kivinjari chako chaguo-msingi (Chrome, Safari, n.k.). Vivinjari vya ndani ya programu kama vile LINE, Messenger, au Instagram vinaweza kushindwa kwa sababu ya vikwazo vya usalama."
         },
         login: {
             title: "Ingia",
@@ -4038,6 +4075,7 @@ export const translations = {
             googleButton: "Ingia na Google",
             facebookButton: "Ingia na Facebook",
             githubButton: "Ingia na GitHub",
+            browserWarning: "Tafadhali ingia au ujisajili ukitumia kivinjari chako chaguo-msingi (Chrome, Safari, n.k.). Vivinjari vya ndani ya programu kama vile LINE, Messenger, au Instagram vinaweza kushindwa kwa sababu ya vikwazo vya usalama.",
             inAppBrowserWarning: "Kuingia kwa Google hakutumiki katika kivinjari hiki cha ndani ya programu. Tafadhali fungua kwenye Chrome au Safari.",
             emailNotVerified: "Tafadhali thibitisha anwani yako ya barua pepe kabla ya kuingia.",
             resendVerification: "Tuma Tena Barua Pepe ya Uthibitishaji",
@@ -4064,6 +4102,8 @@ export const translations = {
             googleButton: "Jisajili na Google",
             facebookButton: "Jisajili na Facebook",
             githubButton: "Jisajili na GitHub",
+            browserWarning: "Tafadhali ingia au ujisajili ukitumia kivinjari chako chaguo-msingi (Chrome, Safari, n.k.). Vivinjari vya ndani ya programu kama vile LINE, Messenger, au Instagram vinaweza kushindwa kwa sababu ya vikwazo vya usalama.",
+            spamWarning: "Ikiwa hujaipata barua pepe ya uthibitishaji, tafadhali angalia folda yako ya spam.",
             verificationSent: "Barua pepe ya uthibitishaji imetumwa! Tafadhali angalia kikasha chako.",
             completeProfile: "Kamilisha Wasifu Wako",
             finishSignup: "Maliza Kujisajili",
