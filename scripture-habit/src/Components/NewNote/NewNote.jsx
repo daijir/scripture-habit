@@ -761,7 +761,14 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                                 activeMembers: [userData.uid]
                             };
                         } else {
-                            updatePayload['dailyActivity.activeMembers'] = arrayUnion(userData.uid);
+                            const newActiveMembers = [...(currentActivity.activeMembers || [])];
+                            if (!newActiveMembers.includes(userData.uid)) {
+                                newActiveMembers.push(userData.uid);
+                            }
+                            updatePayload.dailyActivity = {
+                                ...currentActivity,
+                                activeMembers: newActiveMembers
+                            };
                         }
 
                         await updateDoc(groupRef, updatePayload);
