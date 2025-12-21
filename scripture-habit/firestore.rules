@@ -51,10 +51,10 @@ service cloud.firestore {
            resource.data.ownerUserId == request.auth.uid
         )
         ||
-        // 2. MESSAGE COUNT: Members can update messageCount and lastMessageAt
+        // 2. STATS & ACTIVITY: Members can update messageCount, noteCount, lastMessageAt, etc.
         (
            request.auth.uid in resource.data.members &&
-           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['messageCount', 'noteCount', 'lastMessageAt', 'dailyActivity', 'memberLastActive'])
+           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['messageCount', 'noteCount', 'lastMessageAt', 'dailyActivity', 'dailyActivity.date', 'dailyActivity.activeMembers', 'memberLastActive'])
         )
       );
       
