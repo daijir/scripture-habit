@@ -54,7 +54,7 @@ service cloud.firestore {
         // 2. MESSAGE COUNT: Members can update messageCount and lastMessageAt
         (
            request.auth.uid in resource.data.members &&
-           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['messageCount', 'lastMessageAt', 'dailyActivity', 'memberLastActive'])
+           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['messageCount', 'noteCount', 'lastMessageAt', 'dailyActivity', 'memberLastActive'])
         )
       );
       

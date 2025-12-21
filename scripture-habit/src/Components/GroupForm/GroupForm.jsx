@@ -44,6 +44,7 @@ export default function GroupForm() {
         maxMembers: Number(maxMembers),
         membersCount: 1,
         messageCount: 0,
+        noteCount: 0,
         ownerUserId: user.uid,
         members: [user.uid],
       };
