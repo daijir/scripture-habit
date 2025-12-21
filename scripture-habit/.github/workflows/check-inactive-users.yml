@@ -1,0 +1,20 @@
+name: Check Inactive Users
+
+on:
+  schedule:
+    # Runs every day at 00:00 UTC (9:00 AM JST)
+    - cron: '0 0 * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+jobs:
+  check-inactive:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Check Inactive Users
+        run: |
+          curl -X GET "https://scripture-habit.vercel.app/api/check-inactive-users" \
+            -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            -w "\nHTTP Status: %{http_code}\n" \
+            -v
