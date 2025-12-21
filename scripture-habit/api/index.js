@@ -949,6 +949,8 @@ ${notesText}`;
     }
 });
 
+/*
+// OLD VERSION - COMMENTED OUT - Duplicate endpoint
 // Check Inactive Users (Cron Job)
 app.get('/api/check-inactive-users', async (req, res) => {
     // Optional: Protect with secret
@@ -959,64 +961,63 @@ app.get('/api/check-inactive-users', async (req, res) => {
         // But let's keep it safe if secret exists.
     }
 
-    console.log('Starting activity log repair...');
-    const db = admin.firestore();
 
-    try {
-        const groupsRef = db.collection('groups');
-        const snapshot = await groupsRef.get();
-        let totalUpdated = 0;
+try {
+    const groupsRef = db.collection('groups');
+    const snapshot = await groupsRef.get();
+    let totalUpdated = 0;
 
-        for (const docSnap of snapshot.docs) {
-            const groupId = docSnap.id;
-            const groupData = docSnap.data();
-            const members = groupData.members || [];
+    for (const docSnap of snapshot.docs) {
+        const groupId = docSnap.id;
+        const groupData = docSnap.data();
+        const members = groupData.members || [];
 
-            if (members.length === 0) continue;
+        if (members.length === 0) continue;
 
-            // Fetch last 100 messages to check for recent activity
-            const messagesRef = groupsRef.doc(groupId).collection('messages');
-            const msgsSnap = await messagesRef
-                .orderBy('createdAt', 'desc')
-                .limit(200) // Check last 200 messages
-                .get();
+        // Fetch last 100 messages to check for recent activity
+        const messagesRef = groupsRef.doc(groupId).collection('messages');
+        const msgsSnap = await messagesRef
+            .orderBy('createdAt', 'desc')
+            .limit(200) // Check last 200 messages
+            .get();
 
-            const updates = {};
-            const foundMembers = new Set();
+        const updates = {};
+        const foundMembers = new Set();
 
-            // Existing activity data
-            const currentLastActive = groupData.memberLastActive || {};
+        // Existing activity data
+        const currentLastActive = groupData.memberLastActive || {};
 
-            msgsSnap.forEach(msgDoc => {
-                const data = msgDoc.data();
-                const senderId = data.senderId;
-                const createdAt = data.createdAt;
+        msgsSnap.forEach(msgDoc => {
+            const data = msgDoc.data();
+            const senderId = data.senderId;
+            const createdAt = data.createdAt;
 
-                // If this is a user message (specifically a NOTE/ENTRY) and we haven't found a newer one for this user match
-                if (senderId && (data.isNote || data.isEntry) && members.includes(senderId) && !foundMembers.has(senderId)) {
-                    // Update only if current data is missing or older
-                    const currentTimestamp = currentLastActive[senderId];
-                    if (!currentTimestamp || (createdAt && createdAt.toMillis() > currentTimestamp.toMillis())) {
-                        updates[`memberLastActive.${senderId}`] = createdAt;
-                    }
-                    foundMembers.add(senderId);
+            // If this is a user message (specifically a NOTE/ENTRY) and we haven't found a newer one for this user match
+            if (senderId && (data.isNote || data.isEntry) && members.includes(senderId) && !foundMembers.has(senderId)) {
+                // Update only if current data is missing or older
+                const currentTimestamp = currentLastActive[senderId];
+                if (!currentTimestamp || (createdAt && createdAt.toMillis() > currentTimestamp.toMillis())) {
+                    updates[`memberLastActive.${senderId}`] = createdAt;
                 }
-            });
-
-            if (Object.keys(updates).length > 0) {
-                await groupsRef.doc(groupId).update(updates);
-                totalUpdated += Object.keys(updates).length;
-                console.log(`Updated ${Object.keys(updates).length} members in group ${groupData.name || groupId}`);
+                foundMembers.add(senderId);
             }
+        });
+
+        if (Object.keys(updates).length > 0) {
+            await groupsRef.doc(groupId).update(updates);
+            totalUpdated += Object.keys(updates).length;
+            console.log(`Updated ${Object.keys(updates).length} members in group ${groupData.name || groupId}`);
         }
-
-        res.json({ message: `Repair complete. Updated activity logs for ${totalUpdated} members.` });
-
-    } catch (error) {
-        console.error('Error repairing logs:', error);
-        res.status(500).json({ error: error.message });
     }
+
+    res.json({ message: `Repair complete. Updated activity logs for ${totalUpdated} members.` });
+
+} catch (error) {
+    console.error('Error repairing logs:', error);
+    res.status(500).json({ error: error.message });
+}
 });
+*/
 
 // FORCE PURGE: Remove users who were just initialized but have no history (Ghost buster)
 app.get('/api/purge-initialized-users', async (req, res) => {
