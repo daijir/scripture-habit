@@ -19,7 +19,7 @@ export const translations = {
             header: "Support",
             subHeader: "Donations to Scripture Habit are directly applied to future development and maintaining this tool for your spiritual growth.",
             suggestionTitle: "Suggested Amounts (Feel free to choose any amount):",
-            suggestion1: "🥤 $2 (Coffee) - A quick boost!",
+            suggestion1: "🥤 $2 (Drink) - A quick boost!",
             suggestion2: "🍱 $10 (Lunch) - Keeps the servers running.",
             suggestion3: "🚀 $20 (Feature) - Fuels new development.",
             methodsHeader: "Donations can be made by the following:",
@@ -359,7 +359,7 @@ export const translations = {
             unableToJoin: "Unable to join group",
             statusActive: "🔥 Active",
             statusNew: "🌱 New",
-            statusRelaxed: "☕ Relaxed"
+            statusRelaxed: "🐈 Relaxado"
         },
         noteLabels: {
             scripture: "Category",
@@ -830,7 +830,7 @@ export const translations = {
             unableToJoin: "グループに参加できませんでした",
             statusActive: "🔥 活発",
             statusNew: "🌱 新着",
-            statusRelaxed: "☕ まったり"
+            statusRelaxed: "🐈 まったり"
         },
         noteLabels: {
             scripture: "カテゴリ",
@@ -900,7 +900,7 @@ export const translations = {
             header: "Apoio",
             subHeader: "As doações ao Scripture Habit são aplicadas diretamente no desenvolvimento futuro e na manutenção desta ferramenta para o seu crescimento espiritual.",
             suggestionTitle: "Sugestões de Valor (Sinta-se livre para escolher):",
-            suggestion1: "🥤 R$ 10 (Café) - Um apoio rápido!",
+            suggestion1: "🥤 R$ 10 (Bebida) - Um apoio rápido!",
             suggestion2: "🍱 R$ 30 (Almoço) - Mantém os servidores rodando.",
             suggestion3: "🚀 R$ 60 (Recurso) - Abastece o desenvolvimento.",
             methodsHeader: "As doações podem ser feitas da seguinte forma:",
@@ -1246,7 +1246,7 @@ export const translations = {
             unableToJoin: "Não foi possível entrar no grupo",
             statusActive: "🔥 Ativo",
             statusNew: "🌱 Novo",
-            statusRelaxed: "☕ Relaxado"
+            statusRelaxed: "🐈 Relaxado"
         },
         noteLabels: {
             scripture: "Escritura",
@@ -1316,7 +1316,7 @@ export const translations = {
             header: "支持",
             subHeader: "捐贈給 Scripture Habit 的款項將直接用於未來的功能開發，並維護這個促進您靈性成長的工具。",
             suggestionTitle: "建議金額（您可以自由決定）：",
-            suggestion1: "🥤 $15 (咖啡) - 快速的支持！",
+            suggestion1: "🥤 $15 (飲料) - 快速的支持！",
             suggestion2: "🍱 $70 (午餐) - 維持伺服器運作。",
             suggestion3: "🚀 $150 (新功能) - 推動未來開發。",
             methodsHeader: "可以通過以下方式進行捐款：",
@@ -1657,7 +1657,7 @@ export const translations = {
             unableToJoin: "無法加入群組",
             statusActive: "🔥 活躍",
             statusNew: "🌱 新",
-            statusRelaxed: "☕ 輕鬆"
+            statusRelaxed: "🐈 輕鬆"
         },
         noteLabels: {
             scripture: "經文",
@@ -2068,7 +2068,7 @@ export const translations = {
             unableToJoin: "No se pudo unir al grupo",
             statusActive: "🔥 Activo",
             statusNew: "🌱 Nuevo",
-            statusRelaxed: "☕ Relajado"
+            statusRelaxed: "🐈 Relajado"
         },
         noteLabels: {
             scripture: "Escritura",
@@ -2479,7 +2479,7 @@ export const translations = {
             unableToJoin: "Không thể tham gia nhóm",
             statusActive: "🔥 Hoạt động",
             statusNew: "🌱 Mới",
-            statusRelaxed: "☕ Thư giãn"
+            statusRelaxed: "🐈 Thư giãn"
         },
         noteLabels: {
             scripture: "Thánh Thư",
@@ -2890,7 +2890,7 @@ export const translations = {
             unableToJoin: "ไม่สามารถเข้าร่วมกลุ่มได้",
             statusActive: "🔥 ใช้งาน",
             statusNew: "🌱 ใหม่",
-            statusRelaxed: "☕ ผ่อนคลาย"
+            statusRelaxed: "🐈 ผ่อนคลาย"
         },
         noteLabels: {
             scripture: "พระคัมภีร์",
@@ -3301,7 +3301,7 @@ export const translations = {
             unableToJoin: "그룹에 가입할 수 없음",
             statusActive: "🔥 활동 중",
             statusNew: "🌱 신규",
-            statusRelaxed: "☕ 여유"
+            statusRelaxed: "🐈 여유"
         },
         noteLabels: {
             scripture: "성구",
@@ -3712,7 +3712,7 @@ export const translations = {
             unableToJoin: "Hindi makasali sa grupo",
             statusActive: "🔥 Aktibo",
             statusNew: "🌱 Bago",
-            statusRelaxed: "☕ Relaxed"
+            statusRelaxed: "🐈 Relaxed"
         },
         noteLabels: {
             scripture: "Banal na Kasulatan",
@@ -4123,7 +4123,7 @@ export const translations = {
             unableToJoin: "Imeshindwa kujiunga na kikundi",
             statusActive: "🔥 Hai",
             statusNew: "🌱 Mpya",
-            statusRelaxed: "☕ Imetulia"
+            statusRelaxed: "🐈 Imetulia"
         },
         noteLabels: {
             scripture: "Andiko",
