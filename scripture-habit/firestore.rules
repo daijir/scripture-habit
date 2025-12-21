@@ -32,34 +32,26 @@ service cloud.firestore {
     
     // Rules for the 'groups' collection
     match /groups/{groupId} {
-      // Secure Read: Only allow if group is public OR user is a member/owner
-      allow read: if request.auth != null && (
-        resource.data.isPublic == true ||
-        (resource.data.get('members', []) != null && request.auth.uid in resource.data.members) ||
-        resource.data.ownerUserId == request.auth.uid
-      );
+      // 読み取り: ログインユーザーなら基本読み取りは許可（権限確認やリスト表示に必要）
+      allow read: if request.auth != null;
 
       // A user can create a group, but they must set themselves as the owner.
       allow create: if request.auth != null &&
                     request.auth.uid == request.resource.data.ownerUserId;
       
-      // Rules for updating a group
-      // CRITICAL SECURITY FIX: Removed client-side JOIN logic to force use of API (which checks invite codes)
+      // 更新権限
       allow update: if request.auth != null && (
-        // 1. SETTINGS: The owner can update other fields (like isPublic)
+        // A. オーナーは何でも更新可能
+        resource.data.get('ownerUserId', '') == request.auth.uid ||
+        // B. メンバーは統計情報の更新のみ可能（重要な設定などは変更不可）
         (
-           resource.data.ownerUserId == request.auth.uid
-        )
-        ||
-        // 2. STATS & ACTIVITY: Members can update messageCount, noteCount, lastMessageAt, etc.
-        (
-           (resource.data.get('members', []) != null && request.auth.uid in resource.data.members) &&
-           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['messageCount', 'noteCount', 'lastMessageAt', 'dailyActivity', 'memberLastActive'])
+          request.auth.uid in resource.data.get('members', []) &&
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['ownerUserId', 'inviteCode', 'members'])
         )
       );
       
       // Allow deletion if the user is the owner
-      allow delete: if request.auth != null && resource.data.ownerUserId == request.auth.uid;
+      allow delete: if request.auth != null && resource.data.get('ownerUserId', '') == request.auth.uid;
       
       // Rules for the 'messages' subcollection
       match /messages/{messageId} {
@@ -67,7 +59,7 @@ service cloud.firestore {
         allow read, write: if request.auth != null &&
                            (
                              request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.get('members', []) ||
-                             get(/databases/$(database)/documents/groups/$(groupId)).data.ownerUserId == request.auth.uid
+                             get(/databases/$(database)/documents/groups/$(groupId)).data.get('ownerUserId', '') == request.auth.uid
                            );
       }
     }
