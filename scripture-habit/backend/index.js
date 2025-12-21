@@ -894,6 +894,8 @@ app.get('/check-inactive-users', async (req, res) => {
       const memberLastActive = groupData.memberLastActive || {};
       const ownerUserId = groupData.ownerUserId;
 
+      console.log(`\nProcessing group ${groupId} (${groupData.name || 'Unnamed'}) with ${members.length} members`);
+
       if (members.length === 0) continue;
 
       let groupUpdates = {};
@@ -903,21 +905,32 @@ app.get('/check-inactive-users', async (req, res) => {
       const membersToRemove = [];
       const membersToInitialize = [];
 
+
       for (const memberId of members) {
         // Skip owner
-        if (memberId === ownerUserId) continue;
+        if (memberId === ownerUserId) {
+          console.log(`  Member ${memberId} is owner, skipping`);
+          continue;
+        }
 
         const lastActiveTimestamp = memberLastActive[memberId];
 
         if (!lastActiveTimestamp) {
           // Initialize tracking if missing (giving them a fresh start)
+          console.log(`  Member ${memberId} has no lastActive timestamp, initializing`);
           membersToInitialize.push(memberId);
         } else {
           const lastActiveDate = lastActiveTimestamp.toDate();
           const diff = now - lastActiveDate;
+          const daysDiff = Math.floor(diff / (24 * 60 * 60 * 1000));
+
+          console.log(`  Member ${memberId}: last active ${daysDiff} days ago (${lastActiveDate.toISOString()})`);
 
           if (diff > THREE_DAYS_MS) {
+            console.log(`    ⚠️ Member ${memberId} is inactive (${daysDiff} days), marking for removal`);
             membersToRemove.push(memberId);
+          } else {
+            console.log(`    ✅ Member ${memberId} is active (${daysDiff} days)`);
           }
         }
       }
@@ -1002,6 +1015,79 @@ app.get('/check-inactive-users', async (req, res) => {
   }
 
 
+
+});
+
+// Manual Test Endpoint for Debugging Inactivity (specific group)
+app.get('/test-inactive-check/:groupId', async (req, res) => {
+  const { groupId } = req.params;
+
+  console.log(`\n🔍 Manual inactivity check for group: ${groupId}`);
+  const db = admin.firestore();
+
+  try {
+    const groupRef = db.collection('groups').doc(groupId);
+    const groupDoc = await groupRef.get();
+
+    if (!groupDoc.exists) {
+      return res.status(404).json({ error: 'Group not found' });
+    }
+
+    const groupData = groupDoc.data();
+    const members = groupData.members || [];
+    const memberLastActive = groupData.memberLastActive || {};
+    const ownerUserId = groupData.ownerUserId;
+
+    const now = new Date();
+    const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
+
+    const report = {
+      groupId,
+      groupName: groupData.name,
+      totalMembers: members.length,
+      ownerUserId,
+      checkTime: now.toISOString(),
+      members: []
+    };
+
+    for (const memberId of members) {
+      const memberInfo = {
+        memberId,
+        isOwner: memberId === ownerUserId
+      };
+
+      if (memberId === ownerUserId) {
+        memberInfo.status = 'Owner (skipped)';
+        memberInfo.action = 'none';
+      } else {
+        const lastActiveTimestamp = memberLastActive[memberId];
+
+        if (!lastActiveTimestamp) {
+          memberInfo.status = 'No tracking data';
+          memberInfo.action = 'would initialize';
+          memberInfo.lastActive = null;
+          memberInfo.daysSinceActive = null;
+        } else {
+          const lastActiveDate = lastActiveTimestamp.toDate();
+          const diff = now - lastActiveDate;
+          const daysDiff = Math.floor(diff / (24 * 60 * 60 * 1000));
+
+          memberInfo.lastActive = lastActiveDate.toISOString();
+          memberInfo.daysSinceActive = daysDiff;
+          memberInfo.status = daysDiff > 3 ? '⚠️ Inactive' : '✅ Active';
+          memberInfo.action = daysDiff > 3 ? 'would remove' : 'keep';
+        }
+      }
+
+      report.members.push(memberInfo);
+    }
+
+    res.json(report);
+
+  } catch (error) {
+    console.error('Error in test inactive check:', error);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 
