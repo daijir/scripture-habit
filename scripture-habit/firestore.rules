@@ -35,7 +35,7 @@ service cloud.firestore {
       // Secure Read: Only allow if group is public OR user is a member/owner
       allow read: if request.auth != null && (
         resource.data.isPublic == true ||
-        request.auth.uid in resource.data.members ||
+        (resource.data.get('members', []) != null && request.auth.uid in resource.data.members) ||
         resource.data.ownerUserId == request.auth.uid
       );
 
@@ -53,7 +53,7 @@ service cloud.firestore {
         ||
         // 2. STATS & ACTIVITY: Members can update messageCount, noteCount, lastMessageAt, etc.
         (
-           request.auth.uid in resource.data.members &&
+           (resource.data.get('members', []) != null && request.auth.uid in resource.data.members) &&
            request.resource.data.diff(resource.data).affectedKeys().hasOnly(['messageCount', 'noteCount', 'lastMessageAt', 'dailyActivity', 'memberLastActive'])
         )
       );
@@ -63,9 +63,12 @@ service cloud.firestore {
       
       // Rules for the 'messages' subcollection
       match /messages/{messageId} {
-        // Only group members can read or write messages.
+        // Only group members or the owner can read or write messages.
         allow read, write: if request.auth != null &&
-                           request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.members;
+                           (
+                             request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.get('members', []) ||
+                             get(/databases/$(database)/documents/groups/$(groupId)).data.ownerUserId == request.auth.uid
+                           );
       }
     }
   }
