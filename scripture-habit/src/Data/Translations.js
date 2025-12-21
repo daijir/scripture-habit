@@ -191,7 +191,8 @@ export const translations = {
             unityModalLegendTelestial: "Telestial (33%~)",
             unityModalLegendEmpty: "Starting (0%~)",
             unityModalNoPostsYet: "No posts yet today",
-            unityModalAllPosted: "Everyone has shared today! Amazing unity!"
+            unityModalAllPosted: "Everyone has shared today! Amazing unity!",
+            addNoteTooltip: "Click + to post a note!"
         },
         newNote: {
             editTitle: "Edit Note",
@@ -592,7 +593,8 @@ export const translations = {
             unityModalLegendTelestial: "星の栄え (33%〜)",
             unityModalLegendEmpty: "これから！ (0%〜)",
             unityModalNoPostsYet: "今日の投稿はまだありません",
-            unityModalAllPosted: "全員が投稿しました！素晴らしい一体感です！"
+            unityModalAllPosted: "全員が投稿しました！素晴らしい一体感です！",
+            addNoteTooltip: "＋を押してノート投稿！"
         },
         myNotes: {
             description: "ノートコレクション",

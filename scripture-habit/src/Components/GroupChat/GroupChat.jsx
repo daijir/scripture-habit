@@ -60,6 +60,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
   const [hasMoreOlder, setHasMoreOlder] = useState(true);
   const latestMessageRef = useRef(null);
+  const [showAddNoteTooltip, setShowAddNoteTooltip] = useState(false);
 
   useEffect(() => {
     const hasDismissed = localStorage.getItem('hasDismissedInactivityPolicy');
@@ -77,6 +78,40 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     }
   }, [location.state, groupId]);
 
+  // Show tooltip every 6 visits
+  useEffect(() => {
+    if (!groupId) return;
+
+    // Clean up old localStorage key (migration)
+    const oldKey = localStorage.getItem('hasSeenAddNoteTooltip');
+    if (oldKey) {
+      localStorage.removeItem('hasSeenAddNoteTooltip');
+    }
+
+    // Get current visit count
+    const visitCountStr = localStorage.getItem('groupChatVisitCount');
+    const visitCount = visitCountStr ? parseInt(visitCountStr, 10) : 0;
+
+    // Increment visit count
+    const newVisitCount = visitCount + 1;
+    localStorage.setItem('groupChatVisitCount', newVisitCount.toString());
+
+    // Show tooltip every 6th visit (1, 7, 13, 19, ...)
+    if (newVisitCount % 6 === 1) {
+      // Show tooltip after a short delay for better UX
+      const timer = setTimeout(() => {
+        setShowAddNoteTooltip(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    } else {
+    }
+  }, [groupId]);
+
+
+  const handleDismissTooltip = () => {
+    setShowAddNoteTooltip(false);
+  };
+
   const handleDismissInactivityBanner = () => {
     setShowInactivityPolicyBanner(false);
     localStorage.setItem('hasDismissedInactivityPolicy', 'true');
@@ -88,18 +123,6 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     return String(groupData.ownerUserId).trim() === String(userData.uid).trim();
   }, [groupData, userData]);
 
-  // Debug ownership
-  useEffect(() => {
-    if (groupData && userData) {
-      console.log('Ownership Check:', {
-        groupName: groupData.name,
-        ownerId: groupData.ownerUserId,
-        myId: userData.uid,
-        isOwner,
-        rawMatch: groupData.ownerUserId === userData.uid
-      });
-    }
-  }, [groupData, userData, isOwner]);
 
   const handleDismissWelcomeGuide = () => {
     setShowWelcomeGuide(false);
@@ -2629,8 +2652,18 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
             placeholder={inputPlaceholder}
             rows={1}
           />
-          <div className="add-entry-btn" onClick={() => setIsNewNoteOpen(true)}>
-            <UilPlus />
+          <div className="add-entry-btn-wrapper">
+            {showAddNoteTooltip && (
+              <div className="add-note-tooltip" onClick={handleDismissTooltip}>
+                <div className="tooltip-content">
+                  {t('groupChat.addNoteTooltip')}
+                </div>
+                <div className="tooltip-arrow"></div>
+              </div>
+            )}
+            <div className="add-entry-btn" onClick={() => { setIsNewNoteOpen(true); handleDismissTooltip(); }}>
+              <UilPlus />
+            </div>
           </div>
           <button type="submit">{t('groupChat.send')}</button>
         </div>
