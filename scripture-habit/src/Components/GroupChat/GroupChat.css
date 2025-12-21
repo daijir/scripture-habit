@@ -1670,8 +1670,7 @@ input:checked+.slider:before {
     .add-note-tooltip {
         font-size: 0.85rem;
         padding: 0.6rem 1rem;
-        max-width: 200px;
-        white-space: normal;
+        white-space: nowrap;
         text-align: center;
     }
 }
