@@ -183,6 +183,10 @@ export default function SignupForm() {
       <div className='AppGlass Form'>
         <h2>{t('signup.title')}</h2>
 
+        <div className="browser-warning">
+          {t('signup.browserWarning')}
+        </div>
+
         <button
           onClick={() => handleSocialSignup(new GoogleAuthProvider())}
           className="google-btn"
@@ -225,6 +229,7 @@ export default function SignupForm() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <p className="form-note">{t('signup.spamWarning')}</p>
           <Button type="submit">
             {t('signup.submitButton')}
           </Button>

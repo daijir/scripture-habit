@@ -28,6 +28,17 @@
   color: var(--gray);
 }
 
+.form-note {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: -10px;
+  margin-bottom: 15px;
+  max-width: 20rem;
+  text-align: left;
+  line-height: 1.4;
+  width: 90%;
+}
+
 .SignupForm form button {
   background: linear-gradient(135deg, #8E9EFA 0%, #B088D9 100%);
   color: white;

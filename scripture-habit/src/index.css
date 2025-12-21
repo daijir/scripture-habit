@@ -161,3 +161,19 @@ button {
   /* Add a little background to make it readable? */
   border-radius: 4px;
 }
+
+.browser-warning {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin: 15px 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  text-align: left;
+  border: 1px solid #ffeeba;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  font-weight: 500;
+  width: 100%;
+  box-sizing: border-box;
+}
