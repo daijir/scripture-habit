@@ -694,6 +694,17 @@ const Dashboard = () => {
                               tl: "Ang Pagapanumbalik",
                               sw: "Urejesho"
                             },
+                            "Doctrine and Covenants": {
+                              ja: "教義と聖約",
+                              pt: "Doutrina e Convênios",
+                              zho: "教義和聖約",
+                              es: "Doctrina y Convenios",
+                              vi: "Giáo Lý và Giao Ước",
+                              th: "หลักคำสอนและพันธสัญญา",
+                              ko: "교리와 성약",
+                              tl: "Doktrina at mga Tipan",
+                              sw: "Mafundisho na Maagano"
+                            },
                             "Articles of Faith": {
                               ja: "信仰箇条",
                               pt: "Regras de Fé",
