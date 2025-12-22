@@ -192,7 +192,8 @@ export const translations = {
             unityModalLegendEmpty: "Starting (0%~)",
             unityModalNoPostsYet: "No posts yet today",
             unityModalAllPosted: "Everyone has shared today! Amazing unity!",
-            addNoteTooltip: "Click + to post a note!"
+            addNoteTooltip: "Click + to post a note!",
+            unityEncouragement: "Let's all aim for 100%!"
         },
         newNote: {
             editTitle: "Edit Note",
@@ -594,7 +595,8 @@ export const translations = {
             unityModalLegendEmpty: "これから！ (0%〜)",
             unityModalNoPostsYet: "今日の投稿はまだありません",
             unityModalAllPosted: "全員が投稿しました！素晴らしい一体感です！",
-            addNoteTooltip: "＋を押してノート投稿！"
+            addNoteTooltip: "＋を押してノート投稿！",
+            unityEncouragement: "みんなで100%を目指そう！"
         },
         myNotes: {
             description: "ノートコレクション",
@@ -1036,7 +1038,8 @@ export const translations = {
             unityModalLegendTelestial: "Telestial (33%~)",
             unityModalLegendEmpty: "Iniciando (0%~)",
             unityModalNoPostsYet: "Nenhuma postagem ainda hoje",
-            unityModalAllPosted: "Todos compartilharam hoje! Unidade incrível!"
+            unityModalAllPosted: "Todos compartilharam hoje! Unidade incrível!",
+            unityEncouragement: "Vamos buscar os 100%!"
         },
         myNotes: {
             description: "Coleção de Notas",
@@ -1452,7 +1455,8 @@ export const translations = {
             unityModalLegendTelestial: "低級國度 (33%~)",
             unityModalLegendEmpty: "開始 (0%~)",
             unityModalNoPostsYet: "今天尚無發文",
-            unityModalAllPosted: "全員已分享！驚人的團結！"
+            unityModalAllPosted: "全員已分享！驚人的團結！",
+            unityEncouragement: "讓我們一起達成 100%！"
         },
         myNotes: {
             description: "筆記收藏",
@@ -1863,7 +1867,8 @@ export const translations = {
             unityModalLegendTelestial: "Telestial (33%~)",
             unityModalLegendEmpty: "Empezando (0%~)",
             unityModalNoPostsYet: "No hay publicaciones hoy todavía",
-            unityModalAllPosted: "¡Todos han compartido hoy! ¡Increíble unidad!"
+            unityModalAllPosted: "¡Todos han compartido hoy! ¡Increíble unidad!",
+            unityEncouragement: "¡Vamos a por el 100%!"
         },
         myNotes: {
             description: "Colección de Notas",
@@ -2274,7 +2279,8 @@ export const translations = {
             unityModalLegendTelestial: "Hạ giới (33%~)",
             unityModalLegendEmpty: "Bắt đầu (0%~)",
             unityModalNoPostsYet: "Chưa có bài đăng nào hôm nay",
-            unityModalAllPosted: "Mọi người đã chia sẻ hôm nay! Sự thống nhất tuyệt vời!"
+            unityModalAllPosted: "Mọi người đã chia sẻ hôm nay! Sự thống nhất tuyệt vời!",
+            unityEncouragement: "Hãy cùng hướng tới 100%!"
         },
         myNotes: {
             description: "Bộ Sưu Tập Ghi Chép",
@@ -2685,7 +2691,8 @@ export const translations = {
             unityModalLegendTelestial: "เทเลสเทรียล (33%~)",
             unityModalLegendEmpty: "เริ่มต้น (0%~)",
             unityModalNoPostsYet: "ยังไม่มีการโพสต์ในวันนี้",
-            unityModalAllPosted: "ทุกคนร่วมแบ่งปันแล้ววันนี้! ความเป็นหนึ่งเดียวที่น่าทึ่ง!"
+            unityModalAllPosted: "ทุกคนร่วมแบ่งปันแล้ววันนี้! ความเป็นหนึ่งเดียวที่น่าทึ่ง!",
+            unityEncouragement: "มาตั้งเป้าที่ 100% กันเถอะ!"
         },
         myNotes: {
             description: "คลังบันทึก",
@@ -3096,7 +3103,8 @@ export const translations = {
             unityModalLegendTelestial: "별의 왕국 (33%~)",
             unityModalLegendEmpty: "시작 (0%~)",
             unityModalNoPostsYet: "오늘 게시글이 없습니다",
-            unityModalAllPosted: "모두가 오늘 공유했습니다! 놀라운 일체감입니다!"
+            unityModalAllPosted: "오늘 모두가 공유했습니다! 놀라운 단합력입니다!",
+            unityEncouragement: "모두 함께 100%를 목표로 해요!"
         },
         myNotes: {
             description: "노트 컬렉션",
@@ -3507,7 +3515,8 @@ export const translations = {
             unityModalLegendTelestial: "Telestiyal (33%~)",
             unityModalLegendEmpty: "Simula (0%~)",
             unityModalNoPostsYet: "Wala pang post ngayong araw",
-            unityModalAllPosted: "Lahat ay nakapag-share na ngayon! Kamangha-manghang pagkakaisa!"
+            unityModalAllPosted: "Lahat ay nakapag-share na ngayon! Kamangha-manghang pagkakaisa!",
+            unityEncouragement: "Sama-sama nating abutin ang 100%!"
         },
         myNotes: {
             description: "Koleksyon ng mga Tala",
@@ -3918,7 +3927,8 @@ export const translations = {
             unityModalLegendTelestial: "Telestrial (33%~)",
             unityModalLegendEmpty: "Kuanza (0%~)",
             unityModalNoPostsYet: "Hakuna machapisho bado leo",
-            unityModalAllPosted: "Kila mtu ameshiriki leo! Umoja wa ajabu!"
+            unityModalAllPosted: "Kila mtu ameshiriki leo! Umoja wa ajabu!",
+            unityEncouragement: "Hebu tulenge asilimia 100%!"
         },
         myNotes: {
             description: "Mkusanyiko wa Maelezo",
