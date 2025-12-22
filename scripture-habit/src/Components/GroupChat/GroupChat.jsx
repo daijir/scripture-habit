@@ -96,8 +96,8 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     const newVisitCount = visitCount + 1;
     localStorage.setItem('groupChatVisitCount', newVisitCount.toString());
 
-    // Show tooltip every 6th visit (1, 7, 13, 19, ...)
-    if (newVisitCount % 6 === 1) {
+    // Show tooltip every 2th visit (1, 7, 13, 19, ...)
+    if (newVisitCount % 2 === 1) {
       // Show tooltip after a short delay for better UX
       const timer = setTimeout(() => {
         setShowAddNoteTooltip(true);
@@ -1508,8 +1508,10 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
               <UilArrowLeft size="24" />
             </div>
           )}
-          <h2 style={{ display: 'flex', alignItems: 'center' }}>
-            {groupData ? groupData.name : t('groupChat.groupName')}
+          <h2 style={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
+            <span className="group-name-text" title={groupData ? groupData.name : t('groupChat.groupName')}>
+              {groupData ? groupData.name : t('groupChat.groupName')}
+            </span>
             {groupData?.ownerUserId === userData?.uid && (
               <button
                 className="edit-group-name-btn"
@@ -1528,39 +1530,50 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                   alignItems: 'center',
                   padding: '4px',
                   borderRadius: '50%',
-                  transition: 'background 0.2s'
+                  transition: 'background 0.2s',
+                  flexShrink: 0
                 }}
                 title={t('groupChat.changeGroupName')}
               >
                 <UilPen size="18" />
               </button>
             )}
-            {groupData?.members && <span className="member-count-badge">({groupData.members.length})</span>}
+            {groupData?.members && <span className="member-count-badge" style={{ flexShrink: 0 }}>({groupData.members.length})</span>}
             {groupData && (
-              <span
-                className="unity-score-badge clickable"
-                onClick={handleShowUnityModal}
-                style={{
-                  marginLeft: '8px',
-                  fontSize: '1.0rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  color: unityPercentage === 100 ? '#B8860B' : 'var(--text-color)',
-                  fontWeight: unityPercentage === 100 ? 'bold' : 'normal',
-                  textShadow: unityPercentage === 100 ? '0 0 8px rgba(255, 215, 0, 0.4)' : 'none',
-                  transition: 'all 0.3s ease',
-                  cursor: 'pointer',
-                  padding: '2px 6px',
-                  borderRadius: '12px',
-                  backgroundColor: 'rgba(0,0,0,0.05)'
-                }}
-                title="Unity Score: members active today"
-              >
-                {unityPercentage === 100 ? '☀️' :
-                  unityPercentage >= 66 ? '🌕' :
-                    unityPercentage >= 33 ? '🌠' :
-                      '🌑'} {unityPercentage}%
-              </span>
+              <div className="unity-score-container">
+                <span
+                  className="unity-score-badge clickable"
+                  onClick={handleShowUnityModal}
+                  style={{
+                    marginLeft: '8px',
+                    fontSize: '1.0rem',
+                    display: 'flex',
+                    alignItems: 'center',
+                    color: unityPercentage === 100 ? '#B8860B' : 'var(--text-color)',
+                    fontWeight: unityPercentage === 100 ? 'bold' : 'normal',
+                    textShadow: unityPercentage === 100 ? '0 0 8px rgba(255, 215, 0, 0.4)' : 'none',
+                    transition: 'all 0.3s ease',
+                    cursor: 'pointer',
+                    padding: '2px 6px',
+                    borderRadius: '12px',
+                    backgroundColor: 'rgba(0,0,0,0.05)'
+                  }}
+                  title="Unity Score: members active today"
+                >
+                  {unityPercentage === 100 ? '☀️' :
+                    unityPercentage >= 66 ? '🌕' :
+                      unityPercentage >= 33 ? '🌠' :
+                        '🌑'} {unityPercentage}%
+                </span>
+                {unityPercentage < 100 && (
+                  <div
+                    className="unity-encouragement-bubble"
+                    onClick={handleShowUnityModal}
+                  >
+                    {t('groupChat.unityEncouragement')}
+                  </div>
+                )}
+              </div>
             )}
 
           </h2>
@@ -2473,15 +2486,12 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         <div className="leave-modal-overlay" onClick={() => setShowUnityModal(false)}>
           <div className="leave-modal-content unity-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '380px', maxHeight: '85vh', display: 'flex', flexDirection: 'column', padding: '1.5rem' }}>
             <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span style={{ fontSize: '1.8rem' }}>
-                  {unityPercentage === 100 ? '☀️' :
-                    unityPercentage >= 66 ? '🌕' :
-                      unityPercentage >= 33 ? '🌠' :
-                        '🌑'}
-                </span>
-                <h3 style={{ margin: 0, fontSize: '1.3rem' }}>{t('groupChat.unityModalTitle') || "Unity Percentage"}</h3>
-              </div>
+              <span style={{ fontSize: '1.8rem' }}>
+                {unityPercentage === 100 ? '☀️' :
+                  unityPercentage >= 66 ? '🌕' :
+                    unityPercentage >= 33 ? '🌠' :
+                      '🌑'}
+              </span>
               <button className="close-menu-btn" onClick={() => setShowUnityModal(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gray)' }}>
                 <UilTimes size="24" />
               </button>
@@ -2654,7 +2664,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
           />
           <div className="add-entry-btn-wrapper">
             {showAddNoteTooltip && (
-              <div className="add-note-tooltip" onClick={handleDismissTooltip}>
+              <div className="add-note-tooltip" onClick={() => { setIsNewNoteOpen(true); handleDismissTooltip(); }}>
                 <div className="tooltip-content">
                   {t('groupChat.addNoteTooltip')}
                 </div>
