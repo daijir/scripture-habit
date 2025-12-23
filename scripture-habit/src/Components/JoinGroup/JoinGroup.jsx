@@ -16,7 +16,6 @@ import Mascot from '../Mascot/Mascot';
 export default function JoinGroup() {
   const { t, language } = useLanguage();
   const API_BASE = Capacitor.isNativePlatform() ? 'https://scripture-habit.vercel.app' : '';
-  const [groupCode, setGroupCode] = useState("");
   const [error, setError] = useState("");
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
@@ -193,63 +192,12 @@ export default function JoinGroup() {
     navigate('/dashboard', { state: { initialGroupId: groupId, showWelcome: false, initialView: 2 } });
   };
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setError("");
 
-    if (groupCode.trim() === "") {
-      setError(t('joinGroup.errorEnterCode'));
-      return;
-    }
-
-    const q = query(collection(db, 'groups'), where('inviteCode', '==', groupCode.trim()));
-
-    try {
-      const querySnapshot = await getDocs(q);
-      if (querySnapshot.empty) {
-        setError(t('joinGroup.errorInvalidCode'));
-        return;
-      }
-
-      const groupDoc = querySnapshot.docs[0];
-      const groupData = groupDoc.data();
-
-      // For invite code join, we can also show confirmation or just join directly.
-      // Assuming direct join for invite code is fine as user explicitly typed code.
-      await joinGroup(groupDoc.id, groupData);
-
-    } catch (e) {
-      console.error("Error finding group:", e);
-      setError(t('joinGroup.errorSearch'));
-    }
-  }
 
   return (
     <div className="App">
       <div className="AppGlass join-group-container">
-        <div className="group-card-section">
-          <div className="section-header">
-            <h2>{t('joinGroup.inviteCodeTitle')}</h2>
-            <p>{t('joinGroup.inviteCodeDesc')}</p>
-          </div>
-
-          <form onSubmit={handleSubmit}>
-            <Input
-              label={t('joinGroup.inviteCodeLabel')}
-              id="inviteCode"
-              type="text"
-              placeholder={t('joinGroup.inviteCodePlaceholder')}
-              value={groupCode}
-              onChange={(e) => setGroupCode(e.target.value.toUpperCase())}
-              required
-            />
-            {error && <p className="error">{error}</p>}
-
-            <Button type="submit" className="invite-join-btn">
-              {t('joinGroup.joinButton')}
-            </Button>
-          </form>
-        </div>
+        {error && <p className="error" style={{ color: 'red', textAlign: 'center', width: '100%', marginBottom: '1rem' }}>{error}</p>}
 
         <Mascot
           userData={userData}

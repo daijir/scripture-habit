@@ -1303,12 +1303,6 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     }
   };
 
-  const handleCopyInviteCode = () => {
-    if (groupData && groupData.inviteCode) {
-      navigator.clipboard.writeText(groupData.inviteCode);
-      toast.success(t('groupChat.inviteCodeCopied'));
-    }
-  };
 
   const handleCopyInviteLink = () => {
     if (groupData && groupData.inviteCode) {
@@ -1669,7 +1663,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
             </div>
 
             <div className="mobile-menu-content">
-              {/* Invite Code Section */}
+              {/* Invite Link Section */}
               <div className="mobile-menu-item invite-section" onClick={() => { handleCopyInviteLink(); setShowMobileMenu(false); }}>
                 <div className="menu-item-icon">
                   <UilCopy size="20" />
