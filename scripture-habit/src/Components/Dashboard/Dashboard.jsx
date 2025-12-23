@@ -10,6 +10,7 @@ import Sidebar from '../Sidebar/Sidebar';
 import GroupChat from '../GroupChat/GroupChat';
 import './Dashboard.css';
 import Button from '../Button/Button';
+import { Capacitor } from '@capacitor/core';
 
 import NewNote from '../NewNote/NewNote';
 import MyNotes from '../MyNotes/MyNotes';
@@ -50,6 +51,7 @@ const Dashboard = () => {
   const [warnings, setWarnings] = useState([]);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [newNickname, setNewNickname] = useState('');
+  const [isJoiningInvite, setIsJoiningInvite] = useState(false);
   const { t, language } = useLanguage();
 
   const todayPlan = getTodayReadingPlan();
@@ -417,6 +419,84 @@ const Dashboard = () => {
     setWarnings(newWarnings);
   }, [userGroups, userData]);
 
+  // --- Invitation Handling ---
+  useEffect(() => {
+    const processPendingInvite = async () => {
+      const inviteCode = localStorage.getItem('pendingInviteCode');
+      if (!inviteCode || !user || !userData || showWelcomeStory || isJoiningInvite) return;
+
+      setIsJoiningInvite(true);
+      console.log("Processing pending invite code:", inviteCode);
+
+      try {
+        // 1. Find the group by invite code
+        const q = query(collection(db, 'groups'), where('inviteCode', '==', inviteCode));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          console.warn("Invite code invalid or group not found");
+          localStorage.removeItem('pendingInviteCode');
+          setIsJoiningInvite(false);
+          return;
+        }
+
+        const groupDoc = querySnapshot.docs[0];
+        const groupId = groupDoc.id;
+        const groupData = groupDoc.data();
+
+        // 2. Check if already a member
+        const currentGroupIds = userData?.groupIds || (userData?.groupId ? [userData.groupId] : []);
+        if (currentGroupIds.includes(groupId)) {
+          console.log("User already in this group");
+          localStorage.removeItem('pendingInviteCode');
+          setIsJoiningInvite(false);
+          // Just switch to this group
+          setActiveGroupId(groupId);
+          setSelectedView(2);
+          return;
+        }
+
+        // 3. Join the group
+        const API_BASE = Capacitor.isNativePlatform() ? 'https://scripture-habit.vercel.app' : '';
+        const idToken = await user.getIdToken();
+        const resp = await fetch(`${API_BASE}/api/join-group`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${idToken}`
+          },
+          body: JSON.stringify({ groupId })
+        });
+
+        if (resp.ok) {
+          // Success!
+          localStorage.removeItem('pendingInviteCode');
+          // Allow some time for Firestore listeners to catch up
+          setTimeout(() => {
+            setActiveGroupId(groupId);
+            setSelectedView(2);
+            setIsJoiningInvite(false);
+            window.alert(`${t('joinGroup.joiningFromInviteSuccess')} (${groupData.name})`);
+          }, 1000);
+        } else {
+          const errText = await resp.text();
+          console.error("Failed to join via invite link:", errText);
+          localStorage.removeItem('pendingInviteCode');
+          setIsJoiningInvite(false);
+        }
+
+      } catch (error) {
+        console.error("Error processing pending invite:", error);
+        localStorage.removeItem('pendingInviteCode');
+        setIsJoiningInvite(false);
+      }
+    };
+
+    if (!showWelcomeStory && userData && user) {
+      processPendingInvite();
+    }
+  }, [user, userData, showWelcomeStory, t]);
+
   if (loading) {
     return <div className='App Dashboard'>Loading...</div>;
   }
@@ -445,8 +525,9 @@ const Dashboard = () => {
 
   // Allow access if user has groups, even if groupId is not set (migration case)
   const hasGroups = (userData.groupIds && userData.groupIds.length > 0) || userData.groupId;
+  const pendingInviteCode = localStorage.getItem('pendingInviteCode');
 
-  if (!hasGroups) {
+  if (!hasGroups && !pendingInviteCode && !isJoiningInvite) {
     return <Navigate to="/group-options" replace />;
   }
 
@@ -520,10 +601,29 @@ const Dashboard = () => {
           userGroups={userGroups}
           activeGroupId={activeGroupId}
           setActiveGroupId={setActiveGroupId}
-          hideMobile={isInputFocused}
+          hideMobile={isInputFocused || isJoiningInvite}
         />
         {selectedView === 0 && (
           <div className="DashboardContent">
+            {isJoiningInvite && (
+              <div className="joining-overlay" style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                background: 'rgba(255, 255, 255, 0.8)',
+                zIndex: 2000,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backdropFilter: 'blur(10px)'
+              }}>
+                <div className="loading-spinner" style={{ marginBottom: '1rem' }}></div>
+                <h3>{t('joinGroup.joiningFromInvite')}</h3>
+              </div>
+            )}
             <div className="dashboard-header">
               <div>
                 <h1>Scripture Habit</h1>

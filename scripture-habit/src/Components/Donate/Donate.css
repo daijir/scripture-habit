@@ -74,12 +74,12 @@
     margin-bottom: 3rem;
     font-weight: 500;
     padding: 2.5rem 3rem;
-    background: linear-gradient(to right, rgba(107, 70, 193, 0.03), rgba(107, 70, 193, 0.08));
+    background: linear-gradient(to right, rgba(213, 63, 140, 0.03), rgba(213, 63, 140, 0.08));
     border-radius: 20px;
-    border-left: 6px solid #6B46C1;
+    border-left: 6px solid #D53F8C;
     text-align: left;
     position: relative;
-    box-shadow: 0 10px 30px rgba(107, 70, 193, 0.05);
+    box-shadow: 0 10px 30px rgba(213, 63, 140, 0.05);
     letter-spacing: 0.03em;
     overflow: hidden;
 }
@@ -90,7 +90,7 @@
     top: 5px;
     left: 10px;
     font-size: 4rem;
-    color: rgba(107, 70, 193, 0.08);
+    color: rgba(213, 63, 140, 0.08);
     font-family: serif;
     z-index: 0;
     line-height: 1;
@@ -102,7 +102,7 @@
     bottom: -10px;
     right: 10px;
     font-size: 4rem;
-    color: rgba(107, 70, 193, 0.08);
+    color: rgba(213, 63, 140, 0.08);
     font-family: serif;
     z-index: 0;
     line-height: 1;

@@ -121,6 +121,9 @@ export const translations = {
             public: "Public",
             private: "Private",
             inviteCode: "Invite Code",
+            inviteCodeCopied: "Invite code copied to clipboard!",
+            inviteLink: "Invite Link",
+            inviteLinkCopied: "Invite link copied to clipboard!",
             members: "Members",
             groupMembers: "Group Members",
             typeMessage: "Click + button to create a note or type a message...",
@@ -281,7 +284,9 @@ export const translations = {
             confirmJoin: "Join",
             cancelJoin: "Cancel",
             notes: "Notes",
-            createdAt: "Created at"
+            createdAt: "Created at",
+            joiningFromInvite: "Joining from invitation...",
+            joiningFromInviteSuccess: "Welcome! You've successfully joined the group via your friend's invitation."
         },
         groupForm: {
             title: "Create a Study Group",
@@ -318,8 +323,8 @@ export const translations = {
             browserWarning: "Please log in or sign up using your default browser (Chrome, Safari, etc.). In-app browsers like LINE, Messenger, or Instagram may prevent login due to security restrictions.",
             inAppBrowserWarning: "Google Login is not supported in this in-app browser. Please open in Chrome or Safari.",
             emailNotVerified: "Please verify your email address before logging in.",
-            resendVerification: "Resend Verification Email",
-            verificationResent: "Verification email sent again."
+            resendVerification: "Send Verification Email",
+            verificationResent: "Verification email sent."
         },
         forgotPasswordPage: {
             title: "Reset Your Password",
@@ -496,6 +501,9 @@ export const translations = {
             public: "パブリック",
             private: "プライベート",
             inviteCode: "招待コード",
+            inviteCodeCopied: "招待コードをコピーしました",
+            inviteLink: "招待リンク",
+            inviteLinkCopied: "招待リンクをコピーしました",
             members: "メンバー",
             groupMembers: "グループメンバー",
             typeMessage: [
@@ -753,7 +761,9 @@ export const translations = {
             confirmJoin: "参加",
             cancelJoin: "キャンセル",
             notes: "ノート",
-            createdAt: "作成日"
+            createdAt: "作成日",
+            joiningFromInvite: "招待から参加中...",
+            joiningFromInviteSuccess: "ようこそ！友達の招待からグループに参加しました。"
         },
         groupForm: {
             title: "学習グループを作成",
@@ -790,8 +800,8 @@ export const translations = {
             browserWarning: "必ずお使いのデフォルトブラウザ（Chrome, Safariなど）からログイン・サインアップしてください。LINE, メッセンジャー, インスタグラムなどのアプリ内ブラウザでは、セキュリティの関係でログインできないことがございます。",
             inAppBrowserWarning: "このアプリ内ブラウザではGoogleログインが利用できません。右上のメニュー等からChromeやSafariで開いてください。",
             emailNotVerified: "ログインする前にメールアドレスの確認を行ってください。",
-            resendVerification: "確認メールを再送信",
-            verificationResent: "確認メールを再送信しました。"
+            resendVerification: "確認メールを送信",
+            verificationResent: "確認メールを送信しました。"
         },
         forgotPasswordPage: {
             title: "パスワードをリセット",
@@ -968,6 +978,9 @@ export const translations = {
             public: "Público",
             private: "Privado",
             inviteCode: "Código de Convite",
+            inviteCodeCopied: "Código de convite copiado!",
+            inviteLink: "Link de Convite",
+            inviteLinkCopied: "Link de convite copiado!",
             members: "Membros",
             groupMembers: "Membros do Grupo",
             typeMessage: "Clique no botão + para criar uma anotação ou digite...",
@@ -1039,7 +1052,8 @@ export const translations = {
             unityModalLegendEmpty: "Iniciando (0%~)",
             unityModalNoPostsYet: "Nenhuma postagem ainda hoje",
             unityModalAllPosted: "Todos compartilharam hoje! Unidade incrível!",
-            unityEncouragement: "Vamos buscar os 100%!"
+            unityEncouragement: "Vamos buscar os 100%!",
+            addNoteTooltip: "Clique em + para postar uma nota!"
         },
         myNotes: {
             description: "Coleção de Notas",
@@ -1168,7 +1182,9 @@ export const translations = {
             confirmJoin: "Entrar",
             cancelJoin: "Cancelar",
             notes: "Anotações",
-            createdAt: "Criado em"
+            createdAt: "Criado em",
+            joiningFromInvite: "Entrando pelo convite...",
+            joiningFromInviteSuccess: "Bem-vindo! Você entrou no grupo através de um convite."
         },
         groupForm: {
             title: "Criar um Grupo de Estudo",
@@ -1193,10 +1209,9 @@ export const translations = {
         },
         login: {
             title: "Entrar",
-            emailLabel: "Endereço Gmail",
+            emailLabel: "Endereço de e-mail",
             passwordLabel: "Senha",
             submitButton: "Entrar",
-            errorGmail: "Por favor, use um endereço Gmail.",
             noAccount: "Não tem uma conta?",
             signupLink: "Inscrever-se",
             forgotPassword: "Esqueceu sua senha?",
@@ -1206,8 +1221,8 @@ export const translations = {
             browserWarning: "Por favor, faça login ou inscreva-se usando seu navegador padrão (Chrome, Safari, etc.). Navegadores internos de aplicativos como LINE, Messenger ou Instagram podem impedir o login devido a restrições de segurança.",
             inAppBrowserWarning: "O login do Google não é suportado neste navegador no aplicativo. Abra no Chrome ou Safari.",
             emailNotVerified: "Por favor, verifique seu endereço de e-mail antes de fazer login.",
-            resendVerification: "Reenviar e-mail de verificação",
-            verificationResent: "E-mail de verificação reenviado."
+            resendVerification: "Enviar e-mail de verificação",
+            verificationResent: "E-mail de verificação enviado."
         },
         forgotPasswordPage: {
             title: "Redefinir sua senha",
@@ -1219,10 +1234,9 @@ export const translations = {
         signup: {
             title: "Inscrever-se",
             nicknameLabel: "Apelido",
-            emailLabel: "Endereço Gmail",
+            emailLabel: "Endereço de e-mail",
             passwordLabel: "Senha",
             submitButton: "Inscrever-se",
-            errorGmail: "Por favor, use um endereço Gmail.",
             errorSaveProfile: "Falha ao salvar perfil. Contate o suporte.",
             errorEmailInUse: "E-mail já em uso. Faça login ou use outro.",
             hasAccount: "Já tem uma conta?",
@@ -1385,6 +1399,9 @@ export const translations = {
             public: "公開",
             private: "私人",
             inviteCode: "邀請碼",
+            inviteCodeCopied: "邀請碼已複製！",
+            inviteLink: "邀請連結",
+            inviteLinkCopied: "邀請連結已複製！",
             members: "成員",
             groupMembers: "群組成員",
             typeMessage: "點擊 + 按鈕新增筆記或輸入訊息...",
@@ -1456,7 +1473,8 @@ export const translations = {
             unityModalLegendEmpty: "開始 (0%~)",
             unityModalNoPostsYet: "今天尚無發文",
             unityModalAllPosted: "全員已分享！驚人的團結！",
-            unityEncouragement: "讓我們一起達成 100%！"
+            unityEncouragement: "讓我們一起達成 100%！",
+            addNoteTooltip: "點擊 + 發布筆記！"
         },
         myNotes: {
             description: "筆記收藏",
@@ -1580,7 +1598,9 @@ export const translations = {
             confirmJoin: "加入",
             cancelJoin: "取消",
             notes: "筆記",
-            createdAt: "建立於"
+            createdAt: "建立於",
+            joiningFromInvite: "正在通過邀請加入...",
+            joiningFromInviteSuccess: "歡迎！您已通過邀請加入群組。"
         },
         groupForm: {
             title: "建立研讀群組",
@@ -1605,10 +1625,9 @@ export const translations = {
         },
         login: {
             title: "登入",
-            emailLabel: "Gmail 地址",
+            emailLabel: "電子郵件地址",
             passwordLabel: "密碼",
             submitButton: "登入",
-            errorGmail: "請使用 Gmail 地址。",
             noAccount: "還沒有帳號？",
             signupLink: "註冊",
             forgotPassword: "忘記密碼了嗎？",
@@ -1618,8 +1637,8 @@ export const translations = {
             browserWarning: "請使用您的預設瀏覽器（Chrome、Safari 等）進行登入或註冊。LINE、Messenger 或 Instagram 等應用程式內瀏覽器可能會因安全性限制而導致登入失敗。",
             inAppBrowserWarning: "此應用程式內瀏覽器不支援 Google 登入。請在 Chrome 或 Safari 中開啟。",
             emailNotVerified: "請在登錄前驗證您的電子郵件地址。",
-            resendVerification: "重新發送驗證郵件",
-            verificationResent: "驗證郵件已重新發送。"
+            resendVerification: "發送驗證郵件",
+            verificationResent: "驗證郵件已發送。"
         },
         forgotPasswordPage: {
             title: "重設您的密碼",
@@ -1631,10 +1650,9 @@ export const translations = {
         signup: {
             title: "註冊",
             nicknameLabel: "暱稱",
-            emailLabel: "Gmail 地址",
+            emailLabel: "電子郵件地址",
             passwordLabel: "密碼",
             submitButton: "註冊",
-            errorGmail: "請使用 Gmail 地址。",
             errorSaveProfile: "儲存個人資料失敗。請聯繫支援。",
             errorEmailInUse: "此電子郵件地址已被使用。請登入或使用其他電子郵件。",
             hasAccount: "已經有帳號？",
@@ -1797,6 +1815,9 @@ export const translations = {
             public: "Público",
             private: "Privado",
             inviteCode: "Código de Invitación",
+            inviteCodeCopied: "¡Código de invitación copiado!",
+            inviteLink: "Enlace de Invitación",
+            inviteLinkCopied: "¡Enlace de invitación copiado!",
             members: "Miembros",
             groupMembers: "Miembros del Grupo",
             typeMessage: "Haz clic en el botón + para crear una nota o escribe un mensaje...",
@@ -1868,7 +1889,8 @@ export const translations = {
             unityModalLegendEmpty: "Empezando (0%~)",
             unityModalNoPostsYet: "No hay publicaciones hoy todavía",
             unityModalAllPosted: "¡Todos han compartido hoy! ¡Increíble unidad!",
-            unityEncouragement: "¡Vamos a por el 100%!"
+            unityEncouragement: "¡Vamos a por el 100%!",
+            addNoteTooltip: "¡Haz clic en + para publicar una nota!"
         },
         myNotes: {
             description: "Colección de Notas",
@@ -1992,7 +2014,9 @@ export const translations = {
             confirmJoin: "Unirse",
             cancelJoin: "Cancelar",
             notes: "Notas",
-            createdAt: "Creado el"
+            createdAt: "Creado el",
+            joiningFromInvite: "Uniéndose desde la invitación...",
+            joiningFromInviteSuccess: "¡Bienvenido! Te has unido al grupo a través de una invitación."
         },
         groupForm: {
             title: "Crear un Grupo de Estudio",
@@ -2017,10 +2041,9 @@ export const translations = {
         },
         login: {
             title: "Iniciar Sesión",
-            emailLabel: "Dirección de Gmail",
+            emailLabel: "Correo electrónico",
             passwordLabel: "Contraseña",
             submitButton: "Iniciar Sesión",
-            errorGmail: "Por favor, usa una dirección de Gmail.",
             noAccount: "¿No tienes una cuenta?",
             signupLink: "Registrarse",
             forgotPassword: "¿Olvidaste tu contraseña?",
@@ -2030,8 +2053,8 @@ export const translations = {
             browserWarning: "Inicie sesión o regístrese con su navegador predeterminado (Chrome, Safari, etc.). Los navegadores integrados en aplicaciones como LINE, Messenger o Instagram pueden fallar debido a restricciones de seguridad.",
             inAppBrowserWarning: "El inicio de sesión con Google no es compatible en este navegador de la aplicación. Por favor, ábrelo en Chrome o Safari.",
             emailNotVerified: "Por favor, verifique su dirección de correo electrónico antes de iniciar sesión.",
-            resendVerification: "Reenviar correo de verificación",
-            verificationResent: "Correo de verificación reenviado."
+            resendVerification: "Enviar correo de verificación",
+            verificationResent: "Correo de verificación enviado."
         },
         forgotPasswordPage: {
             title: "Restablecer tu contraseña",
@@ -2043,10 +2066,9 @@ export const translations = {
         signup: {
             title: "Registrarse",
             nicknameLabel: "Apodo",
-            emailLabel: "Dirección de Gmail",
+            emailLabel: "Correo electrónico",
             passwordLabel: "Contraseña",
             submitButton: "Registrarse",
-            errorGmail: "Por favor, usa una dirección de Gmail.",
             errorSaveProfile: "Error al guardar el perfil. Contacta a soporte.",
             errorEmailInUse: "Este correo ya está en uso. Inicia sesión o usa otro.",
             hasAccount: "Ya tienes una cuenta?",
@@ -2209,6 +2231,9 @@ export const translations = {
             public: "Công khai",
             private: "Riêng tư",
             inviteCode: "Mã mời",
+            inviteCodeCopied: "Đã sao chép mã mời!",
+            inviteLink: "Liên kết mời",
+            inviteLinkCopied: "Đã sao chép liên kết mời!",
             members: "Thành viên",
             groupMembers: "Thành viên Nhóm",
             typeMessage: "Nhấn nút + để tạo ghi chép hoặc nhập tin nhắn...",
@@ -2280,7 +2305,8 @@ export const translations = {
             unityModalLegendEmpty: "Bắt đầu (0%~)",
             unityModalNoPostsYet: "Chưa có bài đăng nào hôm nay",
             unityModalAllPosted: "Mọi người đã chia sẻ hôm nay! Sự thống nhất tuyệt vời!",
-            unityEncouragement: "Hãy cùng hướng tới 100%!"
+            unityEncouragement: "Hãy cùng hướng tới 100%!",
+            addNoteTooltip: "Nhấp vào + để đăng ghi chú!"
         },
         myNotes: {
             description: "Bộ Sưu Tập Ghi Chép",
@@ -2404,7 +2430,9 @@ export const translations = {
             confirmJoin: "Tham gia",
             cancelJoin: "Hủy",
             notes: "Ghi chép",
-            createdAt: "Ngày tạo"
+            createdAt: "Ngày tạo",
+            joiningFromInvite: "Đang tham gia từ lời mời...",
+            joiningFromInviteSuccess: "Chào mừng! Bạn đã tham gia nhóm thông qua lời mời."
         },
         groupForm: {
             title: "Tạo nhóm học tập",
@@ -2429,10 +2457,9 @@ export const translations = {
         },
         login: {
             title: "Đăng nhập",
-            emailLabel: "Địa chỉ Gmail",
+            emailLabel: "Địa chỉ email",
             passwordLabel: "Mật khẩu",
             submitButton: "Đăng nhập",
-            errorGmail: "Vui lòng sử dụng địa chỉ Gmail.",
             noAccount: "Chưa có tài khoản?",
             signupLink: "Đăng ký",
             forgotPassword: "Bạn quên mật khẩu?",
@@ -2442,8 +2469,8 @@ export const translations = {
             browserWarning: "Vui lòng đăng nhập hoặc đăng ký bằng trình duyệt mặc định của bạn (Chrome, Safari, v.v.). Các trình duyệt trong ứng dụng như LINE, Messenger hoặc Instagram có thể thất bại do các hạn chế về bảo mật.",
             inAppBrowserWarning: "Đăng nhập Google không được hỗ trợ trong trình duyệt ứng dụng này. Vui lòng mở trong Chrome hoặc Safari.",
             emailNotVerified: "Vui lòng xác minh địa chỉ email của bạn trước khi đăng nhập.",
-            resendVerification: "Gửi lại email xác minh",
-            verificationResent: "Email xác minh đã được gửi lại."
+            resendVerification: "Gửi email xác minh",
+            verificationResent: "Email xác minh đã được gửi."
         },
         forgotPasswordPage: {
             title: "Đặt lại mật khẩu của bạn",
@@ -2455,10 +2482,9 @@ export const translations = {
         signup: {
             title: "Đăng ký",
             nicknameLabel: "Biệt danh",
-            emailLabel: "Địa chỉ Gmail",
+            emailLabel: "Địa chỉ email",
             passwordLabel: "Mật khẩu",
             submitButton: "Đăng ký",
-            errorGmail: "Vui lòng sử dụng địa chỉ Gmail.",
             errorSaveProfile: "Lưu hồ sơ thất bại. Liên hệ hỗ trợ.",
             errorEmailInUse: "Email đã được sử dụng. Vui lòng đăng nhập hoặc sử dụng email khác.",
             hasAccount: "Đã có tài khoản?",
@@ -2621,6 +2647,9 @@ export const translations = {
             public: "สาธารณะ",
             private: "ส่วนตัว",
             inviteCode: "รหัสเชิญ",
+            inviteCodeCopied: "คัดลอกรหัสเชิญแล้ว!",
+            inviteLink: "ลิงก์เชิญ",
+            inviteLinkCopied: "คัดลอกลิงก์เชิญแล้ว!",
             members: "สมาชิก",
             groupMembers: "สมาชิกกลุ่ม",
             typeMessage: "คลิกปุ่ม + เพื่อสร้างบันทึกหรือพิมพ์ข้อความ...",
@@ -2692,7 +2721,8 @@ export const translations = {
             unityModalLegendEmpty: "เริ่มต้น (0%~)",
             unityModalNoPostsYet: "ยังไม่มีการโพสต์ในวันนี้",
             unityModalAllPosted: "ทุกคนร่วมแบ่งปันแล้ววันนี้! ความเป็นหนึ่งเดียวที่น่าทึ่ง!",
-            unityEncouragement: "มาตั้งเป้าที่ 100% กันเถอะ!"
+            unityEncouragement: "มาตั้งเป้าที่ 100% กันเถอะ!",
+            addNoteTooltip: "คลิก + เพื่อโพสต์โน้ต!"
         },
         myNotes: {
             description: "คลังบันทึก",
@@ -2816,7 +2846,9 @@ export const translations = {
             confirmJoin: "เข้าร่วม",
             cancelJoin: "ยกเลิก",
             notes: "บันทึก",
-            createdAt: "สร้างเมื่อ"
+            createdAt: "สร้างเมื่อ",
+            joiningFromInvite: "กำลังเข้าร่วมจากคำเชิญ...",
+            joiningFromInviteSuccess: "ยินดีต้อนรับ! คุณได้เข้าร่วมกลุ่มผ่านคำเชิญแล้ว"
         },
         groupForm: {
             title: "สร้างกลุ่มศึกษา",
@@ -2841,10 +2873,9 @@ export const translations = {
         },
         login: {
             title: "เข้าสู่ระบบ",
-            emailLabel: "ที่อยู่ Gmail",
+            emailLabel: "ที่อยู่อีเมล",
             passwordLabel: "รหัสผ่าน",
             submitButton: "เข้าสู่ระบบ",
-            errorGmail: "กรุณาใช้ที่อยู่ Gmail",
             noAccount: "ยังไม่มีบัญชี?",
             signupLink: "ลงทะเบียน",
             forgotPassword: "ลืมรหัสผ่าน?",
@@ -2854,8 +2885,8 @@ export const translations = {
             browserWarning: "กรุณาเข้าสู่ระบบหรือลงทะเบียนโดยใช้เบราว์เซอร์เริ่มต้นของคุณ (Chrome, Safari ฯลฯ) เบราว์เซอร์ในแอป เช่น LINE, Messenger หรือ Instagram อาจทำงานล้มเหลวเนื่องจากข้อจำกัดด้านความปลอดภัย",
             inAppBrowserWarning: "การเข้าสู่ระบบด้วย Google ไม่รองรับในเบราว์เซอร์ในแอปนี้ กรุณาเปิดใน Chrome หรือ Safari",
             emailNotVerified: "กรุณายืนยันที่อยู่อีเมลของคุณก่อนเข้าสู่ระบบ",
-            resendVerification: "ส่งอีเมลยืนยันอีกครั้ง",
-            verificationResent: "ส่งอีเมลยืนยันอีกครั้งแล้ว"
+            resendVerification: "ส่งอีเมลยืนยัน",
+            verificationResent: "ส่งอีเมลยืนยันแล้ว"
         },
         forgotPasswordPage: {
             title: "รีเซ็ตรหัสผ่านของคุณ",
@@ -2867,10 +2898,9 @@ export const translations = {
         signup: {
             title: "ลงทะเบียน",
             nicknameLabel: "ชื่อเล่น",
-            emailLabel: "ที่อยู่ Gmail",
+            emailLabel: "ที่อยู่อีเมล",
             passwordLabel: "รหัสผ่าน",
             submitButton: "ลงทะเบียน",
-            errorGmail: "กรุณาใช้ที่อยู่ Gmail",
             errorSaveProfile: "บันทึกโปรไฟล์ไม่สำเร็จ กรุณาติดต่อฝ่ายสนับสนุน",
             errorEmailInUse: "ที่อยู่อีเมลนี้ถูกใช้แล้ว กรุณาเข้าสู่ระบบหรือใช้อีเมลอื่น",
             hasAccount: "มีบัญชีอยู่แล้ว?",
@@ -3033,6 +3063,9 @@ export const translations = {
             public: "공개",
             private: "비공개",
             inviteCode: "초대 코드",
+            inviteCodeCopied: "초대 코드가 복사되었습니다!",
+            inviteLink: "초대 링크",
+            inviteLinkCopied: "초대 링크가 복사되었습니다!",
             members: "멤버",
             groupMembers: "그룹 멤버",
             typeMessage: "+ 버튼을 클릭하여 노트를 작성하거나 메시지를 입력하세요...",
@@ -3104,7 +3137,8 @@ export const translations = {
             unityModalLegendEmpty: "시작 (0%~)",
             unityModalNoPostsYet: "오늘 게시글이 없습니다",
             unityModalAllPosted: "오늘 모두가 공유했습니다! 놀라운 단합력입니다!",
-            unityEncouragement: "모두 함께 100%를 목표로 해요!"
+            unityEncouragement: "모두 함께 100%를 목표로 해요!",
+            addNoteTooltip: "+를 눌러 노트를 게시하세요!"
         },
         myNotes: {
             description: "노트 컬렉션",
@@ -3228,7 +3262,9 @@ export const translations = {
             confirmJoin: "가입",
             cancelJoin: "취소",
             notes: "노트",
-            createdAt: "생성일"
+            createdAt: "생성일",
+            joiningFromInvite: "초대로 참여 중...",
+            joiningFromInviteSuccess: "환영합니다! 초대를 통해 그룹에 참여하셨습니다."
         },
         groupForm: {
             title: "학습 그룹 생성",
@@ -3253,10 +3289,9 @@ export const translations = {
         },
         login: {
             title: "로그인",
-            emailLabel: "Gmail 주소",
+            emailLabel: "이메일 주소",
             passwordLabel: "비밀번호",
             submitButton: "로그인",
-            errorGmail: "Gmail 주소를 사용해주세요.",
             noAccount: "계정이 없으신가요?",
             signupLink: "회원가입",
             forgotPassword: "비밀번호를 잊으셨나요?",
@@ -3266,8 +3301,8 @@ export const translations = {
             browserWarning: "기본 브라우저(Chrome, Safari 등)를 사용하여 로그인하거나 가입하십시오. LINE, Messenger, Instagram과 같은 인앱 브라우저는 보안 제한으로 인해 로그인이 실패할 수 있습니다.",
             inAppBrowserWarning: "Google 로그인은 이 인앱 브라우저에서 지원되지 않습니다. Chrome 또는 Safari에서 열어주세요.",
             emailNotVerified: "로그인하기 전에 이메일 주소를 확인해주세요.",
-            resendVerification: "인증 이메일 재전송",
-            verificationResent: "인증 이메일이 다시 전송되었습니다."
+            resendVerification: "인증 이메일 전송",
+            verificationResent: "인증 이메일이 전송되었습니다."
         },
         forgotPasswordPage: {
             title: "비밀번호 재설정",
@@ -3279,10 +3314,9 @@ export const translations = {
         signup: {
             title: "회원가입",
             nicknameLabel: "닉네임",
-            emailLabel: "Gmail 주소",
+            emailLabel: "이메일 주소",
             passwordLabel: "비밀번호",
             submitButton: "회원가입",
-            errorGmail: "Gmail 주소를 사용해주세요.",
             errorSaveProfile: "프로필 저장 실패. 지원팀에 문의하세요.",
             errorEmailInUse: "이미 사용 중인 이메일 주소입니다. 로그인하거나 다른 이메일을 사용하세요.",
             hasAccount: "이미 계정이 있으신가요?",
@@ -3354,7 +3388,7 @@ export const translations = {
             doneToday: "오늘도 수고했어요!\n내일 또 만나요!",
             promptToday: "오늘 경전은 읽었나요?\n함께 공부해요!",
             weeklyRecapPrompt: "이번 주 배운 내용을\n함께 돌아볼까요?",
-            groupOptionsPrompt: "함께 공부할\n커뮤니ティ를 찾아볼까요?",
+            groupOptionsPrompt: "함께 공부할\n커뮤니티를 찾아볼까요?",
             createGroupPrompt: "새로운 그룹을 만들고\n친구들을 초대해보세요!",
             welcomeMessage: "Scripture Habit에 오신 것을\n환영합니다!"
         }
@@ -3445,6 +3479,9 @@ export const translations = {
             public: "Pampubliko",
             private: "Pribado",
             inviteCode: "Invite Code",
+            inviteCodeCopied: "Nakopya ang invite code!",
+            inviteLink: "Invite Link",
+            inviteLinkCopied: "Nakopya ang invite link!",
             members: "Mga Miyembro",
             groupMembers: "Mga Miyembro ng Grupo",
             typeMessage: "I-click ang + button para gumawa ng tala o mag-type ng mensahe...",
@@ -3516,7 +3553,8 @@ export const translations = {
             unityModalLegendEmpty: "Simula (0%~)",
             unityModalNoPostsYet: "Wala pang post ngayong araw",
             unityModalAllPosted: "Lahat ay nakapag-share na ngayon! Kamangha-manghang pagkakaisa!",
-            unityEncouragement: "Sama-sama nating abutin ang 100%!"
+            unityEncouragement: "Sama-sama nating abutin ang 100%!",
+            addNoteTooltip: "I-click ang + para mag-post ng tala!"
         },
         myNotes: {
             description: "Koleksyon ng mga Tala",
@@ -3640,7 +3678,9 @@ export const translations = {
             confirmJoin: "Sumali",
             cancelJoin: "Kanselahin",
             notes: "Mga Tala",
-            createdAt: "Nilikha noong"
+            createdAt: "Nilikha noong",
+            joiningFromInvite: "Sumasali mula sa imbita...",
+            joiningFromInviteSuccess: "Maligayang pagdating! Nakasali ka sa grupo sa pamamagitan ng isang imbita."
         },
         groupForm: {
             title: "Lumikha ng Study Group",
@@ -3665,10 +3705,9 @@ export const translations = {
         },
         login: {
             title: "Mag-log In",
-            emailLabel: "Gmail Address",
+            emailLabel: "Email Address",
             passwordLabel: "Password",
             submitButton: "Mag-log In",
-            errorGmail: "Pakigamit ang Gmail address.",
             noAccount: "Wala pang account?",
             signupLink: "Mag-sign Up",
             forgotPassword: "Nakalimutan ang password?",
@@ -3678,8 +3717,8 @@ export const translations = {
             browserWarning: "Mangyaring mag-log in o mag-sign up gamit ang iyong default na browser (Chrome, Safari, atbp.). Ang mga in-app browser tulad ng LINE, Messenger, o Instagram ay maaaring mabigo dahil sa mga restriksyon sa seguridad.",
             inAppBrowserWarning: "Hindi suportado ang Google Login sa in-app browser na ito. Pakibuksan sa Chrome o Safari.",
             emailNotVerified: "Pakiberipika ang iyong email address bago mag-login.",
-            resendVerification: "Ipadala Muli ang Verification Email",
-            verificationResent: "Naipadala muli ang verification email."
+            resendVerification: "Ipadala ang Verification Email",
+            verificationResent: "Naipadala ang verification email."
         },
         forgotPasswordPage: {
             title: "I-reset ang Iyong Password",
@@ -3691,10 +3730,9 @@ export const translations = {
         signup: {
             title: "Mag-sign Up",
             nicknameLabel: "Palayaw",
-            emailLabel: "Gmail Address",
+            emailLabel: "Email Address",
             passwordLabel: "Password",
             submitButton: "Mag-sign Up",
-            errorGmail: "Pakigamit ang Gmail address.",
             errorSaveProfile: "Nabigong i-save ang profile. Makipag-ugnayan sa suporta.",
             errorEmailInUse: "Ginagamit na ang email na ito. Mag-log in o gumamit ng ibang email.",
             hasAccount: "May account na?",
@@ -3857,6 +3895,9 @@ export const translations = {
             public: "Umma",
             private: "Binafsi",
             inviteCode: "Msimbo wa Kualika",
+            inviteCodeCopied: "Msimbo wa mwaliko umenakiliwa!",
+            inviteLink: "Kiungo cha Mwaliko",
+            inviteLinkCopied: "Kiungo cha mwaliko umenakiliwa!",
             members: "Wanachama",
             groupMembers: "Wanachama wa Kikundi",
             typeMessage: "Bofya kitufe cha + kuunda ujumbe au andika ujumbe...",
@@ -3928,7 +3969,8 @@ export const translations = {
             unityModalLegendEmpty: "Kuanza (0%~)",
             unityModalNoPostsYet: "Hakuna machapisho bado leo",
             unityModalAllPosted: "Kila mtu ameshiriki leo! Umoja wa ajabu!",
-            unityEncouragement: "Hebu tulenge asilimia 100%!"
+            unityEncouragement: "Hebu tulenge asilimia 100%!",
+            addNoteTooltip: "Bofya + ili kuchapisha dokezo!"
         },
         myNotes: {
             description: "Mkusanyiko wa Maelezo",
@@ -4052,7 +4094,9 @@ export const translations = {
             confirmJoin: "Jiunge",
             cancelJoin: "Ghairi",
             notes: "Maelezo",
-            createdAt: "Imeundwa mnamo"
+            createdAt: "Imeundwa mnamo",
+            joiningFromInvite: "Inajiunga kutoka kwa mwaliko...",
+            joiningFromInviteSuccess: "Karibu! Umejiunga na kikundi kupitia mwaliko."
         },
         groupForm: {
             title: "Unda Kikundi cha Kujifunza",
@@ -4077,10 +4121,9 @@ export const translations = {
         },
         login: {
             title: "Ingia",
-            emailLabel: "Anwani ya Gmail",
+            emailLabel: "Anwani ya barua pepe",
             passwordLabel: "Nenosiri",
             submitButton: "Ingia",
-            errorGmail: "Tafadhali tumia anwani ya Gmail.",
             noAccount: "Huna akaunti?",
             signupLink: "Jisajili",
             forgotPassword: "Umesahau nenosiri?",
@@ -4090,8 +4133,8 @@ export const translations = {
             browserWarning: "Tafadhali ingia au ujisajili ukitumia kivinjari chako chaguo-msingi (Chrome, Safari, n.k.). Vivinjari vya ndani ya programu kama vile LINE, Messenger, au Instagram vinaweza kushindwa kwa sababu ya vikwazo vya usalama.",
             inAppBrowserWarning: "Kuingia kwa Google hakutumiki katika kivinjari hiki cha ndani ya programu. Tafadhali fungua kwenye Chrome au Safari.",
             emailNotVerified: "Tafadhali thibitisha anwani yako ya barua pepe kabla ya kuingia.",
-            resendVerification: "Tuma Tena Barua Pepe ya Uthibitishaji",
-            verificationResent: "Barua pepe ya uthibitishaji imetumwa tena."
+            resendVerification: "Tuma Barua Pepe ya Uthibitishaji",
+            verificationResent: "Barua pepe ya uthibitishaji imetumwa."
         },
         forgotPasswordPage: {
             title: "Weka Upya Nenosiri Lako",
@@ -4103,10 +4146,9 @@ export const translations = {
         signup: {
             title: "Jisajili",
             nicknameLabel: "Jina la Utani",
-            emailLabel: "Anwani ya Gmail",
+            emailLabel: "Anwani ya barua pepe",
             passwordLabel: "Nenosiri",
             submitButton: "Jisajili",
-            errorGmail: "Tafadhali tumia anwani ya Gmail.",
             errorSaveProfile: "Imeshindwa kuhifadhi wasifu. Wasiliana na usaidizi.",
             errorEmailInUse: "Anwani hii ya barua pepe tayari inatumika. Tafadhali ingia au tumia barua pepe nyingine.",
             hasAccount: "Tayari una akaunti?",
