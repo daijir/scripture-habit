@@ -61,8 +61,13 @@ export default function SignupForm() {
         setPendingGoogleUser(user);
         setNickname(user.displayName || '');
       } else {
-        // User exists, just redirect
-        navigate('/group-options');
+        // User exists, check for pending invite
+        const inviteCode = localStorage.getItem('pendingInviteCode');
+        if (inviteCode) {
+          navigate('/dashboard');
+        } else {
+          navigate('/group-options');
+        }
       }
 
     } catch (error) {
@@ -97,7 +102,13 @@ export default function SignupForm() {
       };
 
       await setDoc(doc(db, 'users', pendingGoogleUser.uid), userData);
-      navigate('/group-options');
+
+      const inviteCode = localStorage.getItem('pendingInviteCode');
+      if (inviteCode) {
+        navigate('/dashboard');
+      } else {
+        navigate('/group-options');
+      }
 
     } catch (firestoreError) {
       console.error("Error writing user data to Firestore:", firestoreError);

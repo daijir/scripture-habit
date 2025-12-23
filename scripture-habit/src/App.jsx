@@ -15,6 +15,7 @@ import GroupOptions from './Components/GroupOptions/GroupOptions';
 import Welcome from './Components/Welcome/Welcome';
 import { LanguageProvider } from './Context/LanguageContext.jsx';
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
+import InviteRedirect from './Components/InviteRedirect/InviteRedirect';
 
 
 const App = () => {
@@ -40,6 +41,7 @@ const App = () => {
           <Route path="/group-options" element={<GroupOptions />} />
           <Route path="/group/:id" element={<GroupDetails />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/join/:inviteCode" element={<InviteRedirect />} />
 
         </Routes>
         <ToastContainer position="top-right" autoClose={3000} />

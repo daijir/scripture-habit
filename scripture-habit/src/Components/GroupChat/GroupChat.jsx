@@ -1306,7 +1306,16 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const handleCopyInviteCode = () => {
     if (groupData && groupData.inviteCode) {
       navigator.clipboard.writeText(groupData.inviteCode);
-      toast.success("Invite code copied to clipboard!");
+      toast.success(t('groupChat.inviteCodeCopied'));
+    }
+  };
+
+  const handleCopyInviteLink = () => {
+    if (groupData && groupData.inviteCode) {
+      const baseUrl = window.location.origin;
+      const inviteLink = `${baseUrl}/join/${groupData.inviteCode}`;
+      navigator.clipboard.writeText(inviteLink);
+      toast.success(t('groupChat.inviteLinkCopied'));
     }
   };
 
@@ -1595,8 +1604,8 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                   </label>
                 </div>
               )}
-              <div className="invite-code-display" onClick={handleCopyInviteCode} title="Copy Invite Code">
-                <span>{t('groupChat.inviteCode')}: <strong>{groupData.inviteCode}</strong></span>
+              <div className="invite-code-display" onClick={handleCopyInviteLink} title={t('groupChat.inviteLink')}>
+                <span>{t('groupChat.inviteLink')}</span>
                 <UilCopy size="16" className="copy-icon" />
               </div>
 
@@ -1661,13 +1670,12 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
 
             <div className="mobile-menu-content">
               {/* Invite Code Section */}
-              <div className="mobile-menu-item invite-section" onClick={() => { handleCopyInviteCode(); setShowMobileMenu(false); }}>
+              <div className="mobile-menu-item invite-section" onClick={() => { handleCopyInviteLink(); setShowMobileMenu(false); }}>
                 <div className="menu-item-icon">
                   <UilCopy size="20" />
                 </div>
                 <div className="menu-item-content">
-                  <span className="menu-item-label">{t('groupChat.inviteCode')}</span>
-                  <span className="menu-item-value">{groupData.inviteCode}</span>
+                  <span className="menu-item-label">{t('groupChat.inviteLink')}</span>
                 </div>
               </div>
 
