@@ -247,7 +247,11 @@ export default function SignupForm() {
             {t('signup.submitButton')}
           </Button>
         </form>
-        {error && <p style={{ color: 'red', marginTop: 10 }}>{error}</p>}
+        {error && (
+          <div className='error-container' style={{ marginTop: '10px' }}>
+            <p className='error-message'>{error}</p>
+          </div>
+        )}
 
         <div className="auth-switch">
           <p>{t('signup.hasAccount')} <Link to="/login" className="auth-link">{t('signup.loginLink')}</Link></p>
