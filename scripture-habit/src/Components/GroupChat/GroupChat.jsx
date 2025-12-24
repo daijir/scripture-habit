@@ -1472,25 +1472,40 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         localStorage.setItem(storageKey, todayStr);
 
         // EXTRA: Send a system message to the chat if not already sent today
-        const hasAlreadyAnnounced = messages.some(msg =>
-          msg.messageType === 'unityAnnouncement' &&
-          msg.createdAt &&
-          (msg.createdAt.toDate ? msg.createdAt.toDate().toDateString() :
-            (msg.createdAt.seconds ? new Date(msg.createdAt.seconds * 1000).toDateString() : null)) === todayStr
-        );
+        // Use group-level tracking to prevent duplicates from multiple users
+        const messagesRef = collection(db, 'groups', groupId, 'messages');
+        const groupRef = doc(db, 'groups', groupId);
 
-        if (!hasAlreadyAnnounced) {
-          const messagesRef = collection(db, 'groups', groupId, 'messages');
-          addDoc(messagesRef, {
-            senderId: 'system',
-            isSystemMessage: true,
-            messageType: 'unityAnnouncement',
-            createdAt: serverTimestamp()
-          }).catch(err => console.error("Error sending unity announcement:", err));
-        }
+        // Check if announcement was already sent today at group level
+        const checkAndSendAnnouncement = async () => {
+          try {
+            const groupSnap = await getDoc(groupRef);
+            const lastAnnouncementDate = groupSnap.data()?.lastUnityAnnouncementDate;
+
+            // If no announcement was sent today, send one
+            if (lastAnnouncementDate !== todayStr) {
+              // Add the message
+              await addDoc(messagesRef, {
+                senderId: 'system',
+                isSystemMessage: true,
+                messageType: 'unityAnnouncement',
+                createdAt: serverTimestamp()
+              });
+
+              // Update the group's last announcement date
+              await updateDoc(groupRef, {
+                lastUnityAnnouncementDate: todayStr
+              });
+            }
+          } catch (err) {
+            console.error("Error sending unity announcement:", err);
+          }
+        };
+
+        checkAndSendAnnouncement();
       }
     }
-  }, [unityPercentage, groupId, userData?.uid, messages]);
+  }, [unityPercentage, groupId, userData?.uid]);
 
   return (
     <div className="GroupChat" >
