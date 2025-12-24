@@ -16,6 +16,10 @@
     flex-direction: row-reverse;
 }
 
+.mascot-container.reversed .mascot-image-wrapper {
+    transform: scaleX(-1);
+}
+
 .mascot-container:hover {
     transform: translateY(-2px);
 }

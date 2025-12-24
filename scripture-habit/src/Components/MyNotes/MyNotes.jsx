@@ -246,55 +246,43 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
         customMessage={t('mascot.weeklyRecapPrompt')}
         reversed={true}
       />
-      <div className="my-notes-recap-cta">
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', width: '100%' }}>
-          <button
-            className={`new-note-btn cta-btn ${!canGenerateRecap || notes.length === 0 ? 'disabled-btn' : ''}`}
-            onClick={(e) => {
-              if (!canGenerateRecap || recapLoading || notes.length === 0) {
-                e.preventDefault();
-                return;
-              }
-              handleGenerateRecap();
-            }}
-            disabled={recapLoading || !canGenerateRecap || notes.length === 0}
-            style={{
-              background: !canGenerateRecap || notes.length === 0 ? '#e0e0e0' : 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)',
-              color: !canGenerateRecap || notes.length === 0 ? '#999' : '#555',
-              border: '1px solid #eee',
-              cursor: !canGenerateRecap || notes.length === 0 ? 'not-allowed' : 'pointer',
-              width: '100%',
-              maxWidth: '300px',
-              justifyContent: 'center',
-              opacity: notes.length === 0 ? 0.6 : 1 // Fade out if no notes
-            }}
-          >
-            <UilAnalysis size="20" />
-            {recapLoading ? t('myNotes.loading') :
-              !canGenerateRecap && notes.length > 0 ? t('groupChat.daysLeft', { days: daysLeft }) :
-                t('myNotes.generateRecap')}
-          </button>
+      <div className="my-notes-action-center">
+        <div className="action-card-container">
+          {/* Generate Recap Card */}
+          <div className={`action-card recap-card ${!canGenerateRecap || notes.length === 0 ? 'locked' : 'available'}`}>
+            <button
+              className="generate-recap-main-btn"
+              onClick={(e) => {
+                if (!canGenerateRecap || recapLoading || notes.length === 0) {
+                  e.preventDefault();
+                  return;
+                }
+                handleGenerateRecap();
+              }}
+              disabled={recapLoading || !canGenerateRecap || notes.length === 0}
+            >
+              <div className="btn-content">
+                <UilAnalysis size="24" className="recap-icon" />
+                <span>
+                  {recapLoading ? t('myNotes.loading') :
+                    !canGenerateRecap && notes.length > 0 ? t('groupChat.daysLeft', { days: daysLeft }) :
+                      t('myNotes.generateRecap')}
+                </span>
+                {canGenerateRecap && notes.length > 0 && !recapLoading && <div className="stars-decoration">✨</div>}
+              </div>
+              <div className="shimmer-effect"></div>
+            </button>
+          </div>
 
-          <button
-            className="letter-box-btn"
-            onClick={() => setIsLetterBoxOpen(true)}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              cursor: 'pointer',
-              color: '#8e44ad',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              fontSize: '0.9rem',
-              fontWeight: '500',
-              padding: '0.5rem',
-              transition: 'all 0.2s'
-            }}
-          >
-            <UilEnvelope size="20" />
-            {t('letterBox.title')}
-          </button>
+          {/* Letter Box Card */}
+          <div className="action-card letterbox-card" onClick={() => setIsLetterBoxOpen(true)}>
+            <div className="mailbox-visual">
+              <UilEnvelope size="32" className="envelope-icon" />
+              <div className="mailbox-flag"></div>
+            </div>
+            <span className="letterbox-label">{t('letterBox.title')}</span>
+            <div className="hover-indicator"></div>
+          </div>
         </div>
       </div>
 

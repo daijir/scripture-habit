@@ -16,9 +16,7 @@
     width: 90%;
 }
 
-.options-container .mascot-container {
-    margin-bottom: 3rem;
-}
+
 
 .options-container h2 {
     margin-top: 0.5rem;
@@ -31,8 +29,20 @@
 .options-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 2rem;
+    gap: 1.5rem;
     width: 100%;
+}
+
+.option-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-mascot {
+    width: 100%;
+    max-width: 250px;
 }
 
 .option-card {

@@ -62,23 +62,36 @@ const GroupOptions = () => {
         <div className="App GroupOptions">
             <div className="AppGlass options-container">
                 <h2>{t('groupOptions.title')}</h2>
-                <Mascot
-                    userData={userData}
-                    customMessage={t('mascot.groupOptionsPrompt')}
-                />
 
                 <div className="options-grid">
-                    <Link to="/join-group" className="option-card join-card">
-                        <div className="icon">🔍</div>
-                        <h3>{t('groupOptions.joinGroupTitle')}</h3>
-                        <p>{t('groupOptions.joinGroupDesc')}</p>
-                    </Link>
+                    <div className="option-wrapper">
+                        <div className="card-mascot">
+                            <Mascot
+                                userData={userData}
+                                customMessage={t('mascot.createGroupPrompt2')}
+                            />
+                        </div>
+                        <Link to="/group-form" className="option-card create-card">
+                            <div className="icon">✨</div>
+                            <h3>{t('groupOptions.createGroupTitle')}</h3>
+                            <p>{t('groupOptions.createGroupDesc')}</p>
+                        </Link>
+                    </div>
 
-                    <Link to="/group-form" className="option-card create-card">
-                        <div className="icon">✨</div>
-                        <h3>{t('groupOptions.createGroupTitle')}</h3>
-                        <p>{t('groupOptions.createGroupDesc')}</p>
-                    </Link>
+                    <div className="option-wrapper join-wrapper">
+                        <div className="card-mascot">
+                            <Mascot
+                                userData={userData}
+                                customMessage={t('mascot.joinGroupPrompt')}
+                                reversed={true}
+                            />
+                        </div>
+                        <Link to="/join-group" className="option-card join-card">
+                            <div className="icon">🔍</div>
+                            <h3>{t('groupOptions.joinGroupTitle')}</h3>
+                            <p>{t('groupOptions.joinGroupDesc')}</p>
+                        </Link>
+                    </div>
                 </div>
 
                 <Link to="/dashboard" className="back-link">
