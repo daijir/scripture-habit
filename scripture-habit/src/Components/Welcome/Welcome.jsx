@@ -1,12 +1,28 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../Button/Button';
 import Mascot from '../Mascot/Mascot';
 import { useLanguage } from '../../Context/LanguageContext';
+import BrowserWarningModal from '../BrowserWarningModal/BrowserWarningModal';
 import './Welcome.css';
 
 const Welcome = () => {
     const { t, setLanguage, language } = useLanguage();
+    const navigate = useNavigate();
+    const [showWarning, setShowWarning] = useState(false);
+    const [pendingPath, setPendingPath] = useState(null);
+
+    const handleAuthClick = (path) => {
+        setPendingPath(path);
+        setShowWarning(true);
+    };
+
+    const handleContinue = () => {
+        setShowWarning(false);
+        if (pendingPath) {
+            navigate(pendingPath);
+        }
+    };
 
     return (
         <div className="AppGlass welcome-container">
@@ -87,13 +103,20 @@ const Welcome = () => {
             </div>
 
             <div className="auth-buttons">
-                <Link to="/login">
-                    <Button className="login-btn">{t('welcome.login')}</Button>
-                </Link>
-                <Link to="/signup">
-                    <Button className="signup-btn">{t('welcome.signup')}</Button>
-                </Link>
+                <Button className="login-btn" onClick={() => handleAuthClick('/login')}>
+                    {t('welcome.login')}
+                </Button>
+                <Button className="signup-btn" onClick={() => handleAuthClick('/signup')}>
+                    {t('welcome.signup')}
+                </Button>
             </div>
+
+            <BrowserWarningModal
+                isOpen={showWarning}
+                onClose={() => setShowWarning(false)}
+                onContinue={handleContinue}
+                t={t}
+            />
         </div>
     );
 };
