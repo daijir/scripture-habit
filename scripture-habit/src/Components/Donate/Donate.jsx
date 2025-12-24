@@ -6,6 +6,7 @@ import Mascot from '../Mascot/Mascot';
 const Donate = ({ userData }) => {
     const { t } = useLanguage();
     const [showQR, setShowQR] = React.useState(false);
+    const [showBackgroundModal, setShowBackgroundModal] = React.useState(false);
 
     return (
         <div className="Donate DashboardContent">
@@ -23,6 +24,28 @@ const Donate = ({ userData }) => {
                     <p className="donate-vision-statement">
                         {t('donate.vision')}
                     </p>
+
+                    <div style={{ marginTop: '1.5rem', marginBottom: '1.5rem', textAlign: 'center' }}>
+                        <button
+                            className="donate-action-btn"
+                            onClick={() => setShowBackgroundModal(true)}
+                            style={{
+                                background: 'var(--pink)',
+                                border: 'none',
+                                padding: '1rem 2rem',
+                                fontSize: '1.1rem',
+                                fontWeight: '600',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease',
+                                color: '#fff',
+                                borderRadius: '12px',
+                                boxShadow: '0 4px 12px rgba(255, 105, 180, 0.3)'
+                            }}
+                        >
+                            📖 {t('donate.appBackground')}
+                        </button>
+                    </div>
+
                     <p className="donate-subheader">
                         {t('donate.subHeader')}
                     </p>
@@ -75,6 +98,27 @@ const Donate = ({ userData }) => {
                     </div>
                 </div>
             </div>
+
+            {/* App Background Modal */}
+            {
+                showBackgroundModal && (
+                    <div className="group-modal-overlay" onClick={() => setShowBackgroundModal(false)}>
+                        <div className="group-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '700px', maxHeight: '80vh', overflow: 'auto' }}>
+                            <h3>{t('donate.appBackground')}</h3>
+                            <div style={{ whiteSpace: 'pre-wrap', lineHeight: '1.8', textAlign: 'left' }}>
+                                {t('donate.backgroundStory')}
+                            </div>
+                            <button
+                                className="close-modal-btn"
+                                onClick={() => setShowBackgroundModal(false)}
+                                style={{ marginTop: '1.5rem' }}
+                            >
+                                {t('recapModal.close')}
+                            </button>
+                        </div>
+                    </div>
+                )
+            }
         </div>
     );
 };
