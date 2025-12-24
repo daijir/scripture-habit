@@ -70,6 +70,10 @@ export default function LoginForm() {
       console.error("Error signing in with provider:", error);
       if (error.code === 'auth/account-exists-with-different-credential') {
         setError(t('signup.errorAccountExistsWithDifferentCredential'));
+      } else if (error.code === 'auth/invalid-credential' ||
+        error.code === 'auth/user-not-found' ||
+        error.code === 'auth/wrong-password') {
+        setError(t('login.errorInvalidCredential'));
       } else {
         setError(error.message);
       }
@@ -129,7 +133,14 @@ export default function LoginForm() {
 
       navigate('/dashboard');
     } catch (error) {
-      setError(error.message);
+      console.error("Error signing in with email/password:", error);
+      if (error.code === 'auth/invalid-credential' ||
+        error.code === 'auth/user-not-found' ||
+        error.code === 'auth/wrong-password') {
+        setError(t('login.errorInvalidCredential'));
+      } else {
+        setError(error.message);
+      }
     }
   };
 

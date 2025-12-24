@@ -74,6 +74,8 @@ export default function SignupForm() {
       console.error("Error signing in with provider:", error);
       if (error.code === 'auth/account-exists-with-different-credential') {
         setError(t('signup.errorAccountExistsWithDifferentCredential'));
+      } else if (error.code === 'auth/invalid-credential') {
+        setError(t('login.errorInvalidCredential'));
       } else {
         setError(error.message);
       }

@@ -298,7 +298,7 @@ export const translations = {
             chooseLanguage: "Choose your language (you can change language setting later as well.)",
             login: "Log in",
             signup: "Sign Up",
-            browserWarning: "Please log in or sign up using your default browser (Chrome, Safari, etc.). In-app browsers like LINE, Messenger, or Instagram may prevent login due to security restrictions."
+            browserWarning: "Please log in or sign up using your default browser (Chrome, Safari, Edge, etc.). In-app browsers like LINE, Messenger, or Instagram may prevent login due to security restrictions."
         },
         login: {
             title: "Log In",
@@ -315,7 +315,8 @@ export const translations = {
             inAppBrowserWarning: "Google Login is not supported in this in-app browser. Please open in Chrome or Safari.",
             emailNotVerified: "Please verify your email address before logging in.",
             resendVerification: "Send Verification Email",
-            verificationResent: "Verification email sent."
+            verificationResent: "Verification email sent.",
+            errorInvalidCredential: "Invalid email or password. Please try again."
         },
         forgotPasswordPage: {
             title: "Reset Your Password",
@@ -404,6 +405,19 @@ export const translations = {
             groupOptionsPrompt: "Let's find a community\nto study together!",
             createGroupPrompt: "Create a new group and\ninvite your friends!",
             welcomeMessage: "Welcome to\nScripture Habit!"
+        },
+        browserWarning: {
+            modalTitle: "Use Default Browser",
+            modalDescription: "In-app browsers (LINE, Instagram, Messenger, WhatsApp, etc.) often have security restrictions that prevent login or Google Sign-in from working correctly.",
+            notRecommended: "Not Recommended",
+            recommended: "Recommended",
+            continueButton: "I understand, Continue",
+            howToOpen: {
+                line: "Tap the three-dot menu (⋮) in the top right and select 'Open in browser'.",
+                instagram: "Tap the three-dot menu (⋮) in the top right and select 'Open in browser'.",
+                messenger: "Tap the ellipsis (...) and select 'Open in external browser'.",
+                whatsapp: "Copy the link and paste it into Chrome or Safari."
+            }
         }
     },
     ja: {
@@ -766,7 +780,7 @@ export const translations = {
             chooseLanguage: "言語を選択してください（後で変更することも可能です）。",
             login: "ログイン",
             signup: "サインアップ",
-            browserWarning: "必ずお使いのデフォルトブラウザ（Chrome, Safariなど）からログイン・サインアップしてください。LINE, メッセンジャー, インスタグラムなどのアプリ内ブラウザでは、セキュリティの関係でログインできないことがございます。"
+            browserWarning: "必ずお使いのデフォルトブラウザ（Chrome, Safari, Edgeなど）からログイン・サインアップしてください。LINE, メッセンジャー, インスタグラムなどのアプリ内ブラウザでは、セキュリティの関係でログインできないことがございます。"
         },
         login: {
             title: "ログイン",
@@ -779,11 +793,12 @@ export const translations = {
             googleButton: "Googleでログイン",
             facebookButton: "Facebookでログイン",
             githubButton: "GitHubでログイン",
-            browserWarning: "必ずお使いのデフォルトブラウザ（Chrome, Safariなど）からログイン・サインアップしてください。LINE, メッセンジャー, インスタグラムなどのアプリ内ブラウザでは、セキュリティの関係でログインできないことがございます。",
+            browserWarning: "必ずお使いのデフォルトブラウザ（Chrome, Safari, Edgeなど）からログイン・サインアップしてください。LINE, メッセンジャー, インスタグラムなどのアプリ内ブラウザでは、セキュリティの関係でログインできないことがございます。",
             inAppBrowserWarning: "このアプリ内ブラウザではGoogleログインが利用できません。右上のメニュー等からChromeやSafariで開いてください。",
             emailNotVerified: "ログインする前にメールアドレスの確認を行ってください。",
             resendVerification: "確認メールを送信",
-            verificationResent: "確認メールを送信しました。"
+            verificationResent: "確認メールを送信しました。",
+            errorInvalidCredential: "メールアドレスまたはパスワードが正しくありません。もう一度お試しください。"
         },
         forgotPasswordPage: {
             title: "パスワードをリセット",
@@ -805,7 +820,7 @@ export const translations = {
             googleButton: "Googleで登録",
             facebookButton: "Facebookで登録",
             githubButton: "GitHubで登録",
-            browserWarning: "必ずお使いのデフォルトブラウザ（Chrome, Safariなど）からログイン・サインアップしてください。LINE, メッセンジャー, インスタグラムなどのアプリ内ブラウザでは、セキュリティの関係でログインできないことがございます。",
+            browserWarning: "必ずお使いのデフォルトブラウザ（Chrome, Safari, Edgeなど）からログイン・サインアップしてください。LINE, メッセンジャー, インスタグラムなどのアプリ内ブラウザでは、セキュリティの関係でログインできないことがございます。",
             spamWarning: "確認メールが届かない場合、迷惑メールの受信箱をご確認ください。",
             verificationSent: "確認メールを送信しました！受信トレイを確認してください。",
             completeProfile: "プロフィールを完成させる",
@@ -856,8 +871,6 @@ export const translations = {
             page3RuleContent1: "グループの習慣化のために、<strong style='color: #E53E3E;'>3日に1度は学びをシェアする</strong>という約束があります。",
             page3RuleContent2: "3日間投稿がないと自動的にお休み（退出）となりますが、再び同じグループに入り直すことも可能です。",
             page4Title: "教義と聖約50:22",
-            page4Quote: "「それゆえ、説く者と受ける者は互いに理解し合い、ともに教化されて、ともに喜ぶのである。」- イエス・キリスト",
-            page4Content: "この聖句の通り{username}さんが喜びを感じることができたらとてもうれしいです。開発者冥利につきます。",
             page5Title: "準備はいいですか？",
             page5Content: "それでは、良い聖典学習の旅を！",
             startButton: "はじめる",
@@ -865,13 +878,26 @@ export const translations = {
             skipButton: "スキップ"
         },
         mascot: {
-            streakCelebration: "すごい！{streak}日連続だよ！",
-            doneToday: "今日の学習お疲れ様！\n明日も待ってるよ！",
-            promptToday: "今日の聖典はもう読んだ？\n一緒に学ぼう！",
-            weeklyRecapPrompt: "今週の学びを\n振り返ってみない？",
-            groupOptionsPrompt: "一緒に聖典を学ぶ\n仲間を見つけよう！",
-            createGroupPrompt: "新しいグループを作って\n友達を誘ってみよう！",
+            streakCelebration: "すごい！{streak}日連続達成！",
+            doneToday: "お疲れ様でした！\nまた明日もお会いしましょう！",
+            promptToday: "今日はもう読みましたか？\n一緒に学習しましょう！",
+            weeklyRecapPrompt: "今週の学習を\n振り返りましょう！",
+            groupOptionsPrompt: "一緒に切磋琢磨する\n仲間を見つけましょう！",
+            createGroupPrompt: "新しいグループを作成して\n友達を招待しましょう！",
             welcomeMessage: "Scripture Habitへ\nようこそ！"
+        },
+        browserWarning: {
+            modalTitle: "デフォルトブラウザを使用してください",
+            modalDescription: "LINE、Instagram、メッセンジャー、WhatsAppなどのアプリ内ブラウザでは、セキュリティ制限によりログインやGoogleサインインが正常に動作しないことが多くあります。",
+            notRecommended: "非推奨（おすすめしません）",
+            recommended: "推奨ブラウザ",
+            continueButton: "理解しました。このまま進む",
+            howToOpen: {
+                line: "右上のメニュー（︙）から「他のブラウザで開く」をタップしてください。",
+                instagram: "右上のメニュー（︙）から「ブラウザで開く」をタップしてください。",
+                messenger: "右上のメニュー（⋯）から「外部ブラウザで開く」をタップしてください。",
+                whatsapp: "URLをコピーして、ChromeやSafariに貼り付けてください。"
+            }
         }
     },
     pt: {
@@ -1178,7 +1204,7 @@ export const translations = {
             chooseLanguage: "Escolha seu idioma (você pode alterar depois).",
             login: "Entrar",
             signup: "Inscrever-se",
-            browserWarning: "Por favor, faça login ou inscreva-se usando seu navegador padrão (Chrome, Safari, etc.). Navegadores internos de aplicativos como LINE, Messenger ou Instagram podem impedir o login devido a restrições de segurança."
+            browserWarning: "Por favor, faça login ou inscreva-se usando seu navegador padrão (Chrome, Safari, Edge, etc.). Navegadores internos de aplicativos como LINE, Messenger ou Instagram podem impedir o login devido a restrições de segurança."
         },
         login: {
             title: "Entrar",
@@ -1191,11 +1217,12 @@ export const translations = {
             googleButton: "Entrar com o Google",
             facebookButton: "Entrar com Facebook",
             githubButton: "Entrar com GitHub",
-            browserWarning: "Por favor, faça login ou inscreva-se usando seu navegador padrão (Chrome, Safari, etc.). Navegadores internos de aplicativos como LINE, Messenger ou Instagram podem impedir o login devido a restrições de segurança.",
+            browserWarning: "Por favor, faça login ou inscreva-se usando seu navegador padrão (Chrome, Safari, Edge, etc.). Navegadores internos de aplicativos como LINE, Messenger ou Instagram podem impedir o login devido a restrições de segurança.",
             inAppBrowserWarning: "O login do Google não é suportado neste navegador no aplicativo. Abra no Chrome ou Safari.",
             emailNotVerified: "Por favor, verifique seu endereço de e-mail antes de fazer login.",
             resendVerification: "Enviar e-mail de verificação",
-            verificationResent: "E-mail de verificação enviado."
+            verificationResent: "E-mail de verificação enviado.",
+            errorInvalidCredential: "E-mail ou senha inválidos. Por favor, tente novamente."
         },
         forgotPasswordPage: {
             title: "Redefinir sua senha",
@@ -1284,6 +1311,19 @@ export const translations = {
             groupOptionsPrompt: "Vamos encontrar uma comunidade\npara estudar juntos!",
             createGroupPrompt: "Crie um novo grupo e\nconvide seus amigos!",
             welcomeMessage: "Bem-vindo ao\nScripture Habit!"
+        },
+        browserWarning: {
+            modalTitle: "Use o navegador padrão",
+            modalDescription: "Navegadores integrados em aplicativos (LINE, Instagram, Messenger, WhatsApp, etc.) geralmente têm restrições de segurança que impedem o funcionamento correto do login ou do login do Google.",
+            notRecommended: "Não recomendado",
+            recommended: "Recomendado",
+            continueButton: "Entendi, Continuar",
+            howToOpen: {
+                line: "Toque no menu de três pontos (⋮) no canto superior direito e selecione 'Abrir no navegador'.",
+                instagram: "Toque no menu de três pontos (⋮) no canto superior direito e selecione 'Abrir no navegador'.",
+                messenger: "Toque nas reticências (...) e selecione 'Abrir no navegador externo'.",
+                whatsapp: "Copie o link e cole-o no Chrome ou Safari."
+            }
         }
     },
     zho: {
@@ -1585,7 +1625,7 @@ export const translations = {
             chooseLanguage: "選擇您的語言 (您稍後也可以更改)。",
             login: "登入",
             signup: "註冊",
-            browserWarning: "請使用您的預設瀏覽器（Chrome、Safari 等）進行登入或註冊。LINE、Messenger 或 Instagram 等應用程式內瀏覽器可能會因安全性限制而導致登入失敗。"
+            browserWarning: "請使用您的預設瀏覽器（Chrome、Safari、Edge 等）進行登入或註冊。LINE、Messenger 或 Instagram 等應用程式內瀏覽器可能會因安全性限制而導致登入失敗。"
         },
         login: {
             title: "登入",
@@ -1602,7 +1642,8 @@ export const translations = {
             inAppBrowserWarning: "此應用程式內瀏覽器不支援 Google 登入。請在 Chrome 或 Safari 中開啟。",
             emailNotVerified: "請在登錄前驗證您的電子郵件地址。",
             resendVerification: "發送驗證郵件",
-            verificationResent: "驗證郵件已發送。"
+            verificationResent: "驗證郵件已發送。",
+            errorInvalidCredential: "電子郵件或密碼無效。請再試一次。"
         },
         forgotPasswordPage: {
             title: "重設您的密碼",
@@ -1691,6 +1732,19 @@ export const translations = {
             groupOptionsPrompt: "讓我們找個社群\n一起學習吧！",
             createGroupPrompt: "建立一個新群組並\n邀請您的朋友！",
             welcomeMessage: "歡迎來到\nScripture Habit！"
+        },
+        browserWarning: {
+            modalTitle: "請使用預設瀏覽器",
+            modalDescription: "應用程式內瀏覽器（LINE、Instagram、Messenger、WhatsApp 等）通常有安全性限制，可能會導致登入或 Google 登入無法正常運作。",
+            notRecommended: "不推薦",
+            recommended: "推薦",
+            continueButton: "我明白，繼續",
+            howToOpen: {
+                line: "點擊右上角的三圓點選單 (⋮)，然後選擇「在瀏覽器中開啟」。",
+                instagram: "點擊右上角 三圓點選單 (⋮)，然後選擇「在瀏覽器中開啟」。",
+                messenger: "點擊省略號 (...) 並選擇「在外部瀏覽器中開啟」。",
+                whatsapp: "複製連結並將其貼到 Chrome 或 Safari 中。"
+            }
         }
     },
     es: {
@@ -2009,7 +2063,8 @@ export const translations = {
             inAppBrowserWarning: "El inicio de sesión con Google no es compatible en este navegador de la aplicación. Por favor, ábrelo en Chrome o Safari.",
             emailNotVerified: "Por favor, verifique su dirección de correo electrónico antes de iniciar sesión.",
             resendVerification: "Enviar correo de verificación",
-            verificationResent: "Correo de verificación enviado."
+            verificationResent: "Correo de verificación enviado.",
+            errorInvalidCredential: "Correo electrónico o contraseña no válidos. Por favor, inténtelo de nuevo."
         },
         forgotPasswordPage: {
             title: "Restablecer tu contraseña",
@@ -2098,6 +2153,19 @@ export const translations = {
             groupOptionsPrompt: "¡Busquemos una comunidad\npara estudiar juntos!",
             createGroupPrompt: "¡Crea un nuevo grupo e\ninvita a tus amigos!",
             welcomeMessage: "¡Bienvenido a\nScripture Habit!"
+        },
+        browserWarning: {
+            modalTitle: "Usa el navegador predeterminado",
+            modalDescription: "Los navegadores dentro de aplicaciones (LINE, Instagram, Messenger, WhatsApp, etc.) suelen tener restricciones de seguridad que impiden que el inicio de sesión o el inicio de sesión de Google funcionen correctamente.",
+            notRecommended: "No recomendado",
+            recommended: "Recomendado",
+            continueButton: "Entiendo, continuar",
+            howToOpen: {
+                line: "Toca el menú de tres puntos (⋮) en la esquina superior derecha y selecciona 'Abrir en el navegador'.",
+                instagram: "Toca el menú de tres puntos (⋮) en la esquina superior derecha y selecciona 'Abrir en el navegador'.",
+                messenger: "Toca los puntos suspensivos (...) y selecciona 'Abrir en navegador externo'.",
+                whatsapp: "Copia el enlace y pégalo en Chrome o Safari."
+            }
         }
     },
     vi: {
@@ -2148,7 +2216,7 @@ export const translations = {
             shareLearningCall: "Bạn có muốn chia sẻ những gì bạn đã học hôm nay không?",
             goToByuSpeech: "Đi đến Bài phát biểu BYU",
             readStudyMaterial: "Đọc Tài liệu Nghiên cứu",
-            todaysComeFollowMe: "'Hãy Đến Mà Theo Ta' Hôm Nay",
+            todaysComeFollowMe: "'Hãy Đến Mà Theo Ta' Hôm nay",
             noReadingPlan: "Không có kế hoạch cho hôm nay."
         },
         languages: {
@@ -2416,7 +2484,8 @@ export const translations = {
             inAppBrowserWarning: "Đăng nhập Google không được hỗ trợ trong trình duyệt ứng dụng này. Vui lòng mở trong Chrome hoặc Safari.",
             emailNotVerified: "Vui lòng xác minh địa chỉ email của bạn trước khi đăng nhập.",
             resendVerification: "Gửi email xác minh",
-            verificationResent: "Email xác minh đã được gửi."
+            verificationResent: "Email xác minh đã được gửi.",
+            errorInvalidCredential: "Email hoặc mật khẩu không hợp lệ. Vui lòng thử lại."
         },
         forgotPasswordPage: {
             title: "Đặt lại mật khẩu của bạn",
@@ -2505,6 +2574,19 @@ export const translations = {
             groupOptionsPrompt: "Hãy tìm một cộng đồng\nđể cùng nhau học tập nhé!",
             createGroupPrompt: "Tạo một nhóm mới và\nmời bạn bè của bạn!",
             welcomeMessage: "Chào mừng bạn đến với\nScripture Habit!"
+        },
+        browserWarning: {
+            modalTitle: "Sử dụng trình duyệt mặc định",
+            modalDescription: "Trình duyệt trong ứng dụng (LINE, Instagram, Messenger, WhatsApp, v.v.) thường có các hạn chế bảo mật ngăn cản việc đăng nhập hoặc Đăng nhập Google hoạt động chính xác.",
+            notRecommended: "Không khuyến khích",
+            recommended: "Được khuyến khích",
+            continueButton: "Tôi hiểu, Tiếp tục",
+            howToOpen: {
+                line: "Nhấn vào menu ba chấm (⋮) ở góc trên bên phải và chọn 'Mở trong trình duyệt'.",
+                instagram: "Nhấn vào menu ba chấm (⋮) ở góc trên bên phải và chọn 'Mở trong trình duyệt'.",
+                messenger: "Nhấn vào dấu ba chấm (...) và chọn 'Mở trong trình duyệt bên ngoài'.",
+                whatsapp: "Sao chép liên kết và dán vào Chrome hoặc Safari."
+            }
         }
     },
     th: {
@@ -2823,7 +2905,8 @@ export const translations = {
             inAppBrowserWarning: "การเข้าสู่ระบบด้วย Google ไม่รองรับในเบราว์เซอร์ในแอปนี้ กรุณาเปิดใน Chrome หรือ Safari",
             emailNotVerified: "กรุณายืนยันที่อยู่อีเมลของคุณก่อนเข้าสู่ระบบ",
             resendVerification: "ส่งอีเมลยืนยัน",
-            verificationResent: "ส่งอีเมลยืนยันแล้ว"
+            verificationResent: "ส่งอีเมลยืนยันแล้ว",
+            errorInvalidCredential: "อีเมลหรือรหัสผ่านไม่ถูกต้อง โปรดลองอีกครั้ง"
         },
         forgotPasswordPage: {
             title: "รีเซ็ตรหัสผ่านของคุณ",
@@ -2905,13 +2988,26 @@ export const translations = {
             skipButton: "ข้าม"
         },
         mascot: {
-            streakCelebration: "สุดยอด! ต่อเนื่อง {streak} วันแล้ว!",
-            doneToday: "วันนี้ทำได้ดีมาก!\nแล้วเจอกันพรุ่งนี้นะ!",
-            promptToday: "วันนี้อ่านหรือยัง?\nมาเรียนด้วยกันเถอะ!",
-            weeklyRecapPrompt: "มาทบทวนสิ่งที่คุณเรียนรู้\nในสัปดาห์นี้กันเถอะ!",
-            groupOptionsPrompt: "มาหาชุมชนเพื่อ\nศึกษาด้วยกันเถอะ!",
+            streakCelebration: "สุดยอด! ต่อเนื่อง {streak} วัน!",
+            doneToday: "วันนี้ทำได้ดีมาก!\nเจอกันพรุ่งนี้!",
+            promptToday: "วันนี้คุณอ่านหรือยัง?\nมาเรียนรู้ด้วยกันเถอะ!",
+            weeklyRecapPrompt: "มาทบทวนการเรียนรู้\nของคุณในสัปดาห์นี้กัน!",
+            groupOptionsPrompt: "มาค้นหาชุมชน\nเพื่อเรียนรู้ด้วยกัน!",
             createGroupPrompt: "สร้างกลุ่มใหม่และ\nชวนเพื่อนของคุณ!",
             welcomeMessage: "ยินดีต้อนรับสู่\nScripture Habit!"
+        },
+        browserWarning: {
+            modalTitle: "ใช้เบราว์เซอร์เริ่มต้น",
+            modalDescription: "เบราว์เซอร์ในแอป (LINE, Instagram, Messenger, WhatsApp ฯลฯ) มักจะมีข้อจำกัดด้านความปลอดภัยที่ขัดขวางไม่ให้การเข้าสู่ระบบหรือการเข้าสู่ระบบของ Google ทำงานอย่างถูกต้อง",
+            notRecommended: "ไม่แนะนำ",
+            recommended: "แนะนำ",
+            continueButton: "ฉันเข้าใจแล้ว ดำเนินการต่อ",
+            howToOpen: {
+                line: "แตะเมนูสามจุด (⋮) ที่มุมขวาบนแล้วเลือก 'เปิดในเบราว์เซอร์'",
+                instagram: "แตะเมนูสามจุด (⋮) ที่มุมขวาบนแล้วเลือก 'เปิดในเบราว์เซอร์'",
+                messenger: "แตะจุดไข่ปลา (...) แล้วเลือก 'เปิดในเบราว์เซอร์ภายนอก'",
+                whatsapp: "คัดลอกลิงก์แล้ววางใน Chrome หรือ Safari"
+            }
         }
     },
     ko: {
@@ -3230,7 +3326,8 @@ export const translations = {
             inAppBrowserWarning: "Google 로그인은 이 인앱 브라우저에서 지원되지 않습니다. Chrome 또는 Safari에서 열어주세요.",
             emailNotVerified: "로그인하기 전에 이메일 주소를 확인해주세요.",
             resendVerification: "인증 이메일 전송",
-            verificationResent: "인증 이메일이 전송되었습니다."
+            verificationResent: "인증 이메일이 전송되었습니다.",
+            errorInvalidCredential: "이메일 또는 비밀번호가 잘못되었습니다. 다시 시도해 주세요."
         },
         forgotPasswordPage: {
             title: "비밀번호 재설정",
@@ -3319,6 +3416,19 @@ export const translations = {
             groupOptionsPrompt: "함께 공부할\n커뮤니티를 찾아볼까요?",
             createGroupPrompt: "새로운 그룹을 만들고\n친구들을 초대해보세요!",
             welcomeMessage: "Scripture Habit에 오신 것을\n환영합니다!"
+        },
+        browserWarning: {
+            modalTitle: "기본 브라우저 사용",
+            modalDescription: "인앱 브라우저(LINE, Instagram, Messenger, WhatsApp 등)는 종종 보안 제한으로 인해 로그인이나 Google 로그인이 올바르게 작동하지 않을 수 있습니다.",
+            notRecommended: "권장하지 않음",
+            recommended: "권장됨",
+            continueButton: "이해했습니다, 계속하기",
+            howToOpen: {
+                line: "오른쪽 상단의 점 세 개 메뉴(⋮)를 누르고 '다른 브라우저로 열기'를 선택하세요.",
+                instagram: "오른쪽 상단의 점 세 개 메뉴(⋮)를 누르고 '브라우저에서 열기'를 선택하세요.",
+                messenger: "줄임표(...)를 누르고 '외부 브라우저에서 열기'를 선택하세요.",
+                whatsapp: "링크를 복사하여 Chrome 또는 Safari에 붙여넣으세요."
+            }
         }
     },
     tl: {
@@ -3637,7 +3747,8 @@ export const translations = {
             inAppBrowserWarning: "Hindi suportado ang Google Login sa in-app browser na ito. Pakibuksan sa Chrome o Safari.",
             emailNotVerified: "Pakiberipika ang iyong email address bago mag-login.",
             resendVerification: "Ipadala ang Verification Email",
-            verificationResent: "Naipadala ang verification email."
+            verificationResent: "Naipadala ang verification email.",
+            errorInvalidCredential: "Inbalidong email o password. Pakisubukang muli."
         },
         forgotPasswordPage: {
             title: "I-reset ang Iyong Password",
@@ -3719,13 +3830,26 @@ export const translations = {
             skipButton: "Laktawan"
         },
         mascot: {
-            streakCelebration: "Kamangha-mangha! {streak} araw na streak!",
-            doneToday: "Mahusay ang ginawa mo ngayong araw!\nKita-kita tayo bukas!",
+            streakCelebration: "Kamangha-mangha! {streak} na araw na streak!",
+            doneToday: "Magaling ang ginawa mo ngayong araw!\nKita-kits bukas!",
             promptToday: "Nagbasa ka na ba ngayong araw?\nMag-aral tayo nang magkasama!",
-            weeklyRecapPrompt: "Magmuni-muni tayo sa\niyong natutunan ngayong linggo!",
-            groupOptionsPrompt: "Humanap tayo ng komunidad\npara mag-aral nang sabay!",
-            createGroupPrompt: "Lumikha ng bagong grupo at\nimbitahan ang iyong mga kaibigan!",
+            weeklyRecapPrompt: "Balikan natin ang iyong\npag-aaral ngayong linggo!",
+            groupOptionsPrompt: "Maghanap tayo ng komunidad\nupang mag-aral nang magkasama!",
+            createGroupPrompt: "Gumawa ng bagong grupo at\nimbitahan ang iyong mga kaibigan!",
             welcomeMessage: "Maligayang pagdating sa\nScripture Habit!"
+        },
+        browserWarning: {
+            modalTitle: "Gamitin ang Default Browser",
+            modalDescription: "Ang mga in-app browser (LINE, Instagram, Messenger, WhatsApp, atbp.) ay madalas na may mga restriksyon sa seguridad na pumipigil sa tamang pag-login o Google Sign-in.",
+            notRecommended: "Hindi Inirerekomenda",
+            recommended: "Inirerekomenda",
+            continueButton: "Naiintindihan ko, Ituloy",
+            howToOpen: {
+                line: "I-tap ang three-dot menu (⋮) sa kanang bahagi sa itaas at piliin ang 'Buksan sa browser'.",
+                instagram: "I-tap ang three-dot menu (⋮) sa kanang bahagi sa itaas at piliin ang 'Buksan sa browser'.",
+                messenger: "I-tap ang ellipsis (...) at piliin ang 'Buksan sa external browser'.",
+                whatsapp: "Kopyahin ang link at i-paste ito sa Chrome o Safari."
+            }
         }
     },
     sw: {
@@ -4044,7 +4168,8 @@ export const translations = {
             inAppBrowserWarning: "Kuingia kwa Google hakutumiki katika kivinjari hiki cha ndani ya programu. Tafadhali fungua kwenye Chrome au Safari.",
             emailNotVerified: "Tafadhali thibitisha anwani yako ya barua pepe kabla ya kuingia.",
             resendVerification: "Tuma Barua Pepe ya Uthibitishaji",
-            verificationResent: "Barua pepe ya uthibitishaji imetumwa."
+            verificationResent: "Barua pepe ya uthibitishaji imetumwa.",
+            errorInvalidCredential: "Barua pepe au nenosiri si sahihi. Tafadhali jaribu tena."
         },
         forgotPasswordPage: {
             title: "Weka Upya Nenosiri Lako",
@@ -4066,7 +4191,7 @@ export const translations = {
             googleButton: "Jisajili na Google",
             facebookButton: "Jisajili na Facebook",
             githubButton: "Jisajili na GitHub",
-            browserWarning: "Tafadhali ingia au ujisajili ukitumia kivinjari chako chaguo-msingi (Chrome, Safari, n.k.). Vivinjari vya ndani ya programu kama vile LINE, Messenger, au Instagram vinaweza kushindwa kwa sababu ya vikwazo vya usalama.",
+            browserWarning: "Tafadhali ingia au ujisajili ukitumia kivinjari chako chaguo-msingi (Chrome, Safari, Edge, n.k.). Vivinjari vya ndani ya programu kama vile LINE, Messenger, au Instagram vinaweza kushindwa kwa sababu ya vikwazo vya usalama.",
             spamWarning: "Ikiwa hujaipata barua pepe ya uthibitishaji, tafadhali angalia folda yako ya spam.",
             verificationSent: "Barua pepe ya uthibitishaji imetumwa! Tafadhali angalia kikasha chako.",
             completeProfile: "Kamilisha Wasifu Wako",
@@ -4133,6 +4258,19 @@ export const translations = {
             groupOptionsPrompt: "Hebu tupate jumuiya ya\nkujifunza pamoja!",
             createGroupPrompt: "Unda kikundi kipya na\nualike marafiki zako!",
             welcomeMessage: "Karibu kwenye\nScripture Habit!"
+        },
+        browserWarning: {
+            modalTitle: "Tumia Kivinjari Chaguo-msingi",
+            modalDescription: "Vivinjari vya ndani ya programu (LINE, Instagram, Messenger, WhatsApp, nk.) mara nyingi huwa na vizuizi vya usalama ambavyo huzuia kuingia au Kuingia kwa Google kufanya kazi vizuri.",
+            notRecommended: "Haipendekezwi",
+            recommended: "Inapendekezwi",
+            continueButton: "Nimeelewa, Endelea",
+            howToOpen: {
+                line: "Gusa menyu ya vitone vitatu (⋮) upande wa juu kulia na uchague 'Fungua kwenye kivinjari'.",
+                instagram: "Gusa menyu ya vitone vitatu (⋮) upande wa juu kulia na uchague 'Fungua kwenye kivinjari'.",
+                messenger: "Gusa dokezo (...) na uchague 'Fungua kwenye kivinjari cha nje'.",
+                whatsapp: "Nakili kiungo na ukibandike kwenye Chrome au Safari."
+            }
         }
-    }
+    },
 };
