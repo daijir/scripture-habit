@@ -173,7 +173,11 @@ export default function LoginForm() {
               {t('signup.finishSignup')}
             </Button>
           </form>
-          {error && <p style={{ color: 'red', marginTop: 10 }}>{error}</p>}
+          {error && (
+            <div className='error-container'>
+              <p className='error-message'>{error}</p>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -241,7 +245,7 @@ export default function LoginForm() {
         {/* Error message */}
         {error && (
           <div className='error-container' style={{ marginTop: '10px' }}>
-            <p className='error'>{error}</p>
+            <p className='error-message'>{error}</p>
             {unverifiedUser && (
               <button
                 type="button"

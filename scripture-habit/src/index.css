@@ -177,3 +177,44 @@ button {
   width: 100%;
   box-sizing: border-box;
 }
+
+.error-container {
+  background-color: #fff9db;
+  /* Very light yellow */
+  border: 2px solid #ffec99;
+  /* Stronger yellow border */
+  padding: 12px 16px;
+  border-radius: 12px;
+  margin: 15px auto;
+  width: 20rem;
+  max-width: 92%;
+  text-align: center;
+  box-sizing: border-box;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  animation: shake 0.4s ease-in-out;
+}
+
+.error-message {
+  color: #e03131;
+  /* Bright error red */
+  font-size: 0.9rem;
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+@keyframes shake {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-5px);
+  }
+
+  75% {
+    transform: translateX(5px);
+  }
+}
