@@ -53,7 +53,7 @@ const Profile = ({ userData, stats }) => {
                 ward: newWard,
                 bio: newBio
             });
-            setMessage({ type: 'success', text: t('profile.save') + ' ' + t('groupChat.successUpdate') }); // Generic success message might be better
+            setMessage({ type: 'success', text: t('profile.successUpdate') });
 
             // Clear message after 3 seconds
             setTimeout(() => {
@@ -61,7 +61,7 @@ const Profile = ({ userData, stats }) => {
             }, 3000);
         } catch (error) {
             console.error("Error updating profile:", error);
-            setMessage({ type: 'error', text: t('groupChat.errorChangeNickname') }); // Or a more generic error
+            setMessage({ type: 'error', text: t('profile.errorUpdate') });
         } finally {
             setIsSaving(false);
         }

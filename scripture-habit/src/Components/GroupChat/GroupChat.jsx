@@ -2637,7 +2637,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                   <span>{t('groupChat.inviteLink')}</span>
                 </div>
               </div>
-              <p className="invite-footer-hint">Tap above to copy and share with your friends!</p>
+              <p className="invite-footer-hint">{t('groupChat.inviteLinkHint')}</p>
             </div>
           </div>
         </div>

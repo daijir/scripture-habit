@@ -78,7 +78,9 @@ export const translations = {
             enterBio: "Enter a short bio",
             level: "Level",
             nextLevel: "Next Level",
-            daysStudied: "Days Studied"
+            daysStudied: "Days Studied",
+            successUpdate: "Profile updated successfully!",
+            errorUpdate: "Failed to update profile. Please try again."
         },
         myNotes: {
             description: "Note Collection",
@@ -220,7 +222,8 @@ export const translations = {
             unityModalNoPostsYet: "No posts yet today",
             unityModalAllPosted: "Everyone has shared today! Amazing unity!",
             addNoteTooltip: "Click + to post a note!",
-            inviteFriendsPrompt: "Invite your friends!"
+            inviteFriendsPrompt: "Invite your friends!",
+            inviteLinkHint: "Tap above to copy and share with your friends!"
         },
         newNote: {
             editTitle: "Edit Note",
@@ -551,7 +554,9 @@ export const translations = {
             enterBio: "なんでも一言を入力",
             level: "レベル",
             nextLevel: "レベルアップまであと",
-            daysStudied: "合計学習日数"
+            daysStudied: "合計学習日数",
+            successUpdate: "プロフィールを更新しました！",
+            errorUpdate: "プロフィールの更新に失敗しました。もう一度試してください。"
         },
         groupChat: {
             send: "送信",
@@ -657,7 +662,8 @@ export const translations = {
             unityModalNoPostsYet: "今日の投稿はまだありません",
             unityModalAllPosted: "全員が投稿しました！素晴らしい一体感です！",
             addNoteTooltip: "＋を押してノート投稿！",
-            inviteFriendsPrompt: "友人を誘いましょう！"
+            inviteFriendsPrompt: "友人を誘いましょう！",
+            inviteLinkHint: "上をタップしてコピーし、友達にシェアしましょう！"
         },
         myNotes: {
             description: "ノートコレクション",
@@ -1030,7 +1036,9 @@ export const translations = {
             enterBio: "Insira uma biografia curta",
             level: "Nível",
             nextLevel: "Para o próximo nível",
-            daysStudied: "Dias Estudados"
+            daysStudied: "Dias Estudados",
+            successUpdate: "Perfil atualizado com sucesso!",
+            errorUpdate: "Falha ao atualizar o perfil. Tente novamente."
         },
         groupChat: {
             send: "Enviar",
@@ -1136,7 +1144,8 @@ export const translations = {
             unityModalNoPostsYet: "Nenhuma postagem ainda hoje",
             unityModalAllPosted: "Todos que postaram hoje! Unidade incrível!",
             inviteFriendsPrompt: "Convide seus amigos!",
-            addNoteTooltip: "Clique em + para postar uma nota!"
+            addNoteTooltip: "Clique em + para postar uma nota!",
+            inviteLinkHint: "Toque acima para copiar e compartilhar com seus amigos!"
         },
         myNotes: {
             description: "Coleção de Notas",
@@ -1508,7 +1517,9 @@ export const translations = {
             enterBio: "輸入簡介",
             level: "等級",
             nextLevel: "距離下一級",
-            daysStudied: "已學習天數"
+            daysStudied: "已學習天數",
+            successUpdate: "個人檔案已成功更新！",
+            errorUpdate: "更新個人檔案失敗。請再試一次。"
         },
         groupChat: {
             send: "發送",
@@ -1588,6 +1599,7 @@ export const translations = {
             unityModalNoPostsYet: "今天尚未有發文",
             unityModalAllPosted: "全員已分享！驚人的團結！",
             inviteFriendsPrompt: "邀請您的朋友！",
+            inviteLinkHint: "點擊上方進行複製並分享給你的朋友！",
             addNoteTooltip: "點擊 + 發布筆記！"
         },
         myNotes: {
@@ -1956,7 +1968,9 @@ export const translations = {
             enterBio: "Ingresar biografía corta",
             level: "Nivel",
             nextLevel: "Para el siguiente nivel",
-            daysStudied: "Días estudiados"
+            daysStudied: "Días estudiados",
+            successUpdate: "¡Perfil actualizado con éxito!",
+            errorUpdate: "Error al actualizar el perfil. Por favor, inténtelo de nuevo."
         },
         groupChat: {
             send: "Enviar",
@@ -2062,7 +2076,8 @@ export const translations = {
             unityModalNoPostsYet: "No hay publicaciones hoy todavía",
             unityModalAllPosted: "¡Todos han compartido hoy! ¡Increíble unidad!",
             addNoteTooltip: "¡Haz clic en + para publicar una nota!",
-            inviteFriendsPrompt: "¡Invita a tus amigos!"
+            inviteFriendsPrompt: "¡Invita a tus amigos!",
+            inviteLinkHint: "¡Toca arriba para copiar y compartir con tus amigos!"
         },
         myNotes: {
             description: "Colección de Notas",
@@ -2405,7 +2420,9 @@ export const translations = {
             enterBio: "Nhập tiểu sử ngắn",
             level: "Cấp độ",
             nextLevel: "Đến cấp độ tiếp theo",
-            daysStudied: "Số ngày đã học"
+            daysStudied: "Số ngày đã học",
+            successUpdate: "Cập nhật hồ sơ thành công!",
+            errorUpdate: "Cập nhật hồ sơ thất bại. Vui lòng thử lại."
         },
         groupChat: {
             send: "Gửi",
@@ -2485,6 +2502,7 @@ export const translations = {
             unityModalNoPostsYet: "Chưa có bài đăng nào hôm nay",
             unityModalAllPosted: "Mọi người đã chia sẻ hôm nay! Sự thống nhất tuyệt vời!",
             inviteFriendsPrompt: "Mời bạn bè của bạn!",
+            inviteLinkHint: "Chạm vào bên trên để sao chép và chia sẻ với bạn bè!",
             addNoteTooltip: "Nhấp vào + để đăng ghi chú!"
         },
         myNotes: {
@@ -2852,7 +2870,9 @@ export const translations = {
             enterBio: "ป้อนประวัติย่อ",
             level: "ระดับ",
             nextLevel: "สู่ระดับถัดไป",
-            daysStudied: "จำนวนวันที่ศึกษา"
+            daysStudied: "จำนวนวันที่ศึกษา",
+            successUpdate: "อัปเดตโปรไฟล์สำเร็จแล้ว!",
+            errorUpdate: "อัปเดตโปรไฟล์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง"
         },
         groupChat: {
             send: "ส่ง",
@@ -2958,6 +2978,7 @@ export const translations = {
             unityModalNoPostsYet: "ยังไม่มีการโพสต์ในวันนี้",
             unityModalAllPosted: "ทุกคนร่วมแบ่งปันแล้ววันนี้! ความเป็นหนึ่งเดียวที่น่าทึ่ง!",
             inviteFriendsPrompt: "ชวนเพื่อนของคุณมาเข้าร่วม!",
+            inviteLinkHint: "แตะด้านบนเพื่อคัดลอกและแชร์กับเพื่อนของคุณ!",
             addNoteTooltip: "คลิก + เพื่อโพสต์โน้ต!"
         },
         myNotes: {
@@ -3325,7 +3346,9 @@ export const translations = {
             enterBio: "한마디를 입력하세요",
             level: "레벨",
             nextLevel: "다음 레벨까지",
-            daysStudied: "학습한 일수"
+            daysStudied: "학습한 일수",
+            successUpdate: "프로필이 성공적으로 업데이트되었습니다!",
+            errorUpdate: "프로필 업데이트에 실패했습니다. 다시 시도해 주세요."
         },
         groupChat: {
             send: "전송",
@@ -3431,6 +3454,7 @@ export const translations = {
             unityModalNoPostsYet: "오늘 게시글이 없습니다",
             unityModalAllPosted: "오늘 모두가 공유했습니다! 놀라운 단합력입니다!",
             inviteFriendsPrompt: "친구를 초대하세요!",
+            inviteLinkHint: "위쪽을 눌러 복사하고 친구들에게 공유하세요!",
             addNoteTooltip: "+를 눌러 노트를 게시하세요!"
         },
         myNotes: {
@@ -3798,7 +3822,9 @@ export const translations = {
             enterBio: "Ilagay ang talambuhay",
             level: "Antas",
             nextLevel: "Para sa susunod na antas",
-            daysStudied: "Mga Araw na Nag-aral"
+            daysStudied: "Mga Araw na Nag-aral",
+            successUpdate: "Matagumpay na na-update ang profile!",
+            errorUpdate: "Nabigong i-update ang profile. Pakisubukan muli."
         },
         groupChat: {
             send: "Ipadala",
@@ -3898,12 +3924,13 @@ export const translations = {
             unityModalNotPosted: "Hikayatin natin ang mga hindi pa nakapag-post!",
             unityModalLegendTitle: "Gabay sa Pag-unlad",
             unityModalLegendCelestial: "Selestiyal (100%)",
-            unityModalLegendTerestiyal: "Terestrial (66%~)",
-            unityModalLegendTelestiyal: "Telestrial (33%~)",
+            unityModalLegendTerrestrial: "Terestrial (66%~)",
+            unityModalLegendTelestial: "Telestrial (33%~)",
             unityModalLegendEmpty: "Simula (0%~)",
             unityModalNoPostsYet: "Wala pang post ngayong araw",
             unityModalAllPosted: "Lahat ay nakapag-share na ngayon! Kamangha-manghang pagkakaisa!",
             inviteFriendsPrompt: "Imbitahan ang iyong mga kaibigan!",
+            inviteLinkHint: "I-tap sa itaas para kopyahin at ibahagi sa iyong mga kaibigan!",
             addNoteTooltip: "I-click ang + para mag-post ng tala!"
         },
         myNotes: {
@@ -4271,7 +4298,9 @@ export const translations = {
             enterBio: "Weka wasifu mfupi",
             level: "Kiwango",
             nextLevel: "Kuelekea kiwango kijacho",
-            daysStudied: "Siku Ulizosoma"
+            daysStudied: "Siku Ulizosoma",
+            successUpdate: "Wasifu umesasishwa kikamilifu!",
+            errorUpdate: "Imeshindwa kusasisha wasifu. Tafadhali jaribu tena."
         },
         groupChat: {
             send: "Tuma",
@@ -4377,6 +4406,7 @@ export const translations = {
             unityModalNoPostsYet: "Hakuna machapisho bado leo",
             unityModalAllPosted: "Kila mtu ameshiriki leo! Umoja wa ajabu!",
             inviteFriendsPrompt: "Alika marafiki zako!",
+            inviteLinkHint: "Gusa hapo juu ili kunakili na kushiriki na marafiki zako!",
             addNoteTooltip: "Bofya + ili kuchapisha dokezo!"
         },
         myNotes: {
