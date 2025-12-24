@@ -15,6 +15,7 @@ import { useLanguage } from '../../Context/LanguageContext.jsx';
 import NoteDisplay from '../NoteDisplay/NoteDisplay';
 import confetti from 'canvas-confetti';
 import UserProfileModal from '../UserProfileModal/UserProfileModal';
+import Mascot from '../Mascot/Mascot';
 
 const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFocusChange, onBack, onGroupSelect }) => {
   const { language, t } = useLanguage();
@@ -61,6 +62,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const [hasMoreOlder, setHasMoreOlder] = useState(true);
   const latestMessageRef = useRef(null);
   const [showAddNoteTooltip, setShowAddNoteTooltip] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   useEffect(() => {
     const hasDismissed = localStorage.getItem('hasDismissedInactivityPolicy');
@@ -1344,7 +1346,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     handleGenerateWeeklyRecap();
   };
 
-  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit || showEditNameModal || showMembersModal || showUnityModal;
+  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit || showEditNameModal || showMembersModal || showUnityModal || showInviteModal;
 
   // Calculate Unity Score (Percentage of members who posted today)
   const unityPercentage = useMemo(() => {
@@ -1545,37 +1547,18 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
             {groupData && (
               <div className="unity-score-container">
                 <span
-                  className="unity-score-badge clickable"
+                  className={`unity-score-badge ${unityPercentage === 100 ? 'celestial' : ''}`}
                   onClick={handleShowUnityModal}
-                  style={{
-                    marginLeft: '8px',
-                    fontSize: '1.0rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    color: unityPercentage === 100 ? '#B8860B' : 'var(--text-color)',
-                    fontWeight: unityPercentage === 100 ? 'bold' : 'normal',
-                    textShadow: unityPercentage === 100 ? '0 0 8px rgba(255, 215, 0, 0.4)' : 'none',
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer',
-                    padding: '2px 6px',
-                    borderRadius: '12px',
-                    backgroundColor: 'rgba(0,0,0,0.05)'
-                  }}
                   title="Unity Score: members active today"
                 >
-                  {unityPercentage === 100 ? '☀️' :
-                    unityPercentage >= 66 ? '🌕' :
-                      unityPercentage >= 33 ? '🌠' :
-                        '🌑'} {unityPercentage}%
+                  <span className="unity-icon">
+                    {unityPercentage === 100 ? '☀️' :
+                      unityPercentage >= 66 ? '🌕' :
+                        unityPercentage >= 33 ? '🌠' :
+                          '🌑'}
+                  </span>
+                  <span className="unity-percent-text">{unityPercentage}%</span>
                 </span>
-                {unityPercentage < 100 && (
-                  <div
-                    className="unity-encouragement-bubble"
-                    onClick={handleShowUnityModal}
-                  >
-                    {t('groupChat.unityEncouragement')}
-                  </div>
-                )}
               </div>
             )}
 
@@ -1598,9 +1581,11 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                   </label>
                 </div>
               )}
-              <div className="invite-code-display" onClick={handleCopyInviteLink} title={t('groupChat.inviteLink')}>
-                <span>{t('groupChat.inviteLink')}</span>
-                <UilCopy size="16" className="copy-icon" />
+              <div className="invite-code-wrapper">
+                <div className="invite-code-display" onClick={() => setShowInviteModal(true)} title={t('groupChat.inviteLink')}>
+                  <span>{t('groupChat.inviteLink')}</span>
+                  <UilCopy size="16" className="copy-icon" />
+                </div>
               </div>
 
               <div className="invite-code-display members-btn-desktop" onClick={handleShowMembers} title={t('groupChat.members')}>
@@ -1636,17 +1621,24 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
             </div>
 
             {/* Mobile hamburger menu button */}
-            <button
-              className="hamburger-btn mobile-only"
-              onClick={() => setShowMobileMenu(!showMobileMenu)}
-              aria-label="Menu"
-            >
-              <span className={`hamburger-icon ${showMobileMenu ? 'open' : ''}`}>
-                <span></span>
-                <span></span>
-                <span></span>
-              </span>
-            </button>
+            <div className="hamburger-container mobile-only">
+              {groupData.members.length === 1 && (
+                <div className="header-invite-btn-mobile" onClick={() => setShowInviteModal(true)} title={t('groupChat.inviteLink')}>
+                  <span style={{ fontSize: '1.2rem' }}>🎁</span>
+                </div>
+              )}
+              <button
+                className="hamburger-btn"
+                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                aria-label="Menu"
+              >
+                <span className={`hamburger-icon ${showMobileMenu ? 'open' : ''}`}>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </span>
+              </button>
+            </div>
           </>
         )}
       </div>
@@ -1664,7 +1656,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
 
             <div className="mobile-menu-content">
               {/* Invite Link Section */}
-              <div className="mobile-menu-item invite-section" onClick={() => { handleCopyInviteLink(); setShowMobileMenu(false); }}>
+              <div className="mobile-menu-item invite-section" onClick={() => { setShowInviteModal(true); setShowMobileMenu(false); }}>
                 <div className="menu-item-icon">
                   <UilCopy size="20" />
                 </div>
@@ -2624,6 +2616,33 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         />
       )}
 
+      {/* Invite Friends Modal */}
+      {showInviteModal && (
+        <div className="leave-modal-overlay" onClick={() => setShowInviteModal(false)}>
+          <div className="leave-modal-content invite-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>{t('groupChat.inviteLink')}</h3>
+              <button className="close-menu-btn" onClick={() => setShowInviteModal(false)}>
+                <UilTimes size="24" />
+              </button>
+            </div>
+            <div className="invite-modal-body">
+              <Mascot customMessage={t('groupChat.inviteFriendsPrompt')} userData={userData} />
+              <div className="invite-link-card" onClick={handleCopyInviteLink}>
+                <div className="invite-link-content">
+                  <span className="invite-link-url">{window.location.origin}/join/{groupData?.inviteCode}</span>
+                </div>
+                <div className="copy-badge">
+                  <UilCopy size="18" />
+                  <span>{t('groupChat.inviteLink')}</span>
+                </div>
+              </div>
+              <p className="invite-footer-hint">Tap above to copy and share with your friends!</p>
+            </div>
+          </div>
+        </div>
+      )}
+
       <form
         onSubmit={handleSendMessage}
         className="send-message-form"
@@ -2666,7 +2685,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
           />
           <div className="add-entry-btn-wrapper">
             {showAddNoteTooltip && (
-              <div className="add-note-tooltip" onClick={() => { setIsNewNoteOpen(true); handleDismissTooltip(); }}>
+              <div className="add-note-tooltip" onClick={(e) => { e.stopPropagation(); handleDismissTooltip(); }}>
                 <div className="tooltip-content">
                   {t('groupChat.addNoteTooltip')}
                 </div>
