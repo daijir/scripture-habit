@@ -50,7 +50,8 @@ export const translations = {
             goToByuSpeech: "Go to BYU Speech",
             readStudyMaterial: "Read The Study Material",
             todaysComeFollowMe: "Today's 'Come, Follow Me'",
-            noReadingPlan: "No plan for today."
+            noReadingPlan: "No plan for today.",
+            postedANote: "{nickname} posted a note! ✨"
         },
         languages: {
             title: "Languages",
@@ -227,7 +228,8 @@ export const translations = {
             unityModalAllPosted: "Everyone has shared today! Amazing unity!",
             addNoteTooltip: "Click + to post a note!",
             inviteFriendsPrompt: "Invite your friends!",
-            inviteLinkHint: "Tap above to copy and share with your friends!"
+            inviteLinkHint: "Tap above to copy and share with your friends!",
+            readStatus: "Read {count}"
         },
         newNote: {
             editTitle: "Edit Note",
@@ -530,7 +532,8 @@ export const translations = {
             goToByuSpeech: "BYUスピーチへ移動",
             readStudyMaterial: "学習資料を読む",
             todaysComeFollowMe: "今日の「わたしに従ってきなさい」",
-            noReadingPlan: "今日の「わたしに従ってきなさい」はありません。"
+            noReadingPlan: "今日の「わたしに従ってきなさい」はありません。",
+            postedANote: "{nickname}さんがノートを投稿しました！✨"
         },
         languages: {
             title: "言語設定",
@@ -669,7 +672,8 @@ export const translations = {
             unityModalAllPosted: "全員が投稿しました！素晴らしい一体感です！",
             addNoteTooltip: "＋を押してノート投稿！",
             inviteFriendsPrompt: "友人を誘いましょう！",
-            inviteLinkHint: "上をタップしてコピーし、友達にシェアしましょう！"
+            inviteLinkHint: "上をタップしてコピーし、友達にシェアしましょう！",
+            readStatus: "既読 {count}"
         },
         myNotes: {
             description: "ノートコレクション",
@@ -1016,7 +1020,8 @@ export const translations = {
             goToByuSpeech: "Ir para o Discurso da BYU",
             readStudyMaterial: "Ler o Material de Estudo",
             todaysComeFollowMe: "'Vem, e Segue-Me' de Hoje",
-            noReadingPlan: "Nenhum plano para hoje."
+            noReadingPlan: "Nenhum plano para hoje.",
+            postedANote: "{nickname} postou uma nota! ✨"
         },
         languages: {
             title: "Idiomas",
@@ -1155,7 +1160,8 @@ export const translations = {
             unityModalAllPosted: "Todos que postaram hoje! Unidade incrível!",
             inviteFriendsPrompt: "Convide seus amigos!",
             addNoteTooltip: "Clique em + para postar uma nota!",
-            inviteLinkHint: "Toque acima para copiar e compartilhar com seus amigos!"
+            inviteLinkHint: "Toque acima para copiar e compartilhar com seus amigos!",
+            readStatus: "Visualizado {count}"
         },
         myNotes: {
             description: "Coleção de Notas",
@@ -1499,7 +1505,8 @@ export const translations = {
             goToByuSpeech: "前往 BYU 演講",
             readStudyMaterial: "閱讀研讀資料",
             todaysComeFollowMe: "今日的《來跟從我》",
-            noReadingPlan: "今日無計畫。"
+            noReadingPlan: "今日無計畫。",
+            postedANote: "{nickname} 發布了一則筆記！✨"
         },
         languages: {
             title: "語言",
@@ -1612,7 +1619,8 @@ export const translations = {
             unityModalAllPosted: "全員已分享！驚人的團結！",
             inviteFriendsPrompt: "邀請您的朋友！",
             inviteLinkHint: "點擊上方進行複製並分享給你的朋友！",
-            addNoteTooltip: "點擊 + 發布筆記！"
+            addNoteTooltip: "點擊 + 發布筆記！",
+            readStatus: "已讀 {count}"
         },
         myNotes: {
             description: "筆記收藏",
@@ -1952,7 +1960,8 @@ export const translations = {
             goToByuSpeech: "Ir al Discurso de BYU",
             readStudyMaterial: "Leer el Material de Estudio",
             todaysComeFollowMe: "'Ven, sígueme' de hoy",
-            noReadingPlan: "No hay plan para hoy."
+            noReadingPlan: "No hay plan para hoy.",
+            postedANote: "¡{nickname} publicó una nota! ✨"
         },
         languages: {
             title: "Idiomas",
@@ -2091,7 +2100,8 @@ export const translations = {
             unityModalAllPosted: "¡Todos han compartido hoy! ¡Increíble unidad!",
             addNoteTooltip: "¡Haz clic en + para publicar una nota!",
             inviteFriendsPrompt: "¡Invita a tus amigos!",
-            inviteLinkHint: "¡Toca arriba para copiar y compartir con tus amigos!"
+            inviteLinkHint: "¡Toca arriba para copiar y compartir con tus amigos!",
+            readStatus: "Leído {count}"
         },
         myNotes: {
             description: "Colección de Notas",
@@ -2406,7 +2416,8 @@ export const translations = {
             goToByuSpeech: "Đi đến Bài phát biểu BYU",
             readStudyMaterial: "Đọc Tài liệu Nghiên cứu",
             todaysComeFollowMe: "'Hãy Đến Mà Theo Ta' Hôm nay",
-            noReadingPlan: "Không có kế hoạch cho hôm nay."
+            noReadingPlan: "Không có kế hoạch cho hôm nay.",
+            postedANote: "{nickname} đã đăng một ghi chú! ✨"
         },
         languages: {
             title: "Ngôn ngữ",
@@ -2519,7 +2530,8 @@ export const translations = {
             unityModalAllPosted: "Mọi người đã chia sẻ hôm nay! Sự thống nhất tuyệt vời!",
             inviteFriendsPrompt: "Mời bạn bè của bạn!",
             inviteLinkHint: "Chạm vào bên trên để sao chép và chia sẻ với bạn bè!",
-            addNoteTooltip: "Nhấp vào + để đăng ghi chú!"
+            addNoteTooltip: "Nhấp vào + để đăng ghi chú!",
+            readStatus: "Đã đọc {count}"
         },
         myNotes: {
             description: "Bộ Sưu Tập Ghi Chép",
@@ -2858,7 +2870,8 @@ export const translations = {
             goToByuSpeech: "ไปที่สุนทรพจน์ BYU",
             readStudyMaterial: "อ่านเอกสารการศึกษา",
             todaysComeFollowMe: "'จงตามเรามา' ของวันนี้",
-            noReadingPlan: "ไม่มีแผนสำหรับวันนี้"
+            noReadingPlan: "ไม่มีแผนสำหรับวันนี้",
+            postedANote: "{nickname} โพสต์บันทึกแล้ว! ✨"
         },
         languages: {
             title: "ภาษา",
@@ -2997,7 +3010,8 @@ export const translations = {
             unityModalAllPosted: "ทุกคนร่วมแบ่งปันแล้ววันนี้! ความเป็นหนึ่งเดียวที่น่าทึ่ง!",
             inviteFriendsPrompt: "ชวนเพื่อนของคุณมาเข้าร่วม!",
             inviteLinkHint: "แตะด้านบนเพื่อคัดลอกและแชร์กับเพื่อนของคุณ!",
-            addNoteTooltip: "คลิก + เพื่อโพสต์โน้ต!"
+            addNoteTooltip: "คลิก + เพื่อโพสต์โน้ต!",
+            readStatus: "อ่านแล้ว {count}"
         },
         myNotes: {
             description: "คลังบันทึก",
@@ -3336,7 +3350,8 @@ export const translations = {
             goToByuSpeech: "BYU 연설로 이동",
             readStudyMaterial: "학습 자료 읽기",
             todaysComeFollowMe: "오늘의 '와서 나를 따르라'",
-            noReadingPlan: "오늘의 계획이 없습니다."
+            noReadingPlan: "오늘의 계획이 없습니다.",
+            postedANote: "{nickname}님이 노트를 게시했습니다! ✨"
         },
         languages: {
             title: "언어",
@@ -3475,7 +3490,8 @@ export const translations = {
             unityModalAllPosted: "오늘 모두가 공유했습니다! 놀라운 단합력입니다!",
             inviteFriendsPrompt: "친구를 초대하세요!",
             inviteLinkHint: "위쪽을 눌러 복사하고 친구들에게 공유하세요!",
-            addNoteTooltip: "+를 눌러 노트를 게시하세요!"
+            addNoteTooltip: "+를 눌러 노트를 게시하세요!",
+            readStatus: "{count}명 읽음"
         },
         myNotes: {
             description: "노트 컬렉션",
@@ -3814,7 +3830,8 @@ export const translations = {
             goToByuSpeech: "Pumunta sa BYU Speech",
             readStudyMaterial: "Basahin ang Study Material",
             todaysComeFollowMe: "'Pumarito Ka, Sumunod Ka sa Akin' Ngayon",
-            noReadingPlan: "Walang plano para sa araw na ito."
+            noReadingPlan: "Walang plano para sa araw na ito.",
+            postedANote: "Nag-post si {nickname} ng isang tala! ✨"
         },
         languages: {
             title: "Mga Wika",
@@ -3953,7 +3970,8 @@ export const translations = {
             unityModalAllPosted: "Lahat ay nakapag-share na ngayon! Kamangha-manghang pagkakaisa!",
             inviteFriendsPrompt: "Imbitahan ang iyong mga kaibigan!",
             inviteLinkHint: "I-tap sa itaas para kopyahin at ibahagi sa iyong mga kaibigan!",
-            addNoteTooltip: "I-click ang + para mag-post ng tala!"
+            addNoteTooltip: "I-click ang + para mag-post ng tala!",
+            readStatus: "Nabasa na {count}"
         },
         myNotes: {
             description: "Koleksyon ng mga Tala",
@@ -4292,7 +4310,8 @@ export const translations = {
             goToByuSpeech: "Nenda kwenye Hotuba ya BYU",
             readStudyMaterial: "Soma Nyenzo za Kujifunza",
             todaysComeFollowMe: "'Njoo, Unifuate' ya Leo",
-            noReadingPlan: "Hakuna mpango wa leo."
+            noReadingPlan: "Hakuna mpango wa leo.",
+            postedANote: "{nickname} amechapisha dokezo! ✨"
         },
         languages: {
             title: "Lugha",
@@ -4431,7 +4450,8 @@ export const translations = {
             unityModalAllPosted: "Kila mtu ameshiriki leo! Umoja wa ajabu!",
             inviteFriendsPrompt: "Alika marafiki zako!",
             inviteLinkHint: "Gusa hapo juu ili kunakili na kushiriki na marafiki zako!",
-            addNoteTooltip: "Bofya + ili kuchapisha dokezo!"
+            addNoteTooltip: "Bofya + ili kuchapisha dokezo!",
+            readStatus: "Imesomwa {count}"
         },
         myNotes: {
             description: "Mkusanyiko wa Maelezo",

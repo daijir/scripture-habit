@@ -40,6 +40,7 @@ const Dashboard = () => {
   const [rawUserGroups, setRawUserGroups] = useState([]);
   const [groupStates, setGroupStates] = useState({});
   const [loadingGroupStates, setLoadingGroupStates] = useState(true);
+  const [latestNoteNotification, setLatestNoteNotification] = useState(null);
 
   const location = useLocation();
   // Initialize activeGroupId from location state if available, to avoid initial null state
@@ -253,7 +254,7 @@ const Dashboard = () => {
     return () => {
       cleanupPromise.then(cleanup => cleanup && cleanup());
     };
-  }, [userData?.groupIds, userData?.groupId]);
+  }, [JSON.stringify(userData?.groupIds), userData?.groupId]);
 
   // Fetch user group states (read counts)
   useEffect(() => {
@@ -418,6 +419,45 @@ const Dashboard = () => {
 
     setWarnings(newWarnings);
   }, [userGroups, userData]);
+
+  // Check for recent notes from others to show notification
+  useEffect(() => {
+    if (!userGroups || userGroups.length === 0 || !userData || loadingGroupStates) return;
+
+    // Filter groups where someone ELSE posted a note today
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayTime = today.getTime();
+
+    let mostRecent = null;
+
+    userGroups.forEach(group => {
+      if (group.lastNoteAt && group.lastNoteByUid !== userData.uid) {
+        const noteTime = group.lastNoteAt.toMillis ? group.lastNoteAt.toMillis() : (group.lastNoteAt.seconds * 1000);
+
+        // Check against lastReadAt in user's state for this group
+        const state = groupStates[group.id];
+        let lastReadTime = 0;
+        if (state && state.lastReadAt) {
+          lastReadTime = state.lastReadAt.toMillis ? state.lastReadAt.toMillis() : (state.lastReadAt.seconds * 1000);
+        }
+
+        // Only show if note is from today AND newer than user's last read time
+        if (noteTime >= todayTime && noteTime > lastReadTime) {
+          if (!mostRecent || noteTime > mostRecent.time) {
+            mostRecent = {
+              nickname: group.lastNoteByNickname,
+              time: noteTime,
+              groupId: group.id,
+              groupName: group.name
+            };
+          }
+        }
+      }
+    });
+
+    setLatestNoteNotification(mostRecent);
+  }, [userGroups, userData?.uid, groupStates, loadingGroupStates]);
 
   // --- Invitation Handling ---
   useEffect(() => {
@@ -692,6 +732,19 @@ const Dashboard = () => {
                 userData={userData}
                 onClick={() => setShowWelcomeStory(true)}
               />
+
+              {latestNoteNotification && (
+                <div
+                  className="note-notification"
+                  onClick={() => {
+                    setActiveGroupId(latestNoteNotification.groupId);
+                    setSelectedView(2);
+                  }}
+                >
+                  <span>📖</span>
+                  {t('dashboard.postedANote', { nickname: latestNoteNotification.nickname })}
+                </div>
+              )}
 
               <div className="inspiration-card"
                 style={{ position: 'relative', cursor: 'pointer', transition: 'transform 0.2s' }}

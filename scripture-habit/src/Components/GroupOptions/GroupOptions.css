@@ -117,5 +117,10 @@
 @media screen and (max-width: 768px) {
     .GroupOptions .options-container {
         background-color: transparent !important;
+        padding-top: 1rem;
+    }
+
+    .options-container h2 {
+        margin-bottom: 2rem;
     }
 }

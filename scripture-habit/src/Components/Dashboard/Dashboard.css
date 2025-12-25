@@ -183,6 +183,9 @@
 /* Inspiration Section */
 .inspiration-section {
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .inspiration-card {
@@ -487,4 +490,49 @@
   display: inline-block;
   width: 1em;
   text-align: left;
+  padding: 0;
+}
+
+.note-notification {
+  background: rgba(72, 187, 120, 0.1);
+  border: 1px solid rgba(72, 187, 120, 0.2);
+  color: #2F855A;
+  padding: 0.8rem 1.2rem;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 600;
+  margin: 0.5rem auto 1rem auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  animation: slideIn 0.5s ease-out;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  max-width: 90%;
+}
+
+.note-notification:hover {
+  background: rgba(72, 187, 120, 0.2);
+  transform: translateY(-2px);
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .note-notification {
+    width: 100%;
+    box-sizing: border-box;
+  }
 }

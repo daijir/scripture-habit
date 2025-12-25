@@ -397,6 +397,14 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         return;
       }
 
+      // Optimization: Only update if the read count has actually increased
+      // or if significant time has passed (though message count is the main driver)
+      if (userReadCount !== null && cachedMessageCount <= userReadCount) {
+        // Still update the timestamp occasionally? 
+        // For now, let's just skip to prevent loops if nothing new is read.
+        return;
+      }
+
       const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', cachedGroupId);
 
       try {
@@ -404,6 +412,15 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
           readMessageCount: cachedMessageCount,
           lastReadAt: serverTimestamp()
         }, { merge: true });
+
+        // Also update group document with member's last read time for read-indicator
+        const groupRef = doc(db, 'groups', cachedGroupId);
+        await updateDoc(groupRef, {
+          [`memberLastReadAt.${userData.uid}`]: serverTimestamp()
+        });
+
+        // Update local state to prevent immediate re-run
+        setUserReadCount(cachedMessageCount);
       } catch (error) {
         if (!cancelled) {
           console.error("Error updating read status:", error);
@@ -416,7 +433,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     return () => {
       cancelled = true;
     };
-  }, [groupId, groupData, userData, isActive, initialScrollDone, messages.length]);
+  }, [groupId, userData?.uid, isActive, initialScrollDone, messages.length, userReadCount]);
 
   // Track previous message count to only auto-scroll on new messages, not updates
   const prevMessageCountRef = useRef(0);
@@ -2198,9 +2215,29 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                     </span>
                     <div className="message-bubble-row" style={{ display: 'flex', alignItems: 'flex-end', gap: '5px' }}>
                       {msg.senderId === userData?.uid && (
-                        <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', marginBottom: '2px', whiteSpace: 'nowrap' }}>
-                          {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                        </span>
+                        <div className="message-status-column" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
+                          {(() => {
+                            if (!groupData?.memberLastReadAt || !msg.createdAt) return null;
+                            const msgTime = msg.createdAt.toMillis ? msg.createdAt.toMillis() : (msg.createdAt.seconds * 1000);
+                            let readCount = 0;
+                            Object.keys(groupData.memberLastReadAt).forEach(uid => {
+                              if (uid === msg.senderId) return;
+                              const readAt = groupData.memberLastReadAt[uid];
+                              if (!readAt) return;
+                              const readTime = readAt.toMillis ? readAt.toMillis() : (readAt.seconds * 1000);
+                              if (readTime >= msgTime) readCount++;
+                            });
+                            if (readCount === 0) return null;
+                            return (
+                              <span className="read-status" style={{ fontSize: '0.65rem', color: '#4A5568', fontWeight: 'bold' }}>
+                                {t('groupChat.readStatus', { count: readCount })}
+                              </span>
+                            );
+                          })()}
+                          <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', whiteSpace: 'nowrap' }}>
+                            {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                          </span>
+                        </div>
                       )}
                       <div className="message-bubble-column" style={{ display: 'flex', flexDirection: 'column', maxWidth: '100%', alignItems: msg.senderId === userData?.uid ? 'flex-end' : 'flex-start' }}>
                         {msg.replyTo && (
@@ -2277,9 +2314,29 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                         </div>
                       </div>
                       {msg.senderId !== userData?.uid && (
-                        <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', marginBottom: '2px', whiteSpace: 'nowrap' }}>
-                          {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                        </span>
+                        <div className="message-status-column" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '2px' }}>
+                          {(() => {
+                            if (!groupData?.memberLastReadAt || !msg.createdAt) return null;
+                            const msgTime = msg.createdAt.toMillis ? msg.createdAt.toMillis() : (msg.createdAt.seconds * 1000);
+                            let readCount = 0;
+                            Object.keys(groupData.memberLastReadAt).forEach(uid => {
+                              if (uid === msg.senderId) return;
+                              const readAt = groupData.memberLastReadAt[uid];
+                              if (!readAt) return;
+                              const readTime = readAt.toMillis ? readAt.toMillis() : (readAt.seconds * 1000);
+                              if (readTime >= msgTime) readCount++;
+                            });
+                            if (readCount === 0) return null;
+                            return (
+                              <span className="read-status" style={{ fontSize: '0.65rem', color: '#4A5568', fontWeight: 'bold' }}>
+                                {t('groupChat.readStatus', { count: readCount })}
+                              </span>
+                            );
+                          })()}
+                          <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', whiteSpace: 'nowrap' }}>
+                            {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                          </span>
+                        </div>
                       )}
                     </div>
                     {/* Reactions display */}
