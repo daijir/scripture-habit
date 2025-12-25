@@ -1748,6 +1748,7 @@ export const translations = {
             unityModalLegendEmpty: "開始 (0%~)",
             unityModalNoPostsYet: "今天尚未有發文",
             unityModalAllPosted: "全員已分享！驚人的團結！",
+            addNoteTooltip: "點擊 + 發布筆記！",
             inviteFriendsPrompt: "邀請您的朋友！",
             inviteLinkHint: "點擊上方進行複製並分享給你的朋友！",
             inviteLine: "透過 LINE 邀請",

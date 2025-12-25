@@ -1405,27 +1405,59 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     }
   };
 
-  const handleShareMessenger = () => {
-    if (groupData && groupData.inviteCode) {
-      const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}`;
-      // Messenger doesn't support pre-filled text via simple URL without App ID
-      // But we can open the share dialog or m.me
-      const url = Capacitor.isNativePlatform()
-        ? `fb-messenger://share/?link=${encodeURIComponent(inviteLink)}`
-        : `https://www.facebook.com/dialog/send?link=${encodeURIComponent(inviteLink)}&app_id=12345&redirect_uri=${encodeURIComponent(window.location.href)}`;
-      window.open(url, '_blank');
-    }
-  };
-
-  const handleShareInstagram = () => {
+  const handleShareMessenger = async () => {
     if (groupData && groupData.inviteCode) {
       const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}`;
       const text = t('groupChat.inviteMessage')
         .replace('{groupName}', groupData.name)
         .replace('{inviteLink}', inviteLink);
 
-      // Instagram doesn't support link sharing via URL
-      // Best way: Copy text to clipboard and open app
+      // 1. Try Native Web Share API (Best for Mobile)
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: 'Scripture Habit',
+            text: text,
+            url: inviteLink,
+          });
+          return;
+        } catch (err) {
+          console.log("Native share failed", err);
+          // If user cancelled, don't fall back
+          if (err.name === 'AbortError') return;
+        }
+      }
+
+      // 2. Fallback: Copy and Open Messenger.com (Desktop)
+      navigator.clipboard.writeText(text);
+      toast.info(t('groupChat.inviteLinkCopied'));
+      window.open('https://www.messenger.com/', '_blank');
+    }
+  };
+
+  const handleShareInstagram = async () => {
+    if (groupData && groupData.inviteCode) {
+      const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}`;
+      const text = t('groupChat.inviteMessage')
+        .replace('{groupName}', groupData.name)
+        .replace('{inviteLink}', inviteLink);
+
+      // 1. Try Native Web Share API (Best for Mobile)
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: 'Scripture Habit',
+            text: text,
+            url: inviteLink,
+          });
+          return;
+        } catch (err) {
+          console.log("Native share failed", err);
+          if (err.name === 'AbortError') return;
+        }
+      }
+
+      // 2. Fallback: Copy and Open Instagram
       navigator.clipboard.writeText(text);
       toast.info(t('groupChat.inviteLinkCopied'));
       window.open('https://www.instagram.com/', '_blank');
