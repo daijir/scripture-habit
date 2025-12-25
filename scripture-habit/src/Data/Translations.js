@@ -1,5 +1,9 @@
 export const translations = {
     en: {
+        seo: {
+            title: "Scripture Habit - Make Scripture Study a Daily Habit",
+            description: "Scripture Habit is a community tool to help you study scriptures with friends and share your insights daily."
+        },
         sidebar: {
             dashboard: "Dashboard",
             myNotes: "My Notes",
@@ -233,6 +237,11 @@ export const translations = {
             addNoteTooltip: "Click + to post a note!",
             inviteFriendsPrompt: "Invite your friends!",
             inviteLinkHint: "Tap above to copy and share with your friends!",
+            inviteLine: "Invite via LINE",
+            inviteWhatsApp: "Invite via WhatsApp",
+            inviteMessenger: "Invite via Messenger",
+            inviteInstagram: "Invite via Instagram",
+            inviteMessage: "Join my scripture study group on Scripture Habit! Let's study together and build a daily habit.\n\nGroup: {groupName}\nJoin here: {inviteLink}",
             readStatus: "Read {count}",
             errorLoadMembers: "Failed to load members list",
             errorUserNotFound: "User profile not found",
@@ -515,6 +524,10 @@ export const translations = {
         }
     },
     ja: {
+        seo: {
+            title: "Scripture Habit - 聖典学習を楽しく、習慣に",
+            description: "Scripture Habit（スクリプチャーハビット）は、仲間と一緒に聖典を学び、証を分かち合うことで、日々の学習を楽しく継続できるコミュニティツールです。"
+        },
         sidebar: {
             dashboard: "ダッシュボード",
             myNotes: "私のノート",
@@ -707,6 +720,11 @@ export const translations = {
             addNoteTooltip: "＋を押してノート投稿！",
             inviteFriendsPrompt: "友人を誘いましょう！",
             inviteLinkHint: "上をタップしてコピーし、友達にシェアしましょう！",
+            inviteLine: "LINEで招待",
+            inviteWhatsApp: "WhatsAppで招待",
+            inviteMessenger: "Messengerで招待",
+            inviteInstagram: "Instagramで招待",
+            inviteMessage: "Scripture Habitで一緒に聖典学習を始めませんか？仲間と一緒に学ぶことで、日々の習慣がもっと楽しくなりますよ！\n\nグループ名: {groupName}\n参加はこちら: {inviteLink}",
             readStatus: "既読 {count}",
             errorLoadMembers: "メンバーリストの読み込みに失敗しました",
             errorUserNotFound: "ユーザーが見つかりません",
@@ -1036,6 +1054,10 @@ export const translations = {
         }
     },
     pt: {
+        seo: {
+            title: "Scripture Habit - Torne o estudo das escrituras um hábito diário",
+            description: "Scripture Habit é uma ferramenta comunitária para ajudá-lo a estudar as escrituras com amigos e compartilhar seus aprendizados diariamente."
+        },
         sidebar: {
             dashboard: "Painel",
             myNotes: "Minhas Anotações",
@@ -1228,6 +1250,11 @@ export const translations = {
             inviteFriendsPrompt: "Convide seus amigos!",
             addNoteTooltip: "Clique em + para postar uma nota!",
             inviteLinkHint: "Toque acima para copiar e compartilhar com seus amigos!",
+            inviteLine: "Convidar via LINE",
+            inviteWhatsApp: "Convidar via WhatsApp",
+            inviteMessenger: "Convidar via Messenger",
+            inviteInstagram: "Convidar via Instagram",
+            inviteMessage: "Junte-se ao meu grupo de estudo das escrituras no Scripture Habit! Vamos estudar juntos e criar um hábito diário.\n\nGrupo: {groupName}\nParticipe aqui: {inviteLink}",
             readStatus: "Visualizado {count}",
             errorLoadMembers: "Falha ao carregar a lista de membros",
             errorUserNotFound: "Perfil do usuário não encontrado",
@@ -1554,6 +1581,10 @@ export const translations = {
         }
     },
     zho: {
+        seo: {
+            title: "Scripture Habit - 讓經文研讀成為日常習慣",
+            description: "Scripture Habit 是一個社區工具，旨在幫助您與朋友一起研讀經文並每天分享您的心得。"
+        },
         sidebar: {
             dashboard: "儀表板",
             myNotes: "我的筆記",
@@ -1719,7 +1750,11 @@ export const translations = {
             unityModalAllPosted: "全員已分享！驚人的團結！",
             inviteFriendsPrompt: "邀請您的朋友！",
             inviteLinkHint: "點擊上方進行複製並分享給你的朋友！",
-            addNoteTooltip: "點擊 + 發布筆記！",
+            inviteLine: "透過 LINE 邀請",
+            inviteWhatsApp: "透過 WhatsApp 邀請",
+            inviteMessenger: "透過 Messenger 邀請",
+            inviteInstagram: "透過 Instagram 邀請",
+            inviteMessage: "加入我在 Scripture Habit 上的聖典學習小組！讓我們一起學習並養成每日習慣。\n\n小組名稱：{groupName}\n點擊加入：{inviteLink}",
             readStatus: "已讀 {count}",
             errorLoadMembers: "無法載入成員列表",
             errorUserNotFound: "找不到使用者設定檔",
@@ -2042,6 +2077,10 @@ export const translations = {
         }
     },
     es: {
+        seo: {
+            title: "Scripture Habit - Haz del estudio de las escrituras un hábito diario",
+            description: "Scripture Habit es una herramienta comunitaria para ayudarte a estudiar las escrituras con amigos y compartir lo aprendido diariamente."
+        },
         sidebar: {
             dashboard: "Tablero",
             myNotes: "Mis Notas",
@@ -2234,6 +2273,11 @@ export const translations = {
             addNoteTooltip: "¡Haz clic en + para publicar una nota!",
             inviteFriendsPrompt: "¡Invita a tus amigos!",
             inviteLinkHint: "¡Toca arriba para copiar y compartir con tus amigos!",
+            inviteLine: "Invitar por LINE",
+            inviteWhatsApp: "Invitar por WhatsApp",
+            inviteMessenger: "Invitar por Messenger",
+            inviteInstagram: "Invitar por Instagram",
+            inviteMessage: "¡Únete a mi grupo de estudio de las escrituras en Scripture Habit! Estudiemos juntos y creemos un hábito diario.\n\nGrupo: {groupName}\nÚnete aquí: {inviteLink}",
             readStatus: "Leído {count}",
             errorLoadMembers: "Error al cargar la lista de miembros",
             errorUserNotFound: "Perfil de usuario no encontrado",
@@ -2531,6 +2575,10 @@ export const translations = {
         }
     },
     vi: {
+        seo: {
+            title: "Scripture Habit - Biến việc học thánh thư thành thói quen hàng ngày",
+            description: "Scripture Habit là một công cụ cộng đồng giúp bạn học thánh thư cùng bạn bè và chia sẻ những hiểu biết của mình hàng ngày."
+        },
         sidebar: {
             dashboard: "Trang chủ",
             myNotes: "Ghi chép của tôi",
@@ -2696,6 +2744,11 @@ export const translations = {
             unityModalAllPosted: "Mọi người đã chia sẻ hôm nay! Sự thống nhất tuyệt vời!",
             inviteFriendsPrompt: "Mời bạn bè của bạn!",
             inviteLinkHint: "Chạm vào bên trên để sao chép và chia sẻ với bạn bè!",
+            inviteLine: "Mời qua LINE",
+            inviteWhatsApp: "Mời qua WhatsApp",
+            inviteMessenger: "Mời qua Messenger",
+            inviteInstagram: "Mời qua Instagram",
+            inviteMessage: "Hãy tham gia nhóm học thánh thư của tôi trên Scripture Habit! Chúng ta hãy cùng nhau học tập và tạo thói quen hàng ngày.\n\nNhóm: {groupName}\nTham gia tại đây: {inviteLink}",
             addNoteTooltip: "Nhấp vào + để đăng ghi chú!",
             readStatus: "Đã đọc {count}",
             errorLoadMembers: "Không thể tải danh sách thành viên",
@@ -3018,6 +3071,10 @@ export const translations = {
         }
     },
     th: {
+        seo: {
+            title: "Scripture Habit - ทำให้การศึกษาพระคัมภีร์เป็นนิสัยประจำวัน",
+            description: "Scripture Habit เป็นเครื่องมือชุมชนที่จะช่วยให้คุณศึกษาพระคัมภีร์ไปพร้อมกับเพื่อนๆ และแบ่งปันสิ่งที่คุณเรียนรู้ได้ทุกวัน"
+        },
         sidebar: {
             dashboard: "แผงควบคุม",
             myNotes: "บันทึกของฉัน",
@@ -3209,6 +3266,11 @@ export const translations = {
             unityModalAllPosted: "ทุกคนร่วมแบ่งปันแล้ววันนี้! ความเป็นหนึ่งเดียวที่น่าทึ่ง!",
             inviteFriendsPrompt: "ชวนเพื่อนของคุณมาเข้าร่วม!",
             inviteLinkHint: "แตะด้านบนเพื่อคัดลอกและแชร์กับเพื่อนของคุณ!",
+            inviteLine: "เชิญผ่าน LINE",
+            inviteWhatsApp: "เชิญผ่าน WhatsApp",
+            inviteMessenger: "เชิญผ่าน Messenger",
+            inviteInstagram: "เชิญผ่าน Instagram",
+            inviteMessage: "เข้าร่วมกลุ่มศึกษาพระคัมภีร์ของฉันที่ Scripture Habit! มาศึกษาร่วมกันและสร้างนิสัยประจำวัน\n\nกลุ่ม: {groupName}\nเข้าร่วมที่นี่: {inviteLink}",
             addNoteTooltip: "คลิก + เพื่อโพสต์โน้ต!",
             readStatus: "อ่านแล้ว {count}",
             errorLoadMembers: "ไม่สามารถโหลดรายชื่อสมาชิกได้",
@@ -3531,6 +3593,10 @@ export const translations = {
         }
     },
     ko: {
+        seo: {
+            title: "Scripture Habit - 경전 공부를 매일의 습관으로",
+            description: "Scripture Habit은 친구들과 함께 경전을 공부하고 매일 배운 내용을 나눌 수 있도록 돕는 커뮤니티 도구입니다."
+        },
         sidebar: {
             dashboard: "대시보드",
             myNotes: "내 노트",
@@ -3722,6 +3788,11 @@ export const translations = {
             unityModalAllPosted: "오늘 모두가 공유했습니다! 놀라운 단합력입니다!",
             inviteFriendsPrompt: "친구를 초대하세요!",
             inviteLinkHint: "위쪽을 눌러 복사하고 친구들에게 공유하세요!",
+            inviteLine: "LINE으로 초대",
+            inviteWhatsApp: "WhatsApp으로 초대",
+            inviteMessenger: "Messenger로 초대",
+            inviteInstagram: "Instagram으로 초대",
+            inviteMessage: "Scripture Habit에서 저와 함께 성전 공부 모임에 참여하세요! 함께 공부하며 매일의 습관을 만들어봅시다.\n\n그룹: {groupName}\n여기에서 참여: {inviteLink}",
             addNoteTooltip: "+를 눌러 노트를 게시하세요!",
             readStatus: "{count}명 읽음",
             errorLoadMembers: "멤버 목록을 불러오지 못했습니다",
@@ -4044,6 +4115,10 @@ export const translations = {
         }
     },
     tl: {
+        seo: {
+            title: "Scripture Habit - Gawing pang-araw-araw na gawi ang pag-aaral ng banal na kasulatan",
+            description: "Ang Scripture Habit ay isang community tool upang matulungan kang mag-aral ng mga banal na kasulatan kasama ang mga kaibigan at ibahagi ang iyong mga natutunan araw-araw."
+        },
         sidebar: {
             dashboard: "Dashboard",
             myNotes: "Aking mga Tala",
@@ -4235,6 +4310,11 @@ export const translations = {
             unityModalAllPosted: "Lahat ay nakapag-share na ngayon! Kamangha-manghang pagkakaisa!",
             inviteFriendsPrompt: "Imbitahan ang iyong mga kaibigan!",
             inviteLinkHint: "I-tap sa itaas para kopyahin at ibahagi sa iyong mga kaibigan!",
+            inviteLine: "Mag-imbita sa pamamagitan ng LINE",
+            inviteWhatsApp: "Mag-imbita sa pamamagitan ng WhatsApp",
+            inviteMessenger: "Mag-imbita sa pamamagitan ng Messenger",
+            inviteInstagram: "Mag-imbita sa pamamagitan ng Instagram",
+            inviteMessage: "Sumali sa aking grupo sa pag-aaral ng mga banal na kasulatan sa Scripture Habit! Mag-aral tayo nang sama-sama at bumuo ng pang-araw-araw na gawi.\n\nGrupo: {groupName}\nSumali rito: {inviteLink}",
             addNoteTooltip: "I-click ang + para mag-post ng tala!",
             readStatus: "Nabasa na {count}",
             errorLoadMembers: "Nabigong i-load ang listahan ng mga miyembro",
@@ -4557,6 +4637,10 @@ export const translations = {
         }
     },
     sw: {
+        seo: {
+            title: "Scripture Habit - Fanya mafunzo ya maandiko kuwa tabia ya kila siku",
+            description: "Scripture Habit ni chombo cha jumuiya cha kukusaidia kujifunza maandiko na marafiki na kushiriki mafunzo yako kila siku."
+        },
         sidebar: {
             dashboard: "Dashibodi",
             myNotes: "Maelezo Yangu",
@@ -4748,6 +4832,11 @@ export const translations = {
             unityModalAllPosted: "Kila mtu ameshiriki leo! Umoja wa ajabu!",
             inviteFriendsPrompt: "Alika marafiki zako!",
             inviteLinkHint: "Gusa hapo juu ili kunakili na kushiriki na marafiki zako!",
+            inviteLine: "Alika kupitia LINE",
+            inviteWhatsApp: "Alika kupitia WhatsApp",
+            inviteMessenger: "Alika kupitia Messenger",
+            inviteInstagram: "Alika kupitia Instagram",
+            inviteMessage: "Jiunge na kikundi changu cha kujifunza maandiko kwenye Scripture Habit! Hebu tujifunze pamoja na kujenga tabia ya kila siku.\n\nKikundi: {groupName}\nJiunge hapa: {inviteLink}",
             addNoteTooltip: "Bofya + ili kuchapisha dokezo!",
             readStatus: "Imesomwa {count}",
             errorLoadMembers: "Imeshindwa kupakia orodha ya wanachama",

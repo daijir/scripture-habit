@@ -25,6 +25,7 @@ import { getTodayReadingPlan } from '../../Data/DailyReadingPlan';
 import WelcomeStoryModal from '../WelcomeStoryModal/WelcomeStoryModal';
 import Donate from '../Donate/Donate';
 import Mascot from '../Mascot/Mascot';
+import { DashboardSkeleton } from '../Skeleton/Skeleton';
 
 
 
@@ -536,7 +537,14 @@ const Dashboard = () => {
   }, [user, userData, showWelcomeStory, t]);
 
   if (loading) {
-    return <div className='App Dashboard'>Loading...</div>;
+    return (
+      <div className='App Dashboard'>
+        <div className='AppGlass Grid'>
+          <Sidebar selected={selectedView} setSelected={setSelectedView} userGroups={[]} />
+          <DashboardSkeleton />
+        </div>
+      </div>
+    );
   }
 
   if (error) {

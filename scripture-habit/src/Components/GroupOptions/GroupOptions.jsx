@@ -7,6 +7,7 @@ import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
 import WelcomeStoryModal from '../WelcomeStoryModal/WelcomeStoryModal';
 import Mascot from '../Mascot/Mascot';
+import { OptionsSkeleton } from '../Skeleton/Skeleton';
 
 const GroupOptions = () => {
     const { t } = useLanguage();
@@ -56,7 +57,15 @@ const GroupOptions = () => {
         }
     };
 
-    if (loading) return <div className="App GroupOptions">Loading...</div>;
+    if (loading) {
+        return (
+            <div className="App GroupOptions">
+                <div className="AppGlass options-container">
+                    <OptionsSkeleton />
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="App GroupOptions">

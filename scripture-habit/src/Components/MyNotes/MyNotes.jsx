@@ -17,6 +17,7 @@ import './MyNotes.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 import NoteDetailModal from './NoteDetailModal';
 import Mascot from '../Mascot/Mascot';
+import { NoteGridSkeleton } from '../Skeleton/Skeleton';
 
 const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
   const { language, t } = useLanguage();
@@ -345,7 +346,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
       </div>
 
       {loading ? (
-        <div className="loading-state">{t('myNotes.loading')}</div>
+        <NoteGridSkeleton />
       ) : notes.length === 0 ? (
         <div className="empty-state">
           <UilBookOpen size="60" color="#ccc" />

@@ -2,10 +2,11 @@ import React, { useState, useEffect, useRef, useLayoutEffect, useMemo } from 're
 import * as Sentry from "@sentry/react";
 import { Capacitor } from '@capacitor/core';
 import { db, auth } from '../../firebase';
-import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle, UilUsersAlt, UilPen } from '@iconscout/react-unicons';
+import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle, UilUsersAlt, UilPen, UilWhatsapp, UilCommentAlt, UilFacebookMessenger, UilInstagram } from '@iconscout/react-unicons';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc, getDoc, limit, startAfter, startAt, endBefore } from 'firebase/firestore';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { ChatSkeleton } from '../Skeleton/Skeleton';
 import ReactMarkdown from 'react-markdown';
 import NewNote from '../NewNote/NewNote';
 import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
@@ -1382,6 +1383,55 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     }
   };
 
+  const handleShareLine = () => {
+    if (groupData && groupData.inviteCode) {
+      const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}`;
+      const text = t('groupChat.inviteMessage')
+        .replace('{groupName}', groupData.name)
+        .replace('{inviteLink}', inviteLink);
+      const url = `https://line.me/R/msg/text/?${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+  };
+
+  const handleShareWhatsApp = () => {
+    if (groupData && groupData.inviteCode) {
+      const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}`;
+      const text = t('groupChat.inviteMessage')
+        .replace('{groupName}', groupData.name)
+        .replace('{inviteLink}', inviteLink);
+      const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+      window.open(url, '_blank');
+    }
+  };
+
+  const handleShareMessenger = () => {
+    if (groupData && groupData.inviteCode) {
+      const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}`;
+      // Messenger doesn't support pre-filled text via simple URL without App ID
+      // But we can open the share dialog or m.me
+      const url = Capacitor.isNativePlatform()
+        ? `fb-messenger://share/?link=${encodeURIComponent(inviteLink)}`
+        : `https://www.facebook.com/dialog/send?link=${encodeURIComponent(inviteLink)}&app_id=12345&redirect_uri=${encodeURIComponent(window.location.href)}`;
+      window.open(url, '_blank');
+    }
+  };
+
+  const handleShareInstagram = () => {
+    if (groupData && groupData.inviteCode) {
+      const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}`;
+      const text = t('groupChat.inviteMessage')
+        .replace('{groupName}', groupData.name)
+        .replace('{inviteLink}', inviteLink);
+
+      // Instagram doesn't support link sharing via URL
+      // Best way: Copy text to clipboard and open app
+      navigator.clipboard.writeText(text);
+      toast.info(t('groupChat.inviteLinkCopied'));
+      window.open('https://www.instagram.com/', '_blank');
+    }
+  };
+
   /* 
    * Check if weekly recap is available (7 day cooldown)
    */
@@ -2030,7 +2080,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       >
 
 
-        {loading && <p>Loading messages...</p>}
+        {loading && <ChatSkeleton />}
         {isLoadingOlder && (
           <div className="loading-older-messages" style={{ textAlign: 'center', padding: '10px', color: 'var(--gray)' }}>
             <i className="spinner-mini"></i>
@@ -2690,6 +2740,24 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                   <UilCopy size="18" />
                   <span>{t('groupChat.inviteLink')}</span>
                 </div>
+              </div>
+              <div className="share-buttons-grid">
+                <button className="share-btn line" onClick={handleShareLine}>
+                  <UilCommentAlt size="20" />
+                  <span>{t('groupChat.inviteLine')}</span>
+                </button>
+                <button className="share-btn whatsapp" onClick={handleShareWhatsApp}>
+                  <UilWhatsapp size="20" />
+                  <span>{t('groupChat.inviteWhatsApp')}</span>
+                </button>
+                <button className="share-btn messenger" onClick={handleShareMessenger}>
+                  <UilFacebookMessenger size="20" />
+                  <span>{t('groupChat.inviteMessenger')}</span>
+                </button>
+                <button className="share-btn instagram" onClick={handleShareInstagram}>
+                  <UilInstagram size="20" />
+                  <span>{t('groupChat.inviteInstagram')}</span>
+                </button>
               </div>
               <p className="invite-footer-hint">{t('groupChat.inviteLinkHint')}</p>
             </div>

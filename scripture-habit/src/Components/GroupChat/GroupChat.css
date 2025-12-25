@@ -1886,6 +1886,70 @@ input:checked+.slider:before {
     opacity: 0.8;
 }
 
+.share-buttons-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    width: 100%;
+}
+
+.share-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.8rem 0.5rem;
+    border-radius: 1rem;
+    border: none;
+    font-weight: 700;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: white;
+    min-width: 0;
+}
+
+.share-btn span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.share-btn.line {
+    background: #06C755;
+    box-shadow: 0 4px 12px rgba(6, 199, 85, 0.2);
+}
+
+.share-btn.whatsapp {
+    background: #25D366;
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
+}
+
+.share-btn.messenger {
+    background: #0084FF;
+    box-shadow: 0 4px 12px rgba(0, 132, 255, 0.2);
+}
+
+.share-btn.instagram {
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    box-shadow: 0 4px 12px rgba(220, 39, 67, 0.2);
+}
+
+.share-btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+}
+
+.share-btn:active {
+    transform: translateY(0);
+}
+
+@media screen and (max-width: 400px) {
+    .share-buttons-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Header Invite Button Mobile */
 .header-invite-btn-mobile {
     margin-right: 8px;
