@@ -755,6 +755,8 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                             lastNoteAt: serverTimestamp(),
                             lastNoteByNickname: userData.nickname,
                             lastNoteByUid: userData.uid,
+                            lastMessageByNickname: userData.nickname,
+                            lastMessageByUid: userData.uid,
                             [`memberLastActive.${userData.uid}`]: serverTimestamp()
                         };
 
@@ -775,6 +777,15 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         }
 
                         await updateDoc(groupRef, updatePayload);
+
+                        // CRITICAL: Update user's own read count so they don't see a "1" notification for their own note
+                        const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', gid);
+                        // We fetch the current count to be safe, or just increment it if we can
+                        // For simplicity and consistency with GroupChat, we'll increment based on what we just sent
+                        await setDoc(userGroupStateRef, {
+                            readMessageCount: increment(1),
+                            lastReadAt: serverTimestamp()
+                        }, { merge: true });
                     }
 
                     sharedMessageIds[gid] = msgRef.id;
