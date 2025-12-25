@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Capacitor } from '@capacitor/core';
 import { db } from '../../firebase';
-import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment, query, where, getDocs, Timestamp, arrayUnion } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment, query, where, getDocs, Timestamp, arrayUnion, setDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { UilTrashAlt, UilShuffle } from '@iconscout/react-unicons';
 import Select from 'react-select';
@@ -757,7 +757,8 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                             lastNoteByUid: userData.uid,
                             lastMessageByNickname: userData.nickname,
                             lastMessageByUid: userData.uid,
-                            [`memberLastActive.${userData.uid}`]: serverTimestamp()
+                            [`memberLastActive.${userData.uid}`]: serverTimestamp(),
+                            [`memberLastReadAt.${userData.uid}`]: serverTimestamp()
                         };
 
                         if (currentActivity.date !== todayStr) {
@@ -780,10 +781,10 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
                         // CRITICAL: Update user's own read count so they don't see a "1" notification for their own note
                         const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', gid);
-                        // We fetch the current count to be safe, or just increment it if we can
-                        // For simplicity and consistency with GroupChat, we'll increment based on what we just sent
+                        // Using the new total count to ensure synchronization
+                        const newReadCount = (gData.messageCount || 0) + 1;
                         await setDoc(userGroupStateRef, {
-                            readMessageCount: increment(1),
+                            readMessageCount: newReadCount,
                             lastReadAt: serverTimestamp()
                         }, { merge: true });
                     }
