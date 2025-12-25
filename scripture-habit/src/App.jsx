@@ -15,12 +15,41 @@ import JoinGroup from './Components/JoinGroup/JoinGroup';
 import GroupDetails from "./Components/GroupDetails/GroupDetails";
 import GroupOptions from './Components/GroupOptions/GroupOptions';
 import Welcome from './Components/Welcome/Welcome';
-import { LanguageProvider } from './Context/LanguageContext.jsx';
+import { LanguageProvider, useLanguage } from './Context/LanguageContext.jsx';
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
 import InviteRedirect from './Components/InviteRedirect/InviteRedirect';
 import Maintenance from './Components/Maintenance/Maintenance';
 import { MAINTENANCE_MODE } from './config';
 import * as Sentry from "@sentry/react";
+
+const SEOManager = () => {
+  const { t, language } = useLanguage();
+
+  useEffect(() => {
+    // Update Document Title
+    document.title = t('seo.title') || "Scripture Habit";
+
+    // Update Meta Description
+    const description = t('seo.description');
+    if (description) {
+      document.querySelector('meta[name="description"]')?.setAttribute('content', description);
+      document.querySelector('meta[property="og:description"]')?.setAttribute('content', description);
+      document.querySelector('meta[property="twitter:description"]')?.setAttribute('content', description);
+    }
+
+    // Update OG/Twitter Titles
+    const title = t('seo.title');
+    if (title) {
+      document.querySelector('meta[property="og:title"]')?.setAttribute('content', title);
+      document.querySelector('meta[property="twitter:title"]')?.setAttribute('content', title);
+    }
+
+    // Update HTML lang attribute
+    document.documentElement.lang = language || 'en';
+  }, [language, t]);
+
+  return null;
+};
 
 const App = () => {
   const [systemStatus, setSystemStatus] = useEffectSpecialState(() => {
@@ -58,6 +87,7 @@ const App = () => {
   if (MAINTENANCE_MODE || systemStatus.error === 'quota' || systemStatus.maintenance) {
     return (
       <LanguageProvider>
+        <SEOManager />
         <Maintenance isQuota={systemStatus.error === 'quota'} />
       </LanguageProvider>
     );
@@ -65,6 +95,7 @@ const App = () => {
 
   return (
     <LanguageProvider>
+      <SEOManager />
       <div className="App">
         <Routes>
           <Route

@@ -1,15 +1,47 @@
 {
     "short_name": "Scripture Habit",
-    "name": "Scripture Habit",
+    "name": "Scripture Habit - 聖典学習を習慣に",
+    "description": "仲間と一緒に聖典を学び、証を分かち合うコミュニティアプリ。",
     "icons": [
         {
             "src": "/logo.svg",
+            "sizes": "192x192",
+            "type": "image/svg+xml",
+            "purpose": "any"
+        },
+        {
+            "src": "/logo.svg",
             "sizes": "512x512",
-            "type": "image/svg+xml"
+            "type": "image/svg+xml",
+            "purpose": "any shadow"
+        },
+        {
+            "src": "/logo.svg",
+            "sizes": "512x512",
+            "type": "image/svg+xml",
+            "purpose": "maskable"
         }
     ],
-    "start_url": ".",
+    "start_url": "/dashboard",
     "display": "standalone",
-    "theme_color": "#000000",
-    "background_color": "transparent"
+    "display_override": [
+        "window-controls-overlay"
+    ],
+    "orientation": "portrait",
+    "theme_color": "#6b46c1",
+    "background_color": "#ffffff",
+    "categories": [
+        "education",
+        "social",
+        "lifestyle"
+    ],
+    "screenshots": [
+        {
+            "src": "/logo.svg",
+            "sizes": "512x512",
+            "type": "image/svg+xml",
+            "form_factor": "narrow",
+            "label": "Homescreen of Scripture Habit"
+        }
+    ]
 }
