@@ -50,6 +50,11 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
       if (docSnap.exists()) {
         setCurrentUserData({ ...userData, ...docSnap.data() });
       }
+    }, (err) => {
+      console.error("Error listening to user doc in MyNotes:", err);
+      if (err.code === 'resource-exhausted' || err.message.toLowerCase().includes('quota exceeded')) {
+        toast.error(t('systemErrors.quotaExceededMessage'), { toastId: 'quota-error' });
+      }
     });
 
     const notesRef = collection(db, 'users', userData.uid, 'notes');
@@ -67,6 +72,9 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
       setLoading(false);
     }, (error) => {
       console.error("Error fetching notes:", error);
+      if (error.code === 'resource-exhausted' || error.message.toLowerCase().includes('quota exceeded')) {
+        toast.error(t('systemErrors.quotaExceededMessage'), { toastId: 'quota-error' });
+      }
       setLoading(false);
     });
 

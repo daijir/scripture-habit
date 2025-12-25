@@ -162,6 +162,8 @@ export default function SignupForm() {
       console.error("Error creating user in Authentication:", authError);
       if (authError.code === 'auth/email-already-in-use') {
         setError(t('signup.errorEmailInUse'));
+      } else if (authError.code === 'resource-exhausted' || authError.message.toLowerCase().includes('quota exceeded')) {
+        setError(t('systemErrors.quotaExceededMessage'));
       } else {
         setError(authError.message);
       }
