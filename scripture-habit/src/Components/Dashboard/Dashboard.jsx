@@ -432,9 +432,28 @@ const Dashboard = () => {
     let mostRecent = null;
 
     userGroups.forEach(group => {
-      if (group.lastNoteAt && group.lastNoteByUid !== userData.uid) {
-        const noteTime = group.lastNoteAt.toMillis ? group.lastNoteAt.toMillis() : (group.lastNoteAt.seconds * 1000);
+      const noteTime = group.lastNoteAt ? (group.lastNoteAt.toMillis ? group.lastNoteAt.toMillis() : (group.lastNoteAt.seconds * 1000)) : 0;
+      const messageTime = group.lastMessageAt ? (group.lastMessageAt.toMillis ? group.lastMessageAt.toMillis() : (group.lastMessageAt.seconds * 1000)) : 0;
 
+      // Determine which one is newer and should be considered
+      let currentType = '';
+      let currentTime = 0;
+      let currentNickname = '';
+      let currentUid = '';
+
+      if (noteTime >= messageTime && noteTime > 0) {
+        currentType = 'note';
+        currentTime = noteTime;
+        currentNickname = group.lastNoteByNickname;
+        currentUid = group.lastNoteByUid;
+      } else if (messageTime > noteTime && messageTime > 0) {
+        currentType = 'message';
+        currentTime = messageTime;
+        currentNickname = group.lastMessageByNickname;
+        currentUid = group.lastMessageByUid;
+      }
+
+      if (currentTime > 0 && currentUid !== userData.uid) {
         // Check against lastReadAt in user's state for this group
         const state = groupStates[group.id];
         let lastReadTime = 0;
@@ -442,12 +461,13 @@ const Dashboard = () => {
           lastReadTime = state.lastReadAt.toMillis ? state.lastReadAt.toMillis() : (state.lastReadAt.seconds * 1000);
         }
 
-        // Only show if note is from today AND newer than user's last read time
-        if (noteTime >= todayTime && noteTime > lastReadTime) {
-          if (!mostRecent || noteTime > mostRecent.time) {
+        // Only show if newer than today AND newer than user's last read time
+        if (currentTime >= todayTime && currentTime > lastReadTime) {
+          if (!mostRecent || currentTime > mostRecent.time) {
             mostRecent = {
-              nickname: group.lastNoteByNickname,
-              time: noteTime,
+              type: currentType,
+              nickname: currentNickname || 'Someone',
+              time: currentTime,
               groupId: group.id,
               groupName: group.name
             };
@@ -741,8 +761,8 @@ const Dashboard = () => {
                     setSelectedView(2);
                   }}
                 >
-                  <span>📖</span>
-                  {t('dashboard.postedANote', { nickname: latestNoteNotification.nickname })}
+                  <span>{latestNoteNotification.type === 'note' ? '📖' : '💬'}</span>
+                  {t(latestNoteNotification.type === 'note' ? 'dashboard.postedANote' : 'dashboard.sentAMessage', { nickname: latestNoteNotification.nickname })}
                 </div>
               )}
 

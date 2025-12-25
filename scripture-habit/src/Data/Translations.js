@@ -51,7 +51,8 @@ export const translations = {
             readStudyMaterial: "Read The Study Material",
             todaysComeFollowMe: "Today's 'Come, Follow Me'",
             noReadingPlan: "No plan for today.",
-            postedANote: "{nickname} posted a note! ✨"
+            postedANote: "{nickname} posted a note! ✨",
+            sentAMessage: "{nickname} sent a message! ✨"
         },
         languages: {
             title: "Languages",
@@ -533,7 +534,8 @@ export const translations = {
             readStudyMaterial: "学習資料を読む",
             todaysComeFollowMe: "今日の「わたしに従ってきなさい」",
             noReadingPlan: "今日の「わたしに従ってきなさい」はありません。",
-            postedANote: "{nickname}さんがノートを投稿しました！✨"
+            postedANote: "{nickname}さんがノートを投稿しました！✨",
+            sentAMessage: "{nickname}さんがメッセージを送信しました！✨"
         },
         languages: {
             title: "言語設定",
@@ -1021,7 +1023,8 @@ export const translations = {
             readStudyMaterial: "Ler o Material de Estudo",
             todaysComeFollowMe: "'Vem, e Segue-Me' de Hoje",
             noReadingPlan: "Nenhum plano para hoje.",
-            postedANote: "{nickname} postou uma nota! ✨"
+            postedANote: "{nickname} postou uma nota! ✨",
+            sentAMessage: "{nickname} enviou uma mensagem! ✨"
         },
         languages: {
             title: "Idiomas",
@@ -1506,7 +1509,8 @@ export const translations = {
             readStudyMaterial: "閱讀研讀資料",
             todaysComeFollowMe: "今日的《來跟從我》",
             noReadingPlan: "今日無計畫。",
-            postedANote: "{nickname} 發布了一則筆記！✨"
+            postedANote: "{nickname} 發布了一則筆記！✨",
+            sentAMessage: "{nickname} 發送了一則訊息！✨"
         },
         languages: {
             title: "語言",
@@ -1961,7 +1965,8 @@ export const translations = {
             readStudyMaterial: "Leer el Material de Estudio",
             todaysComeFollowMe: "'Ven, sígueme' de hoy",
             noReadingPlan: "No hay plan para hoy.",
-            postedANote: "¡{nickname} publicó una nota! ✨"
+            postedANote: "¡{nickname} publicó una nota! ✨",
+            sentAMessage: "¡{nickname} envió un mensaje! ✨"
         },
         languages: {
             title: "Idiomas",
@@ -2417,7 +2422,8 @@ export const translations = {
             readStudyMaterial: "Đọc Tài liệu Nghiên cứu",
             todaysComeFollowMe: "'Hãy Đến Mà Theo Ta' Hôm nay",
             noReadingPlan: "Không có kế hoạch cho hôm nay.",
-            postedANote: "{nickname} đã đăng một ghi chú! ✨"
+            postedANote: "{nickname} đã đăng một ghi chú! ✨",
+            sentAMessage: "{nickname} đã gửi một tin nhắn! ✨"
         },
         languages: {
             title: "Ngôn ngữ",
@@ -2871,7 +2877,8 @@ export const translations = {
             readStudyMaterial: "อ่านเอกสารการศึกษา",
             todaysComeFollowMe: "'จงตามเรามา' ของวันนี้",
             noReadingPlan: "ไม่มีแผนสำหรับวันนี้",
-            postedANote: "{nickname} โพสต์บันทึกแล้ว! ✨"
+            postedANote: "{nickname} โพสต์บันทึกแล้ว! ✨",
+            sentAMessage: "{nickname} ส่งข้อความแล้ว! ✨"
         },
         languages: {
             title: "ภาษา",
@@ -3351,7 +3358,8 @@ export const translations = {
             readStudyMaterial: "학습 자료 읽기",
             todaysComeFollowMe: "오늘의 '와서 나를 따르라'",
             noReadingPlan: "오늘의 계획이 없습니다.",
-            postedANote: "{nickname}님이 노트를 게시했습니다! ✨"
+            postedANote: "{nickname}님이 노트를 게시했습니다! ✨",
+            sentAMessage: "{nickname}님이 메시지를 보냈습니다! ✨"
         },
         languages: {
             title: "언어",
@@ -3831,7 +3839,8 @@ export const translations = {
             readStudyMaterial: "Basahin ang Study Material",
             todaysComeFollowMe: "'Pumarito Ka, Sumunod Ka sa Akin' Ngayon",
             noReadingPlan: "Walang plano para sa araw na ito.",
-            postedANote: "Nag-post si {nickname} ng isang tala! ✨"
+            postedANote: "Nag-post si {nickname} ng isang tala! ✨",
+            sentAMessage: "Nagpadala si {nickname} ng isang mensahe! ✨"
         },
         languages: {
             title: "Mga Wika",
@@ -4311,7 +4320,8 @@ export const translations = {
             readStudyMaterial: "Soma Nyenzo za Kujifunza",
             todaysComeFollowMe: "'Njoo, Unifuate' ya Leo",
             noReadingPlan: "Hakuna mpango wa leo.",
-            postedANote: "{nickname} amechapisha dokezo! ✨"
+            postedANote: "{nickname} amechapisha dokezo! ✨",
+            sentAMessage: "{nickname} ametuma ujumbe! ✨"
         },
         languages: {
             title: "Lugha",

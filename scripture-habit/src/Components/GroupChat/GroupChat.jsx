@@ -399,9 +399,10 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
 
       // Optimization: Only update if the read count has actually increased
       // or if significant time has passed (though message count is the main driver)
-      if (userReadCount !== null && cachedMessageCount <= userReadCount) {
-        // Still update the timestamp occasionally? 
-        // For now, let's just skip to prevent loops if nothing new is read.
+      // Optimization: Only update if the read count has actually increased
+      // or if we haven't recorded a read timestamp in the group doc yet.
+      const hasReadTimestamp = groupData?.memberLastReadAt && groupData.memberLastReadAt[userData.uid];
+      if (userReadCount !== null && cachedMessageCount <= userReadCount && hasReadTimestamp) {
         return;
       }
 
@@ -777,10 +778,21 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       const groupRef = doc(db, 'groups', groupId);
       const updatePayload = {
         messageCount: increment(1),
-        lastMessageAt: serverTimestamp()
+        lastMessageAt: serverTimestamp(),
+        lastMessageByNickname: userData.nickname,
+        lastMessageByUid: userData.uid
       };
 
       await updateDoc(groupRef, updatePayload);
+
+      // CRITICAL: Immediately update user's own readMessageCount so they don't see a "1" notification for their own message
+      const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', groupId);
+      const newReadCount = (userReadCount || 0) + 1;
+      await setDoc(userGroupStateRef, {
+        readMessageCount: newReadCount,
+        lastReadAt: serverTimestamp()
+      }, { merge: true });
+      setUserReadCount(newReadCount);
 
       setNewMessage('');
       setReplyTo(null);
@@ -2229,7 +2241,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                             });
                             if (readCount === 0) return null;
                             return (
-                              <span className="read-status" style={{ fontSize: '0.65rem', color: '#4A5568', fontWeight: 'bold' }}>
+                              <span className="read-status" style={{ fontSize: '0.65rem', color: '#4A5568' }}>
                                 {t('groupChat.readStatus', { count: readCount })}
                               </span>
                             );
