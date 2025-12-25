@@ -1,25 +1,232 @@
 Checking against base language: ja
-Total base keys: 354
+Total base keys: 408
 
 [en] OK
 
-[pt] OK
+[pt] Missing 26 keys:
+  - groupChat.errorLoadMembers
+  - groupChat.errorUserNotFound
+  - groupChat.errorLoadProfile
+  - groupChat.errorSendMessage
+  - groupChat.leftGroupSuccess
+  - groupChat.errorLeaveGroup
+  - groupChat.errorGroupNameMismatch
+  - groupChat.errorOnlyOwnerDelete
+  - groupChat.groupAlreadyDeleted
+  - groupChat.groupDeletedSuccess
+  - groupChat.errorDeleteGroup
+  - groupChat.errorOnlyOwnerChangeName
+  - groupChat.errorOnlyOwnerWeeklyRecap
+  - groupChat.generatingWeeklyRecap
+  - groupChat.weeklyRecapGenerated
+  - groupChat.errorWeeklyRecap
+  - groupChat.errorEditMessage
+  - groupChat.errorDeleteMessage
+  - groupChat.groupStatusUpdated
+  - groupChat.errorUpdateGroupStatus
+  - myNotes.noteDeletedSuccess
+  - myNotes.noteDeletedError
+  - myNotes.letterSaveError
+  - newNote.aiQuestionsGenerated
+  - newNote.aiQuestionsError
+  - newNote.levelUp
 
-[zho] OK
+[zho] Missing 26 keys:
+  - groupChat.errorLoadMembers
+  - groupChat.errorUserNotFound
+  - groupChat.errorLoadProfile
+  - groupChat.errorSendMessage
+  - groupChat.leftGroupSuccess
+  - groupChat.errorLeaveGroup
+  - groupChat.errorGroupNameMismatch
+  - groupChat.errorOnlyOwnerDelete
+  - groupChat.groupAlreadyDeleted
+  - groupChat.groupDeletedSuccess
+  - groupChat.errorDeleteGroup
+  - groupChat.errorOnlyOwnerChangeName
+  - groupChat.errorOnlyOwnerWeeklyRecap
+  - groupChat.generatingWeeklyRecap
+  - groupChat.weeklyRecapGenerated
+  - groupChat.errorWeeklyRecap
+  - groupChat.errorEditMessage
+  - groupChat.errorDeleteMessage
+  - groupChat.groupStatusUpdated
+  - groupChat.errorUpdateGroupStatus
+  - myNotes.noteDeletedSuccess
+  - myNotes.noteDeletedError
+  - myNotes.letterSaveError
+  - newNote.aiQuestionsGenerated
+  - newNote.aiQuestionsError
+  - newNote.levelUp
 
-[es] OK
+[es] Missing 26 keys:
+  - groupChat.errorLoadMembers
+  - groupChat.errorUserNotFound
+  - groupChat.errorLoadProfile
+  - groupChat.errorSendMessage
+  - groupChat.leftGroupSuccess
+  - groupChat.errorLeaveGroup
+  - groupChat.errorGroupNameMismatch
+  - groupChat.errorOnlyOwnerDelete
+  - groupChat.groupAlreadyDeleted
+  - groupChat.groupDeletedSuccess
+  - groupChat.errorDeleteGroup
+  - groupChat.errorOnlyOwnerChangeName
+  - groupChat.errorOnlyOwnerWeeklyRecap
+  - groupChat.generatingWeeklyRecap
+  - groupChat.weeklyRecapGenerated
+  - groupChat.errorWeeklyRecap
+  - groupChat.errorEditMessage
+  - groupChat.errorDeleteMessage
+  - groupChat.groupStatusUpdated
+  - groupChat.errorUpdateGroupStatus
+  - myNotes.noteDeletedSuccess
+  - myNotes.noteDeletedError
+  - myNotes.letterSaveError
+  - newNote.aiQuestionsGenerated
+  - newNote.aiQuestionsError
+  - newNote.levelUp
 
-[vi] OK
+[vi] Missing 26 keys:
+  - groupChat.errorLoadMembers
+  - groupChat.errorUserNotFound
+  - groupChat.errorLoadProfile
+  - groupChat.errorSendMessage
+  - groupChat.leftGroupSuccess
+  - groupChat.errorLeaveGroup
+  - groupChat.errorGroupNameMismatch
+  - groupChat.errorOnlyOwnerDelete
+  - groupChat.groupAlreadyDeleted
+  - groupChat.groupDeletedSuccess
+  - groupChat.errorDeleteGroup
+  - groupChat.errorOnlyOwnerChangeName
+  - groupChat.errorOnlyOwnerWeeklyRecap
+  - groupChat.generatingWeeklyRecap
+  - groupChat.weeklyRecapGenerated
+  - groupChat.errorWeeklyRecap
+  - groupChat.errorEditMessage
+  - groupChat.errorDeleteMessage
+  - groupChat.groupStatusUpdated
+  - groupChat.errorUpdateGroupStatus
+  - myNotes.noteDeletedSuccess
+  - myNotes.noteDeletedError
+  - myNotes.letterSaveError
+  - newNote.aiQuestionsGenerated
+  - newNote.aiQuestionsError
+  - newNote.levelUp
 
-[th] OK
+[th] Missing 26 keys:
+  - groupChat.errorLoadMembers
+  - groupChat.errorUserNotFound
+  - groupChat.errorLoadProfile
+  - groupChat.errorSendMessage
+  - groupChat.leftGroupSuccess
+  - groupChat.errorLeaveGroup
+  - groupChat.errorGroupNameMismatch
+  - groupChat.errorOnlyOwnerDelete
+  - groupChat.groupAlreadyDeleted
+  - groupChat.groupDeletedSuccess
+  - groupChat.errorDeleteGroup
+  - groupChat.errorOnlyOwnerChangeName
+  - groupChat.errorOnlyOwnerWeeklyRecap
+  - groupChat.generatingWeeklyRecap
+  - groupChat.weeklyRecapGenerated
+  - groupChat.errorWeeklyRecap
+  - groupChat.errorEditMessage
+  - groupChat.errorDeleteMessage
+  - groupChat.groupStatusUpdated
+  - groupChat.errorUpdateGroupStatus
+  - myNotes.noteDeletedSuccess
+  - myNotes.noteDeletedError
+  - myNotes.letterSaveError
+  - newNote.aiQuestionsGenerated
+  - newNote.aiQuestionsError
+  - newNote.levelUp
 
-[ko] OK
+[ko] Missing 28 keys:
+  - groupChat.errorLoadMembers
+  - groupChat.errorUserNotFound
+  - groupChat.errorLoadProfile
+  - groupChat.errorSendMessage
+  - groupChat.leftGroupSuccess
+  - groupChat.errorLeaveGroup
+  - groupChat.errorGroupNameMismatch
+  - groupChat.errorOnlyOwnerDelete
+  - groupChat.groupAlreadyDeleted
+  - groupChat.groupDeletedSuccess
+  - groupChat.errorDeleteGroup
+  - groupChat.errorOnlyOwnerChangeName
+  - groupChat.errorOnlyOwnerWeeklyRecap
+  - groupChat.generatingWeeklyRecap
+  - groupChat.weeklyRecapGenerated
+  - groupChat.errorWeeklyRecap
+  - groupChat.errorEditMessage
+  - groupChat.errorDeleteMessage
+  - groupChat.groupStatusUpdated
+  - groupChat.errorUpdateGroupStatus
+  - myNotes.noteDeletedSuccess
+  - myNotes.noteDeletedError
+  - myNotes.letterSaveError
+  - newNote.aiQuestionsGenerated
+  - newNote.aiQuestionsError
+  - newNote.levelUp
+  - systemErrors.underMaintenanceTitle
+  - systemErrors.underMaintenanceMessage
 
-[tl] OK
+[tl] Missing 26 keys:
+  - groupChat.errorLoadMembers
+  - groupChat.errorUserNotFound
+  - groupChat.errorLoadProfile
+  - groupChat.errorSendMessage
+  - groupChat.leftGroupSuccess
+  - groupChat.errorLeaveGroup
+  - groupChat.errorGroupNameMismatch
+  - groupChat.errorOnlyOwnerDelete
+  - groupChat.groupAlreadyDeleted
+  - groupChat.groupDeletedSuccess
+  - groupChat.errorDeleteGroup
+  - groupChat.errorOnlyOwnerChangeName
+  - groupChat.errorOnlyOwnerWeeklyRecap
+  - groupChat.generatingWeeklyRecap
+  - groupChat.weeklyRecapGenerated
+  - groupChat.errorWeeklyRecap
+  - groupChat.errorEditMessage
+  - groupChat.errorDeleteMessage
+  - groupChat.groupStatusUpdated
+  - groupChat.errorUpdateGroupStatus
+  - myNotes.noteDeletedSuccess
+  - myNotes.noteDeletedError
+  - myNotes.letterSaveError
+  - newNote.aiQuestionsGenerated
+  - newNote.aiQuestionsError
+  - newNote.levelUp
 
-[sw] Missing 3 keys:
-  - myNotes.noNotesTitle
-  - myNotes.noNotesDesc
-  - myNotes.deleteTitle
+[sw] Missing 26 keys:
+  - groupChat.errorLoadMembers
+  - groupChat.errorUserNotFound
+  - groupChat.errorLoadProfile
+  - groupChat.errorSendMessage
+  - groupChat.leftGroupSuccess
+  - groupChat.errorLeaveGroup
+  - groupChat.errorGroupNameMismatch
+  - groupChat.errorOnlyOwnerDelete
+  - groupChat.groupAlreadyDeleted
+  - groupChat.groupDeletedSuccess
+  - groupChat.errorDeleteGroup
+  - groupChat.errorOnlyOwnerChangeName
+  - groupChat.errorOnlyOwnerWeeklyRecap
+  - groupChat.generatingWeeklyRecap
+  - groupChat.weeklyRecapGenerated
+  - groupChat.errorWeeklyRecap
+  - groupChat.errorEditMessage
+  - groupChat.errorDeleteMessage
+  - groupChat.groupStatusUpdated
+  - groupChat.errorUpdateGroupStatus
+  - myNotes.noteDeletedSuccess
+  - myNotes.noteDeletedError
+  - myNotes.letterSaveError
+  - newNote.aiQuestionsGenerated
+  - newNote.aiQuestionsError
+  - newNote.levelUp
 
-Found total 3 missing translations.
+Found total 210 missing translations.

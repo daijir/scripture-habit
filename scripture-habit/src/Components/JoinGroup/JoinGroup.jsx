@@ -12,6 +12,7 @@ import GroupCard from '../../groups/GroupCard';
 import { useLanguage } from '../../Context/LanguageContext';
 import UserProfileModal from '../UserProfileModal/UserProfileModal';
 import Mascot from '../Mascot/Mascot';
+import { toast } from 'react-toastify';
 
 export default function JoinGroup() {
   const { t, language } = useLanguage();
@@ -112,7 +113,7 @@ export default function JoinGroup() {
         body: JSON.stringify({ groupId })
       });
       if (resp.ok) {
-        alert(`${t('joinGroup.successJoined')} ${groupData.name}`);
+        toast.success(`🎉 ${t('joinGroup.successJoined')} ${groupData.name}`);
         navigate('/dashboard', { state: { initialGroupId: groupId, showWelcome: true, initialView: 2 } });
         return;
       }
@@ -136,7 +137,7 @@ export default function JoinGroup() {
           groupId: groupId // Set as active
         });
         await batch.commit();
-        alert(`${t('joinGroup.successJoined')} ${groupData.name}`);
+        toast.success(`🎉 ${t('joinGroup.successJoined')} ${groupData.name}`);
         navigate('/dashboard', { state: { initialGroupId: groupId, showWelcome: true, initialView: 2 } });
       } catch (e) {
         console.error("Error joining group:", e);
@@ -178,6 +179,8 @@ export default function JoinGroup() {
     }
     setLoadingMembers(false);
   };
+
+  if (!t) return null; // Wait for translations
 
   const confirmJoin = async () => {
     if (selectedGroup) {
@@ -282,7 +285,7 @@ export default function JoinGroup() {
                 </span>
               </div>
               {loadingMembers ? (
-                <p style={{ fontSize: '0.8rem', color: '#718096' }}>Loading members...</p>
+                <p style={{ fontSize: '0.8rem', color: '#718096' }}>{t('letterBox.loading') || 'Loading members...'}</p>
               ) : (
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                   {memberNames.length > 0 ? (
@@ -307,7 +310,7 @@ export default function JoinGroup() {
                       </span>
                     ))
                   ) : (
-                    <p style={{ fontSize: '0.8rem', color: '#718096' }}>None</p>
+                    <p style={{ fontSize: '0.8rem', color: '#718096' }}>{t('groupCard.noDescription') || 'None'}</p>
                   )}
                 </div>
               )}

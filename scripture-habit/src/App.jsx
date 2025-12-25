@@ -1,8 +1,10 @@
 import { Routes, Route, Link } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Analytics } from "@vercel/analytics/react";
+import { db } from './firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 
 import SignupForm from './Components/SignupForm/SignupForm';
 import LoginForm from './Components/LoginForm/LoginForm';
@@ -18,18 +20,45 @@ import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
 import InviteRedirect from './Components/InviteRedirect/InviteRedirect';
 import Maintenance from './Components/Maintenance/Maintenance';
 import { MAINTENANCE_MODE } from './config';
-
+import * as Sentry from "@sentry/react";
 
 const App = () => {
+  const [systemStatus, setSystemStatus] = useEffectSpecialState(() => {
+    // Probe Firestore for status/quota
+    const statusRef = doc(db, 'system', 'status');
+    const unsubscribe = onSnapshot(statusRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setSystemStatus({ ...docSnap.data(), loading: false, error: null });
+      } else {
+        setSystemStatus({ loading: false, error: null });
+      }
+    }, (err) => {
+      console.error("System probe failed:", err);
+      const isQuota = err.code === 'resource-exhausted' || err.message.toLowerCase().includes('quota exceeded');
 
-  useEffect(() => {
+      // Log legitimate errors to Sentry, but ignore expected quota issues
+      if (!isQuota) {
+        Sentry.captureException(err);
+      }
 
-  }, []);
+      setSystemStatus({ loading: false, error: isQuota ? 'quota' : err.message });
+    });
+    return unsubscribe;
+  });
 
-  if (MAINTENANCE_MODE) {
+  // Helper because we need actual state here
+  function useEffectSpecialState(effect) {
+    const [state, setState] = useState({ loading: true, error: null });
+    useEffect(() => {
+      return effect();
+    }, []);
+    return [state, setState];
+  }
+
+  if (MAINTENANCE_MODE || systemStatus.error === 'quota' || systemStatus.maintenance) {
     return (
       <LanguageProvider>
-        <Maintenance />
+        <Maintenance isQuota={systemStatus.error === 'quota'} />
       </LanguageProvider>
     );
   }
@@ -61,4 +90,56 @@ const App = () => {
   );
 };
 
-export default App;
+export default Sentry.withErrorBoundary(App, {
+  fallback: ({ error, resetError }) => (
+    <div className="App" style={{
+      height: '100vh',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '2rem',
+      textAlign: 'center',
+      background: 'linear-gradient(135deg, #f6f8fb 0%, #e9edf5 100%)'
+    }}>
+      <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>🙏</div>
+      <h1 style={{ color: '#2d3748', marginBottom: '1rem' }}>Something went wrong</h1>
+      <p style={{ color: '#4a5568', marginBottom: '2rem', maxWidth: '500px' }}>
+        We apologize for the inconvenience. A report has been sent to our team, and we are working to fix this.
+      </p>
+      <button
+        onClick={() => {
+          resetError();
+          window.location.href = '/dashboard';
+        }}
+        style={{
+          padding: '0.8rem 2rem',
+          background: 'linear-gradient(135deg, #6b46c1 0%, #4a90e2 100%)',
+          color: 'white',
+          border: 'none',
+          borderRadius: '12px',
+          fontWeight: 'bold',
+          cursor: 'pointer',
+          boxShadow: '0 4px 12px rgba(107, 70, 193, 0.2)'
+        }}
+      >
+        Reload Application
+      </button>
+      {process.env.NODE_ENV === 'development' && (
+        <pre style={{
+          marginTop: '2rem',
+          textAlign: 'left',
+          fontSize: '0.8rem',
+          background: '#fff',
+          padding: '1rem',
+          borderRadius: '8px',
+          maxWidth: '90%',
+          overflow: 'auto',
+          border: '1px solid #e2e8f0'
+        }}>
+          {error.toString()}
+        </pre>
+      )}
+    </div>
+  ),
+});

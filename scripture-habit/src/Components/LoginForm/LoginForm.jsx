@@ -10,6 +10,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import { useLanguage } from '../../Context/LanguageContext';
 import { UilGoogle, UilGithub } from '@iconscout/react-unicons';
+import { toast } from 'react-toastify';
 
 export default function LoginForm() {
   const { t } = useLanguage();
@@ -150,7 +151,7 @@ export default function LoginForm() {
     if (unverifiedUser) {
       try {
         await sendEmailVerification(unverifiedUser);
-        window.alert(t('login.verificationResent'));
+        toast.info(t('login.verificationResent'));
       } catch (error) {
         console.error("Error resending verification email:", error);
         setError("Error: " + error.message);

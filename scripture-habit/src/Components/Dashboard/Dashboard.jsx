@@ -11,6 +11,7 @@ import GroupChat from '../GroupChat/GroupChat';
 import './Dashboard.css';
 import Button from '../Button/Button';
 import { Capacitor } from '@capacitor/core';
+import { toast } from 'react-toastify';
 
 import NewNote from '../NewNote/NewNote';
 import MyNotes from '../MyNotes/MyNotes';
@@ -350,47 +351,24 @@ const Dashboard = () => {
     }
   }, [userData?.uid]);
 
-  // Calculate total personal notes
+  // No longer using real-time listener for the entire collection to get count
+  // personalNotesCount is now derived from userData.totalNotes
   useEffect(() => {
-    if (!userData || !userData.uid) return;
-
-    try {
-      const notesRef = collection(db, 'users', userData.uid, 'notes');
-      const unsubscribeTotalNotes = onSnapshot(notesRef, (querySnapshot) => {
-        setPersonalNotesCount(querySnapshot.size);
-      }, (err) => {
-        console.error("Error fetching total notes count:", err);
-      });
-
-      return () => unsubscribeTotalNotes();
-    } catch (err) {
-      console.error("Error setting up total notes listener:", err);
+    if (userData) {
+      setPersonalNotesCount(userData.totalNotes || 0);
     }
-  }, [userData?.uid]);
+  }, [userData?.totalNotes]);
 
   useEffect(() => {
-    let unsubscribeGroupNotes = null;
     if (userData && activeGroupId) {
-      try {
-        const messagesRef = collection(db, 'groups', activeGroupId, 'messages');
-        const q = query(messagesRef, where('isNote', '==', true));
-        unsubscribeGroupNotes = onSnapshot(q, (querySnapshot) => {
-          setGroupTotalNotes(querySnapshot.size || 0);
-        }, (err) => {
-          if (err.code !== 'permission-denied') {
-            console.error('Error fetching group notes count:', err);
-          }
-        });
-      } catch (err) {
-        console.error('Error setting up group notes listener:', err);
+      const activeGroup = userGroups.find(g => g.id === activeGroupId);
+      if (activeGroup) {
+        setGroupTotalNotes(activeGroup.noteCount || 0);
       }
     } else {
       setGroupTotalNotes(0);
     }
-    return () => {
-      if (unsubscribeGroupNotes) unsubscribeGroupNotes();
-    };
-  }, [userData, activeGroupId]);
+  }, [activeGroupId, userGroups]);
 
   // Check for inactivity warnings
   useEffect(() => {
@@ -536,7 +514,7 @@ const Dashboard = () => {
             setActiveGroupId(groupId);
             setSelectedView(2);
             setIsJoiningInvite(false);
-            window.alert(`${t('joinGroup.joiningFromInviteSuccess')} (${groupData.name})`);
+            toast.success(`🎉 ${t('joinGroup.joiningFromInviteSuccess')} (${groupData.name})`);
           }, 1000);
         } else {
           const errText = await resp.text();
@@ -703,7 +681,7 @@ const Dashboard = () => {
       await updateDoc(userRef, {
         nickname: newNickname.trim()
       });
-      // toast.success(t('groupChat.nicknameChanged')); // Assuming toast is available or imported if needed, otherwise rely on listener update
+      toast.success(t('groupChat.nicknameChanged'));
       setShowEditProfileModal(false);
       setNewNickname('');
     } catch (error) {

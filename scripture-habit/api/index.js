@@ -472,9 +472,12 @@ app.get('/api/groups', async (req, res) => {
         const db = admin.firestore();
         const groupsRef = db.collection('groups');
 
-        // Fetch all public groups (without orderBy/limit to avoid index issues/missing fields)
+        // Fetch up to 100 public groups to avoid quota issues and performance degradation
+        // Sorting by lastMessageAt to get currently active groups first
         const snapshot = await groupsRef
             .where('isPublic', '==', true)
+            .orderBy('lastMessageAt', 'desc')
+            .limit(100)
             .get();
 
         const groups = [];
@@ -739,6 +742,7 @@ app.post('/api/generate-weekly-recap', aiLimiter, async (req, res) => {
         // Query notes from last 7 days
         const snapshot = await messagesRef
             .where('createdAt', '>=', timestamp7DaysAgo)
+            .limit(200)
             .get();
 
         const notes = [];

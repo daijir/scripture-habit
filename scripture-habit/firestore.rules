@@ -63,5 +63,14 @@ service cloud.firestore {
                            );
       }
     }
+
+    // Rules for the 'system' collection (Maintenance & Status)
+    match /system/{docId} {
+      // Allow anyone to read the status to check for maintenance mode/quota issues
+      // This is necessary to show the maintenance page before the user logs in
+      allow read: if true;
+      // No one can write via client
+      allow write: if false;
+    }
   }
 }
