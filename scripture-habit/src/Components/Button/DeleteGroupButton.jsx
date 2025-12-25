@@ -1,14 +1,17 @@
-import { auth, db } from '../../firebase';
-import { doc, deleteDoc } from 'firebase/firestore';
+import { auth } from '../../firebase';
+import { toast } from 'react-toastify';
+import { useLanguage } from '../../Context/LanguageContext';
 
 export default function DeleteGroupButton({ groupId, ownerUserId }) {
+  const { t } = useLanguage();
+
   const handleDelete = async () => {
     const user = auth.currentUser;
     if (!user || user.uid !== ownerUserId) {
-      return alert("Only the group owner can delete this group");
+      return toast.error(t('groupChat.errorOnlyOwnerDelete') || "Only the group owner can delete this group");
     }
 
-    if (!confirm("Are you sure you want to delete this group?")) return;
+    if (!confirm(t('groupChat.deleteMessageConfirm') || "Are you sure you want to delete this group?")) return;
 
     try {
       const idToken = await user.getIdToken();
@@ -25,18 +28,18 @@ export default function DeleteGroupButton({ groupId, ownerUserId }) {
         throw new Error(await response.text());
       }
 
-      alert("Group deleted successfully");
+      toast.success(t('groupChat.groupDeletedSuccess') || "Group deleted successfully");
       window.location.href = '/dashboard';
 
     } catch (err) {
       console.error(err);
-      alert("Failed to delete group: " + err.message);
+      toast.error(`${t('groupChat.errorDeleteGroup') || "Failed to delete group"}: ${err.message}`);
     }
   };
 
   return (
     <button onClick={handleDelete} className="btn btn-danger">
-      Delete Group
+      {t('groupChat.deleteGroup')}
     </button>
   );
 }

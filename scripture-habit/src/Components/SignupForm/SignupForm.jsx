@@ -10,6 +10,7 @@ import Input from '../Input/Input';
 import './SignupForm.css'
 import { useLanguage } from '../../Context/LanguageContext';
 import { UilGoogle, UilGithub } from '@iconscout/react-unicons';
+import { toast } from 'react-toastify';
 
 export default function SignupForm() {
   const { t } = useLanguage();
@@ -155,7 +156,7 @@ export default function SignupForm() {
       }
 
       await signOut(auth);
-      window.alert(t('signup.verificationSent'));
+      toast.info(t('signup.verificationSent'));
       navigate('/login');
 
     } catch (authError) {

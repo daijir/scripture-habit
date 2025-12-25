@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useLayoutEffect, useMemo } from 'react';
+import * as Sentry from "@sentry/react";
 import { Capacitor } from '@capacitor/core';
 import { db, auth } from '../../firebase';
 import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle, UilUsersAlt, UilPen } from '@iconscout/react-unicons';
@@ -165,9 +166,11 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       }
     }, (err) => {
       console.error("Error listening to group:", err);
-      if (err.code === 'resource-exhausted' || err.message.toLowerCase().includes('quota exceeded')) {
+      const isQuota = err.code === 'resource-exhausted' || err.message.toLowerCase().includes('quota exceeded');
+      if (isQuota) {
         setError(t('systemErrors.quotaExceededMessage'));
       } else {
+        Sentry.captureException(err);
         setError(err.message);
       }
     });
@@ -592,7 +595,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       setMembersList(members);
     } catch (error) {
       console.error("Error fetching members:", error);
-      toast.error("Failed to load members list");
+      toast.error(t('groupChat.errorLoadMembers') || "Failed to load members list");
     } finally {
       setMembersLoading(false);
     }
@@ -665,11 +668,11 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       if (userDoc.exists()) {
         setSelectedMember({ id: userDoc.id, ...userDoc.data() });
       } else {
-        toast.error("User profile not found");
+        toast.error(t('groupChat.errorUserNotFound') || "User profile not found");
       }
     } catch (error) {
       console.error("Error fetching user profile:", error);
-      toast.error("Failed to load user profile");
+      toast.error(t('groupChat.errorLoadProfile') || "Failed to load user profile");
     }
   };
 
@@ -844,7 +847,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       }
     } catch (e) {
       console.error("Error sending message:", e);
-      toast.error(`Failed to send message: ${e.message || e}`);
+      toast.error(`${t('groupChat.errorSendMessage') || 'Failed to send message'}: ${e.message || e}`);
     }
   };
 
@@ -878,11 +881,11 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         throw new Error(text || 'Failed to leave group');
       }
 
-      toast.success("You have left the group.");
+      toast.success(t('groupChat.leftGroupSuccess') || "You have left the group.");
       navigate('/dashboard');
     } catch (error) {
       console.error("Error leaving group:", error);
-      toast.error(`Failed to leave group: ${error.message}`);
+      toast.error(`${t('groupChat.errorLeaveGroup') || 'Failed to leave group'}: ${error.message}`);
     } finally {
       setShowLeaveModal(false);
       setIsLeaving(false);
@@ -893,13 +896,13 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     if (!userData || !groupId || !groupData) return;
 
     if (deleteConfirmationName !== groupData.name) {
-      toast.error("Group name does not match.");
+      toast.error(t('groupChat.errorGroupNameMismatch') || "Group name does not match.");
       return;
     }
 
     // Verify ownership
     if (groupData.ownerUserId !== userData.uid) {
-      toast.error("Only the group owner can delete this group.");
+      toast.error(t('groupChat.errorOnlyOwnerDelete') || "Only the group owner can delete this group.");
       return;
     }
 
@@ -919,18 +922,18 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         const text = await response.text();
         // If it's a 404/not found, it might already be deleted, so we can treat as success or specific error
         if (response.status === 404) {
-          toast.success("Group already deleted.");
+          toast.success(t('groupChat.groupAlreadyDeleted') || "Group already deleted.");
           navigate('/dashboard');
           return;
         }
         throw new Error(text || 'Failed to delete group');
       }
 
-      toast.success("Group deleted successfully.");
+      toast.success(t('groupChat.groupDeletedSuccess') || "Group deleted successfully.");
       navigate('/dashboard');
     } catch (error) {
       console.error("Error deleting group:", error);
-      toast.error(`Failed to delete group: ${error.message}`);
+      toast.error(`${t('groupChat.errorDeleteGroup') || 'Failed to delete group'}: ${error.message}`);
     } finally {
       setShowDeleteModal(false);
     }
@@ -940,7 +943,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     if (!userData || !groupId || !groupData || !newGroupName.trim()) return;
 
     if (groupData.ownerUserId !== userData.uid) {
-      toast.error("Only the group owner can change the group name.");
+      toast.error(t('groupChat.errorOnlyOwnerChangeName') || "Only the group owner can change the group name.");
       return;
     }
 
@@ -966,11 +969,11 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     // Optional: Check if user is owner, or just let anyone generate for engagement (but maybe rate limit or only owner?)
     // For now, let's restrict to owner to avoid spamming system messages
     if (groupData?.ownerUserId !== userData.uid) {
-      toast.error("Only the group owner can generate the weekly recap.");
+      toast.error(t('groupChat.errorOnlyOwnerWeeklyRecap') || "Only the group owner can generate the weekly recap.");
       return;
     }
 
-    toast.info("Generating weekly recap... This may take a moment.");
+    toast.info(t('groupChat.generatingWeeklyRecap') || "Generating weekly recap... This may take a moment.");
     setShowMobileMenu(false);
 
     try {
@@ -998,12 +1001,12 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       if (data.message && data.message.includes('No notes found')) {
         toast.info(t('groupChat.noNotesForRecap') || "No notes found for this week.");
       } else {
-        toast.success("Weekly recap generated!");
+        toast.success(t('groupChat.weeklyRecapGenerated') || "Weekly recap generated!");
       }
 
     } catch (error) {
       console.error("Error generating recap:", error);
-      toast.error("Failed to generate weekly recap.");
+      toast.error(t('groupChat.errorWeeklyRecap') || "Failed to generate weekly recap.");
     }
   };
 
@@ -1118,7 +1121,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       setEditText('');
     } catch (error) {
       console.error('Error editing message:', error);
-      toast.error('Failed to edit message');
+      toast.error(t('groupChat.errorEditMessage') || 'Failed to edit message');
     }
   };
 
@@ -1154,7 +1157,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       toast.success(t('groupChat.messageDeleted'));
     } catch (error) {
       console.error('Error deleting message:', error);
-      toast.error('Failed to delete message');
+      toast.error(t('groupChat.errorDeleteMessage') || 'Failed to delete message');
     } finally {
       setMessageToDelete(null);
       setShowDeleteMessageModal(false);
@@ -1362,10 +1365,10 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       await updateDoc(groupRef, {
         isPublic: !groupData.isPublic
       });
-      toast.success(`Group is now ${!groupData.isPublic ? 'Public' : 'Private'}`);
+      toast.success(t('groupChat.groupStatusUpdated', { status: !groupData.isPublic ? t('groupChat.public') : t('groupChat.private') }) || `Group is now ${!groupData.isPublic ? 'Public' : 'Private'}`);
     } catch (error) {
       console.error("Error updating group status:", error);
-      toast.error("Failed to update group status");
+      toast.error(t('groupChat.errorUpdateGroupStatus') || "Failed to update group status");
     }
   };
 

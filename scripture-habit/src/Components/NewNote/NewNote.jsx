@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import * as Sentry from "@sentry/react";
 import axios from 'axios';
 import { Capacitor } from '@capacitor/core';
 import { db } from '../../firebase';
@@ -199,11 +200,11 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             if (response.data.questions) {
                 const newContent = response.data.questions;
                 setAiQuestion(newContent);
-                toast.success('AI Ponder Questions generated!');
+                toast.success(t('newNote.aiQuestionsGenerated') || 'AI Ponder Questions generated!');
             }
         } catch (error) {
             console.error(error);
-            toast.error('Failed to generate questions. Gemini API key might be missing.');
+            toast.error(t('newNote.aiQuestionsError') || 'Failed to generate questions. Gemini API key might be missing.');
         } finally {
             setAiLoading(false);
         }
@@ -832,7 +833,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
                 if (willLevelUp) {
                     const newLevel = Math.floor((currentDays + 1) / 7) + 1;
-                    toast.success(`🎊 Congratulations! You reached Level ${newLevel}! 🎊`, {
+                    toast.success(t('newNote.levelUp', { level: newLevel }) || `🎊 Congratulations! You reached Level ${newLevel}! 🎊`, {
                         position: "top-center",
                         autoClose: 5000,
                         hideProgressBar: false,
@@ -880,6 +881,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             if (e.code === 'resource-exhausted' || (e.message && e.message.toLowerCase().includes('quota exceeded'))) {
                 setError(t('systemErrors.quotaExceededMessage'));
             } else {
+                Sentry.captureException(e);
                 setError(t('newNote.errorSave'));
             }
             setLoading(false);

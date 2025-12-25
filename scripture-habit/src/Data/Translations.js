@@ -108,7 +108,10 @@ export const translations = {
             noNotesForRecap: "No notes found for this week.",
             recapError: "Failed to generate recap.",
             weeklyReflectionCall: "Would you like to reflect on your week?",
-            sharedActivity: "Shared Activity"
+            sharedActivity: "Shared Activity",
+            noteDeletedSuccess: "Note deleted successfully",
+            noteDeletedError: "Failed to delete note",
+            letterSaveError: "Failed to save letter."
         },
         recapModal: {
             title: "Your Weekly Letter",
@@ -230,7 +233,27 @@ export const translations = {
             addNoteTooltip: "Click + to post a note!",
             inviteFriendsPrompt: "Invite your friends!",
             inviteLinkHint: "Tap above to copy and share with your friends!",
-            readStatus: "Read {count}"
+            readStatus: "Read {count}",
+            errorLoadMembers: "Failed to load members list",
+            errorUserNotFound: "User profile not found",
+            errorLoadProfile: "Failed to load user profile",
+            errorSendMessage: "Failed to send message",
+            leftGroupSuccess: "You have left the group.",
+            errorLeaveGroup: "Failed to leave group",
+            errorGroupNameMismatch: "Group name does not match.",
+            errorOnlyOwnerDelete: "Only the group owner can delete this group.",
+            groupAlreadyDeleted: "Group already deleted.",
+            groupDeletedSuccess: "Group deleted successfully.",
+            errorDeleteGroup: "Failed to delete group",
+            errorOnlyOwnerChangeName: "Only the group owner can change the group name.",
+            errorOnlyOwnerWeeklyRecap: "Only the group owner can generate the weekly recap.",
+            generatingWeeklyRecap: "Generating weekly recap... This may take a moment.",
+            weeklyRecapGenerated: "Weekly recap generated!",
+            errorWeeklyRecap: "Failed to generate weekly recap.",
+            errorEditMessage: "Failed to edit message",
+            errorDeleteMessage: "Failed to delete message",
+            groupStatusUpdated: "Group is now {status}",
+            errorUpdateGroupStatus: "Failed to update group status"
         },
         newNote: {
             editTitle: "Edit Note",
@@ -295,7 +318,10 @@ export const translations = {
             relationshipScriptures: "✨ Relationship Scriptures",
             joyScriptures: "✨ Joy",
             aiQuestion: "✨ AI Question:",
-            titleLabel: "Title:"
+            titleLabel: "Title:",
+            aiQuestionsGenerated: "AI Ponder Questions generated!",
+            aiQuestionsError: "Failed to generate questions. Gemini API key might be missing.",
+            levelUp: "🎊 Congratulations! You reached Level {level}! 🎊"
         },
         scriptures: {
             oldTestament: "Old Testament",
@@ -681,7 +707,27 @@ export const translations = {
             addNoteTooltip: "＋を押してノート投稿！",
             inviteFriendsPrompt: "友人を誘いましょう！",
             inviteLinkHint: "上をタップしてコピーし、友達にシェアしましょう！",
-            readStatus: "既読 {count}"
+            readStatus: "既読 {count}",
+            errorLoadMembers: "メンバーリストの読み込みに失敗しました",
+            errorUserNotFound: "ユーザーが見つかりません",
+            errorLoadProfile: "プロフィールの読み込みに失敗しました",
+            errorSendMessage: "メッセージの送信に失敗しました",
+            leftGroupSuccess: "グループを退会しました",
+            errorLeaveGroup: "退会に失敗しました",
+            errorGroupNameMismatch: "グループ名が一致しません",
+            errorOnlyOwnerDelete: "グループオーナーのみが削除できます",
+            groupAlreadyDeleted: "グループは既に削除されています",
+            groupDeletedSuccess: "グループを削除しました",
+            errorDeleteGroup: "グループの削除に失敗しました",
+            errorOnlyOwnerChangeName: "オーナーのみが名前を変更できます",
+            errorOnlyOwnerWeeklyRecap: "オーナーのみが振り返りを作成できます",
+            generatingWeeklyRecap: "振り返りを作成中... しばらくお待ちください",
+            weeklyRecapGenerated: "振り返りを作成しました！",
+            errorWeeklyRecap: "振り返りの作成に失敗しました",
+            errorEditMessage: "メッセージの編集に失敗しました",
+            errorDeleteMessage: "メッセージの削除に失敗しました",
+            groupStatusUpdated: "グループを{status}に変更しました",
+            errorUpdateGroupStatus: "ステータスの更新に失敗しました"
         },
         myNotes: {
             description: "ノートコレクション",
@@ -703,7 +749,10 @@ export const translations = {
             noNotesForRecap: "今週のノートが見つかりませんでした。",
             recapError: "作成に失敗しました。",
             weeklyReflectionCall: "今週の振り返りをしてみませんか？",
-            sharedActivity: "共有されたグループのアクティビティ"
+            sharedActivity: "Shared Activity",
+            noteDeletedSuccess: "ノートを削除しました",
+            noteDeletedError: "ノートの削除に失敗しました",
+            letterSaveError: "レターの保存に失敗しました"
         },
         recapModal: {
             title: "今週の振り返りレター",
@@ -790,7 +839,10 @@ export const translations = {
             relationshipScriptures: "✨ 人間関係",
             joyScriptures: "✨ 喜び",
             aiQuestion: "✨ AIからの質問:",
-            titleLabel: "タイトル:"
+            titleLabel: "タイトル:",
+            aiQuestionsGenerated: "AIが質問を作成しました！",
+            aiQuestionsError: "質問の作成に失敗しました。GeminiのAPIキーが設定されていない可能性があります。",
+            levelUp: "🎊 おめでとうございます！レベル {level} に到達しました！ 🎊"
         },
         scriptures: {
             oldTestament: "旧約聖書",
@@ -1176,7 +1228,27 @@ export const translations = {
             inviteFriendsPrompt: "Convide seus amigos!",
             addNoteTooltip: "Clique em + para postar uma nota!",
             inviteLinkHint: "Toque acima para copiar e compartilhar com seus amigos!",
-            readStatus: "Visualizado {count}"
+            readStatus: "Visualizado {count}",
+            errorLoadMembers: "Falha ao carregar a lista de membros",
+            errorUserNotFound: "Perfil do usuário não encontrado",
+            errorLoadProfile: "Falha ao carregar o perfil do usuário",
+            errorSendMessage: "Falha ao enviar mensagem",
+            leftGroupSuccess: "Você saiu do grupo.",
+            errorLeaveGroup: "Falha ao sair do grupo",
+            errorGroupNameMismatch: "O nome do grupo não coincide.",
+            errorOnlyOwnerDelete: "Apenas o proprietário do grupo pode excluir este grupo.",
+            groupAlreadyDeleted: "O grupo já foi excluído.",
+            groupDeletedSuccess: "Grupo excluído com sucesso.",
+            errorDeleteGroup: "Falha ao excluir o grupo",
+            errorOnlyOwnerChangeName: "Apenas o proprietário do grupo pode alterar o nome do grupo.",
+            errorOnlyOwnerWeeklyRecap: "Apenas o proprietário do grupo pode gerar o resumo semanal.",
+            generatingWeeklyRecap: "Gerando resumo semanal... Isso pode levar um momento.",
+            weeklyRecapGenerated: "Resumo semanal gerado!",
+            errorWeeklyRecap: "Falha ao gerar o resumo semanal.",
+            errorEditMessage: "Falha ao editar a mensagem",
+            errorDeleteMessage: "Falha ao excluir a mensagem",
+            groupStatusUpdated: "O grupo agora é {status}",
+            errorUpdateGroupStatus: "Falha ao atualizar o status do grupo"
         },
         myNotes: {
             description: "Coleção de Notas",
@@ -1203,7 +1275,10 @@ export const translations = {
             noNotesForRecap: "Nenhuma nota encontrada esta semana.",
             recapError: "Falha ao gerar resumo.",
             weeklyReflectionCall: "Gostaria de refletir sobre sua semana?",
-            sharedActivity: "Atividade Compartilhada"
+            sharedActivity: "Atividade Compartilhada",
+            noteDeletedSuccess: "Nota excluída com sucesso",
+            noteDeletedError: "Falha ao excluir a nota",
+            letterSaveError: "Falha ao salvar a carta."
         },
         recapModal: {
             title: "Sua Carta Semanal",
@@ -1282,7 +1357,10 @@ export const translations = {
             relationshipScriptures: "✨ Relacionamento",
             joyScriptures: "✨ Alegria",
             aiQuestion: "✨ Pergunta da IA:",
-            titleLabel: "Título:"
+            titleLabel: "Título:",
+            aiQuestionsGenerated: "Perguntas de reflexão da IA geradas!",
+            aiQuestionsError: "Falha ao gerar perguntas. A chave da API Gemini pode estar faltando.",
+            levelUp: "🎊 Parabéns! Você alcançou o Nível {level}! 🎊"
         },
         scriptures: {
             oldTestament: "Velho Testamento",
@@ -1642,7 +1720,27 @@ export const translations = {
             inviteFriendsPrompt: "邀請您的朋友！",
             inviteLinkHint: "點擊上方進行複製並分享給你的朋友！",
             addNoteTooltip: "點擊 + 發布筆記！",
-            readStatus: "已讀 {count}"
+            readStatus: "已讀 {count}",
+            errorLoadMembers: "無法載入成員列表",
+            errorUserNotFound: "找不到使用者設定檔",
+            errorLoadProfile: "無法載入使用者設定檔",
+            errorSendMessage: "發送訊息失敗",
+            leftGroupSuccess: "您已退出群組。",
+            errorLeaveGroup: "退出群組失敗",
+            errorGroupNameMismatch: "群組名稱不符。",
+            errorOnlyOwnerDelete: "只有群組所有者可以刪除此群組。",
+            groupAlreadyDeleted: "群組已刪除。",
+            groupDeletedSuccess: "群組刪除成功。",
+            errorDeleteGroup: "刪除群組失敗",
+            errorOnlyOwnerChangeName: "只有群組所有者可以更改群組名稱。",
+            errorOnlyOwnerWeeklyRecap: "只有群組所有者可以生成每週回顧。",
+            generatingWeeklyRecap: "正在生成每週回顧... 請稍候。",
+            weeklyRecapGenerated: "每週回顧已生成！",
+            errorWeeklyRecap: "生成每週回顧失敗。",
+            errorEditMessage: "編輯訊息失敗",
+            errorDeleteMessage: "刪除訊息失敗",
+            groupStatusUpdated: "群組現在為 {status}",
+            errorUpdateGroupStatus: "更新群組狀態失敗"
         },
         myNotes: {
             description: "筆記收藏",
@@ -1664,7 +1762,10 @@ export const translations = {
             noNotesForRecap: "本週找不到筆記。",
             recapError: "產生回顧失敗。",
             weeklyReflectionCall: "您想回顧本週的學習嗎？",
-            sharedActivity: "分享的活動"
+            sharedActivity: "分享的活動",
+            noteDeletedSuccess: "筆記刪除成功",
+            noteDeletedError: "刪除筆記失敗",
+            letterSaveError: "存入信箱失敗。"
         },
         recapModal: {
             title: "您的每週信件",
@@ -1744,7 +1845,10 @@ export const translations = {
             relationshipScriptures: "✨ 人際關係",
             joyScriptures: "✨ 喜樂",
             aiQuestion: "✨ AI 提問：",
-            titleLabel: "標題："
+            titleLabel: "標題：",
+            aiQuestionsGenerated: "AI 沉思問題已生成！",
+            aiQuestionsError: "生成問題失敗。可能缺少 Gemini API 金鑰。",
+            levelUp: "🎊 恭喜！您已達到第 {level} 級！ 🎊"
         },
         scriptures: {
             oldTestament: "舊約",
@@ -2130,7 +2234,27 @@ export const translations = {
             addNoteTooltip: "¡Haz clic en + para publicar una nota!",
             inviteFriendsPrompt: "¡Invita a tus amigos!",
             inviteLinkHint: "¡Toca arriba para copiar y compartir con tus amigos!",
-            readStatus: "Leído {count}"
+            readStatus: "Leído {count}",
+            errorLoadMembers: "Error al cargar la lista de miembros",
+            errorUserNotFound: "Perfil de usuario no encontrado",
+            errorLoadProfile: "Error al cargar el perfil de usuario",
+            errorSendMessage: "Error al enviar el mensaje",
+            leftGroupSuccess: "Has salido del grupo.",
+            errorLeaveGroup: "Error al salir del grupo",
+            errorGroupNameMismatch: "El nombre del grupo no coincide.",
+            errorOnlyOwnerDelete: "Solo el propietario puede eliminar este grupo.",
+            groupAlreadyDeleted: "El grupo ya ha sido eliminado.",
+            groupDeletedSuccess: "Grupo eliminado con éxito.",
+            errorDeleteGroup: "Error al eliminar el grupo",
+            errorOnlyOwnerChangeName: "Solo el propietario puede cambiar el nombre del grupo.",
+            errorOnlyOwnerWeeklyRecap: "Solo el propietario puede generar el resumen semanal.",
+            generatingWeeklyRecap: "Generando resumen semanal... Esto puede tardar un momento.",
+            weeklyRecapGenerated: "¡Resumen semanal generado!",
+            errorWeeklyRecap: "Error al generar el resumen semanal.",
+            errorEditMessage: "Error al editar el mensaje",
+            errorDeleteMessage: "Error al eliminar el mensaje",
+            groupStatusUpdated: "El grupo ahora es {status}",
+            errorUpdateGroupStatus: "Error al actualizar el estado del grupo"
         },
         myNotes: {
             description: "Colección de Notas",
@@ -2152,7 +2276,10 @@ export const translations = {
             noNotesForRecap: "No se encontraron notas esta semana.",
             recapError: "Error al generar el resumen.",
             weeklyReflectionCall: "¿Te gustaría reflexionar sobre tu semana?",
-            sharedActivity: "Actividad Compartida"
+            sharedActivity: "Actividad Compartida",
+            noteDeletedSuccess: "Nota eliminada con éxito",
+            noteDeletedError: "Error al eliminar la nota",
+            letterSaveError: "Error al guardar la carta."
         },
         recapModal: {
             title: "Tu Carta Semanal",
@@ -2207,7 +2334,10 @@ export const translations = {
             relationshipScriptures: "✨ Relaciones",
             joyScriptures: "✨ Gozo",
             aiQuestion: "✨ Pregunta de IA:",
-            titleLabel: "Título:"
+            titleLabel: "Título:",
+            aiQuestionsGenerated: "¡Preguntas de reflexión de IA generadas!",
+            aiQuestionsError: "Error al generar preguntas. Puede que falte la clave API de Gemini.",
+            levelUp: "🎊 ¡Felicidades! ¡Has alcanzado el Nivel {level}! 🎊"
         },
         scriptures: {
             oldTestament: "Antiguo Testamento",
@@ -2567,7 +2697,27 @@ export const translations = {
             inviteFriendsPrompt: "Mời bạn bè của bạn!",
             inviteLinkHint: "Chạm vào bên trên để sao chép và chia sẻ với bạn bè!",
             addNoteTooltip: "Nhấp vào + để đăng ghi chú!",
-            readStatus: "Đã đọc {count}"
+            readStatus: "Đã đọc {count}",
+            errorLoadMembers: "Không thể tải danh sách thành viên",
+            errorUserNotFound: "Không tìm thấy hồ sơ người dùng",
+            errorLoadProfile: "Không thể tải hồ sơ người dùng",
+            errorSendMessage: "Không gửi được tin nhắn",
+            leftGroupSuccess: "Bạn đã rời khỏi nhóm.",
+            errorLeaveGroup: "Không thể rời khỏi nhóm",
+            errorGroupNameMismatch: "Tên nhóm không khớp.",
+            errorOnlyOwnerDelete: "Chỉ chủ nhóm mới có thể xóa nhóm này.",
+            groupAlreadyDeleted: "Nhóm đã bị xóa.",
+            groupDeletedSuccess: "Xóa nhóm thành công.",
+            errorDeleteGroup: "Không thể xóa nhóm",
+            errorOnlyOwnerChangeName: "Chỉ chủ nhóm mới có thể thay đổi tên nhóm.",
+            errorOnlyOwnerWeeklyRecap: "Chỉ chủ nhóm mới có thể tạo tổng kết hàng tuần.",
+            generatingWeeklyRecap: "Đang tạo tổng kết hàng tuần... Vui lòng đợi trong giây lát.",
+            weeklyRecapGenerated: "Đã tạo tổng kết hàng tuần!",
+            errorWeeklyRecap: "Không thể tạo tổng kết hàng tuần.",
+            errorEditMessage: "Không thể chỉnh sửa tin nhắn",
+            errorDeleteMessage: "Không thể xóa tin nhắn",
+            groupStatusUpdated: "Nhóm hiện đang là {status}",
+            errorUpdateGroupStatus: "Không thể cập nhật trạng thái nhóm"
         },
         myNotes: {
             description: "Bộ Sưu Tập Ghi Chép",
@@ -2589,7 +2739,10 @@ export const translations = {
             noNotesForRecap: "Không tìm thấy ghi chú nào trong tuần này.",
             recapError: "Không thể tạo tóm tắt.",
             weeklyReflectionCall: "Bạn có muốn suy ngẫm về tuần này không?",
-            sharedActivity: "Hoạt động được chia sẻ"
+            sharedActivity: "Hoạt động được chia sẻ",
+            noteDeletedSuccess: "Xóa ghi chú thành công",
+            noteDeletedError: "Không thể xóa ghi chú",
+            letterSaveError: "Không thể lưu thư vào hộp thư."
         },
         recapModal: {
             title: "Thư hàng tuần của bạn",
@@ -2668,7 +2821,10 @@ export const translations = {
             relationshipScriptures: "✨ Mối Quan Hệ",
             joyScriptures: "✨ Niềm Vui",
             aiQuestion: "✨ Câu Hỏi AI:",
-            titleLabel: "Tiêu đề:"
+            titleLabel: "Tiêu đề:",
+            aiQuestionsGenerated: "Đã tạo các câu hỏi suy ngẫm từ AI!",
+            aiQuestionsError: "Không thể tạo câu hỏi. Có thể thiếu khóa API Gemini.",
+            levelUp: "🎊 Chúc mừng! Bạn đã đạt Cấp {level}! 🎊"
         },
         scriptures: {
             oldTestament: "Cựu Ước",
@@ -3054,7 +3210,27 @@ export const translations = {
             inviteFriendsPrompt: "ชวนเพื่อนของคุณมาเข้าร่วม!",
             inviteLinkHint: "แตะด้านบนเพื่อคัดลอกและแชร์กับเพื่อนของคุณ!",
             addNoteTooltip: "คลิก + เพื่อโพสต์โน้ต!",
-            readStatus: "อ่านแล้ว {count}"
+            readStatus: "อ่านแล้ว {count}",
+            errorLoadMembers: "ไม่สามารถโหลดรายชื่อสมาชิกได้",
+            errorUserNotFound: "ไม่พบโปรไฟล์ผู้ใช้",
+            errorLoadProfile: "ไม่สามารถโหลดโปรไฟล์ผู้ใช้ได้",
+            errorSendMessage: "ส่งข้อความไม่สำเร็จ",
+            leftGroupSuccess: "คุณได้ออกจากกลุ่มแล้ว",
+            errorLeaveGroup: "ไม่สามารถออกจากกลุ่มได้",
+            errorGroupNameMismatch: "ชื่อกลุ่มไม่ตรงกัน",
+            errorOnlyOwnerDelete: "เฉพาะเจ้าของกลุ่มเท่านั้นที่สามารถลบกลุ่มนี้ได้",
+            groupAlreadyDeleted: "กลุ่มถูกลบไปแล้ว",
+            groupDeletedSuccess: "ลบกลุ่มสำเร็จ",
+            errorDeleteGroup: "ไม่สามารถลบกลุ่มได้",
+            errorOnlyOwnerChangeName: "เฉพาะเจ้าของกลุ่มเท่านั้นที่สามารถเปลี่ยนชื่อกลุ่มได้",
+            errorOnlyOwnerWeeklyRecap: "เฉพาะเจ้าของกลุ่มเท่านั้นที่สามารถสร้างสรุปประจำสัปดาห์ได้",
+            generatingWeeklyRecap: "กำลังสร้างสรุปประจำสัปดาห์... กรุณารอสักครู่",
+            weeklyRecapGenerated: "สร้างสรุปประจำสัปดาห์สำเร็จ!",
+            errorWeeklyRecap: "ไม่สามารถสร้างสรุปประจำสัปดาห์ได้",
+            errorEditMessage: "ไม่สามารถแก้ไขข้อความได้",
+            errorDeleteMessage: "ไม่สามารถลบข้อความได้",
+            groupStatusUpdated: "ขณะนี้กลุ่มเป็น {status}",
+            errorUpdateGroupStatus: "ไม่สามารถอัปเดตสถานะกลุ่มได้"
         },
         myNotes: {
             description: "คลังบันทึก",
@@ -3076,7 +3252,10 @@ export const translations = {
             noNotesForRecap: "ไม่พบโน้ตในสัปดาห์นี้",
             recapError: "สร้างสรุปไม่สำเร็จ",
             weeklyReflectionCall: "คุณต้องการทบทวนสัปดาห์ของคุณหรือไม่?",
-            sharedActivity: "กิจกรรมที่แชร์"
+            sharedActivity: "กิจกรรมที่แชร์",
+            noteDeletedSuccess: "ลบบันทึกสำเร็จ",
+            noteDeletedError: "ไม่สามารถลบบันทึกได้",
+            letterSaveError: "ไม่สามารถบันทึกจดหมายลงในกล่องจดหมายได้"
         },
         recapModal: {
             title: "จดหมายรายสัปดาห์ของคุณ",
@@ -3155,7 +3334,10 @@ export const translations = {
             relationshipScriptures: "✨ ความสัมพันธ์",
             joyScriptures: "✨ ความหรรษา",
             aiQuestion: "✨ คำถาม AI:",
-            titleLabel: "หัวข้อ:"
+            titleLabel: "หัวข้อ:",
+            aiQuestionsGenerated: "สร้างคำถามสำหรับไตร่ตรองจาก AI สำเร็จ!",
+            aiQuestionsError: "ไม่สามารถสร้างคำถามได้ อาจขาด Gemini API Key",
+            levelUp: "🎊 ยินดีด้วย! คุณถึงระดับ {level} แล้ว! 🎊"
         },
         scriptures: {
             oldTestament: "พันธสัญญาเดิม",
@@ -3541,7 +3723,27 @@ export const translations = {
             inviteFriendsPrompt: "친구를 초대하세요!",
             inviteLinkHint: "위쪽을 눌러 복사하고 친구들에게 공유하세요!",
             addNoteTooltip: "+를 눌러 노트를 게시하세요!",
-            readStatus: "{count}명 읽음"
+            readStatus: "{count}명 읽음",
+            errorLoadMembers: "멤버 목록을 불러오지 못했습니다",
+            errorUserNotFound: "사용자 프로필을 찾을 수 없습니다",
+            errorLoadProfile: "사용자 프로필을 불러오지 못했습니다",
+            errorSendMessage: "메시지 전송 실패",
+            leftGroupSuccess: "그룹에서 탈퇴했습니다.",
+            errorLeaveGroup: "그룹 탈퇴 실패",
+            errorGroupNameMismatch: "그룹 이름이 일치하지 않습니다.",
+            errorOnlyOwnerDelete: "그룹 소유자만 이 그룹을 삭제할 수 있습니다.",
+            groupAlreadyDeleted: "이미 삭제된 그룹입니다.",
+            groupDeletedSuccess: "그룹이 성공적으로 삭제되었습니다.",
+            errorDeleteGroup: "그룹 삭제 실패",
+            errorOnlyOwnerChangeName: "그룹 소유자만 그룹 이름을 변경할 수 있습니다.",
+            errorOnlyOwnerWeeklyRecap: "그룹 소유자만 주간 요약을 생성할 수 있습니다.",
+            generatingWeeklyRecap: "주간 요약을 생성 중입니다... 잠시만 기다려 주세요.",
+            weeklyRecapGenerated: "주간 요약이 생성되었습니다!",
+            errorWeeklyRecap: "주간 요약 생성 실패",
+            errorEditMessage: "메시지 수정 실패",
+            errorDeleteMessage: "메시지 삭제 실패",
+            groupStatusUpdated: "그룹이 이제 {status} 상태입니다",
+            errorUpdateGroupStatus: "그룹 상태 업데이트 실패"
         },
         myNotes: {
             description: "노트 컬렉션",
@@ -3563,7 +3765,10 @@ export const translations = {
             noNotesForRecap: "이번 주 노트를 찾을 수 없습니다.",
             recapError: "요약을 생성하지 못했습니다.",
             weeklyReflectionCall: "한 주를 되돌아보시겠습니까?",
-            sharedActivity: "공유 활동"
+            sharedActivity: "공유 활동",
+            noteDeletedSuccess: "노트가 성공적으로 삭제되었습니다",
+            noteDeletedError: "노트 삭제 실패",
+            letterSaveError: "편지함에 편지를 저장하지 못했습니다."
         },
         recapModal: {
             title: "당신의 주간 편지",
@@ -3642,7 +3847,10 @@ export const translations = {
             relationshipScriptures: "✨ 대인 관계",
             joyScriptures: "✨ 기쁨",
             aiQuestion: "✨ AI 질문:",
-            titleLabel: "제목:"
+            titleLabel: "제목:",
+            aiQuestionsGenerated: "AI 성찰 질문이 생성되었습니다!",
+            aiQuestionsError: "질문 생성 실패. Gemini API 키가 누락되었을 수 있습니다.",
+            levelUp: "🎊 축하합니다! {level} 레벨에 도달했습니다! 🎊"
         },
         scriptures: {
             oldTestament: "구약전서",
@@ -3830,7 +4038,9 @@ export const translations = {
         },
         systemErrors: {
             quotaExceededTitle: "시스템 점검 중 (할당량 초과)",
-            quotaExceededMessage: "현재 예상보다 많은 접속으로 인해 데이터베이스 이용 한도에 도달했습니다. 일본 시간 오후 5:00(17:00 JST)에 자동으로 리셋되어 복구될 예정입니다. 이용에 불편을 드려 죄송합니다."
+            quotaExceededMessage: "현재 예상보다 많은 접속으로 인해 데이터베이스 이용 한도에 도달했습니다. 일본 시간 오후 5:00(17:00 JST)에 자동으로 리셋되어 복구될 예정입니다. 이용에 불편을 드려 죄송합니다.",
+            underMaintenanceTitle: "시스템 점검 중",
+            underMaintenanceMessage: "현재 시스템 점검 또는 할당량 초과로 인해 서비스를 일시적으로 이용할 수 없습니다."
         }
     },
     tl: {
@@ -4026,7 +4236,27 @@ export const translations = {
             inviteFriendsPrompt: "Imbitahan ang iyong mga kaibigan!",
             inviteLinkHint: "I-tap sa itaas para kopyahin at ibahagi sa iyong mga kaibigan!",
             addNoteTooltip: "I-click ang + para mag-post ng tala!",
-            readStatus: "Nabasa na {count}"
+            readStatus: "Nabasa na {count}",
+            errorLoadMembers: "Nabigong i-load ang listahan ng mga miyembro",
+            errorUserNotFound: "Hindi natagpuan ang profile ng user",
+            errorLoadProfile: "Nabigong i-load ang profile ng user",
+            errorSendMessage: "Nabigong ipadala ang mensahe",
+            leftGroupSuccess: "Umalis ka na sa grupo.",
+            errorLeaveGroup: "Nabigong umalis sa grupo",
+            errorGroupNameMismatch: "Hindi tumutugma ang pangalan ng grupo.",
+            errorOnlyOwnerDelete: "Tanging ang may-ari ng grupo ang maaaring magbura ng grupong ito.",
+            groupAlreadyDeleted: "Nabura na ang grupo.",
+            groupDeletedSuccess: "Matagumpay na nabura ang grupo.",
+            errorDeleteGroup: "Nabigong burahin ang grupo",
+            errorOnlyOwnerChangeName: "Tanging ang may-ari ng grupo ang maaaring magbago ng pangalan ng grupo.",
+            errorOnlyOwnerWeeklyRecap: "Tanging ang may-ari ng grupo ang maaaring gumawa ng lingguhang recap.",
+            generatingWeeklyRecap: "Gumagawa ng lingguhang recap... Maaaring tumagal ito ng sandali.",
+            weeklyRecapGenerated: "Gawa na ang lingguhang recap!",
+            errorWeeklyRecap: "Nabigong gumawa ng lingguhang recap.",
+            errorEditMessage: "Nabigong i-edit ang mensahe",
+            errorDeleteMessage: "Nabigong burahin ang mensahe",
+            groupStatusUpdated: "Ang grupo ay {status} na ngayon",
+            errorUpdateGroupStatus: "Nabigong i-update ang status ng grupo"
         },
         myNotes: {
             description: "Koleksyon ng mga Tala",
@@ -4048,7 +4278,10 @@ export const translations = {
             noNotesForRecap: "Walang natagpuang mga tala para sa linggong ito.",
             recapError: "Nabigo sa pagbuo ng buod.",
             weeklyReflectionCall: "Gusto mo bang magnilay sa iyong linggo?",
-            sharedActivity: "Ibinahaging Aktibidad"
+            sharedActivity: "Ibinahaging Aktibidad",
+            noteDeletedSuccess: "Matagumpay na nabura ang tala",
+            noteDeletedError: "Nabigong burahin ang tala",
+            letterSaveError: "Nabigong i-save ang sulat sa Inbox."
         },
         recapModal: {
             title: "Ang Iyong Lingguhang Sulat",
@@ -4127,7 +4360,10 @@ export const translations = {
             relationshipScriptures: "✨ Relasyon",
             joyScriptures: "✨ Kagalakan",
             aiQuestion: "✨ AI Tanong:",
-            titleLabel: "Pamagat:"
+            titleLabel: "Pamagat:",
+            aiQuestionsGenerated: "Gawa na ang mga tanong para sa pagninilay mula sa AI!",
+            aiQuestionsError: "Nabigong gumawa ng mga tanong. Maaaring kulang ang Gemini API Key.",
+            levelUp: "🎊 Pagbati! Naabot mo na ang Level {level}! 🎊"
         },
         scriptures: {
             oldTestament: "Lumang Tipan",
@@ -4513,7 +4749,27 @@ export const translations = {
             inviteFriendsPrompt: "Alika marafiki zako!",
             inviteLinkHint: "Gusa hapo juu ili kunakili na kushiriki na marafiki zako!",
             addNoteTooltip: "Bofya + ili kuchapisha dokezo!",
-            readStatus: "Imesomwa {count}"
+            readStatus: "Imesomwa {count}",
+            errorLoadMembers: "Imeshindwa kupakia orodha ya wanachama",
+            errorUserNotFound: "Wasifu wa mtumiaji haujapatikana",
+            errorLoadProfile: "Imeshindwa kupakia wasifu wa mtumiaji",
+            errorSendMessage: "Imeshindwa kutuma ujumbe",
+            leftGroupSuccess: "Umeondoka kwenye kikundi.",
+            errorLeaveGroup: "Imeshindwa kuondoka kwenye kikundi",
+            errorGroupNameMismatch: "Jina la kikundi halilingani.",
+            errorOnlyOwnerDelete: "Ni mmiliki wa kikundi tu anayeweza kufuta kikundi hiki.",
+            groupAlreadyDeleted: "Kikundi kimefutwa tayari.",
+            groupDeletedSuccess: "Kikundi kimefutwa kwa mafanikio.",
+            errorDeleteGroup: "Imeshindwa kufuta kikundi",
+            errorOnlyOwnerChangeName: "Ni mmiliki wa kikundi tu anayeweza kubadilisha jina la kikundi.",
+            errorOnlyOwnerWeeklyRecap: "Ni mmiliki wa kikundi tu anayeweza kutengeneza muhtasari wa wiki.",
+            generatingWeeklyRecap: "Inatengeneza muhtasari wa wiki... Hii inaweza kuchukua muda.",
+            weeklyRecapGenerated: "Muhtasari wa wiki umetengenezwa!",
+            errorWeeklyRecap: "Imeshindwa kutengeneza muhtasari wa wiki.",
+            errorEditMessage: "Imeshindwa kuhariri ujumbe",
+            errorDeleteMessage: "Imeshindwa kufuta ujumbe",
+            groupStatusUpdated: "Kikundi sasa ni {status}",
+            errorUpdateGroupStatus: "Imeshindwa kusasisha hali ya kikundi"
         },
         myNotes: {
             description: "Mkusanyiko wa Maelezo",
@@ -4535,7 +4791,10 @@ export const translations = {
             noNotesForRecap: "Hakuna maelezo yaliyopatikana kwa wiki hii.",
             recapError: "Imeshindwa kutengeneza muhtasari.",
             weeklyReflectionCall: "Je, ungependa kutafakari wiki yako?",
-            sharedActivity: "Shughuli Iliyoshirikiwa"
+            sharedActivity: "Shughuli Iliyoshirikiwa",
+            noteDeletedSuccess: "Dokezo limefutwa kwa mafanikio",
+            noteDeletedError: "Imeshindwa kufuta dokezo",
+            letterSaveError: "Imeshindwa kuhifadhi barua kwenye Sanduku la Barua."
         },
         recapModal: {
             title: "Barua Yako ya Wiki",
@@ -4614,7 +4873,10 @@ export const translations = {
             relationshipScriptures: "✨ Mahusiano",
             joyScriptures: "✨ Furaha",
             aiQuestion: "✨ Swali la AI:",
-            titleLabel: "Kichwa:"
+            titleLabel: "Kichwa:",
+            aiQuestionsGenerated: "Maswali ya kutafakari ya AI yametengenezwa!",
+            aiQuestionsError: "Imeshindwa kutengeneza maswali. Huenda Gemini API Key imekosekana.",
+            levelUp: "🎊 Hongera! Umefikia Kiwango cha {level}! 🎊"
         },
         scriptures: {
             oldTestament: "Agano la Kale",

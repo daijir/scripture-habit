@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import * as Sentry from "@sentry/react";
 import axios from 'axios';
 import { Capacitor } from '@capacitor/core';
 import { db } from '../../firebase';
@@ -52,8 +53,11 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
       }
     }, (err) => {
       console.error("Error listening to user doc in MyNotes:", err);
-      if (err.code === 'resource-exhausted' || err.message.toLowerCase().includes('quota exceeded')) {
+      const isQuota = err.code === 'resource-exhausted' || err.message.toLowerCase().includes('quota exceeded');
+      if (isQuota) {
         toast.error(t('systemErrors.quotaExceededMessage'), { toastId: 'quota-error' });
+      } else {
+        Sentry.captureException(err);
       }
     });
 
@@ -72,8 +76,11 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
       setLoading(false);
     }, (error) => {
       console.error("Error fetching notes:", error);
-      if (error.code === 'resource-exhausted' || error.message.toLowerCase().includes('quota exceeded')) {
+      const isQuota = error.code === 'resource-exhausted' || error.message.toLowerCase().includes('quota exceeded');
+      if (isQuota) {
         toast.error(t('systemErrors.quotaExceededMessage'), { toastId: 'quota-error' });
+      } else {
+        Sentry.captureException(error);
       }
       setLoading(false);
     });
@@ -164,7 +171,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
       setIsLetterBoxOpen(true); // Open the box to show the new item
     } catch (error) {
       console.error("Error saving to letter box:", error);
-      toast.error("Failed to save letter.");
+      toast.error(t('myNotes.letterSaveError') || "Failed to save letter.");
     }
   };
 
@@ -200,13 +207,13 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
         totalNotes: increment(-1)
       });
 
-      toast.success("Note deleted successfully");
+      toast.success(t('myNotes.noteDeletedSuccess') || "Note deleted successfully");
       setIsDeleteModalOpen(false);
       setIsEditModalOpen(false);
       setSelectedNote(null);
     } catch (error) {
       console.error("Error deleting note:", error);
-      toast.error("Failed to delete note");
+      toast.error(t('myNotes.noteDeletedError') || "Failed to delete note");
     }
   };
 

@@ -4,6 +4,7 @@ import { getFirestore, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { app, auth } from '../firebase';
 import './GroupCard.css';
 import { useLanguage } from '../Context/LanguageContext';
+import { toast } from 'react-toastify';
 
 type Props = {
   group: { id: string; name: string; description?: string; members?: string[]; lastMessageAt?: any; messageCount?: number };
@@ -64,7 +65,7 @@ export default function GroupCard({ group, currentUser, onJoin, onOpen }: Props)
 
   const handleJoin = async () => {
     if (!currentUser) {
-      alert(t('groupCard.signInFirst'));
+      toast.info(t('groupCard.signInFirst'));
       return;
     }
     if (isMember) return;
@@ -96,7 +97,7 @@ export default function GroupCard({ group, currentUser, onJoin, onOpen }: Props)
       }
     } catch (err) {
       console.error('Join failed', err);
-      alert(t('groupCard.unableToJoin'));
+      toast.error(t('groupCard.unableToJoin'));
     } finally {
       setJoining(false);
     }
