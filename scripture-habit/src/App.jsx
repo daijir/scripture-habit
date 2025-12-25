@@ -16,6 +16,8 @@ import Welcome from './Components/Welcome/Welcome';
 import { LanguageProvider } from './Context/LanguageContext.jsx';
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
 import InviteRedirect from './Components/InviteRedirect/InviteRedirect';
+import Maintenance from './Components/Maintenance/Maintenance';
+import { MAINTENANCE_MODE } from './config';
 
 
 const App = () => {
@@ -23,6 +25,14 @@ const App = () => {
   useEffect(() => {
 
   }, []);
+
+  if (MAINTENANCE_MODE) {
+    return (
+      <LanguageProvider>
+        <Maintenance />
+      </LanguageProvider>
+    );
+  }
 
   return (
     <LanguageProvider>

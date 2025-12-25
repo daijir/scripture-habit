@@ -562,7 +562,67 @@ const Dashboard = () => {
   }
 
   if (error) {
-    return <div className='App Dashboard' style={{ color: 'red' }}>Error: {error}</div>;
+    const isQuotaError = error.toLowerCase().includes('quota exceeded') || error.toLowerCase().includes('resource-exhausted');
+
+    if (isQuotaError) {
+      return (
+        <div className='App Dashboard' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <div className='AppGlass' style={{
+            padding: '2rem',
+            textAlign: 'center',
+            maxWidth: '500px',
+            width: '90%',
+            background: 'rgba(255, 255, 255, 0.7)',
+            backdropFilter: 'blur(15px)',
+            borderRadius: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.4)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.5rem',
+            animation: 'fadeIn 0.5s ease-out'
+          }}>
+            <div style={{ fontSize: '3rem' }}>🛠️</div>
+            <h2 style={{ color: '#2d3748', margin: 0, fontSize: '1.5rem', fontWeight: '800' }}>
+              {t('systemErrors.quotaExceededTitle')}
+            </h2>
+            <p style={{ color: '#4a5568', margin: 0, lineHeight: '1.6', fontSize: '1rem' }}>
+              {t('systemErrors.quotaExceededMessage')}
+            </p>
+            <div style={{
+              marginTop: '1rem',
+              padding: '1rem',
+              background: 'rgba(107, 70, 193, 0.1)',
+              borderRadius: '12px',
+              fontSize: '0.9rem',
+              color: '#6b46c1',
+              fontWeight: '600'
+            }}>
+              Expected Reset: 17:00 JST / 8:00 AM UTC
+            </div>
+            <button
+              onClick={() => window.location.reload()}
+              style={{
+                marginTop: '1rem',
+                padding: '0.8rem 1.5rem',
+                background: 'linear-gradient(135deg, #6b46c1 0%, #4a90e2 100%)',
+                color: 'white',
+                border: 'none',
+                borderRadius: '12px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                transition: 'transform 0.2s',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return <div className='App Dashboard' style={{ color: 'red', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Error: {error}</div>;
   }
 
   if (!user) {

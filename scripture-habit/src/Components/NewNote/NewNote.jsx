@@ -877,7 +877,11 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
         } catch (e) {
             console.error("Error saving note:", e);
-            setError(t('newNote.errorSave'));
+            if (e.code === 'resource-exhausted' || (e.message && e.message.toLowerCase().includes('quota exceeded'))) {
+                setError(t('systemErrors.quotaExceededMessage'));
+            } else {
+                setError(t('newNote.errorSave'));
+            }
             setLoading(false);
         }
     };

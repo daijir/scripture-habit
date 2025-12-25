@@ -480,6 +480,12 @@ export const translations = {
                 messenger: "Tap the ellipsis (...) and select 'Open in external browser'.",
                 whatsapp: "Copy the link and paste it into Chrome or Safari."
             }
+        },
+        systemErrors: {
+            quotaExceededTitle: "System Maintenance (Quota Exceeded)",
+            quotaExceededMessage: "We are currently experiencing high traffic and have reached our database limit. The system is expected to reset and be fully functional by 5:00 PM JST. We apologize for the inconvenience.",
+            underMaintenanceTitle: "System Maintenance",
+            underMaintenanceMessage: "The application is currently undergoing maintenance to provide a better experience. We'll be back online shortly. Thank you for your patience."
         }
     },
     ja: {
@@ -969,6 +975,12 @@ export const translations = {
                 messenger: "右上のメニュー（⋯）から「外部ブラウザで開く」をタップしてください。",
                 whatsapp: "URLをコピーして、ChromeやSafariに貼り付けてください。"
             }
+        },
+        systemErrors: {
+            quotaExceededTitle: "システムメンテナンス中（アクセス制限）",
+            quotaExceededMessage: "現在、想定以上のアクセスによりデータベースの利用制限に達しています。日本時間 17:00 に自動的にリセットされ、復旧する見込みです。ご不便をおかけして申し訳ありません。",
+            underMaintenanceTitle: "システムメンテナンス中",
+            underMaintenanceMessage: "ただいま、より良いサービス提供のためのメンテナンスを行っております。終了まで今しばらくお待ちください。ご不便をおかけして申し訳ありません。"
         }
     },
     pt: {
@@ -1455,6 +1467,12 @@ export const translations = {
                 messenger: "Toque nas reticências (...) e selecione 'Abrir no navegador externo'.",
                 whatsapp: "Copie o link e cole-o no Chrome ou Safari."
             }
+        },
+        systemErrors: {
+            quotaExceededTitle: "Manutenção do Sistema (Cota Excedida)",
+            quotaExceededMessage: "Estamos enfrentando um alto tráfego no momento e atingimos o limite do nosso banco de dados. O sistema deverá ser reiniciado e estar totalmente funcional até as 17:00 JST (Horário do Japão). Pedimos desculpas pelo transtorno.",
+            underMaintenanceTitle: "Manutenção do Sistema",
+            underMaintenanceMessage: "O aplicativo está passando por manutenção para proporcionar uma experiência melhor. Voltaremos em breve. Obrigado pela sua paciência."
         }
     },
     zho: {
@@ -1911,6 +1929,12 @@ export const translations = {
                 messenger: "點擊省略號 (...) 並選擇「在外部瀏覽器中開啟」。",
                 whatsapp: "複製連結並將其貼到 Chrome 或 Safari 中。"
             }
+        },
+        systemErrors: {
+            quotaExceededTitle: "系統維護中（超出配額）",
+            quotaExceededMessage: "目前由於訪問量超出預期，已達到資料庫使用限制。預計將於日本時間 17:00 自動重置並恢復正常運作。對您造成的不便我們深表歉意。",
+            underMaintenanceTitle: "系統維護中",
+            underMaintenanceMessage: "應用程序目前正在進行維護，以提供更好的體驗。我們很快就會回來。感謝您的耐心配合。"
         }
     },
     es: {
@@ -2368,6 +2392,12 @@ export const translations = {
                 messenger: "Toca los puntos suspensivos (...) y selecciona 'Abrir en navegador externo'.",
                 whatsapp: "Copia el enlace y pégalo en Chrome o Safari."
             }
+        },
+        systemErrors: {
+            quotaExceededTitle: "Mantenimiento del Sistema (Cuota Excedida)",
+            quotaExceededMessage: "Actualmente estamos experimentando un alto tráfico y hemos alcanzado nuestro límite de base de datos. Se espera que el sistema se reinicie y esté plenamente operativo a las 5:00 PM JST. Lamentamos las molestias.",
+            underMaintenanceTitle: "Mantenimiento del Sistema",
+            underMaintenanceMessage: "La aplicación está en mantenimiento para ofrecer una mejor experiencia. Volveremos pronto. Gracias por su paciencia."
         }
     },
     vi: {
@@ -2823,6 +2853,12 @@ export const translations = {
                 messenger: "Nhấn vào dấu ba chấm (...) và chọn 'Mở trong trình duyệt bên ngoài'.",
                 whatsapp: "Sao chép liên kết và dán vào Chrome hoặc Safari."
             }
+        },
+        systemErrors: {
+            quotaExceededTitle: "Bảo trì hệ thống (Hết hạn mức)",
+            quotaExceededMessage: "Chúng tôi hiện đang gặp lưu lượng truy cập cao và đã đạt đến giới hạn cơ sở dữ liệu. Hệ thống dự kiến sẽ được thiết lập lại và hoạt động đầy đủ vào lúc 5:00 chiều JST (Giờ Nhật Bản). Chúng tôi xin lỗi vì sự bất tiện này.",
+            underMaintenanceTitle: "Bảo trì hệ thống",
+            underMaintenanceMessage: "Ứng dụng hiện đang được bảo trì để cải thiện trải nghiệm của bạn. Chúng tôi sẽ sớm quay lại. Cảm ơn sự kiên nhẫn của bạn."
         }
     },
     th: {
@@ -3304,6 +3340,12 @@ export const translations = {
                 messenger: "แตะจุดไข่ปลา (...) แล้วเลือก 'เปิดในเบราว์เซอร์ภายนอก'",
                 whatsapp: "คัดลอกลิงก์แล้ววางใน Chrome หรือ Safari"
             }
+        },
+        systemErrors: {
+            quotaExceededTitle: "อยู่ระหว่างการบำรุงรักษาระบบ (เกินโควต้า)",
+            quotaExceededMessage: "ขณะนี้เรากำลังประสบกับปริมาณการใช้งานที่สูงและถึงขีดจำกัดของฐานข้อมูลแล้ว คาดว่าระบบจะรีเซ็ตและใช้งานได้ตามปกติภายในเวลา 17:00 น. JST (เวลาญี่ปุ่น) ขออภัยในความไม่สะดวก",
+            underMaintenanceTitle: "อยู่ระหว่างการบำรุงรักษาระบบ",
+            underMaintenanceMessage: "แอปพลิเคชันกำลังอยู่ระหว่างการบำรุงรักษาเพื่อเพิ่มประสิทธิภาพการใช้งาน เราจะกลับมาให้บริการในเร็วๆ นี้ ขอบคุณที่รอคอย"
         }
     },
     ko: {
@@ -3785,6 +3827,10 @@ export const translations = {
                 messenger: "줄임표(...)를 누르고 '외부 브라우저에서 열기'를 선택하세요.",
                 whatsapp: "링크를 복사하여 Chrome 또는 Safari에 붙여넣으세요."
             }
+        },
+        systemErrors: {
+            quotaExceededTitle: "시스템 점검 중 (할당량 초과)",
+            quotaExceededMessage: "현재 예상보다 많은 접속으로 인해 데이터베이스 이용 한도에 도달했습니다. 일본 시간 오후 5:00(17:00 JST)에 자동으로 리셋되어 복구될 예정입니다. 이용에 불편을 드려 죄송합니다."
         }
     },
     tl: {
@@ -4266,6 +4312,12 @@ export const translations = {
                 messenger: "I-tap ang ellipsis (...) at piliin ang 'Buksan sa external browser'.",
                 whatsapp: "Kopyahin ang link at i-paste ito sa Chrome o Safari"
             }
+        },
+        systemErrors: {
+            quotaExceededTitle: "Maintenance ng System (Quota Exceeded)",
+            quotaExceededMessage: "Kasalukuyan kaming nakakaranas ng mataas na trapiko at naabot na ang limitasyon ng aming database. Inaasahang mag-reset ang system at magiging ganap na gumagana sa ganap na 5:00 PM JST. Humihingi kami ng paumanhin sa abala.",
+            underMaintenanceTitle: "Maintenance ng System",
+            underMaintenanceMessage: "Kasalukuyang sumasailalim sa maintenance ang application upang makapagbigay ng mas magandang karanasan. Babalik kami sa lalong madaling panahon. Salamat sa inyong pasensya."
         }
     },
     sw: {
@@ -4747,6 +4799,12 @@ export const translations = {
                 messenger: "Gusa dokezo (...) na uchague 'Fungua kwenye kivinjari cha nje'.",
                 whatsapp: "Nakili kiungo na ukibandike kwenye Chrome au Safari."
             }
+        },
+        systemErrors: {
+            quotaExceededTitle: "Matengenezo ya Mfumo (Kiwango Kimezidi)",
+            quotaExceededMessage: "Kwa sasa tunapata trafiki kubwa na tumefikia kikomo cha hifadhidata yetu. Mfumo unatarajiwa kuwekwa upya na kufanya kazi kikamilifu ifikapo saa 11:00 jioni JST (Saa za Japani). Tunatabaika kwa usumbufu huu.",
+            underMaintenanceTitle: "Matengenezo ya Mfumo",
+            underMaintenanceMessage: "Programu kwa sasa inafanyiwa matengenezo ili kutoa uzoefu bora zaidi. Tutarejea hivi punde. Asante kwa subira yako."
         }
     },
 };

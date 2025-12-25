@@ -163,6 +163,13 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         // Include groupId with the data so we can validate it later
         setGroupData({ ...docSnap.data(), _groupId: groupId });
       }
+    }, (err) => {
+      console.error("Error listening to group:", err);
+      if (err.code === 'resource-exhausted' || err.message.toLowerCase().includes('quota exceeded')) {
+        setError(t('systemErrors.quotaExceededMessage'));
+      } else {
+        setError(err.message);
+      }
     });
 
     const initMessages = async () => {
@@ -258,6 +265,12 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                   return [...prev, ...cleanIncoming];
                 });
               }
+            }, (err) => {
+              console.error("Error listening to new messages:", err);
+              if (err.code === 'resource-exhausted' || err.message.toLowerCase().includes('quota exceeded')) {
+                setError(t('systemErrors.quotaExceededMessage'));
+              }
+              // else we don't necessarily want to break the whole chat UI for a sub-listener error unless it's critical
             });
           }
         } else {
@@ -291,6 +304,11 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
               }
             });
             setLoading(false);
+          }, (err) => {
+            console.error("Error listening to all messages:", err);
+            if (err.code === 'resource-exhausted' || err.message.toLowerCase().includes('quota exceeded')) {
+              setError(t('systemErrors.quotaExceededMessage'));
+            }
           });
         }
 

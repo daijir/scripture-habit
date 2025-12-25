@@ -138,6 +138,8 @@ export default function LoginForm() {
         error.code === 'auth/user-not-found' ||
         error.code === 'auth/wrong-password') {
         setError(t('login.errorInvalidCredential'));
+      } else if (error.code === 'resource-exhausted' || error.message.toLowerCase().includes('quota exceeded')) {
+        setError(t('systemErrors.quotaExceededMessage'));
       } else {
         setError(error.message);
       }
