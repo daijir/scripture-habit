@@ -1434,55 +1434,8 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     return Math.min(100, Math.max(0, score));
   }, [messages, groupData, groupId]);
 
-  // Synchronize Daily Activity Data (for Sidebar accuracy)
-  useEffect(() => {
-    if (!groupData || groupData._groupId !== groupId || !messages) return;
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    const todayTime = today.getTime();
-    const todayStr = today.toDateString();
-
-    const uniquePosters = new Set();
-    messages.forEach(msg => {
-      let msgTime = 0;
-      if (msg.createdAt?.toDate) {
-        msgTime = msg.createdAt.toDate().getTime();
-      } else if (msg.createdAt?.seconds) {
-        msgTime = msg.createdAt.seconds * 1000;
-      }
-      if (msgTime >= todayTime && msg.senderId !== 'system' && !msg.isSystemMessage && msg.isNote) {
-        uniquePosters.add(msg.senderId);
-      }
-    });
-
-    // Check against Firestore data
-    const currentActivity = groupData.dailyActivity || {};
-    const recordedMembers = (currentActivity.date === todayStr && currentActivity.activeMembers)
-      ? new Set(currentActivity.activeMembers)
-      : new Set();
-
-    // Find missing members (present in local calculation but missing in Firestore)
-    const missingMembers = [...uniquePosters].filter(uid => !recordedMembers.has(uid));
-
-    if (missingMembers.length > 0) {
-      const groupRef = doc(db, 'groups', groupId);
-      const updatePayload = {};
-
-      if (currentActivity.date !== todayStr) {
-        // New day (or overwrite stale data)
-        updatePayload.dailyActivity = {
-          date: todayStr,
-          activeMembers: Array.from(uniquePosters)
-        };
-      } else {
-        // Add only missing members
-        updatePayload['dailyActivity.activeMembers'] = arrayUnion(...missingMembers);
-      }
-
-      updateDoc(groupRef, updatePayload).catch(err => console.error("Error syncing daily activity:", err));
-    }
-  }, [messages, groupData, groupId]);
+  // Synchronize Daily Activity Data removed because it caused infinite loops and quota issues.
+  // Daily activity is now updated explicitly when sending messages/notes.
 
   // Track previous percentage to trigger effect only on change
   useEffect(() => {
