@@ -388,7 +388,8 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
 
     // Cache values at effect start to prevent stale closures
     const cachedGroupId = groupId;
-    const cachedMessageCount = groupData?.messageCount || messages.length; // Use group total count to ensure unread badge clears even if count is desynced
+    // Use the maximum of the recorded count and the actual message list length to handle race conditions
+    const cachedMessageCount = Math.max(groupData?.messageCount || 0, messages.length);
     let cancelled = false;
 
     const updateReadStatus = async () => {
@@ -439,7 +440,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     return () => {
       cancelled = true;
     };
-  }, [groupId, userData?.uid, isActive, initialScrollDone, messages.length, userReadCount, groupData]);
+  }, [groupId, userData?.uid, isActive, initialScrollDone, messages.length, userReadCount, groupData?.messageCount]);
 
   // Track previous message count to only auto-scroll on new messages, not updates
   const prevMessageCountRef = useRef(0);
