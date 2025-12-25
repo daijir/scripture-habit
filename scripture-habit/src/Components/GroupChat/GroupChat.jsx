@@ -398,9 +398,8 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       }
 
       // Optimization: Only update if the read count has actually increased
-      // or if significant time has passed (though message count is the main driver)
-      // Optimization: Only update if the read count has actually increased
       // or if we haven't recorded a read timestamp in the group doc yet.
+      // We also check if the last recorded timestamp is older than the last message.
       const hasReadTimestamp = groupData?.memberLastReadAt && groupData.memberLastReadAt[userData.uid];
       if (userReadCount !== null && cachedMessageCount <= userReadCount && hasReadTimestamp) {
         return;
@@ -409,16 +408,22 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
       const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', cachedGroupId);
 
       try {
-        await setDoc(userGroupStateRef, {
+        // Prepare updates
+        const updateTasks = [];
+
+        // 1. Update personal state
+        updateTasks.push(setDoc(userGroupStateRef, {
           readMessageCount: cachedMessageCount,
           lastReadAt: serverTimestamp()
-        }, { merge: true });
+        }, { merge: true }));
 
-        // Also update group document with member's last read time for read-indicator
+        // 2. Update group document with member's last read time for read-indicator
         const groupRef = doc(db, 'groups', cachedGroupId);
-        await updateDoc(groupRef, {
+        updateTasks.push(updateDoc(groupRef, {
           [`memberLastReadAt.${userData.uid}`]: serverTimestamp()
-        });
+        }));
+
+        await Promise.all(updateTasks);
 
         // Update local state to prevent immediate re-run
         setUserReadCount(cachedMessageCount);
@@ -434,7 +439,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     return () => {
       cancelled = true;
     };
-  }, [groupId, userData?.uid, isActive, initialScrollDone, messages.length, userReadCount]);
+  }, [groupId, userData?.uid, isActive, initialScrollDone, messages.length, userReadCount, groupData]);
 
   // Track previous message count to only auto-scroll on new messages, not updates
   const prevMessageCountRef = useRef(0);
@@ -785,13 +790,24 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
 
       await updateDoc(groupRef, updatePayload);
 
-      // CRITICAL: Immediately update user's own readMessageCount so they don't see a "1" notification for their own message
+      // CRITICAL: Immediately update user's own readMessageCount and group-level read time
+      // This ensures the sender doesn't see a notification for their own message
+      // AND ensures others see that the sender is active/read up to this point.
       const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', groupId);
-      const newReadCount = (userReadCount || 0) + 1;
-      await setDoc(userGroupStateRef, {
+      const newReadCount = (groupData?.messageCount || messages.length) + 1;
+
+      const readUpdates = [];
+      readUpdates.push(setDoc(userGroupStateRef, {
         readMessageCount: newReadCount,
         lastReadAt: serverTimestamp()
-      }, { merge: true });
+      }, { merge: true }));
+
+      // Also update group document with member's last read time
+      readUpdates.push(updateDoc(groupRef, {
+        [`memberLastReadAt.${userData.uid}`]: serverTimestamp()
+      }));
+
+      await Promise.all(readUpdates);
       setUserReadCount(newReadCount);
 
       setNewMessage('');
