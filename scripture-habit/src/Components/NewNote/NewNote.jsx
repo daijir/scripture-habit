@@ -752,6 +752,9 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                             messageCount: increment(1),
                             noteCount: increment(1), // Increment note count
                             lastMessageAt: serverTimestamp(),
+                            lastNoteAt: serverTimestamp(),
+                            lastNoteByNickname: userData.nickname,
+                            lastNoteByUid: userData.uid,
                             [`memberLastActive.${userData.uid}`]: serverTimestamp()
                         };
 
