@@ -2314,29 +2314,9 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                         </div>
                       </div>
                       {msg.senderId !== userData?.uid && (
-                        <div className="message-status-column" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '2px' }}>
-                          {(() => {
-                            if (!groupData?.memberLastReadAt || !msg.createdAt) return null;
-                            const msgTime = msg.createdAt.toMillis ? msg.createdAt.toMillis() : (msg.createdAt.seconds * 1000);
-                            let readCount = 0;
-                            Object.keys(groupData.memberLastReadAt).forEach(uid => {
-                              if (uid === msg.senderId) return;
-                              const readAt = groupData.memberLastReadAt[uid];
-                              if (!readAt) return;
-                              const readTime = readAt.toMillis ? readAt.toMillis() : (readAt.seconds * 1000);
-                              if (readTime >= msgTime) readCount++;
-                            });
-                            if (readCount === 0) return null;
-                            return (
-                              <span className="read-status" style={{ fontSize: '0.65rem', color: '#4A5568', fontWeight: 'bold' }}>
-                                {t('groupChat.readStatus', { count: readCount })}
-                              </span>
-                            );
-                          })()}
-                          <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', whiteSpace: 'nowrap' }}>
-                            {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
-                          </span>
-                        </div>
+                        <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', marginBottom: '2px', whiteSpace: 'nowrap' }}>
+                          {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+                        </span>
                       )}
                     </div>
                     {/* Reactions display */}
