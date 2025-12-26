@@ -17,7 +17,7 @@ const isGCUrl = (str) => {
     return /^\d{4}\/\d{2}\/.+$/.test(str);
 };
 
-const GCNoteRenderer = ({ parts, url, language, t, isSent, linkColor }) => {
+const GCNoteRenderer = ({ parts, url, language, t, isSent, linkColor, translatedText }) => {
     const { data, loading } = useGCMetadata(url, language);
 
     const content = useMemo(() => {
@@ -64,7 +64,7 @@ ${headerTrans}
 **${talkLabel}:** ${displayContent}
 
 **${commentLabel}:**
-${commentWithLinks}
+${commentWithLinks}${translatedText ? `\n\n---\n✨ **AI ${t('groupChat.translated')}:**\n${translatedText}` : ''}
         `.trim();
 
     }, [data, loading, parts, url, language, t]);
@@ -123,7 +123,7 @@ const extractUrls = (text) => {
     });
 };
 
-const NoteDisplay = ({ text, isSent, linkColor }) => {
+const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
     const { language, t } = useLanguage();
 
     // 1. Parse content to see if it matches the structure
@@ -163,6 +163,14 @@ const NoteDisplay = ({ text, isSent, linkColor }) => {
                 >
                     {processedText}
                 </ReactMarkdown>
+                {translatedText && (
+                    <div style={{ marginTop: '0.5rem', borderTop: '1px dashed #ccc', paddingTop: '0.5rem' }}>
+                        <div style={{ fontSize: '0.75rem', opacity: 0.8, marginBottom: '0.3rem' }}>
+                            <span>✨ AI {t('groupChat.translated')}</span>
+                        </div>
+                        <ReactMarkdown>{translatedText}</ReactMarkdown>
+                    </div>
+                )}
                 {simpleUrls.length > 0 && (
                     <div className="note-link-previews" style={{ marginTop: '0.5rem' }}>
                         {simpleUrls.map((u, idx) => (
@@ -194,7 +202,7 @@ const NoteDisplay = ({ text, isSent, linkColor }) => {
                 chapterValueOriginal: chapterValue,
                 comment: body.substring(chapterMatch.index + chapterMatch[0].length).trim()
             };
-            return <GCNoteRenderer parts={parts} url={chapterValue} language={language} t={t} isSent={isSent} linkColor={linkColor} />;
+            return <GCNoteRenderer parts={parts} url={chapterValue} language={language} t={t} isSent={isSent} linkColor={linkColor} translatedText={translatedText} />;
         }
     }
 
@@ -258,7 +266,7 @@ ${headerTrans}
 **${chapLabel}:** ${chapValTrans}
 
 **${commentLabel}:**
-${commentWithLinks}
+${commentWithLinks}${translatedText ? `\n\n---\n✨ **AI ${t('groupChat.translated')}:**\n${translatedText}` : ''}
     `.trim();
 
     return (

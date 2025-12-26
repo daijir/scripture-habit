@@ -350,3 +350,22 @@
   background: #e0e0e0;
   color: #111827;
 }
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.translate-btn-inline.loading {
+  animation: spin 2s linear infinite;
+}
+
+.translate-btn-inline:hover {
+  opacity: 1 !important;
+  transform: scale(1.1);
+}

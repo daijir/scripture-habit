@@ -3,6 +3,7 @@ const path = require('path');
 const admin = require('firebase-admin');
 const cors = require('cors');
 const axios = require('axios'); // Add axios
+const crypto = require('crypto');
 
 // Load .env from project root (one level up from backend/ directory)
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
@@ -33,9 +34,83 @@ if (!admin.apps.length) {
 
 const db = admin.firestore();
 
+
+const supportedLanguages = ['en', 'ja', 'es', 'pt', 'zh', 'zho', 'vi', 'th', 'ko', 'tl', 'sw'];
+
 // API Model Configuration
-const GEMINI_MODEL = 'gemini-2.5-flash-lite';
+// Using Gemma 3-12b - Higher rate limits (14.4K RPD)
+const GEMINI_MODEL = 'gemma-3-12b-it';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+
+app.post('/translate', async (req, res) => {
+  const { text, targetLanguage } = req.body;
+
+  if (!text || !targetLanguage) {
+    return res.status(400).json({ error: 'Text and targetLanguage are required.' });
+  }
+
+  if (!supportedLanguages.includes(targetLanguage)) {
+    return res.status(400).json({ error: 'Unsupported language.' });
+  }
+
+  if (!process.env.GEMINI_API_KEY) {
+    return res.status(500).json({ error: 'Gemini API Key is not configured.' });
+  }
+
+  try {
+    // Generate a cache key
+    const cacheKey = crypto.createHash('md5').update(`${text}_${targetLanguage}`).digest('hex');
+    const cacheRef = db.collection('translation_cache').doc(cacheKey);
+
+    // 1. Check Cache
+    const cacheDoc = await cacheRef.get();
+    if (cacheDoc.exists) {
+      const cachedData = cacheDoc.data();
+      console.log('Serving translation from cache');
+      return res.json({ translatedText: cachedData.translatedText });
+    }
+
+    const prompt = `You are a professional translator for "Scripture Habit", a scripture study app. 
+Translate the following scripture study note or chat message into the target language: ${targetLanguage}.
+If the text is already in ${targetLanguage}, return it as is.
+Keep the original meaning and tone. If there are scripture references, try to use the official translation if possible.
+Output ONLY the translated text, no acknowledgments or explanations.
+
+Text:
+${text}`;
+
+    const apiUrl = `${GEMINI_API_URL}?key=${process.env.GEMINI_API_KEY}`;
+
+    const response = await axios.post(apiUrl, {
+      contents: [{
+        parts: [{
+          text: prompt
+        }]
+      }]
+    });
+
+    const translatedText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!translatedText) {
+      throw new Error('No content generated from Gemini.');
+    }
+
+    const resultText = translatedText.trim();
+
+    // 2. Save to Cache (asynchronously)
+    cacheRef.set({
+      originalText: text,
+      translatedText: resultText,
+      targetLanguage: targetLanguage,
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    }).catch(err => console.error('Error saving to translation cache:', err));
+
+    res.json({ translatedText: resultText });
+  } catch (error) {
+    console.error('Error in AI translation:', error.message);
+    res.status(500).json({ error: 'Failed to translate' });
+  }
+});
 
 app.post('/verify-login', async (req, res) => {
   const { token } = req.body;

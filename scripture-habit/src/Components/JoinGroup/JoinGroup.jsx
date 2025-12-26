@@ -24,7 +24,71 @@ export default function JoinGroup() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [selectedMemberForProfile, setSelectedMemberForProfile] = useState(null);
+  const [translatedNames, setTranslatedNames] = useState({});
+  const [translatedDescs, setTranslatedDescs] = useState({});
+  const [translatingIds, setTranslatingIds] = useState(new Set());
   const navigate = useNavigate();
+
+  const handleTranslateGroup = async (groupId, name, description) => {
+    if (translatingIds.has(groupId)) return;
+
+    // Toggle if already translated
+    if (translatedNames[groupId] || translatedDescs[groupId]) {
+      setTranslatedNames(prev => {
+        const next = { ...prev };
+        delete next[groupId];
+        return next;
+      });
+      setTranslatedDescs(prev => {
+        const next = { ...prev };
+        delete next[groupId];
+        return next;
+      });
+      return;
+    }
+
+    setTranslatingIds(prev => {
+      const next = new Set(prev);
+      next.add(groupId);
+      return next;
+    });
+
+    try {
+      const idToken = await (user?.getIdToken() || Promise.resolve(null));
+      const headers = { 'Content-Type': 'application/json' };
+      if (idToken) headers['Authorization'] = `Bearer ${idToken}`;
+
+      const translate = async (text) => {
+        if (!text) return null;
+        const res = await fetch(`${API_BASE}/api/translate`, {
+          method: 'POST',
+          headers,
+          body: JSON.stringify({ text, targetLanguage: language })
+        });
+        if (!res.ok) throw new Error('Translation failed');
+        const data = await res.json();
+        return data.translatedText;
+      };
+
+      const [newName, newDesc] = await Promise.all([
+        translate(name),
+        description ? translate(description) : Promise.resolve(null)
+      ]);
+
+      if (newName) setTranslatedNames(prev => ({ ...prev, [groupId]: newName }));
+      if (newDesc) setTranslatedDescs(prev => ({ ...prev, [groupId]: newDesc }));
+
+    } catch (error) {
+      console.error("Error translating group info:", error);
+      toast.error(t('groupChat.errorTranslation') || "Failed to translate");
+    } finally {
+      setTranslatingIds(prev => {
+        const next = new Set(prev);
+        next.delete(groupId);
+        return next;
+      });
+    }
+  };
 
   useEffect(() => {
     let userDocUnsubscribe = () => { };
@@ -195,6 +259,12 @@ export default function JoinGroup() {
     navigate('/dashboard', { state: { initialGroupId: groupId, showWelcome: false, initialView: 2 } });
   };
 
+  useEffect(() => {
+    if (selectedGroup && !translatedNames[selectedGroup.id] && !translatingIds.has(selectedGroup.id)) {
+      handleTranslateGroup(selectedGroup.id, selectedGroup.name, selectedGroup.description);
+    }
+  }, [selectedGroup, language]);
+
 
 
   return (
@@ -248,11 +318,30 @@ export default function JoinGroup() {
       {showConfirmModal && selectedGroup && (
         <div className="group-modal-overlay" onClick={() => setShowConfirmModal(false)}>
           <div className="group-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '400px', textAlign: 'center' }}>
-            <h3>{selectedGroup.name}</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px solid #edf2f7', paddingBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center' }}>
+                <h3 style={{ margin: 0 }}>
+                  {translatingIds.has(selectedGroup.id) ? '...' : (translatedNames[selectedGroup.id] || selectedGroup.name)}
+                </h3>
+              </div>
+              {translatedNames[selectedGroup.id] && translatedNames[selectedGroup.id] !== selectedGroup.name && (
+                <p style={{ fontSize: '0.75rem', color: '#a0aec0', marginTop: '4px' }}>
+                  {t('groupChat.original')}: {selectedGroup.name}
+                </p>
+              )}
+            </div>
+
             {selectedGroup.description && (
-              <p style={{ color: '#718096', marginBottom: '0.5rem', fontStyle: 'italic' }}>
-                {selectedGroup.description}
-              </p>
+              <div style={{ marginBottom: '1rem' }}>
+                <p style={{ color: '#4A5568', marginBottom: '0.5rem', fontStyle: 'italic', whiteSpace: 'pre-wrap' }}>
+                  {translatingIds.has(selectedGroup.id) ? '...' : (translatedDescs[selectedGroup.id] || selectedGroup.description)}
+                </p>
+                {translatedDescs[selectedGroup.id] && translatedDescs[selectedGroup.id] !== selectedGroup.description && (
+                  <p style={{ fontSize: '0.75rem', color: '#a0aec0' }}>
+                    {t('groupChat.original')}: {selectedGroup.description}
+                  </p>
+                )}
+              </div>
             )}
 
             {selectedGroup.createdAt && (

@@ -1,4 +1,5 @@
 import express from 'express';
+import crypto from 'crypto';
 import admin from 'firebase-admin';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -30,7 +31,7 @@ const deleteGroupSchema = z.object({
     groupId: z.string().min(1)
 });
 
-const supportedLanguages = ['en', 'ja', 'es', 'pt', 'zh', 'vi', 'th', 'ko', 'tl', 'sw'];
+const supportedLanguages = ['en', 'ja', 'es', 'pt', 'zh', 'zho', 'vi', 'th', 'ko', 'tl', 'sw'];
 
 const ponderQuestionsSchema = z.object({
     scripture: z.string().min(1).max(100),
@@ -50,6 +51,11 @@ const weeklyRecapSchema = z.object({
 const personalRecapSchema = z.object({
     uid: z.string().min(1),
     language: z.enum(supportedLanguages).optional()
+});
+
+const translateSchema = z.object({
+    text: z.string().min(1).max(5000),
+    targetLanguage: z.enum(supportedLanguages)
 });
 
 // Initialize Firebase Admin SDK
@@ -606,8 +612,6 @@ app.get('/api/fetch-gc-metadata', async (req, res) => {
             speaker = $('p.author-name').first().text().trim();
         } else if ($('a.author-name').length) {
             speaker = $('a.author-name').first().text().trim();
-        } else if ($('.speaker-name').length) {
-            speaker = $('.speaker-name').text().trim();
         }
 
         res.json({ title, speaker });
@@ -628,9 +632,6 @@ app.post('/api/generate-ponder-questions', aiLimiter, async (req, res) => {
     if (!process.env.GEMINI_API_KEY) {
         return res.status(500).json({ error: 'Gemini API Key is not configured.' });
     }
-
-    // Scripture/Chapter checks already handled by Zod schema
-
 
     try {
         const langCode = language || 'en';
@@ -688,7 +689,7 @@ Based on the principles and teachings found in "${scripture} ${chapter}", please
 Do NOT use bullet points or symbols (*, -). Output only the question text as plain text.
 However, please write questions that are easy to understand even for investigators or new members who are not comfortable reading scriptures.`;
 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
@@ -878,7 +879,7 @@ Keep it friendly and uplifting.
 Notes Content:
 ${notesText}`;
 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
@@ -1095,7 +1096,7 @@ Requirements:
 User's Notes:
 ${notesText}`;
 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
@@ -1608,6 +1609,73 @@ app.get('/api/test-inactive-check/:groupId', async (req, res) => {
     } catch (error) {
         console.error('Error in test inactive check:', error);
         res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/api/translate', aiLimiter, async (req, res) => {
+    const validation = translateSchema.safeParse(req.body);
+    if (!validation.success) {
+        return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
+    }
+    const { text, targetLanguage } = validation.data;
+
+    if (!process.env.GEMINI_API_KEY) {
+        return res.status(500).json({ error: 'Gemini API Key is not configured.' });
+    }
+
+    try {
+        const db = admin.firestore();
+        // Generate a cache key
+        const cacheKey = crypto.createHash('md5').update(`${text}_${targetLanguage}`).digest('hex');
+        const cacheRef = db.collection('translation_cache').doc(cacheKey);
+
+        // 1. Check Cache
+        const cacheDoc = await cacheRef.get();
+        if (cacheDoc.exists) {
+            const cachedData = cacheDoc.data();
+            console.log('Serving translation from cache');
+            return res.json({ translatedText: cachedData.translatedText });
+        }
+
+        const prompt = `You are a professional translator for "Scripture Habit", a scripture study app. 
+Translate the following scripture study note or chat message into the target language: ${targetLanguage}.
+If the text is already in ${targetLanguage}, return it as is.
+Keep the original meaning and tone. If there are scripture references, try to use the official translation if possible.
+Output ONLY the translated text, no acknowledgments or explanations.
+
+Text:
+${text}`;
+
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${process.env.GEMINI_API_KEY}`;
+
+        const response = await axios.post(apiUrl, {
+            contents: [{
+                parts: [{
+                    text: prompt
+                }]
+            }]
+        });
+
+        const translatedText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!translatedText) {
+            throw new Error('No content generated from Gemini.');
+        }
+
+        const resultText = translatedText.trim();
+
+        // 2. Save to Cache (asynchronously, don't block response)
+        cacheRef.set({
+            originalText: text,
+            translatedText: resultText,
+            targetLanguage: targetLanguage,
+            createdAt: admin.firestore.FieldValue.serverTimestamp()
+        }).catch(err => console.error('Error saving to translation cache:', err));
+
+        res.json({ translatedText: resultText });
+    } catch (error) {
+        console.error('Error in AI translation:', error.message);
+        res.status(500).json({ error: 'Failed to translate' });
     }
 });
 
