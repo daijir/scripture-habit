@@ -1,15 +1,11 @@
 import React, { useMemo } from 'react';
+import { detectInAppBrowser } from '../../Utils/browserDetection';
 import './BrowserWarningModal.css';
 import { UilCheckCircle, UilTimesCircle, UilInfoCircle } from '@iconscout/react-unicons';
 
 const BrowserWarningModal = ({ isOpen, onClose, onContinue, t }) => {
     const detectedApp = useMemo(() => {
-        const ua = navigator.userAgent || navigator.vendor || window.opera;
-        if (/Line\//i.test(ua)) return 'line';
-        if (/Instagram/i.test(ua)) return 'instagram';
-        if (/FBAN|FBAV/i.test(ua)) return 'messenger';
-        if (/WhatsApp/i.test(ua)) return 'whatsapp';
-        return null;
+        return detectInAppBrowser();
     }, []);
 
     if (!isOpen) return null;
