@@ -4,6 +4,7 @@ import Button from '../Button/Button';
 import Mascot from '../Mascot/Mascot';
 import { useLanguage } from '../../Context/LanguageContext';
 import BrowserWarningModal from '../BrowserWarningModal/BrowserWarningModal';
+import { isInAppBrowser } from '../../Utils/browserDetection';
 import './Welcome.css';
 
 const Welcome = () => {
@@ -13,8 +14,12 @@ const Welcome = () => {
     const [pendingPath, setPendingPath] = useState(null);
 
     const handleAuthClick = (path) => {
-        setPendingPath(path);
-        setShowWarning(true);
+        if (isInAppBrowser()) {
+            setPendingPath(path);
+            setShowWarning(true);
+        } else {
+            navigate(path);
+        }
     };
 
     const handleContinue = () => {

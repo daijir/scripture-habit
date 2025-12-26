@@ -22,6 +22,7 @@ import Maintenance from './Components/Maintenance/Maintenance';
 import { MAINTENANCE_MODE } from './config';
 import * as Sentry from "@sentry/react";
 import InstallPrompt from './Components/InstallPrompt/InstallPrompt';
+import { handleLineRedirect } from './Utils/browserDetection';
 
 const SEOManager = () => {
   const { t, language } = useLanguage();
@@ -53,6 +54,10 @@ const SEOManager = () => {
 };
 
 const App = () => {
+  useEffect(() => {
+    handleLineRedirect();
+  }, []);
+
   const [systemStatus, setSystemStatus] = useEffectSpecialState(() => {
     // Probe Firestore for status/quota
     const statusRef = doc(db, 'system', 'status');
