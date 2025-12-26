@@ -419,6 +419,49 @@
     border-bottom-left-radius: 0.2rem;
 }
 
+/* AI Translation Styles */
+.message-translation {
+    margin-top: 0.8rem;
+    padding-top: 0.5rem;
+    border-top: 1px dashed rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.message.sent .message-translation {
+    border-top: 1px dashed rgba(255, 255, 255, 0.3);
+}
+
+.translation-header {
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: var(--gray);
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.8;
+}
+
+.message.sent .translation-header {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.hover-action-btn.translating {
+    animation: spin 2s linear infinite;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 
 
 

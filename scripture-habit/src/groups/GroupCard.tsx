@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 import { getFirestore, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { app, auth } from '../firebase';
@@ -17,7 +17,59 @@ export default function GroupCard({ group, currentUser, onJoin, onOpen }: Props)
   const { t } = useLanguage();
 
   const [joining, setJoining] = useState(false);
+  const [translatedName, setTranslatedName] = useState('');
+  const [translating, setTranslating] = useState(false);
+  const { language } = useLanguage();
   const db = getFirestore(app);
+
+
+  useEffect(() => {
+    const autoTranslate = async () => {
+      if (!group.name || !language) return;
+
+      // Basic check: if name is short and likely already in target language (very rough)
+      // For now, reliance on cache is better
+      const cacheKey = `trans_name_${group.id}_${language}`;
+      const cached = sessionStorage.getItem(cacheKey);
+      if (cached) {
+        setTranslatedName(cached);
+        return;
+      }
+
+      setTranslating(true);
+      try {
+        const idToken = await auth.currentUser?.getIdToken();
+        const backend = import.meta.env.VITE_BACKEND_URL ?? '';
+        const API_BASE = backend || (window.location.hostname === 'localhost' ? '' : 'https://scripture-habit.vercel.app');
+
+        const res = await fetch(`${API_BASE}/api/translate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(idToken ? { Authorization: `Bearer ${idToken}` } : {}),
+          },
+          body: JSON.stringify({
+            text: group.name,
+            targetLanguage: language,
+          }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.translatedText && data.translatedText !== group.name) {
+            setTranslatedName(data.translatedText);
+            sessionStorage.setItem(cacheKey, data.translatedText);
+          }
+        }
+      } catch (err) {
+        console.error('Auto-translation failed', err);
+      } finally {
+        setTranslating(false);
+      }
+    };
+
+    autoTranslate();
+  }, [group.id, group.name, language]);
 
   const isMember = !!(group.members && currentUser && group.members.includes(currentUser.uid));
 
@@ -105,26 +157,29 @@ export default function GroupCard({ group, currentUser, onJoin, onOpen }: Props)
 
   return (
     <div className="group-card" role="group" aria-label={`Group ${group.name}`}>
-      <div className="group-card-header">
-        <h4 className="group-title">{group.name}</h4>
-        <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', justifyContent: 'flex-end', alignItems: 'center' }}>
-          <div
-            className="activity-badge"
-            style={{
-              backgroundColor: activity.bg,
-              color: activity.color,
-              padding: '0.3rem 0.6rem',
-              borderRadius: '12px',
-              fontSize: '0.75rem',
-              fontWeight: '600',
-              display: 'inline-flex',
-              alignItems: 'center'
-            }}
-          >
-            {activity.label}
-          </div>
-          <div className="member-badge">{group.members?.length ?? 0} {t('groupCard.members')}</div>
+      <div className="group-card-meta">
+        <div
+          className="activity-badge"
+          style={{
+            backgroundColor: activity.bg,
+            color: activity.color,
+            padding: '0.3rem 0.6rem',
+            borderRadius: '12px',
+            fontSize: '0.75rem',
+            fontWeight: '600',
+            display: 'inline-flex',
+            alignItems: 'center'
+          }}
+        >
+          {activity.label}
         </div>
+        <div className="member-badge">{group.members?.length ?? 0} {t('groupCard.members')}</div>
+      </div>
+
+      <div className="group-card-title-row">
+        <h4 className="group-title">
+          {translating ? <span className="translating-placeholder">...</span> : (translatedName || group.name)}
+        </h4>
       </div>
 
       <div className="group-actions">

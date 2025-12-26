@@ -30,3 +30,5 @@ dist-ssr
 # Ignore the service account key
 serviceAccountKey.json
 
+.vercel
+.env*.local

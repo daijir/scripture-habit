@@ -11,6 +11,7 @@ import ReactMarkdown from 'react-markdown';
 import NewNote from '../NewNote/NewNote';
 import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
 import { translateChapterField } from '../../Utils/bookNameTranslations';
+import { NOTE_HEADER_REGEX, removeNoteHeader } from '../../Utils/noteUtils';
 import LinkPreview from '../LinkPreview/LinkPreview';
 import './GroupChat.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
@@ -19,7 +20,110 @@ import confetti from 'canvas-confetti';
 import UserProfileModal from '../UserProfileModal/UserProfileModal';
 import Mascot from '../Mascot/Mascot';
 
-const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFocusChange, onBack, onGroupSelect }) => {
+const GroupMenuItem = ({ group, currentGroupId, language, onSelect, t }) => {
+  const [translatedName, setTranslatedName] = useState('');
+  const translationAttemptedRef = useRef(false);
+
+  useEffect(() => {
+    // Check if we already attempted translation for this specific combination
+    if (translationAttemptedRef.current) return;
+
+    const autoTranslate = async () => {
+      if (!group.name || !language) return;
+
+      const cacheKey = `trans_name_${group.id}_${language}`;
+      const cached = sessionStorage.getItem(cacheKey);
+
+      if (cached) {
+        setTranslatedName(cached);
+        translationAttemptedRef.current = true;
+        return;
+      }
+
+      translationAttemptedRef.current = true;
+
+      try {
+        const idToken = await auth.currentUser?.getIdToken();
+        const API_BASE = window.location.hostname === 'localhost' ? '' : 'https://scripture-habit.vercel.app';
+
+        const res = await fetch(`${API_BASE}/api/translate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(idToken ? { Authorization: `Bearer ${idToken}` } : {}),
+          },
+          body: JSON.stringify({
+            text: group.name,
+            targetLanguage: language,
+          }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.translatedText) {
+            setTranslatedName(data.translatedText);
+            sessionStorage.setItem(cacheKey, data.translatedText);
+          }
+        }
+      } catch (err) {
+        console.error('Mobile menu auto-translation failed', err);
+      }
+    };
+
+    autoTranslate();
+  }, [group.id, group.name, language]);
+
+  const getEmoji = (g) => {
+    let percentage = 0;
+    if (g && g.members && g.members.length > 0) {
+      const todayStr = new Date().toDateString();
+      if (g.dailyActivity && g.dailyActivity.date === todayStr && g.dailyActivity.activeMembers) {
+        const uniqueCount = new Set(g.dailyActivity.activeMembers).size;
+        percentage = Math.round((uniqueCount / g.members.length) * 100);
+      }
+    }
+
+    if (percentage === 100) return '☀️';
+    if (percentage >= 66) return '🌕';
+    if (percentage >= 33) return '🌠';
+    return '🌑';
+  };
+
+  const isActive = group.id === currentGroupId;
+  const displayName = translatedName || group.name;
+
+  return (
+    <div
+      className={`mobile-menu-item ${isActive ? 'active' : ''}`}
+      onClick={onSelect}
+      style={isActive ? { background: 'rgba(255, 145, 157, 0.1)', color: 'var(--pink)' } : {}}
+    >
+      <div className="menu-item-icon" style={isActive ? { color: 'var(--pink)' } : {}}>
+        <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{getEmoji(group)}</span>
+      </div>
+      <span className="menu-item-label" style={isActive ? { fontWeight: 'bold' } : {}}>
+        {displayName} {group.members && <span style={{ fontSize: '0.85em', color: isActive ? 'var(--pink)' : 'var(--gray)', opacity: 0.8, fontWeight: 'normal', marginLeft: '4px' }}>({group.members.length})</span>}
+      </span>
+      {group.unreadCount > 0 && (
+        <span style={{
+          background: 'var(--pink)',
+          color: 'white',
+          borderRadius: '50%',
+          padding: '0.2rem 0.5rem',
+          fontSize: '0.75rem',
+          fontWeight: 'bold',
+          marginLeft: 'auto',
+          minWidth: '20px',
+          textAlign: 'center'
+        }}>
+          {group.unreadCount > 99 ? '99+' : group.unreadCount}
+        </span>
+      )}
+    </div>
+  );
+};
+
+const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInputFocusChange, onBack, onGroupSelect }) => {
   const { language, t } = useLanguage();
   const API_BASE = Capacitor.isNativePlatform() ? 'https://scripture-habit.vercel.app' : '';
   const navigate = useNavigate();
@@ -65,6 +169,92 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
   const latestMessageRef = useRef(null);
   const [showAddNoteTooltip, setShowAddNoteTooltip] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [translatedTexts, setTranslatedTexts] = useState({});
+  const [translatingIds, setTranslatingIds] = useState(new Set());
+  const [translatedGroupName, setTranslatedGroupName] = useState('');
+  const [translatedGroupDesc, setTranslatedGroupDesc] = useState('');
+
+  /* 
+   * Translation State Tracking refs to prevent loops 
+   */
+  const groupNameTranslateRef = useRef({ id: null, lang: null });
+  const groupDescTranslateRef = useRef({ id: null, lang: null });
+
+  useEffect(() => {
+    // Reset on group switch
+    setTranslatedGroupName('');
+    setTranslatedGroupDesc('');
+
+    // Reset refs when group ID changes
+    if (groupNameTranslateRef.current.id !== groupId) {
+      groupNameTranslateRef.current = { id: groupId, lang: null };
+      groupDescTranslateRef.current = { id: groupId, lang: null };
+    }
+
+    const autoTranslateGroupInfo = async () => {
+      if (!groupData?.name || !language) return;
+
+      const translateText = async (text, type) => {
+        if (!text) return '';
+
+        // Check refs to prevent duplicate calls for same content
+        const currentRef = type === 'group_name' ? groupNameTranslateRef : groupDescTranslateRef;
+        if (currentRef.current.lang === language && currentRef.current.textHash === text.length) { // Simple length check as hash proxy
+          // Already attempted for this language
+          const cacheKey = `trans_${type}_${groupId}_${language}`;
+          const cached = sessionStorage.getItem(cacheKey);
+          return cached || '';
+        }
+
+        const cacheKey = `trans_${type}_${groupId}_${language}`;
+        const cached = sessionStorage.getItem(cacheKey);
+
+        if (cached) {
+          currentRef.current = { id: groupId, lang: language, textHash: text.length };
+          return cached;
+        }
+
+        // Mark as attempted before async call
+        currentRef.current = { id: groupId, lang: language, textHash: text.length };
+
+        try {
+          const idToken = await auth.currentUser.getIdToken();
+          const response = await fetch(`${API_BASE}/api/translate`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${idToken}`
+            },
+            body: JSON.stringify({
+              text,
+              targetLanguage: language
+            })
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.translatedText) {
+              sessionStorage.setItem(cacheKey, data.translatedText);
+              return data.translatedText;
+            }
+          }
+        } catch (e) {
+          console.error(`Failed to auto-translate ${type}:`, e);
+        }
+        return '';
+      };
+
+      const [name, desc] = await Promise.all([
+        translateText(groupData.name, 'group_name'),
+        groupData.description ? translateText(groupData.description, 'group_desc') : Promise.resolve('')
+      ]);
+
+      if (name) setTranslatedGroupName(name);
+      if (desc) setTranslatedGroupDesc(desc);
+    };
+
+    autoTranslateGroupInfo();
+  }, [groupId, groupData?.name, groupData?.description, language]);
 
   useEffect(() => {
     const hasDismissed = localStorage.getItem('hasDismissedInactivityPolicy');
@@ -1220,6 +1410,74 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
     setShowReactionsModal(true);
   };
 
+  const handleTranslateMessage = async (msg) => {
+    if (translatingIds.has(msg.id)) return;
+
+    // If already translated, clear it (toggle)
+    if (translatedTexts[msg.id]) {
+      setTranslatedTexts(prev => {
+        const next = { ...prev };
+        delete next[msg.id];
+        return next;
+      });
+      return;
+    }
+
+    setTranslatingIds(prev => {
+      const next = new Set(prev);
+      next.add(msg.id);
+      return next;
+    });
+
+    try {
+      const idToken = await auth.currentUser.getIdToken();
+
+      let textToTranslate = msg.text;
+      const isNote = msg.isNote || msg.isEntry || msg.text?.match(NOTE_HEADER_REGEX);
+
+      if (isNote) {
+        // Extract only the comment for translation
+        const body = removeNoteHeader(msg.text);
+        const chapterMatch = body.match(/\*\*(?:Chapter|Title|Speech|Talk):\*\* (.*?)(?:\n|$)/);
+        const scriptureMatch = body.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
+
+        if (chapterMatch) {
+          textToTranslate = body.substring(chapterMatch.index + chapterMatch[0].length).trim();
+        } else if (scriptureMatch) {
+          textToTranslate = body.substring(scriptureMatch.index + scriptureMatch[0].length).trim();
+        } else {
+          textToTranslate = body;
+        }
+      }
+
+      const response = await fetch(`${API_BASE}/api/translate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({
+          text: textToTranslate,
+          targetLanguage: language
+        })
+      });
+
+      if (!response.ok) throw new Error('Translation failed');
+
+      const data = await response.json();
+      setTranslatedTexts(prev => ({ ...prev, [msg.id]: data.translatedText }));
+    } catch (error) {
+      console.error("Error translating message:", error);
+      toast.error(t('groupChat.errorTranslation') || "Failed to translate message");
+    } finally {
+      setTranslatingIds(prev => {
+        const next = new Set(prev);
+        next.delete(msg.id);
+        return next;
+      });
+    }
+  };
+
   // Helper function to translate scripture names
   const translateScriptureName = (scriptureName) => {
     const scriptureMapping = {
@@ -1632,7 +1890,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
           )}
           <h2 style={{ display: 'flex', alignItems: 'center', minWidth: 0 }}>
             <span className="group-name-text" title={groupData ? groupData.name : t('groupChat.groupName')}>
-              {groupData ? groupData.name : t('groupChat.groupName')}
+              {groupData ? (translatedGroupName || groupData.name) : t('groupChat.groupName')}
             </span>
             {groupData?.ownerUserId === userData?.uid && (
               <button
@@ -1765,7 +2023,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
         <div className="mobile-menu-overlay" onClick={() => setShowMobileMenu(false)}>
           <div className="mobile-menu" onClick={(e) => e.stopPropagation()}>
             <div className="mobile-menu-header">
-              <h3>{groupData.name}</h3>
+              <h3>{translatedGroupName || groupData.name}</h3>
               <button className="close-menu-btn" onClick={() => setShowMobileMenu(false)}>
                 <UilTimes size="24" />
               </button>
@@ -1892,57 +2150,19 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                 My Groups
               </div>
               <div className="mobile-groups-list">
-                {userGroups.map((group) => {
-                  const getEmoji = (g) => {
-                    let percentage = 0;
-                    if (g && g.members && g.members.length > 0) {
-                      const todayStr = new Date().toDateString();
-                      if (g.dailyActivity && g.dailyActivity.date === todayStr && g.dailyActivity.activeMembers) {
-                        const uniqueCount = new Set(g.dailyActivity.activeMembers).size;
-                        percentage = Math.round((uniqueCount / g.members.length) * 100);
-                      }
-                    }
-
-                    if (percentage === 100) return '☀️';
-                    if (percentage >= 66) return '🌕';
-                    if (percentage >= 33) return '🌠';
-                    return '🌑';
-                  };
-
-                  return (
-                    <div
-                      key={group.id}
-                      className={`mobile-menu-item ${group.id === groupId ? 'active' : ''}`}
-                      onClick={() => {
-                        onGroupSelect && onGroupSelect(group.id);
-                        setShowMobileMenu(false);
-                      }}
-                      style={group.id === groupId ? { background: 'rgba(255, 145, 157, 0.1)', color: 'var(--pink)' } : {}}
-                    >
-                      <div className="menu-item-icon" style={group.id === groupId ? { color: 'var(--pink)' } : {}}>
-                        <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>{getEmoji(group)}</span>
-                      </div>
-                      <span className="menu-item-label" style={group.id === groupId ? { fontWeight: 'bold' } : {}}>
-                        {group.name} {group.members && <span style={{ fontSize: '0.85em', color: group.id === groupId ? 'var(--pink)' : 'var(--gray)', opacity: 0.8, fontWeight: 'normal', marginLeft: '4px' }}>({group.members.length})</span>}
-                      </span>
-                      {group.unreadCount > 0 && (
-                        <span style={{
-                          background: 'var(--pink)',
-                          color: 'white',
-                          borderRadius: '50%',
-                          padding: '0.2rem 0.5rem',
-                          fontSize: '0.75rem',
-                          fontWeight: 'bold',
-                          marginLeft: 'auto',
-                          minWidth: '20px',
-                          textAlign: 'center'
-                        }}>
-                          {group.unreadCount > 99 ? '99+' : group.unreadCount}
-                        </span>
-                      )}
-                    </div>
-                  );
-                })}
+                {userGroups.map((group) => (
+                  <GroupMenuItem
+                    key={group.id}
+                    group={group}
+                    currentGroupId={groupId}
+                    language={language}
+                    onSelect={() => {
+                      onGroupSelect && onGroupSelect(group.id);
+                      setShowMobileMenu(false);
+                    }}
+                    t={t}
+                  />
+                ))}
               </div>
               {userGroups.length < 12 && (
                 <>
@@ -2150,19 +2370,22 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                       {(() => {
                         // New format: has messageType and messageData
                         if (msg.messageType === 'streakAnnouncement' && msg.messageData) {
-                          return t('groupChat.streakAnnouncement')
-                            .replace('{nickname}', msg.messageData.nickname)
-                            .replace('{streak}', msg.messageData.streak);
+                          return t('groupChat.streakAnnouncement', {
+                            nickname: msg.messageData.nickname,
+                            streak: msg.messageData.streak
+                          });
                         }
 
                         if (msg.messageType === 'userJoined' && msg.messageData) {
-                          return t('groupChat.userJoined')
-                            .replace('{nickname}', msg.messageData.nickname);
+                          return t('groupChat.userJoined', {
+                            nickname: msg.messageData.nickname
+                          });
                         }
 
                         if (msg.messageType === 'userLeft' && msg.messageData) {
-                          return t('groupChat.userLeft')
-                            .replace('{nickname}', msg.messageData.nickname);
+                          return t('groupChat.userLeft', {
+                            nickname: msg.messageData.nickname
+                          });
                         }
 
                         if (msg.messageType === 'unityAnnouncement') {
@@ -2179,11 +2402,15 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                         // Streak patterns for various languages:
                         const streakPatterns = [
                           /\*\*(.+?) reached a (\d+) day streak/,           // English
-                          /\*\*(.+?)さんが(\d+)日連続ストリーク/,            // Japanese
+                          /\*\*(.+?)さんが(\d+)日連続/,                      // Japanese
                           /\*\*(.+?) alcançou uma ofensiva de (\d+) dias/, // Portuguese
                           /\*\*(.+?) 達成了 (\d+) 天連續紀錄/,              // Chinese
-                          /\*\*(.+?) alcanzó una racha de (\d+) días/,     // Spanish
+                          /\*\*¡?(.+?) alcanzó una racha de (\d+) días/,     // Spanish
                           /\*\*(.+?) đã đạt chuỗi (\d+) ngày/,             // Vietnamese
+                          /\*\*(.+?) ทำต่อเนื่องได้ (\d+) วันแล้ว/,             // Thai
+                          /\*\*(.+?)님이 (\d+)일 연속 기록/,                 // Korean
+                          /\*\*Naabot ni (.+?) ang (\d+) araw/,             // Tagalog
+                          /\*\*(.+?) amefikisha mfululizo wa siku (\d+)/,   // Swahili
                         ];
 
                         for (const pattern of streakPatterns) {
@@ -2191,9 +2418,7 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                           if (match) {
                             const nickname = match[1];
                             const streak = match[2];
-                            return t('groupChat.streakAnnouncement')
-                              .replace('{nickname}', nickname)
-                              .replace('{streak}', streak);
+                            return t('groupChat.streakAnnouncement', { nickname, streak });
                           }
                         }
 
@@ -2205,12 +2430,16 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                           /\*\*(.+?)\*\* 加入了群組/,            // Chinese
                           /\*\*(.+?)\*\* se unió al grupo/,      // Spanish
                           /\*\*(.+?)\*\* đã tham gia nhóm/,      // Vietnamese
+                          /\*\*(.+?)\*\* เข้าร่วมกลุ่มแล้ว/,         // Thai
+                          /\*\*(.+?)\*\*님이 그룹에 참여/,        // Korean
+                          /\*\*(.+?)\*\* sumali sa grupo/,       // Tagalog
+                          /\*\*(.+?)\*\* amejiunga na kikundi/,  // Swahili
                         ];
 
                         for (const pattern of joinPatterns) {
                           const match = msg.text?.match(pattern);
                           if (match) {
-                            return t('groupChat.userJoined').replace('{nickname}', match[1]);
+                            return t('groupChat.userJoined', { nickname: match[1] });
                           }
                         }
 
@@ -2222,12 +2451,16 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                           /\*\*(.+?)\*\* 離開了群組/,            // Chinese
                           /\*\*(.+?)\*\* salió del grupo/,       // Spanish
                           /\*\*(.+?)\*\* đã rời nhóm/,           // Vietnamese
+                          /\*\*(.+?)\*\* ออกจากกลุ่มแล้ว/,          // Thai
+                          /\*\*(.+?)\*\*님이 그룹을 나갔/,         // Korean
+                          /\*\*(.+?)\*\* umalis sa grupo/,        // Tagalog
+                          /\*\*(.+?)\*\* ameondoka kwenye kikundi/, // Swahili
                         ];
 
                         for (const pattern of leavePatterns) {
                           const match = msg.text?.match(pattern);
                           if (match) {
-                            return t('groupChat.userLeft').replace('{nickname}', match[1]);
+                            return t('groupChat.userLeft', { nickname: match[1] });
                           }
                         }
 
@@ -2271,6 +2504,13 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                           >
                             ↩️
                           </button>
+                          <button
+                            className={`hover-action-btn ${translatingIds.has(msg.id) ? 'translating' : ''}`}
+                            onClick={(e) => { e.stopPropagation(); handleTranslateMessage(msg); }}
+                            title={t('groupChat.translate')}
+                          >
+                            {translatingIds.has(msg.id) ? '⏳' : '✨'}
+                          </button>
                         </>
                       ) : (
                         <>
@@ -2287,6 +2527,13 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                             title={t('groupChat.reply')}
                           >
                             ↩️
+                          </button>
+                          <button
+                            className={`hover-action-btn ${translatingIds.has(msg.id) ? 'translating' : ''}`}
+                            onClick={(e) => { e.stopPropagation(); handleTranslateMessage(msg); }}
+                            title={t('groupChat.translate')}
+                          >
+                            {translatingIds.has(msg.id) ? '⏳' : '✨'}
                           </button>
                         </>
                       )}
@@ -2342,7 +2589,11 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                           {msg.text && (
                             (msg.isNote || msg.isEntry) ? (
                               <div className="entry-message-content">
-                                <NoteDisplay text={msg.text} isSent={msg.senderId === userData?.uid} />
+                                <NoteDisplay
+                                  text={msg.text}
+                                  isSent={msg.senderId === userData?.uid}
+                                  translatedText={translatedTexts[msg.id]}
+                                />
                                 <div style={{ marginTop: '0.2rem' }}></div>
                                 {(() => {
                                   // Update regex to find chapter OR title OR speech
@@ -2389,7 +2640,11 @@ const GroupChat = ({ groupId, userData, userGroups, isActive = false, onInputFoc
                                 })()}
                               </div>
                             ) : (
-                              <p>{renderTextWithLinks(msg.text, msg.senderId === userData?.uid)}</p>
+                              <NoteDisplay
+                                text={msg.text}
+                                isSent={msg.senderId === userData?.uid}
+                                translatedText={translatedTexts[msg.id]}
+                              />
                             )
                           )}
                           {/* Show link previews for regular messages with URLs */}

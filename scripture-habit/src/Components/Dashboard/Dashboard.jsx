@@ -581,7 +581,7 @@ const Dashboard = () => {
               background: 'rgba(107, 70, 193, 0.1)',
               borderRadius: '12px',
               fontSize: '0.9rem',
-              color: '#6b46c1',
+              color: '#FF919D',
               fontWeight: '600'
             }}>
               Expected Reset: 17:00 JST / 8:00 AM UTC
@@ -591,7 +591,7 @@ const Dashboard = () => {
               style={{
                 marginTop: '1rem',
                 padding: '0.8rem 1.5rem',
-                background: 'linear-gradient(135deg, #6b46c1 0%, #4a90e2 100%)',
+                background: 'linear-gradient(135deg, #FF919D 0%, #4a90e2 100%)',
                 color: 'white',
                 border: 'none',
                 borderRadius: '12px',

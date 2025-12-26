@@ -145,7 +145,7 @@ export default Sentry.withErrorBoundary(App, {
         }}
         style={{
           padding: '0.8rem 2rem',
-          background: 'linear-gradient(135deg, #6b46c1 0%, #4a90e2 100%)',
+          background: 'linear-gradient(135deg, #FF919D 0%, #4a90e2 100%)',
           color: 'white',
           border: 'none',
           borderRadius: '12px',

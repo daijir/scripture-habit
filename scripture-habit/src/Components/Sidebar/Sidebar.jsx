@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 import { SidebarData } from '../../Data/Data';
 import { UilSignOutAlt, UilPlusCircle, UilUsersAlt, UilHeart } from '@iconscout/react-unicons';
@@ -6,9 +6,107 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 
+const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEmoji, getUnityPercentage, isModal = false }) => {
+  const [translatedName, setTranslatedName] = useState('');
+  const translationAttemptedRef = React.useRef(false);
+
+  useEffect(() => {
+    // Check if we already attempted translation for this specific combination
+    if (translationAttemptedRef.current) return;
+
+    const autoTranslate = async () => {
+      if (!group.name || !language) return;
+
+      const cacheKey = `trans_name_${group.id}_${language}`;
+      const cached = sessionStorage.getItem(cacheKey);
+
+      if (cached) {
+        setTranslatedName(cached);
+        // Mark as attempted so we don't spam checks
+        translationAttemptedRef.current = true;
+        return;
+      }
+
+      // Mark as started
+      translationAttemptedRef.current = true;
+
+      try {
+        const idToken = await auth.currentUser?.getIdToken();
+        const API_BASE = window.location.hostname === 'localhost' ? '' : 'https://scripture-habit.vercel.app';
+
+        const res = await fetch(`${API_BASE}/api/translate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(idToken ? { Authorization: `Bearer ${idToken}` } : {}),
+          },
+          body: JSON.stringify({
+            text: group.name,
+            targetLanguage: language,
+          }),
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.translatedText) {
+            setTranslatedName(data.translatedText);
+            sessionStorage.setItem(cacheKey, data.translatedText);
+          }
+        } else {
+          // If failed, maybe allow retry later? For now, prevent loop by keeping 'true'
+          console.warn('Translation API returned error status:', res.status);
+        }
+      } catch (err) {
+        console.error('Sidebar auto-translation failed', err);
+      }
+    };
+
+    autoTranslate();
+  }, [group.id, group.name, language]);
+
+  const displayName = translatedName || group.name;
+
+  if (isModal) {
+    return (
+      <div
+        className={`modal-group-item ${isActive ? 'active-group' : ''}`}
+        onClick={onClick}
+      >
+        <span style={{ fontSize: '1.2rem', marginRight: '2px' }}>{getGroupStatusEmoji(group)}</span>
+        <span style={{ fontSize: '0.75rem', marginRight: '4px', color: getUnityPercentage(group) === 100 ? '#B8860B' : 'var(--gray)', fontWeight: getUnityPercentage(group) === 100 ? 'bold' : 'normal' }}>
+          {getUnityPercentage(group)}%
+        </span>
+        <span>
+          {displayName}
+          {group.members && <span style={{ fontSize: '0.85em', color: 'var(--gray)', fontWeight: 'normal', marginLeft: '4px' }}>({group.members.length})</span>}
+        </span>
+        {group.unreadCount > 0 && (
+          <span className="unread-badge" style={{ marginLeft: 'auto' }}>{group.unreadCount > 99 ? '99+' : group.unreadCount}</span>
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={`menuItem ${isActive ? 'active' : ''}`}
+      onClick={onClick}
+    >
+      <span style={{ fontSize: '1.2rem', marginRight: '2px' }}>{getGroupStatusEmoji(group)}</span>
+      <span style={{ fontSize: '0.75rem', marginRight: '4px', color: getUnityPercentage(group) === 100 ? '#B8860B' : 'var(--gray)', fontWeight: getUnityPercentage(group) === 100 ? 'bold' : 'normal' }}>
+        {getUnityPercentage(group)}%
+      </span>
+      <span className="group-name-sidebar">{displayName}</span>
+      {group.unreadCount > 0 && (
+        <span className="unread-badge">{group.unreadCount > 99 ? '99+' : group.unreadCount}</span>
+      )}
+    </div>
+  );
+};
+
 const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setActiveGroupId, hideMobile = false }) => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [showGroupModal, setShowGroupModal] = useState(false);
 
   const DashboardIcon = SidebarData[0].icon;
@@ -83,20 +181,15 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
               {t('sidebar.myGroups')} <span style={{ fontSize: '1.2em' }}>({userGroups.length}/12)</span>
             </div>
             {userGroups.map((group) => (
-              <div
+              <SidebarGroupItem
                 key={group.id}
-                className={`menuItem ${selected === 2 && activeGroupId === group.id ? 'active' : ''}`}
+                group={group}
+                language={language}
+                isActive={selected === 2 && activeGroupId === group.id}
                 onClick={() => handleGroupClick(group.id)}
-              >
-                <span style={{ fontSize: '1.2rem', marginRight: '2px' }}>{getGroupStatusEmoji(group)}</span>
-                <span style={{ fontSize: '0.75rem', marginRight: '4px', color: getUnityPercentage(group) === 100 ? '#B8860B' : 'var(--gray)', fontWeight: getUnityPercentage(group) === 100 ? 'bold' : 'normal' }}>
-                  {getUnityPercentage(group)}%
-                </span>
-                <span className="group-name-sidebar">{group.name}</span>
-                {group.unreadCount > 0 && (
-                  <span className="unread-badge">{group.unreadCount > 99 ? '99+' : group.unreadCount}</span>
-                )}
-              </div>
+                getGroupStatusEmoji={getGroupStatusEmoji}
+                getUnityPercentage={getUnityPercentage}
+              />
             ))}
 
             {userGroups.length < 12 && (
@@ -131,23 +224,16 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
             <h3>{t('sidebar.selectGroup')} <span style={{ fontSize: '1.2em' }}>({userGroups.length}/12)</span></h3>
             <div className="modal-group-list">
               {userGroups.map((group) => (
-                <div
+                <SidebarGroupItem
                   key={group.id}
-                  className={`modal-group-item ${activeGroupId === group.id ? 'active-group' : ''}`}
+                  group={group}
+                  language={language}
+                  isActive={activeGroupId === group.id}
                   onClick={() => handleGroupClick(group.id)}
-                >
-                  <span style={{ fontSize: '1.2rem', marginRight: '2px' }}>{getGroupStatusEmoji(group)}</span>
-                  <span style={{ fontSize: '0.75rem', marginRight: '4px', color: getUnityPercentage(group) === 100 ? '#B8860B' : 'var(--gray)', fontWeight: getUnityPercentage(group) === 100 ? 'bold' : 'normal' }}>
-                    {getUnityPercentage(group)}%
-                  </span>
-                  <span>
-                    {group.name}
-                    {group.members && <span style={{ fontSize: '0.85em', color: 'var(--gray)', fontWeight: 'normal', marginLeft: '4px' }}>({group.members.length})</span>}
-                  </span>
-                  {group.unreadCount > 0 && (
-                    <span className="unread-badge" style={{ marginLeft: 'auto' }}>{group.unreadCount > 99 ? '99+' : group.unreadCount}</span>
-                  )}
-                </div>
+                  getGroupStatusEmoji={getGroupStatusEmoji}
+                  getUnityPercentage={getUnityPercentage}
+                  isModal={true}
+                />
               ))}
             </div>
             {userGroups.length < 12 && (
