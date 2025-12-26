@@ -18,7 +18,7 @@ export default function InviteRedirect() {
                 navigate('/dashboard', { replace: true });
             } else {
                 // If not logged in, go to signup
-                navigate('/signup', { replace: true });
+                navigate('/', { replace: true });
             }
         });
 
