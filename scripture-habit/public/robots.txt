@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://scripture-habit.vercel.app/sitemap.xml
