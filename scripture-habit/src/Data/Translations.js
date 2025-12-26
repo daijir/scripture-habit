@@ -104,7 +104,7 @@ export const translations = {
             delete: "Delete Note",
             searchPlaceholder: "Search notes...",
             readInGospelLibrary: "Read in Gospel Library",
-            goToByuSpeech: "Go to BYU Speech",
+            goToByuSpeech: "Go to BYU Speeches",
             readStudyMaterial: "Read The Study Material",
             generateRecap: "✨ Generate Weekly Recap",
             generatingRecap: "Generating weekly recap... This may take a moment.",
@@ -526,6 +526,13 @@ export const translations = {
             quotaExceededMessage: "We are currently experiencing high traffic and have reached our database limit. The system is expected to reset and be fully functional by 5:00 PM JST. We apologize for the inconvenience.",
             underMaintenanceTitle: "System Maintenance",
             underMaintenanceMessage: "The application is currently undergoing maintenance to provide a better experience. We'll be back online shortly. Thank you for your patience."
+        },
+        installPrompt: {
+            title: "Install App",
+            description: "Install this app on your iPhone for a better experience.",
+            instruction1: "Tap the Share button",
+            instruction2: "Select 'Add to Home Screen'",
+            close: "Close"
         }
     },
     ja: {
@@ -1062,6 +1069,13 @@ export const translations = {
             quotaExceededMessage: "現在、想定以上のアクセスによりデータベースの利用制限に達しています。日本時間 17:00 に自動的にリセットされ、復旧する見込みです。ご不便をおかけして申し訳ありません。",
             underMaintenanceTitle: "システムメンテナンス中",
             underMaintenanceMessage: "ただいま、より良いサービス提供のためのメンテナンスを行っております。終了まで今しばらくお待ちください。ご不便をおかけして申し訳ありません。"
+        },
+        installPrompt: {
+            title: "アプリをインストール",
+            description: "iPhoneのホーム画面に追加して、より快適に利用しましょう。",
+            instruction1: "「共有」ボタンをタップ",
+            instruction2: "「ホーム画面に追加」を選択",
+            close: "閉じる"
         }
     },
     pt: {
@@ -1595,6 +1609,13 @@ export const translations = {
             quotaExceededMessage: "Estamos enfrentando um alto tráfego no momento e atingimos o limite do nosso banco de dados. O sistema deverá ser reiniciado e estar totalmente funcional até as 17:00 JST (Horário do Japão). Pedimos desculpas pelo transtorno.",
             underMaintenanceTitle: "Manutenção do Sistema",
             underMaintenanceMessage: "O aplicativo está passando por manutenção para proporcionar uma experiência melhor. Voltaremos em breve. Obrigado pela sua paciência."
+        },
+        installPrompt: {
+            title: "Instalar App",
+            description: "Para uma melhor experiência, instale este app na sua tela inicial.",
+            instruction1: "Toque no menu e selecione 'Adicionar à Tela Inicial'.",
+            instruction2: "Siga as instruções.",
+            close: "Fechar"
         }
     },
     zho: {
@@ -2098,6 +2119,13 @@ export const translations = {
             quotaExceededMessage: "目前由於訪問量超出預期，已達到資料庫使用限制。預計將於日本時間 17:00 自動重置並恢復正常運作。對您造成的不便我們深表歉意。",
             underMaintenanceTitle: "系統維護中",
             underMaintenanceMessage: "應用程序目前正在進行維護，以提供更好的體驗。我們很快就會回來。感謝您的耐心配合。"
+        },
+        installPrompt: {
+            title: "安裝應用程式",
+            description: "為了獲得更好的體驗，請將此應用程式安裝到您的主畫面。",
+            instruction1: "點擊選單並選擇「加入主畫面」。",
+            instruction2: "按照說明操作。",
+            close: "關閉"
         }
     },
     es: {
@@ -2602,6 +2630,13 @@ export const translations = {
             quotaExceededMessage: "Actualmente estamos experimentando un alto tráfico y hemos alcanzado nuestro límite de base de datos. Se espera que el sistema se reinicie y esté plenamente operativo a las 5:00 PM JST. Lamentamos las molestias.",
             underMaintenanceTitle: "Mantenimiento del Sistema",
             underMaintenanceMessage: "La aplicación está en mantenimiento para ofrecer una mejor experiencia. Volveremos pronto. Gracias por su paciencia."
+        },
+        installPrompt: {
+            title: "Instalar App",
+            description: "Para una mejor experiencia, instala esta aplicación en tu pantalla de inicio.",
+            instruction1: "Toca el menú y selecciona 'Añadir a pantalla de inicio'.",
+            instruction2: "Sigue las instrucciones.",
+            close: "Cerrar"
         }
     },
     vi: {
@@ -3104,6 +3139,13 @@ export const translations = {
             quotaExceededMessage: "Chúng tôi hiện đang gặp lưu lượng truy cập cao và đã đạt đến giới hạn cơ sở dữ liệu. Hệ thống dự kiến sẽ được thiết lập lại và hoạt động đầy đủ vào lúc 5:00 chiều JST (Giờ Nhật Bản). Chúng tôi xin lỗi vì sự bất tiện này.",
             underMaintenanceTitle: "Bảo trì hệ thống",
             underMaintenanceMessage: "Ứng dụng hiện đang được bảo trì để cải thiện trải nghiệm của bạn. Chúng tôi sẽ sớm quay lại. Cảm ơn sự kiên nhẫn của bạn."
+        },
+        installPrompt: {
+            title: "Cài đặt ứng dụng",
+            description: "Để có trải nghiệm tốt hơn, hãy cài đặt ứng dụng này vào màn hình chính của bạn.",
+            instruction1: "Nhấn vào menu và chọn 'Thêm vào màn hình chính'.",
+            instruction2: "Làm theo hướng dẫn.",
+            close: "Đóng"
         }
     },
     th: {
@@ -3632,6 +3674,13 @@ export const translations = {
             quotaExceededMessage: "ขณะนี้เรากำลังประสบกับปริมาณการใช้งานที่สูงและถึงขีดจำกัดของฐานข้อมูลแล้ว คาดว่าระบบจะรีเซ็ตและใช้งานได้ตามปกติภายในเวลา 17:00 น. JST (เวลาญี่ปุ่น) ขออภัยในความไม่สะดวก",
             underMaintenanceTitle: "อยู่ระหว่างการบำรุงรักษาระบบ",
             underMaintenanceMessage: "แอปพลิเคชันกำลังอยู่ระหว่างการบำรุงรักษาเพื่อเพิ่มประสิทธิภาพการใช้งาน เราจะกลับมาให้บริการในเร็วๆ นี้ ขอบคุณที่รอคอย"
+        },
+        installPrompt: {
+            title: "ติดตั้งแอป",
+            description: "เพื่อประสบการณ์ที่ดียิ่งขึ้น ติดตั้งแอปนี้ไว้บนหน้าจอหลักของคุณ",
+            instruction1: "แตะที่เมนูและเลือก 'เพิ่มไปยังหน้าจอหลัก'",
+            instruction2: "ทำตามคำแนะนำ",
+            close: "ปิด"
         }
     },
     ko: {
@@ -4160,6 +4209,13 @@ export const translations = {
             quotaExceededMessage: "현재 예상보다 많은 접속으로 인해 데이터베이스 이용 한도에 도달했습니다. 일본 시간 오후 5:00(17:00 JST)에 자동으로 리셋되어 복구될 예정입니다. 이용에 불편을 드려 죄송합니다.",
             underMaintenanceTitle: "시스템 점검 중",
             underMaintenanceMessage: "현재 시스템 점검 또는 할당량 초과로 인해 서비스를 일시적으로 이용할 수 없습니다."
+        },
+        installPrompt: {
+            title: "앱 설치",
+            description: "더 나은 경험을 위해, 홈 화면에 이 앱을 설치하세요.",
+            instruction1: "메뉴를 탭하고 '홈 화면에 추가'를 선택하세요.",
+            instruction2: "안내를 따르세요.",
+            close: "닫기"
         }
     },
     tl: {
@@ -4687,6 +4743,13 @@ export const translations = {
             quotaExceededMessage: "Kasalukuyan kaming nakakaranas ng mataas na trapiko at naabot na ang limitasyon ng aming database. Inaasahang mag-reset ang system at magiging ganap na gumagana sa ganap na 5:00 PM JST. Humihingi kami ng paumanhin sa abala.",
             underMaintenanceTitle: "Maintenance ng System",
             underMaintenanceMessage: "Kasalukuyang sumasailalim sa maintenance ang application upang makapagbigay ng mas magandang karanasan. Babalik kami sa lalong madaling panahon. Salamat sa inyong pasensya."
+        },
+        installPrompt: {
+            title: "I-install ang App",
+            description: "Para sa mas magandang karanasan, i-install ang app na ito sa iyong home screen.",
+            instruction1: "I-tap ang menu at piliin ang 'Add to Home screen'.",
+            instruction2: "Sundin ang mga tagubilin.",
+            close: "Isara"
         }
     },
     sw: {
@@ -5215,6 +5278,13 @@ export const translations = {
             quotaExceededMessage: "Kwa sasa tunapata trafiki kubwa na tumefikia kikomo cha hifadhidata yetu. Mfumo unatarajiwa kuwekwa upya na kufanya kazi kikamilifu ifikapo saa 11:00 jioni JST (Saa za Japani). Tunatabaika kwa usumbufu huu.",
             underMaintenanceTitle: "Matengenezo ya Mfumo",
             underMaintenanceMessage: "Programu kwa sasa inafanyiwa matengenezo ili kutoa uzoefu bora zaidi. Tutarejea hivi punde. Asante kwa subira yako."
+        },
+        installPrompt: {
+            title: "Sakinisha Programu",
+            description: "Ili kupata matumizi bora, sakinisha programu hii kwenye skrini yako ya nyumbani.",
+            instruction1: "Gonga menyu na uchague 'Ongeza kwenye Skrini ya Nyumbani'.",
+            instruction2: "Fuata maelekezo.",
+            close: "Funga"
         }
     },
 };

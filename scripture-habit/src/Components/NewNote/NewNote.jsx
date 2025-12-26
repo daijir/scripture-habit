@@ -1299,7 +1299,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                             rel="noopener noreferrer"
                             className="gospel-library-link"
                         >
-                            {t('myNotes.readInGospelLibrary')} <i className="uil uil-external-link-alt" style={{ fontSize: '0.85em' }}></i>
+                            {scripture === 'BYU Speeches' ? t('myNotes.goToByuSpeech') : t('myNotes.readInGospelLibrary')} <i className="uil uil-external-link-alt" style={{ fontSize: '0.85em' }}></i>
                         </a>
                     </div>
                 )}

@@ -62,7 +62,18 @@ const Dashboard = () => {
   const getReadingPlanUrl = (script) => {
     // Basic heuristic for 2025 Curriculum (D&C)
     const baseUrl = "https://www.churchofjesuschrist.org/study/scriptures";
-    const langParam = language === 'ja' ? '?lang=jpn' : '?lang=eng'; // Simplified lang check
+
+    // Determine language parameter matching getGospelLibraryUrl logic
+    let langParam = "?lang=eng";
+    if (language === 'ja') langParam = "?lang=jpn";
+    else if (language === 'pt') langParam = "?lang=por";
+    else if (language === 'zho') langParam = "?lang=zho";
+    else if (language === 'es') langParam = "?lang=spa";
+    else if (language === 'vi') langParam = "?lang=vie";
+    else if (language === 'th') langParam = "?lang=tha";
+    else if (language === 'ko') langParam = "?lang=kor";
+    else if (language === 'tl') langParam = "?lang=tgl";
+    else if (language === 'sw') langParam = "?lang=swa";
 
     if (script.includes("Official Declarations")) {
       const match = script.match(/(\d+)(?::([\d\-\,]+))?/);
