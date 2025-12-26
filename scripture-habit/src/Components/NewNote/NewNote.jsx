@@ -1377,12 +1377,13 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         <label className="sharing-label">{t('newNote.shareLabel')}</label>
 
                         <div className="radio-group">
-                            <label className="radio-option">
+                            <label className={`radio-option ${userGroups.length === 0 ? 'disabled' : ''}`}>
                                 <input
                                     type="radio"
                                     value="all"
                                     checked={shareOption === 'all'}
                                     onChange={(e) => setShareOption(e.target.value)}
+                                    disabled={userGroups.length === 0}
                                 />
                                 <span>{t('newNote.shareAll')}</span>
                             </label>
@@ -1399,12 +1400,13 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                                 </label>
                             )}
 
-                            <label className="radio-option">
+                            <label className={`radio-option ${userGroups.length === 0 ? 'disabled' : ''}`}>
                                 <input
                                     type="radio"
                                     value="specific"
                                     checked={shareOption === 'specific'}
                                     onChange={(e) => setShareOption(e.target.value)}
+                                    disabled={userGroups.length === 0}
                                 />
                                 <span>{t('newNote.shareSpecific')}</span>
                             </label>
