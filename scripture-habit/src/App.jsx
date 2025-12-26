@@ -21,6 +21,7 @@ import InviteRedirect from './Components/InviteRedirect/InviteRedirect';
 import Maintenance from './Components/Maintenance/Maintenance';
 import { MAINTENANCE_MODE } from './config';
 import * as Sentry from "@sentry/react";
+import InstallPrompt from './Components/InstallPrompt/InstallPrompt';
 
 const SEOManager = () => {
   const { t, language } = useLanguage();
@@ -116,6 +117,7 @@ const App = () => {
         </Routes>
         <ToastContainer position="top-right" autoClose={3000} />
         <Analytics />
+        <InstallPrompt />
       </div>
     </LanguageProvider>
   );
