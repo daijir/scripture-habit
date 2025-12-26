@@ -24,7 +24,16 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, t }) => {
   const [translatedName, setTranslatedName] = useState('');
   const translationAttemptedRef = useRef(false);
 
+  /* 
+   * Translation handling 
+   */
   useEffect(() => {
+    // 1. Check Firestore
+    if (group.translations && group.translations[language] && group.translations[language].name) {
+      setTranslatedName(group.translations[language].name);
+      return;
+    }
+
     // Check if we already attempted translation for this specific combination
     if (translationAttemptedRef.current) return;
 
@@ -46,7 +55,7 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, t }) => {
         const idToken = await auth.currentUser?.getIdToken();
         const API_BASE = window.location.hostname === 'localhost' ? '' : 'https://scripture-habit.vercel.app';
 
-        const res = await fetch(`${API_BASE}/api/translate`, {
+        const response = await fetch(`${API_BASE}/api/translate`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -58,20 +67,30 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, t }) => {
           }),
         });
 
-        if (res.ok) {
-          const data = await res.json();
+        if (response.ok) {
+          const data = await response.json();
           if (data.translatedText) {
             setTranslatedName(data.translatedText);
             sessionStorage.setItem(cacheKey, data.translatedText);
+
+            // Save to Firestore (opportunistic)
+            try {
+              const groupRef = doc(db, 'groups', group.id);
+              await updateDoc(groupRef, {
+                [`translations.${language}.name`]: data.translatedText
+              });
+            } catch (e) {
+              console.error("Failed to save translation to Firestore", e);
+            }
           }
         }
-      } catch (err) {
-        console.error('Mobile menu auto-translation failed', err);
+      } catch (error) {
+        console.error('Error translating group name:', error);
       }
     };
 
     autoTranslate();
-  }, [group.id, group.name, language]);
+  }, [group.id, group.name, group.translations, language]);
 
   const getEmoji = (g) => {
     let percentage = 0;
@@ -194,16 +213,34 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     const autoTranslateGroupInfo = async () => {
       if (!groupData?.name || !language) return;
 
+      // 1. Check Firestore first
+      const savedTrans = groupData.translations?.[language];
+      let nameToSet = savedTrans?.name;
+      let descToSet = savedTrans?.description;
+
+      // If we have both (or appropriate partials), set and done.
+      // Note: If description is empty string in original, we don't need translation for it.
+      const needsName = !nameToSet;
+      const needsDesc = groupData.description && !descToSet;
+
+      if (!needsName && !needsDesc) {
+        if (nameToSet) setTranslatedGroupName(nameToSet);
+        if (descToSet) setTranslatedGroupDesc(descToSet);
+        return;
+      }
+
+      // Set what we have so far
+      if (nameToSet) setTranslatedGroupName(nameToSet);
+      if (descToSet) setTranslatedGroupDesc(descToSet);
+
       const translateText = async (text, type) => {
         if (!text) return '';
 
-        // Check refs to prevent duplicate calls for same content
+        // Ref check
         const currentRef = type === 'group_name' ? groupNameTranslateRef : groupDescTranslateRef;
-        if (currentRef.current.lang === language && currentRef.current.textHash === text.length) { // Simple length check as hash proxy
-          // Already attempted for this language
-          const cacheKey = `trans_${type}_${groupId}_${language}`;
-          const cached = sessionStorage.getItem(cacheKey);
-          return cached || '';
+        if (currentRef.current.lang === language && currentRef.current.textHash === text.length) {
+          // Already attempted
+          return sessionStorage.getItem(`trans_${type}_${groupId}_${language}`) || ''; // Fallback to session
         }
 
         const cacheKey = `trans_${type}_${groupId}_${language}`;
@@ -214,7 +251,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
           return cached;
         }
 
-        // Mark as attempted before async call
         currentRef.current = { id: groupId, lang: language, textHash: text.length };
 
         try {
@@ -244,22 +280,37 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         return '';
       };
 
-      const [name, desc] = await Promise.all([
-        translateText(groupData.name, 'group_name'),
-        groupData.description ? translateText(groupData.description, 'group_desc') : Promise.resolve('')
-      ]);
+      // Perform necessary translations
+      const namePromise = needsName ? translateText(groupData.name, 'group_name') : Promise.resolve(null);
+      const descPromise = needsDesc ? translateText(groupData.description, 'group_desc') : Promise.resolve(null);
 
-      if (name) setTranslatedGroupName(name);
-      if (desc) setTranslatedGroupDesc(desc);
+      const [newName, newDesc] = await Promise.all([namePromise, descPromise]);
+
+      if (newName) setTranslatedGroupName(newName);
+      if (newDesc) setTranslatedGroupDesc(newDesc);
+
+      // Save to Firestore if we got new data
+      if (newName || newDesc) {
+        try {
+          const updatePayload = {};
+          if (newName) updatePayload[`translations.${language}.name`] = newName;
+          if (newDesc) updatePayload[`translations.${language}.description`] = newDesc;
+
+          const groupRef = doc(db, 'groups', groupId);
+          await updateDoc(groupRef, updatePayload);
+          console.log("Saved group info translations to Firestore");
+        } catch (e) {
+          console.error("Error saving translations:", e);
+        }
+      }
     };
 
     autoTranslateGroupInfo();
-  }, [groupId, groupData?.name, groupData?.description, language]);
+  }, [groupId, groupData?.name, groupData?.description, groupData?.translations, language]);
 
   useEffect(() => {
     const hasDismissed = localStorage.getItem('hasDismissedInactivityPolicy');
     if (!hasDismissed) {
-      setShowInactivityPolicyBanner(true);
     }
 
     // Check for welcome guide logic from navigation state
@@ -2704,16 +2755,22 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                   🗑️ {t('groupChat.deleteMessage')}
                 </button>
                 <button onClick={() => { handleReply(contextMenu.message); closeContextMenu(); }}>
-                  ↩️ Reply
+                  ↩️ {t('groupChat.reply')}
+                </button>
+                <button onClick={() => { handleTranslateMessage(contextMenu.message); closeContextMenu(); }}>
+                  {translatingIds.has(contextMenu.message.id) ? '⏳ ...' : `✨ ${t('groupChat.translate')}`}
                 </button>
               </>
             ) : (
               <>
                 <button onClick={() => handleToggleReaction(contextMenu.message)}>
-                  {contextMenu.message?.reactions?.find(r => r.odU === userData?.uid) ? '👎 Unlike' : '👍 Like'}
+                  {contextMenu.message?.reactions?.find(r => r.odU === userData?.uid) ? `👎 ${t('groupChat.unlike')}` : `👍 ${t('groupChat.like')}`}
                 </button>
                 <button onClick={() => { handleReply(contextMenu.message); closeContextMenu(); }}>
-                  ↩️ Reply
+                  ↩️ {t('groupChat.reply')}
+                </button>
+                <button onClick={() => { handleTranslateMessage(contextMenu.message); closeContextMenu(); }}>
+                  {translatingIds.has(contextMenu.message.id) ? '⏳ ...' : `✨ ${t('groupChat.translate')}`}
                 </button>
               </>
             )}

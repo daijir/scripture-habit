@@ -10,8 +10,32 @@ const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEm
   const [translatedName, setTranslatedName] = useState('');
   const translationAttemptedRef = React.useRef(false);
 
+  // Firestore update helper
+  const saveTranslationToFirestore = async (translatedText) => {
+    try {
+      const { doc, updateDoc } = await import('firebase/firestore');
+      const { db } = await import('../../firebase');
+
+      const groupRef = doc(db, 'groups', group.id);
+      // Construct the update object strictly for this language's name to merge
+      const updateData = {};
+      updateData[`translations.${language}.name`] = translatedText;
+
+      await updateDoc(groupRef, updateData);
+      console.log(`Saved translation for ${language} to Firestore`);
+    } catch (err) {
+      console.error('Failed to save translation to Firestore:', err);
+    }
+  };
+
   useEffect(() => {
-    // Check if we already attempted translation for this specific combination
+    // 1. Check Firestore Data (Real-time sync makes this fast)
+    if (group.translations && group.translations[language] && group.translations[language].name) {
+      setTranslatedName(group.translations[language].name);
+      return;
+    }
+
+    // Check if we already attempted translation in this session
     if (translationAttemptedRef.current) return;
 
     const autoTranslate = async () => {
@@ -22,12 +46,13 @@ const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEm
 
       if (cached) {
         setTranslatedName(cached);
-        // Mark as attempted so we don't spam checks
+        // Even if in session storage, if it's not in Firestore (missing in step 1), 
+        // we might want to opportunisticly save it? 
+        // But for now, let's assume session storage is transitory.
         translationAttemptedRef.current = true;
         return;
       }
 
-      // Mark as started
       translationAttemptedRef.current = true;
 
       try {
@@ -51,9 +76,11 @@ const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEm
           if (data.translatedText) {
             setTranslatedName(data.translatedText);
             sessionStorage.setItem(cacheKey, data.translatedText);
+
+            // SAVE TO FIRESTORE
+            await saveTranslationToFirestore(data.translatedText);
           }
         } else {
-          // If failed, maybe allow retry later? For now, prevent loop by keeping 'true'
           console.warn('Translation API returned error status:', res.status);
         }
       } catch (err) {
@@ -62,7 +89,7 @@ const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEm
     };
 
     autoTranslate();
-  }, [group.id, group.name, language]);
+  }, [group.id, group.name, group.translations, language]);
 
   const displayName = translatedName || group.name;
 
