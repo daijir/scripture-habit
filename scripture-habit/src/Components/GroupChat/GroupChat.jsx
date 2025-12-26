@@ -2704,16 +2704,22 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                   🗑️ {t('groupChat.deleteMessage')}
                 </button>
                 <button onClick={() => { handleReply(contextMenu.message); closeContextMenu(); }}>
-                  ↩️ Reply
+                  ↩️ {t('groupChat.reply')}
+                </button>
+                <button onClick={() => { handleTranslateMessage(contextMenu.message); closeContextMenu(); }}>
+                  {translatingIds.has(contextMenu.message.id) ? '⏳ ...' : `✨ ${t('groupChat.translate')}`}
                 </button>
               </>
             ) : (
               <>
                 <button onClick={() => handleToggleReaction(contextMenu.message)}>
-                  {contextMenu.message?.reactions?.find(r => r.odU === userData?.uid) ? '👎 Unlike' : '👍 Like'}
+                  {contextMenu.message?.reactions?.find(r => r.odU === userData?.uid) ? `👎 ${t('groupChat.unlike')}` : `👍 ${t('groupChat.like')}`}
                 </button>
                 <button onClick={() => { handleReply(contextMenu.message); closeContextMenu(); }}>
-                  ↩️ Reply
+                  ↩️ {t('groupChat.reply')}
+                </button>
+                <button onClick={() => { handleTranslateMessage(contextMenu.message); closeContextMenu(); }}>
+                  {translatingIds.has(contextMenu.message.id) ? '⏳ ...' : `✨ ${t('groupChat.translate')}`}
                 </button>
               </>
             )}
