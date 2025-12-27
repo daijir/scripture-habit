@@ -267,7 +267,8 @@ export const translations = {
             errorEditMessage: "Failed to edit message",
             errorDeleteMessage: "Failed to delete message",
             groupStatusUpdated: "Group is now {status}",
-            errorUpdateGroupStatus: "Failed to update group status"
+            errorUpdateGroupStatus: "Failed to update group status",
+            inactivityRemoval: "👋 **{count} member(s)** were removed due to inactivity (3+ days)."
         },
         newNote: {
             editTitle: "Edit Note",
@@ -335,7 +336,12 @@ export const translations = {
             titleLabel: "Title:",
             aiQuestionsGenerated: "AI Ponder Questions generated!",
             aiQuestionsError: "Failed to generate questions. Gemini API key might be missing.",
-            levelUp: "🎊 Congratulations! You reached Level {level}! 🎊"
+            levelUp: "🎊 Congratulations! You reached Level {level}! 🎊",
+            confirmCloseTitle: "Save changes?",
+            confirmCloseMessage: "If you close now, your changes will be lost.",
+            confirmCloseSave: "Post Note",
+            confirmCloseDiscard: "Discard",
+            confirmCloseKeepEditing: "Keep Editing"
         },
         scriptures: {
             oldTestament: "Old Testament",
@@ -763,7 +769,8 @@ export const translations = {
             errorEditMessage: "メッセージの編集に失敗しました",
             errorDeleteMessage: "メッセージの削除に失敗しました",
             groupStatusUpdated: "グループを{status}に変更しました",
-            errorUpdateGroupStatus: "ステータスの更新に失敗しました"
+            errorUpdateGroupStatus: "グループステータスの更新に失敗しました",
+            inactivityRemoval: "👋 **{count}名**のメンバーが、3日以上活動がなかったため退出しました。"
         },
         myNotes: {
             description: "ノートコレクション",
@@ -878,7 +885,12 @@ export const translations = {
             titleLabel: "タイトル:",
             aiQuestionsGenerated: "AIが質問を作成しました！",
             aiQuestionsError: "質問の作成に失敗しました。GeminiのAPIキーが設定されていない可能性があります。",
-            levelUp: "🎊 おめでとうございます！レベル {level} に到達しました！ 🎊"
+            levelUp: "🎊 おめでとうございます！レベル {level} に到達しました！ 🎊",
+            confirmCloseTitle: "入力した内容を保存しますか？",
+            confirmCloseMessage: "このまま閉じると、入力した内容は失われます。",
+            confirmCloseSave: "投稿する",
+            confirmCloseDiscard: "破棄する",
+            confirmCloseKeepEditing: "編集を続ける"
         },
         scriptures: {
             oldTestament: "旧約聖書",
@@ -1195,7 +1207,7 @@ export const translations = {
                 "Quem escreveu as Placas de Latão tinha um charme misterioso, quem será que foi...?",
                 "Qual era a temperatura da febre de Zeezrom? Devia estar bem alta.",
                 "Barcos jareditas, 'ajustados como um prato'... que formato será que é esse?",
-                "A expectativa de 'as janelas do céu se abrirão!' vs. a leveza da minha carteira depois de pagar o dízimo.",
+                "A expectativa de 'as janelas do céu se abrirão!' vs. a leveza da carteira depois de pagar o dízimo.",
                 "Amom filho de Mosias, Amom da expedição, Amom filho de Helamã...",
                 "Fulano gerou Sicrano, que gerou Beltrano... apaguei na zona das genealogias.",
                 "Aquele alívio misterioso quando um apóstolo toma um gole de água durante o discurso.",
@@ -1306,7 +1318,8 @@ export const translations = {
             errorEditMessage: "Falha ao editar a mensagem",
             errorDeleteMessage: "Falha ao excluir a mensagem",
             groupStatusUpdated: "O grupo agora é {status}",
-            errorUpdateGroupStatus: "Falha ao atualizar o status do grupo"
+            errorUpdateGroupStatus: "Falha ao atualizar o status do grupo",
+            inactivityRemoval: "👋 **{count} membro(s)** foram removidos por inatividade (mais de 3 dias)."
         },
         myNotes: {
             description: "Coleção de Notas",
@@ -1418,7 +1431,12 @@ export const translations = {
             titleLabel: "Título:",
             aiQuestionsGenerated: "Perguntas de reflexão da IA geradas!",
             aiQuestionsError: "Falha ao gerar perguntas. A chave da API Gemini pode estar faltando.",
-            levelUp: "🎊 Parabéns! Você alcançou o Nível {level}! 🎊"
+            levelUp: "🎊 Parabéns! Você alcançou o Nível {level}! 🎊",
+            confirmCloseTitle: "Publicar alterações?",
+            confirmCloseMessage: "Se fechar agora, suas alterações serão perdidas.",
+            confirmCloseSave: "Publicar Nota",
+            confirmCloseDiscard: "Descartar",
+            confirmCloseKeepEditing: "Continuar Editando"
         },
         scriptures: {
             oldTestament: "Velho Testamento",
@@ -1820,7 +1838,8 @@ export const translations = {
             errorEditMessage: "編輯訊息失敗",
             errorDeleteMessage: "刪除訊息失敗",
             groupStatusUpdated: "群組現在為 {status}",
-            errorUpdateGroupStatus: "更新群組狀態失敗"
+            errorUpdateGroupStatus: "更新群組狀態失敗",
+            inactivityRemoval: "👋 **{count}名成員**因超過3天未活躍而被移除。"
         },
         myNotes: {
             description: "筆記收藏",
@@ -1928,7 +1947,12 @@ export const translations = {
             titleLabel: "標題：",
             aiQuestionsGenerated: "AI 沉思問題已生成！",
             aiQuestionsError: "生成問題失敗。可能缺少 Gemini API 金鑰。",
-            levelUp: "🎊 恭喜！您已達到第 {level} 級！ 🎊"
+            levelUp: "🎊 恭喜！您已達到第 {level} 級！ 🎊",
+            confirmCloseTitle: "發布變更？",
+            confirmCloseMessage: "如果現在關閉，您的變更將會遺失。",
+            confirmCloseSave: "發布筆記",
+            confirmCloseDiscard: "放棄",
+            confirmCloseKeepEditing: "繼續編輯"
         },
         scriptures: {
             oldTestament: "舊約",
@@ -2356,7 +2380,8 @@ export const translations = {
             errorEditMessage: "Error al editar el mensaje",
             errorDeleteMessage: "Error al eliminar el mensaje",
             groupStatusUpdated: "El grupo ahora es {status}",
-            errorUpdateGroupStatus: "Error al actualizar el estado del grupo"
+            errorUpdateGroupStatus: "Error al actualizar el estado del grupo",
+            inactivityRemoval: "👋 **{count} miembro(s)** fueron eliminados por inactividad (más de 3 días)."
         },
         myNotes: {
             description: "Colección de Notas",
@@ -2439,7 +2464,12 @@ export const translations = {
             titleLabel: "Título:",
             aiQuestionsGenerated: "¡Preguntas de reflexión de IA generadas!",
             aiQuestionsError: "Error al generar preguntas. Puede que falte la clave API de Gemini.",
-            levelUp: "🎊 ¡Felicidades! ¡Has alcanzado el Nivel {level}! 🎊"
+            levelUp: "🎊 ¡Felicidades! ¡Has alcanzado el Nivel {level}! 🎊",
+            confirmCloseTitle: "¿Publicar cambios?",
+            confirmCloseMessage: "Si cierras ahora, tus cambios se perderán.",
+            confirmCloseSave: "Publicar Nota",
+            confirmCloseDiscard: "Descartar",
+            confirmCloseKeepEditing: "Seguir Editando"
         },
         scriptures: {
             oldTestament: "Antiguo Testamento",
@@ -2841,7 +2871,8 @@ export const translations = {
             errorEditMessage: "Không thể chỉnh sửa tin nhắn",
             errorDeleteMessage: "Không thể xóa tin nhắn",
             groupStatusUpdated: "Nhóm hiện đang là {status}",
-            errorUpdateGroupStatus: "Không thể cập nhật trạng thái nhóm"
+            errorUpdateGroupStatus: "Không thể cập nhật trạng thái nhóm",
+            inactivityRemoval: "👋 **{count} thành viên** đã bị xóa do không hoạt động (hơn 3 ngày)."
         },
         myNotes: {
             description: "Bộ Sưu Tập Ghi Chép",
@@ -2948,7 +2979,12 @@ export const translations = {
             titleLabel: "Tiêu đề:",
             aiQuestionsGenerated: "Đã tạo các câu hỏi suy ngẫm từ AI!",
             aiQuestionsError: "Không thể tạo câu hỏi. Có thể thiếu khóa API Gemini.",
-            levelUp: "🎊 Chúc mừng! Bạn đã đạt Cấp {level}! 🎊"
+            levelUp: "🎊 Chúc mừng! Bạn đã đạt Cấp {level}! 🎊",
+            confirmCloseTitle: "Đăng bài thay đổi?",
+            confirmCloseMessage: "Nếu đóng bây giờ, thay đổi của bạn sẽ bị mất.",
+            confirmCloseSave: "Đăng Bài",
+            confirmCloseDiscard: "Hủy bỏ",
+            confirmCloseKeepEditing: "Tiếp tục Chỉnh sửa"
         },
         scriptures: {
             oldTestament: "Cựu Ước",
@@ -3376,7 +3412,8 @@ export const translations = {
             errorEditMessage: "ไม่สามารถแก้ไขข้อความได้",
             errorDeleteMessage: "ไม่สามารถลบข้อความได้",
             groupStatusUpdated: "ขณะนี้กลุ่มเป็น {status}",
-            errorUpdateGroupStatus: "ไม่สามารถอัปเดตสถานะกลุ่มได้"
+            errorUpdateGroupStatus: "ไม่สามารถอัปเดตสถานะกลุ่มได้",
+            inactivityRemoval: "👋 **{count} สมาชิก** ถูกลบออกเนื่องจากไม่มีการใช้งาน (มากกว่า 3 วัน)"
         },
         myNotes: {
             description: "คลังบันทึก",
@@ -3483,7 +3520,12 @@ export const translations = {
             titleLabel: "หัวข้อ:",
             aiQuestionsGenerated: "สร้างคำถามสำหรับไตร่ตรองจาก AI สำเร็จ!",
             aiQuestionsError: "ไม่สามารถสร้างคำถามได้ อาจขาด Gemini API Key",
-            levelUp: "🎊 ยินดีด้วย! คุณถึงระดับ {level} แล้ว! 🎊"
+            levelUp: "🎊 ยินดีด้วย! คุณถึงระดับ {level} แล้ว! 🎊",
+            confirmCloseTitle: "โพสต์การเปลี่ยนแปลง?",
+            confirmCloseMessage: "หากปิดตอนนี้ การเปลี่ยนแปลงของคุณจะสูญหาย",
+            confirmCloseSave: "โพสต์",
+            confirmCloseDiscard: "ละทิ้ง",
+            confirmCloseKeepEditing: "แก้ไขต่อ"
         },
         scriptures: {
             oldTestament: "พันธสัญญาเดิม",
@@ -3911,7 +3953,8 @@ export const translations = {
             errorEditMessage: "메시지 수정 실패",
             errorDeleteMessage: "메시지 삭제 실패",
             groupStatusUpdated: "그룹이 이제 {status} 상태입니다",
-            errorUpdateGroupStatus: "그룹 상태 업데이트 실패"
+            errorUpdateGroupStatus: "그룹 상태 업데이트 실패",
+            inactivityRemoval: "👋 **{count}명의 회원**이 3일 이상 활동하지 않아 제거되었습니다."
         },
         myNotes: {
             description: "노트 컬렉션",
@@ -4018,7 +4061,12 @@ export const translations = {
             titleLabel: "제목:",
             aiQuestionsGenerated: "AI 성찰 질문이 생성되었습니다!",
             aiQuestionsError: "질문 생성 실패. Gemini API 키가 누락되었을 수 있습니다.",
-            levelUp: "🎊 축하합니다! {level} 레벨에 도달했습니다! 🎊"
+            levelUp: "🎊 축하합니다! {level} 레벨에 도달했습니다! 🎊",
+            confirmCloseTitle: "변경 사항 게시?",
+            confirmCloseMessage: "지금 닫으면 변경 사항이 손실됩니다.",
+            confirmCloseSave: "게시하기",
+            confirmCloseDiscard: "취소",
+            confirmCloseKeepEditing: "계속 편집"
         },
         scriptures: {
             oldTestament: "구약전서",
@@ -4445,7 +4493,8 @@ export const translations = {
             errorEditMessage: "Nabigong i-edit ang mensahe",
             errorDeleteMessage: "Nabigong burahin ang mensahe",
             groupStatusUpdated: "Ang grupo ay {status} na ngayon",
-            errorUpdateGroupStatus: "Nabigong i-update ang status ng grupo"
+            errorUpdateGroupStatus: "Nabigong i-update ang status ng grupo",
+            inactivityRemoval: "👋 **{count} miyembro** ay inalis dahil sa kawalan ng aktibidad (higit sa 3 araw)."
         },
         myNotes: {
             description: "Koleksyon ng mga Tala",
@@ -4552,7 +4601,12 @@ export const translations = {
             titleLabel: "Pamagat:",
             aiQuestionsGenerated: "Gawa na ang mga tanong para sa pagninilay mula sa AI!",
             aiQuestionsError: "Nabigong gumawa ng mga tanong. Maaaring kulang ang Gemini API Key.",
-            levelUp: "🎊 Pagbati! Naabot mo na ang Level {level}! 🎊"
+            levelUp: "🎊 Pagbati! Naabot mo na ang Level {level}! 🎊",
+            confirmCloseTitle: "I-post ang mga pagbabago?",
+            confirmCloseMessage: "Kung isasara mo ngayon, mawawala ang iyong mga pagbabago.",
+            confirmCloseSave: "I-post",
+            confirmCloseDiscard: "Itapon",
+            confirmCloseKeepEditing: "Ipagpatuloy ang Pag-edit"
         },
         scriptures: {
             oldTestament: "Lumang Tipan",
@@ -4980,7 +5034,8 @@ export const translations = {
             errorEditMessage: "Imeshindwa kuhariri ujumbe",
             errorDeleteMessage: "Imeshindwa kufuta ujumbe",
             groupStatusUpdated: "Kikundi sasa ni {status}",
-            errorUpdateGroupStatus: "Imeshindwa kusasisha hali ya kikundi"
+            errorUpdateGroupStatus: "Imeshindwa kusasisha hali ya kikundi",
+            inactivityRemoval: "👋 **Wanachama {count}** wameondolewa kwa sababu ya kutokuwepo (zaidi ya siku 3)."
         },
         myNotes: {
             description: "Mkusanyiko wa Maelezo",
@@ -5087,7 +5142,12 @@ export const translations = {
             titleLabel: "Kichwa:",
             aiQuestionsGenerated: "Maswali ya kutafakari ya AI yametengenezwa!",
             aiQuestionsError: "Imeshindwa kutengeneza maswali. Huenda Gemini API Key imekosekana.",
-            levelUp: "🎊 Hongera! Umefikia Kiwango cha {level}! 🎊"
+            levelUp: "🎊 Hongera! Umefikia Kiwango cha {level}! 🎊",
+            confirmCloseTitle: "Chapisha mabadiliko?",
+            confirmCloseMessage: "Ukifunga sasa, mabadiliko yako yatapotea.",
+            confirmCloseSave: "Chapisha",
+            confirmCloseDiscard: "Tupa",
+            confirmCloseKeepEditing: "Endelea Kuhariri"
         },
         scriptures: {
             oldTestament: "Agano la Kale",
