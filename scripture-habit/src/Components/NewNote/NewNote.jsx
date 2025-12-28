@@ -33,6 +33,8 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
     const [selectedOption, setSelectedOption] = useState(null);
     const [comment, setComment] = useState('');
     const [aiQuestion, setAiQuestion] = useState('');
+    const [showCloseConfirm, setShowCloseConfirm] = useState(false);
+    const [initialValues, setInitialValues] = useState({ chapter: '', scripture: '', comment: '' });
 
     // New sharing states
     const [shareOption, setShareOption] = useState('all'); // 'all', 'specific', 'none', 'current'
@@ -116,6 +118,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             setChapter(chap);
             setScripture(script);
             setComment(comm);
+            setInitialValues({ chapter: chap, scripture: script, comment: comm });
 
             const option = translatedScripturesOptions.find(opt => opt.value.toLowerCase() === script.toLowerCase());
             setSelectedOption(option || null);
@@ -131,6 +134,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 setChapter(initialData.chapter || '');
                 setScripture(initialData.scripture || '');
                 setComment(initialData.comment || '');
+                setInitialValues({ chapter: initialData.chapter || '', scripture: initialData.scripture || '', comment: initialData.comment || '' });
 
                 if (initialData.scripture) {
                     const option = translatedScripturesOptions.find(opt => opt.value.toLowerCase() === initialData.scripture.toLowerCase());
@@ -142,6 +146,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 setChapter('');
                 setScripture('');
                 setComment('');
+                setInitialValues({ chapter: '', scripture: '', comment: '' });
                 setAiQuestion('');
                 setSelectedOption(null);
             }
@@ -164,6 +169,19 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 return [...prev, groupId];
             }
         });
+    };
+
+    const handleClose = () => {
+        const hasChanges =
+            chapter !== (initialValues.chapter || '') ||
+            scripture !== (initialValues.scripture || '') ||
+            comment !== (initialValues.comment || '');
+
+        if (hasChanges) {
+            setShowCloseConfirm(true);
+        } else {
+            onClose();
+        }
     };
 
     if (!isOpen) return null;
@@ -1155,307 +1173,351 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
     }
 
     return (
-        <div className="ModalOverlay" onClick={onClose}>
-            <div className="ModalContent" onClick={(e) => e.stopPropagation()}>
-                <div className="modal-header">
-                    <h1>{noteToEdit ? t('newNote.editTitle') : t('newNote.newTitle')}</h1>
-                    {noteToEdit && (
-                        <button
-                            className="delete-btn"
-                            onClick={onDelete}
-                            title={t('newNote.deleteTitle')}
-                        >
-                            <UilTrashAlt size="24" />
-                        </button>
-                    )}
-                </div>
-                {error && <p className="error-message">{error}</p>}
-                <div style={{ marginBottom: '1rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                        <label htmlFor="scripture-select" className="modal-label" style={{ marginBottom: 0 }}>{t('newNote.chooseScriptureLabel')}</label>
+        <>
+            {showCloseConfirm && (
+                <div className="ModalOverlay" style={{ zIndex: 1100, backgroundColor: 'rgba(0,0,0,0.5)' }} onClick={() => setShowCloseConfirm(false)}>
+                    <div className="ModalContent" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '400px', height: 'auto', padding: '2rem' }}>
+                        <div className="modal-header" style={{ justifyContent: 'center', marginBottom: '1rem' }}>
+                            <h2 style={{ fontSize: '1.2rem', fontWeight: 'bold', margin: 0, textAlign: 'center' }}>
+                                {t('newNote.confirmCloseTitle')}
+                            </h2>
+                        </div>
+                        <p style={{ textAlign: 'center', marginBottom: '2rem', color: '#666' }}>
+                            {t('newNote.confirmCloseMessage')}
+                        </p>
+                        <div className="modal-actions" style={{ justifyContent: 'center', gap: '1rem' }}>
+                            <button
+                                onClick={() => setShowCloseConfirm(false)}
+                                className="cancel-btn"
+                                style={{ background: '#e2e8f0', color: '#4a5568' }}
+                            >
+                                {t('newNote.confirmCloseKeepEditing')}
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowCloseConfirm(false);
+                                    onClose();
+                                }}
+                                className="cancel-btn"
+                                style={{ background: '#fed7d7', color: '#c53030' }}
+                            >
+                                {t('newNote.confirmCloseDiscard')}
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowCloseConfirm(false);
+                                    handleSubmit();
+                                }}
+                                className="submit-btn"
+                            >
+                                {t('newNote.confirmCloseSave')}
+                            </button>
+                        </div>
                     </div>
-                    <Select
-                        options={translatedScripturesOptions}
-                        onChange={(option) => {
-                            setSelectedOption(option);
-                            setScripture(option?.value);
-                        }}
-                        value={selectedOption}
-                        placeholder={t('newNote.chooseScripturePlaceholder')}
-                        styles={{
-                            control: (base) => ({
-                                ...base,
-                                backgroundColor: '#ffffff',
-                                borderColor: 'rgba(0, 0, 0, 0.05)',
-                                borderWidth: '2px',
-                                borderRadius: '0.5rem',
-                                padding: '0.2rem',
-                                color: '#333',
-                                boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)',
-                            }),
-                            placeholder: (base) => ({
-                                ...base,
-                                color: '#999',
-                            }),
-                            singleValue: (base) => ({
-                                ...base,
-                                color: '#333',
-                            }),
-                            input: (base) => ({
-                                ...base,
-                                color: '#333',
-                            }),
-                            menu: (base) => ({
-                                ...base,
-                                zIndex: 100,
-                                backgroundColor: '#ffffff',
-                                boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
-                                borderRadius: '0.5rem',
-                            }),
-                            option: (base, { isFocused, isSelected }) => ({
-                                ...base,
-                                backgroundColor: isSelected ? 'var(--pink)' : isFocused ? 'rgba(255, 145, 157, 0.1)' : 'transparent',
-                                color: isSelected ? 'white' : '#333',
-                                cursor: 'pointer',
-                                '&:active': {
-                                    backgroundColor: 'var(--pink)',
-                                    color: 'white',
-                                },
-                            })
-                        }}
-                    />
                 </div>
-
-                <Input
-                    label={scripture === "General Conference" ? t('newNote.urlLabel') : (scripture === "BYU Speeches" ? t('newNote.byuUrlLabel') : (scripture === "Other" ? t('newNote.otherUrlLabel') : t('newNote.chapterLabel')))}
-                    type="text"
-                    value={chapter}
-                    onChange={(e) => {
-                        let val = e.target.value;
-                        setChapter(val);
-                    }}
-                    required
-                    placeholder={scripture === "General Conference" ? t('newNote.urlPlaceholder') : (scripture === "BYU Speeches" ? t('newNote.byuUrlPlaceholder') : (scripture === "Other" ? t('newNote.otherUrlPlaceholder') : currentChapterPlaceholder))}
-                />
-
-                {!noteToEdit && (
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
-                        <button
-                            type="button"
-                            onClick={handleSurpriseMe}
-                            style={{
-                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '20px',
-                                padding: '0.3rem 0.8rem',
-                                fontSize: '0.8rem',
-                                cursor: 'pointer',
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.3rem',
-                                fontWeight: 'bold',
-                                boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
-                            }}
-                        >
-                            <UilShuffle size="16" /> {t('newNote.surpriseMe')}
-                        </button>
-                    </div>
-                )}
-
-                {isUrl && (gcLoading || gcMeta) && (
-                    <div style={{
-                        marginTop: '0.2rem',
-                        marginBottom: '1rem',
-                        padding: '0.5rem 0.8rem',
-                        backgroundColor: '#f7fafc',
-                        borderRadius: '8px',
-                        border: '1px solid #edf2f7',
-                        fontSize: '0.85rem'
-                    }}>
-                        {gcLoading ? (
-                            <span style={{ color: '#a0aec0', fontStyle: 'italic' }}>Fetching title...</span>
-                        ) : gcMeta && (
-                            <div style={{ color: '#4a5568', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-                                <div style={{ display: 'flex', gap: '0.5rem' }}>
-                                    <span style={{ fontWeight: 'bold', minWidth: 'fit-content' }}>{t('newNote.titleLabel')}</span>
-                                    <span style={{ color: '#2d3748' }}>{gcMeta.title}</span>
-                                </div>
-                                {gcMeta.speaker && (
-                                    <div style={{ fontSize: '0.8rem', opacity: 0.8, paddingLeft: 'calc(1.5rem + 0.5rem)' }}>
-                                        {gcMeta.speaker}
-                                    </div>
-                                )}
-                            </div>
+            )}
+            <div className="ModalOverlay" onClick={handleClose}>
+                <div className="ModalContent" onClick={(e) => e.stopPropagation()}>
+                    <div className="modal-header">
+                        <h1>{noteToEdit ? t('newNote.editTitle') : t('newNote.newTitle')}</h1>
+                        {noteToEdit && (
+                            <button
+                                className="delete-btn"
+                                onClick={onDelete}
+                                title={t('newNote.deleteTitle')}
+                            >
+                                <UilTrashAlt size="24" />
+                            </button>
                         )}
                     </div>
-                )}
-
-                {scripture && chapter && (['Old Testament', 'New Testament', 'Book of Mormon', 'Doctrine and Covenants', 'Pearl of Great Price', 'Ordinances and Proclamations'].includes(scripture) || (typeof chapter === 'string' && chapter.startsWith('http'))) && (
-                    <div className="gospel-link-container">
-                        <a
-                            href={typeof chapter === 'string' && chapter.startsWith('http') ? localizeLdsUrl(chapter, language) : getGospelLibraryUrl(scripture, chapter, language)}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="gospel-library-link"
-                        >
-                            {scripture === 'BYU Speeches' ? t('myNotes.goToByuSpeech') : t('myNotes.readInGospelLibrary')} <i className="uil uil-external-link-alt" style={{ fontSize: '0.85em' }}></i>
-                        </a>
-                    </div>
-                )}
-
-                {/* AI Button - simple styling inline for now */}
-                {!noteToEdit && (
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '-0.5rem', marginBottom: '0.5rem' }}>
-                        <button
-                            type="button"
-                            onClick={handleGenerateQuestions}
-                            disabled={aiLoading || !scripture || !chapter}
-                            style={{
-                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '20px',
-                                padding: '0.3rem 0.8rem',
-                                fontSize: '0.8rem',
-                                cursor: 'pointer',
-                                opacity: (aiLoading || !scripture || !chapter) ? 0.7 : 1,
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '0.3rem',
-                                boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                    {error && <p className="error-message">{error}</p>}
+                    <div style={{ marginBottom: '1rem' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                            <label htmlFor="scripture-select" className="modal-label" style={{ marginBottom: 0 }}>{t('newNote.chooseScriptureLabel')}</label>
+                        </div>
+                        <Select
+                            options={translatedScripturesOptions}
+                            onChange={(option) => {
+                                setSelectedOption(option);
+                                setScripture(option?.value);
                             }}
-                        >
-                            {aiLoading ? 'Thinking...' : t('newNote.askAiQuestion')}
-                        </button>
-                    </div>
-                )}
-
-                {aiQuestion && (
-                    <div style={{
-                        backgroundColor: '#f0f4ff',
-                        padding: '10px',
-                        borderRadius: '8px',
-                        marginBottom: '1rem',
-                        border: '1px solid #dbe4ff',
-                        position: 'relative'
-                    }}>
-                        <p style={{ margin: 0, fontSize: '0.9rem', color: '#4a5568', whiteSpace: 'pre-wrap' }}>
-                            <strong>{t('newNote.aiQuestion')}</strong><br />
-                            {aiQuestion}
-                        </p>
-                        <button
-                            onClick={() => setAiQuestion('')}
-                            style={{
-                                position: 'absolute',
-                                top: '5px',
-                                right: '5px',
-                                background: 'transparent',
-                                border: 'none',
-                                cursor: 'pointer',
-                                color: '#a0aec0',
-                                fontSize: '1rem',
-                                padding: '0 5px'
+                            value={selectedOption}
+                            placeholder={t('newNote.chooseScripturePlaceholder')}
+                            styles={{
+                                control: (base) => ({
+                                    ...base,
+                                    backgroundColor: '#ffffff',
+                                    borderColor: 'rgba(0, 0, 0, 0.05)',
+                                    borderWidth: '2px',
+                                    borderRadius: '0.5rem',
+                                    padding: '0.2rem',
+                                    color: '#333',
+                                    boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.02)',
+                                }),
+                                placeholder: (base) => ({
+                                    ...base,
+                                    color: '#999',
+                                }),
+                                singleValue: (base) => ({
+                                    ...base,
+                                    color: '#333',
+                                }),
+                                input: (base) => ({
+                                    ...base,
+                                    color: '#333',
+                                }),
+                                menu: (base) => ({
+                                    ...base,
+                                    zIndex: 100,
+                                    backgroundColor: '#ffffff',
+                                    boxShadow: '0 4px 15px rgba(0,0,0,0.1)',
+                                    borderRadius: '0.5rem',
+                                }),
+                                option: (base, { isFocused, isSelected }) => ({
+                                    ...base,
+                                    backgroundColor: isSelected ? 'var(--pink)' : isFocused ? 'rgba(255, 145, 157, 0.1)' : 'transparent',
+                                    color: isSelected ? 'white' : '#333',
+                                    cursor: 'pointer',
+                                    '&:active': {
+                                        backgroundColor: 'var(--pink)',
+                                        color: 'white',
+                                    },
+                                })
                             }}
-                        >
-                            ×
-                        </button>
+                        />
                     </div>
-                )}
 
-                <Input
-                    label={t('newNote.commentLabel')}
-                    as="textarea"
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    required
-                    placeholder={currentCommentPlaceholder}
-                />
+                    <Input
+                        label={scripture === "General Conference" ? t('newNote.urlLabel') : (scripture === "BYU Speeches" ? t('newNote.byuUrlLabel') : (scripture === "Other" ? t('newNote.otherUrlLabel') : t('newNote.chapterLabel')))}
+                        type="text"
+                        value={chapter}
+                        onChange={(e) => {
+                            let val = e.target.value;
+                            setChapter(val);
+                        }}
+                        required
+                        placeholder={scripture === "General Conference" ? t('newNote.urlPlaceholder') : (scripture === "BYU Speeches" ? t('newNote.byuUrlPlaceholder') : (scripture === "Other" ? t('newNote.otherUrlPlaceholder') : currentChapterPlaceholder))}
+                    />
 
-                {!noteToEdit && (
-                    <div className="sharing-options">
-                        <label className="sharing-label">{t('newNote.shareLabel')}</label>
+                    {!noteToEdit && (
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem', marginTop: '0.5rem', marginBottom: '0.5rem' }}>
+                            <button
+                                type="button"
+                                onClick={handleSurpriseMe}
+                                style={{
+                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '20px',
+                                    padding: '0.3rem 0.8rem',
+                                    fontSize: '0.8rem',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.3rem',
+                                    fontWeight: 'bold',
+                                    boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                                }}
+                            >
+                                <UilShuffle size="16" /> {t('newNote.surpriseMe')}
+                            </button>
+                        </div>
+                    )}
 
-                        <div className="radio-group">
-                            <label className={`radio-option ${userGroups.length === 0 ? 'disabled' : ''}`}>
-                                <input
-                                    type="radio"
-                                    value="all"
-                                    checked={shareOption === 'all'}
-                                    onChange={(e) => setShareOption(e.target.value)}
-                                    disabled={userGroups.length === 0}
-                                />
-                                <span>{t('newNote.shareAll')}</span>
-                            </label>
+                    {isUrl && (gcLoading || gcMeta) && (
+                        <div style={{
+                            marginTop: '0.2rem',
+                            marginBottom: '1rem',
+                            padding: '0.5rem 0.8rem',
+                            backgroundColor: '#f7fafc',
+                            borderRadius: '8px',
+                            border: '1px solid #edf2f7',
+                            fontSize: '0.85rem'
+                        }}>
+                            {gcLoading ? (
+                                <span style={{ color: '#a0aec0', fontStyle: 'italic' }}>Fetching title...</span>
+                            ) : gcMeta && (
+                                <div style={{ color: '#4a5568', display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                                        <span style={{ fontWeight: 'bold', minWidth: 'fit-content' }}>{t('newNote.titleLabel')}</span>
+                                        <span style={{ color: '#2d3748' }}>{gcMeta.title}</span>
+                                    </div>
+                                    {gcMeta.speaker && (
+                                        <div style={{ fontSize: '0.8rem', opacity: 0.8, paddingLeft: 'calc(1.5rem + 0.5rem)' }}>
+                                            {gcMeta.speaker}
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+                    )}
 
-                            {isGroupContext && (currentGroupId || userData.groupId) && (
+                    {scripture && chapter && (['Old Testament', 'New Testament', 'Book of Mormon', 'Doctrine and Covenants', 'Pearl of Great Price', 'Ordinances and Proclamations'].includes(scripture) || (typeof chapter === 'string' && chapter.startsWith('http'))) && (
+                        <div className="gospel-link-container">
+                            <a
+                                href={typeof chapter === 'string' && chapter.startsWith('http') ? localizeLdsUrl(chapter, language) : getGospelLibraryUrl(scripture, chapter, language)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="gospel-library-link"
+                            >
+                                {scripture === 'BYU Speeches' ? t('myNotes.goToByuSpeech') : t('myNotes.readInGospelLibrary')} <i className="uil uil-external-link-alt" style={{ fontSize: '0.85em' }}></i>
+                            </a>
+                        </div>
+                    )}
+
+                    {/* AI Button - simple styling inline for now */}
+                    {!noteToEdit && (
+                        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '-0.5rem', marginBottom: '0.5rem' }}>
+                            <button
+                                type="button"
+                                onClick={handleGenerateQuestions}
+                                disabled={aiLoading || !scripture || !chapter}
+                                style={{
+                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '20px',
+                                    padding: '0.3rem 0.8rem',
+                                    fontSize: '0.8rem',
+                                    cursor: 'pointer',
+                                    opacity: (aiLoading || !scripture || !chapter) ? 0.7 : 1,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '0.3rem',
+                                    boxShadow: '0 2px 5px rgba(0,0,0,0.1)'
+                                }}
+                            >
+                                {aiLoading ? 'Thinking...' : t('newNote.askAiQuestion')}
+                            </button>
+                        </div>
+                    )}
+
+                    {aiQuestion && (
+                        <div style={{
+                            backgroundColor: '#f0f4ff',
+                            padding: '10px',
+                            borderRadius: '8px',
+                            marginBottom: '1rem',
+                            border: '1px solid #dbe4ff',
+                            position: 'relative'
+                        }}>
+                            <p style={{ margin: 0, fontSize: '0.9rem', color: '#4a5568', whiteSpace: 'pre-wrap' }}>
+                                <strong>{t('newNote.aiQuestion')}</strong><br />
+                                {aiQuestion}
+                            </p>
+                            <button
+                                onClick={() => setAiQuestion('')}
+                                style={{
+                                    position: 'absolute',
+                                    top: '5px',
+                                    right: '5px',
+                                    background: 'transparent',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    color: '#a0aec0',
+                                    fontSize: '1rem',
+                                    padding: '0 5px'
+                                }}
+                            >
+                                ×
+                            </button>
+                        </div>
+                    )}
+
+                    <Input
+                        label={t('newNote.commentLabel')}
+                        as="textarea"
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        required
+                        placeholder={currentCommentPlaceholder}
+                    />
+
+                    {!noteToEdit && (
+                        <div className="sharing-options">
+                            <label className="sharing-label">{t('newNote.shareLabel')}</label>
+
+                            <div className="radio-group">
+                                <label className={`radio-option ${userGroups.length === 0 ? 'disabled' : ''}`}>
+                                    <input
+                                        type="radio"
+                                        value="all"
+                                        checked={shareOption === 'all'}
+                                        onChange={(e) => setShareOption(e.target.value)}
+                                        disabled={userGroups.length === 0}
+                                    />
+                                    <span>{t('newNote.shareAll')}</span>
+                                </label>
+
+                                {isGroupContext && (currentGroupId || userData.groupId) && (
+                                    <label className="radio-option">
+                                        <input
+                                            type="radio"
+                                            value="current"
+                                            checked={shareOption === 'current'}
+                                            onChange={(e) => setShareOption(e.target.value)}
+                                        />
+                                        <span>{t('newNote.shareCurrent')}</span>
+                                    </label>
+                                )}
+
+                                <label className={`radio-option ${userGroups.length === 0 ? 'disabled' : ''}`}>
+                                    <input
+                                        type="radio"
+                                        value="specific"
+                                        checked={shareOption === 'specific'}
+                                        onChange={(e) => setShareOption(e.target.value)}
+                                        disabled={userGroups.length === 0}
+                                    />
+                                    <span>{t('newNote.shareSpecific')}</span>
+                                </label>
+
                                 <label className="radio-option">
                                     <input
                                         type="radio"
-                                        value="current"
-                                        checked={shareOption === 'current'}
+                                        value="none"
+                                        checked={shareOption === 'none'}
                                         onChange={(e) => setShareOption(e.target.value)}
                                     />
-                                    <span>{t('newNote.shareCurrent')}</span>
+                                    <span>{t('newNote.shareNone')}</span>
                                 </label>
-                            )}
-
-                            <label className={`radio-option ${userGroups.length === 0 ? 'disabled' : ''}`}>
-                                <input
-                                    type="radio"
-                                    value="specific"
-                                    checked={shareOption === 'specific'}
-                                    onChange={(e) => setShareOption(e.target.value)}
-                                    disabled={userGroups.length === 0}
-                                />
-                                <span>{t('newNote.shareSpecific')}</span>
-                            </label>
-
-                            <label className="radio-option">
-                                <input
-                                    type="radio"
-                                    value="none"
-                                    checked={shareOption === 'none'}
-                                    onChange={(e) => setShareOption(e.target.value)}
-                                />
-                                <span>{t('newNote.shareNone')}</span>
-                            </label>
-                        </div>
-
-                        {shareOption === 'specific' && (
-                            <div className="group-selection-list">
-                                {userGroups.length === 0 && (
-                                    <p style={{ color: 'var(--black)', fontStyle: 'italic', padding: '0.5rem' }}>
-                                        {t('newNote.noGroups')}
-                                    </p>
-                                )}
-                                {userGroups.map(group => (
-                                    <label key={group.id} className="group-checkbox-item">
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedShareGroups.includes(group.id)}
-                                            onChange={() => handleGroupSelection(group.id)}
-                                        />
-                                        <span>{group.name || t('newNote.unnamedGroup')}</span>
-                                    </label>
-                                ))}
                             </div>
-                        )}
-                    </div>
-                )}
 
-                <div className="modal-actions">
-                    <button onClick={onClose} className="cancel-btn">{t('newNote.cancel')}</button>
-                    <button
-                        onClick={handleSubmit}
-                        disabled={loading || !scripture || !chapter || !comment}
-                        className="submit-btn"
-                    >
-                        {loading ? t('newNote.saving') : (noteToEdit ? <>✨ {t('newNote.update')}</> : <>✨ {t('newNote.post')}</>)}
-                    </button>
+                            {shareOption === 'specific' && (
+                                <div className="group-selection-list">
+                                    {userGroups.length === 0 && (
+                                        <p style={{ color: 'var(--black)', fontStyle: 'italic', padding: '0.5rem' }}>
+                                            {t('newNote.noGroups')}
+                                        </p>
+                                    )}
+                                    {userGroups.map(group => (
+                                        <label key={group.id} className="group-checkbox-item">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedShareGroups.includes(group.id)}
+                                                onChange={() => handleGroupSelection(group.id)}
+                                            />
+                                            <span>{group.name || t('newNote.unnamedGroup')}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    <div className="modal-actions">
+                        <button onClick={handleClose} className="cancel-btn">{t('newNote.cancel')}</button>
+                        <button
+                            onClick={handleSubmit}
+                            disabled={loading || !scripture || !chapter || !comment}
+                            className="submit-btn"
+                        >
+                            {loading ? t('newNote.saving') : (noteToEdit ? <>✨ {t('newNote.update')}</> : <>✨ {t('newNote.post')}</>)}
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

@@ -2515,6 +2515,13 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                           }
                         }
 
+                        // Inactivity Removal Pattern
+                        const inactivityPattern = /👋 \*\*(\d+) member\(s\)\*\* were removed due to inactivity \(3\+ days\)\./;
+                        const inactivityMatch = msg.text?.match(inactivityPattern);
+                        if (inactivityMatch) {
+                          return t('groupChat.inactivityRemoval', { count: inactivityMatch[1] });
+                        }
+
                         // No match found, return original text
                         return msg.text;
                       })()}
