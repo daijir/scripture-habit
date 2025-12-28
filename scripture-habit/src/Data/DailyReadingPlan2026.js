@@ -1,5 +1,5 @@
 export const DailyReadingPlan2026 = [
-    { day: 1, scripts: ["Moses 6:63", "Exodus 16:4", "John 6:35"], date: "2025-12-29" },
+    { day: 1, scripts: ["Moses 6:63", "Exodus 16:4", "Exodus 16:11-15", "John 6:35"], date: "2025-12-29" },
     { day: 2, scripts: ["Moses 12:3-5", "John 1:29"], date: "2025-12-30" },
     { day: 3, scripts: ["Numbers 21:4-10", "John 3:14"], date: "2025-12-31" },
     { day: 4, scripts: ["John 1:4-17", "Matthew 12:38-41"], date: "2026-01-01" },
