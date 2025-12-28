@@ -96,6 +96,25 @@ const Donate = ({ userData }) => {
                         <h3>{t('donate.contactTitle')}</h3>
                         <p className="donate-contact-text">{t('donate.contactDesc')}</p>
                     </div>
+
+                    <div className="donate-legal-link">
+                        <button
+                            className="legal-disclosure-btn"
+                            onClick={() => window.open('/legal', '_self')}
+                            style={{
+                                background: 'none',
+                                border: 'none',
+                                color: 'var(--gray)',
+                                fontSize: '0.8rem',
+                                textDecoration: 'underline',
+                                cursor: 'pointer',
+                                marginTop: '1rem',
+                                opacity: 0.7
+                            }}
+                        >
+                            {t('donate.legalDisclosureLink')}
+                        </button>
+                    </div>
                 </div>
             </div>
 

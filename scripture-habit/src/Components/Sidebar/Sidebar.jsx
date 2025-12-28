@@ -241,6 +241,12 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
             <UilHeart />
             <span>{t('sidebar.donate')}</span>
           </div>
+
+          <div className="sidebar-footer">
+            <span onClick={() => navigate('/privacy')}>{t('privacy.title')}</span>
+            <span onClick={() => navigate('/terms')}>{t('terms.title')}</span>
+            <span onClick={() => navigate('/legal')}>{t('legalDisclosure.title')}</span>
+          </div>
         </div>
       </div>
 

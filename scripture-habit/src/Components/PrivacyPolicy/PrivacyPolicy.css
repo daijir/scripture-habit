@@ -90,6 +90,24 @@
     margin-bottom: 2.5rem;
 }
 
+.disclaimer-section {
+    background: #fff5f5;
+    border: 1px solid #feb2b2;
+    padding: 1.2rem;
+    border-radius: 12px;
+    margin-bottom: 2.5rem !important;
+}
+
+.disclaimer-section h2 {
+    margin-top: 0 !important;
+}
+
+.disclaimer-section p {
+    margin-bottom: 0 !important;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
 .privacy-content h2 {
     font-size: 1.4rem;
     color: #2d3748;

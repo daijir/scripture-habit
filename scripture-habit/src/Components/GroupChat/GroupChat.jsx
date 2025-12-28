@@ -19,6 +19,7 @@ import NoteDisplay from '../NoteDisplay/NoteDisplay';
 import confetti from 'canvas-confetti';
 import UserProfileModal from '../UserProfileModal/UserProfileModal';
 import Mascot from '../Mascot/Mascot';
+import { UilExclamationTriangle } from '@iconscout/react-unicons';
 
 const GroupMenuItem = ({ group, currentGroupId, language, onSelect, t }) => {
   const [translatedName, setTranslatedName] = useState('');
@@ -181,6 +182,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   const [selectedMember, setSelectedMember] = useState(null);
   const [showUnityModal, setShowUnityModal] = useState(false);
   const [unityModalData, setUnityModalData] = useState({ posted: [], notPosted: [] });
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportedMessage, setReportedMessage] = useState(null);
+  const [reportReason, setReportReason] = useState('inappropriate');
   const longPressTimer = useRef(null);
   const containerRef = useRef(null);
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
@@ -1529,6 +1533,39 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     }
   };
 
+  const handleReportClick = (msg) => {
+    setReportedMessage(msg);
+    setReportReason('inappropriate');
+    setShowReportModal(true);
+    setContextMenu({ ...contextMenu, show: false });
+  };
+
+  const confirmReport = async () => {
+    if (!reportedMessage || !userData) return;
+
+    try {
+      await addDoc(collection(db, 'reports'), {
+        messageId: reportedMessage.id,
+        groupId: groupId,
+        reporterId: userData.uid,
+        reporterNickname: userData.nickname || 'Unknown',
+        reportedUserId: reportedMessage.senderId,
+        reportedUserNickname: reportedMessage.senderNickname,
+        messageText: reportedMessage.text,
+        reason: reportReason,
+        createdAt: serverTimestamp(),
+        status: 'pending'
+      });
+
+      toast.success(t('groupChat.reportSuccess') || "Report sent successfully.");
+      setShowReportModal(false);
+      setReportedMessage(null);
+    } catch (error) {
+      console.error("Error submitting report:", error);
+      toast.error("Failed to submit report. Please try again.");
+    }
+  };
+
   // Helper function to translate scripture names
   const translateScriptureName = (scriptureName) => {
     const scriptureMapping = {
@@ -1804,7 +1841,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     handleGenerateWeeklyRecap();
   };
 
-  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit || showEditNameModal || showMembersModal || showUnityModal || showInviteModal;
+  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit || showEditNameModal || showMembersModal || showUnityModal || showInviteModal || showReportModal;
 
   // Calculate Unity Score (Percentage of members who posted today)
   const unityPercentage = useMemo(() => {
@@ -2593,6 +2630,13 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                           >
                             {translatingIds.has(msg.id) ? '⏳' : '✨'}
                           </button>
+                          <button
+                            className="hover-action-btn report-btn"
+                            onClick={(e) => { e.stopPropagation(); handleReportClick(msg); }}
+                            title={t('groupChat.report')}
+                          >
+                            🚩
+                          </button>
                         </>
                       )}
                     </div>
@@ -2778,6 +2822,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                 </button>
                 <button onClick={() => { handleTranslateMessage(contextMenu.message); closeContextMenu(); }}>
                   {translatingIds.has(contextMenu.message.id) ? '⏳ ...' : `✨ ${t('groupChat.translate')}`}
+                </button>
+                <button onClick={() => handleReportClick(contextMenu.message)} className="report-option">
+                  🚩 {t('groupChat.report')}
                 </button>
               </>
             )}
@@ -3057,6 +3104,82 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
             <div className="leave-modal-actions" style={{ marginTop: '1.5rem' }}>
               <button className="modal-btn primary" onClick={() => setShowUnityModal(false)} style={{ width: '100%', maxWidth: 'none' }}>
                 {t('groupChat.welcomeGuideButton') || t('welcomeGuideButton') || "Got it!"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Report Modal */}
+      {showReportModal && (
+        <div className="leave-modal-overlay report-modal-overlay" onClick={() => setShowReportModal(false)}>
+          <div className="leave-modal-content report-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <UilExclamationTriangle size="24" color="#E53E3E" />
+                {t('groupChat.reportUser')}
+              </h3>
+              <button className="close-menu-btn" onClick={() => setShowReportModal(false)}>
+                <UilTimes size="24" />
+              </button>
+            </div>
+
+            <div className="report-modal-body">
+              <p className="report-hint">{t('groupChat.reportReason')}:</p>
+
+              <div className="report-options">
+                <label className={`report-option-label ${reportReason === 'inappropriate' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="reportReason"
+                    value="inappropriate"
+                    checked={reportReason === 'inappropriate'}
+                    onChange={(e) => setReportReason(e.target.value)}
+                  />
+                  <span>{t('groupChat.reportInappropriate')}</span>
+                </label>
+
+                <label className={`report-option-label ${reportReason === 'harassment' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="reportReason"
+                    value="harassment"
+                    checked={reportReason === 'harassment'}
+                    onChange={(e) => setReportReason(e.target.value)}
+                  />
+                  <span>{t('groupChat.reportHarassment')}</span>
+                </label>
+
+                <label className={`report-option-label ${reportReason === 'spam' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="reportReason"
+                    value="spam"
+                    checked={reportReason === 'spam'}
+                    onChange={(e) => setReportReason(e.target.value)}
+                  />
+                  <span>{t('groupChat.reportSpam')}</span>
+                </label>
+
+                <label className={`report-option-label ${reportReason === 'other' ? 'selected' : ''}`}>
+                  <input
+                    type="radio"
+                    name="reportReason"
+                    value="other"
+                    checked={reportReason === 'other'}
+                    onChange={(e) => setReportReason(e.target.value)}
+                  />
+                  <span>{t('groupChat.reportOther')}</span>
+                </label>
+              </div>
+            </div>
+
+            <div className="leave-modal-actions">
+              <button className="modal-btn cancel" onClick={() => setShowReportModal(false)}>
+                {t('groupChat.cancel')}
+              </button>
+              <button className="modal-btn leave report-submit" onClick={confirmReport}>
+                {t('groupChat.report')}
               </button>
             </div>
           </div>

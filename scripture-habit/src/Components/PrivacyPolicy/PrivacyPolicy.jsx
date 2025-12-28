@@ -27,6 +27,11 @@ const PrivacyPolicy = () => {
                     <p className="last-updated">{t('privacy.lastUpdated')}</p>
                     <p className="intro">{t('privacy.intro')}</p>
 
+                    <section className="disclaimer-section">
+                        <h2 style={{ color: '#E53E3E' }}>{t('terms.officialDisclaimer')}</h2>
+                        <p><strong>{t('terms.officialDisclaimerItems')}</strong></p>
+                    </section>
+
                     <section>
                         <h2>{t('privacy.dataCollection')}</h2>
                         <p>{t('privacy.dataCollectionItems')}</p>

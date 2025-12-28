@@ -23,9 +23,11 @@ import { MAINTENANCE_MODE } from './config';
 import * as Sentry from "@sentry/react";
 import InstallPrompt from './Components/InstallPrompt/InstallPrompt';
 import { handleLineRedirect } from './Utils/browserDetection';
+import CookieConsent from './Components/CookieConsent/CookieConsent';
 
 import PrivacyPolicy from './Components/PrivacyPolicy/PrivacyPolicy';
 import TermsOfService from './Components/TermsOfService/TermsOfService';
+import LegalDisclosure from './Components/LegalDisclosure/LegalDisclosure';
 
 const SEOManager = () => {
   const { t, language } = useLanguage();
@@ -123,11 +125,13 @@ const App = () => {
           <Route path="/join/:inviteCode" element={<InviteRedirect />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/legal" element={<LegalDisclosure />} />
 
         </Routes>
         <ToastContainer position="top-right" autoClose={3000} />
         <Analytics />
         <InstallPrompt />
+        <CookieConsent />
       </div>
     </LanguageProvider>
   );
