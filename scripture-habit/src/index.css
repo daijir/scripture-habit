@@ -38,6 +38,11 @@
   font-family: 'Inter', sans-serif;
 }
 
+.App.Dashboard {
+  flex-direction: column;
+  align-items: stretch;
+}
+
 .AppGlass {
   padding-top: 20px;
   min-height: 97%;

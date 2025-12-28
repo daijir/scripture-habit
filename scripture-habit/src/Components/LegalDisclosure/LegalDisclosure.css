@@ -31,7 +31,7 @@
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
-    color: var(--pink);
+    color: var(--black);
 }
 
 .back-btn:hover {

@@ -2,6 +2,7 @@ import React from 'react';
 import './Donate.css';
 import { useLanguage } from '../../Context/LanguageContext';
 import Mascot from '../Mascot/Mascot';
+import Footer from '../Footer/Footer';
 
 const Donate = ({ userData }) => {
     const { t } = useLanguage();
@@ -138,6 +139,7 @@ const Donate = ({ userData }) => {
                     </div>
                 )
             }
+            <Footer />
         </div>
     );
 };

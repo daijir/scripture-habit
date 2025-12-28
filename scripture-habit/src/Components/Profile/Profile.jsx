@@ -8,6 +8,7 @@ import { doc, updateDoc, deleteDoc, collection, query, where, getDocs, writeBatc
 import { deleteUser } from 'firebase/auth';
 import Button from '../Button/Button';
 import { toast } from 'react-toastify';
+import Footer from '../Footer/Footer';
 
 const Profile = ({ userData, stats }) => {
     const { language, setLanguage, t } = useLanguage();
@@ -389,6 +390,7 @@ const Profile = ({ userData, stats }) => {
                     </div>
                 </div>
             )}
+            <Footer />
         </div >
     );
 };
