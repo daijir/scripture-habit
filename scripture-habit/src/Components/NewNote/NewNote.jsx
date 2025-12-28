@@ -18,7 +18,7 @@ import './NewNote.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 import { removeNoteHeader } from '../../Utils/noteUtils';
 import { translateChapterField } from '../../Utils/bookNameTranslations';
-import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
+import { getGospelLibraryUrl, getCategoryFromScripture } from '../../Utils/gospelLibraryMapper';
 import { getTodayReadingPlan } from '../../Data/DailyReadingPlan';
 import { localizeLdsUrl } from '../../Utils/urlLocalizer';
 import { UilBookOpen } from '@iconscout/react-unicons';
@@ -294,167 +294,15 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
 
     const fillScriptureData = (script) => {
-        let category = 'Other';
-        let chapterVal = script;
+        const category = getCategoryFromScripture(script);
+        let chapterVal = translateChapterField(script, language);
 
-        // Special handling for 2025 D&C Year
-        if (script.includes("Official Declarations")) {
-            category = "Doctrine and Covenants";
-            // Check for translations
-            const odTranslations = {
-                ja: "公式の宣言",
-                pt: "Declarações Oficiais",
-                zho: "正式宣言",
-                es: "Declaraciones Oficiales",
-                vi: "Tuyên Ngôn Chính Thức",
-                th: "คำประกาศอย่างเป็นทางการ",
-                ko: "공식 선언",
-                tl: "Opisyal na Pahayag",
-                sw: "Matamko Rasmi"
-            };
-            if (odTranslations[language]) {
-                chapterVal = script.replace("Official Declarations", odTranslations[language]);
-            }
-        } else if (script.includes("Doctrine and Covenants")) {
-            category = "Doctrine and Covenants";
-            // e.g. "Doctrine and Covenants 1" -> "1"
-            const match = script.match(/Doctrine and Covenants\s+(.*)/);
+        // Special handling for Doctrine and Covenants: often just show section number
+        if (category === "Doctrine and Covenants") {
+            const match = script.match(/(?:Doctrine and Covenants|D&C)\s+(.*)/i);
             if (match) {
                 chapterVal = match[1]; // Just the section number
             }
-        } else if (script.includes("Joseph Smith—History") || script.includes("Joseph Smith-History")) {
-            category = "Pearl of Great Price";
-            // Keep full string but maybe translate "Joseph Smith—History" if needed?
-            // Usually standard books handle themselves or user can edit. 
-            // Let's pass the string as is or if we want to be fancy:
-            const jshTranslations = {
-                ja: "ジョセフ・スミスー歴史"
-            };
-            if (jshTranslations[language]) {
-                chapterVal = script.replace(/Joseph Smith[—-]History/, jshTranslations[language]);
-            }
-        } else if (script.includes("Articles of Faith")) {
-            category = "Pearl of Great Price";
-            const aofTranslations = {
-                ja: "信仰箇条",
-                pt: "Regras de Fé",
-                zho: "信條",
-                es: "Artículos de Fe",
-                vi: "Những Tín Điều",
-                th: "หลักแห่งความเชื่อ",
-                ko: "신앙개조",
-                tl: "Mga Saligan ng Pananampalataya",
-                sw: "Makala ya Imani"
-            };
-            if (aofTranslations[language]) {
-                chapterVal = script.replace("Articles of Faith", aofTranslations[language]);
-            }
-        } else if (script.includes("The Family: A Proclamation") || script.includes("The Living Christ") || script.includes("The Restoration")) {
-            category = "Ordinances and Proclamations";
-
-            // Translations map
-            const opTranslations = {
-                "The Family: A Proclamation to the World": {
-                    ja: "家族：世界への宣言",
-                    pt: "A Família: Proclamação ao Mundo",
-                    zho: "家庭：致全世界文告",
-                    es: "La Familia: Una Proclamación para el Mundo",
-                    vi: "Gia Đình: Bản Tuyên Ngôn gửi cho Thế Giới",
-                    th: "ครอบครัว: ถ้อยแถลงต่อโลก",
-                    ko: "가족: 세상에 전하는 선언문",
-                    tl: "Ang Mag-anak: Isang Pagpapahayag sa Mundo",
-                    sw: "Familia: Tangazo kwa Ulimwengu"
-                },
-                "The Living Christ: The Testimony of the Apostles": {
-                    ja: "生けるキリスト：使徒たちの証",
-                    pt: "O Cristo Vivo: O Testemunho dos Apóstolos",
-                    zho: "活著的基督：使徒的見證",
-                    es: "El Cristo Viviente: El Testimonio de los Apóstoles",
-                    vi: "Đấng Ky Tô Sống: Chứng Ngôn của Các Vị Sứ Đồ",
-                    th: "พระคริสต์ที่ทรงพระชนม์: คำพยานของอัครสาวก",
-                    ko: "살아 계신 그리스도: 사도들의 간증",
-                    tl: "Ang Buhay na Cristo: Ang Patotoo ng mga Apostol",
-                    sw: "Kristo Aliye Hai: Ushuhuda wa Mitume"
-                },
-                "The Restoration of the Fulness of the Gospel of Jesus Christ: A Bicentennial Proclamation to the World": {
-                    ja: "イエス・キリストの福音の満ちみちた回復：世界への宣言200周年",
-                    pt: "A Restauração da Plenitude do Evangelho de Jesus Cristo: Uma Proclamação Bicentenária ao Mundo",
-                    zho: "耶穌基督福音的復興：兩百週年致全世界文告",
-                    es: "La Restauración de la plenitud del evangelio de Jesucristo: Una proclamación para el mundo en el bicentenario",
-                    vi: "Sự Phục Hồi Trọn Vẹn Phúc Âm của Chúa Giê Su Ky Tô: Bản Tuyên Ngôn Kỷ Niệm Hai Trăm Năm Gửi cho Thế Giới",
-                    th: "การฟื้นฟูความสมบูรณ์ของพระกิตติคุณของพระเยซูคริสต์: ถ้อยแถลงในวาระครบสองศตวรรษต่อโลก",
-                    ko: "예수 그리스도 복음의 충만함의 회복: 세상에 전하는 이백주년 선언문",
-                    tl: "Ang Pagapanumbalik ng Kabuuan ng Ebanghelyo ni Jesucristo: Isang Pagpapahayag sa Mundo sa Ika-200 Anibersaryo",
-                    sw: "Urejesho wa Utimilifu wa Injili ya Yesu Kristo: Tangazo la Miaka Mia Mbili kwa Ulimwengu"
-                },
-                // Short versions for robustness
-                "The Living Christ": {
-                    ja: "生けるキリスト",
-                    pt: "O Cristo Vivo",
-                    zho: "活著的基督",
-                    es: "El Cristo Viviente",
-                    vi: "Đấng Ky Tô Sống",
-                    th: "พระคริสต์ที่ทรงพระชนม์",
-                    ko: "살아 계신 그리스도",
-                    tl: "Ang Buhay na Cristo",
-                    sw: "Kristo Aliye Hai"
-                },
-                "The Restoration": {
-                    ja: "回復の宣言",
-                    pt: "A Restauração",
-                    zho: "復興宣文",
-                    es: "La Restauración",
-                    vi: "Sự Phục Hồi",
-                    th: "การฟื้นฟู",
-                    ko: "회복 선언문",
-                    tl: "Ang Pagapanumbalik",
-                    sw: "Urejesho"
-                }
-            };
-
-            // Logic to replace keeping verses
-            // 1. Check Long Restoration
-            const restorationLong = "The Restoration of the Fulness of the Gospel of Jesus Christ: A Bicentennial Proclamation to the World";
-            if (script.includes(restorationLong)) {
-                if (opTranslations[restorationLong][language]) {
-                    chapterVal = script.replace(restorationLong, opTranslations[restorationLong][language]);
-                } else if (opTranslations["The Restoration"][language]) {
-                    // Fallback to short translation if long not mapped perfectly
-                    chapterVal = script.replace("The Restoration", opTranslations["The Restoration"][language]);
-                }
-            }
-            // 2. Check Living Christ Long
-            else if (script.includes("The Living Christ: The Testimony of the Apostles")) {
-                const key = "The Living Christ: The Testimony of the Apostles";
-                if (opTranslations[key][language]) {
-                    chapterVal = script.replace(key, opTranslations[key][language]);
-                } else if (opTranslations["The Living Christ"][language]) {
-                    chapterVal = script.replace("The Living Christ", opTranslations["The Living Christ"][language]);
-                }
-            }
-            // 3. Check Family Proclamation
-            else if (script.includes("The Family: A Proclamation to the World")) {
-                const key = "The Family: A Proclamation to the World";
-                if (opTranslations[key][language]) {
-                    chapterVal = script.replace(key, opTranslations[key][language]);
-                }
-            }
-            // 4. Fallbacks for partial matches
-            else if (script.includes("The Restoration")) {
-                if (opTranslations["The Restoration"][language]) {
-                    chapterVal = script.replace("The Restoration", opTranslations["The Restoration"][language]);
-                }
-            } else if (script.includes("The Living Christ")) {
-                if (opTranslations["The Living Christ"][language]) {
-                    chapterVal = script.replace("The Living Christ", opTranslations["The Living Christ"][language]);
-                }
-            }
-
-        } else {
-            // General logic for standard books if they appeared (e.g. Old Testament)
-            // But for 2025 it's mostly D&C. 
-            // If "The Family: A Proclamation..." -> Category Other, Chapter "The Family..."
-            // "Other" is default.
         }
 
         const option = translatedScripturesOptions.find(opt => opt.value === category);
@@ -463,9 +311,8 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             setScripture(category);
             setChapter(chapterVal);
         } else {
-            // Should not happen if 'Other' is there
             setScripture('Other');
-            setChapter(script);
+            setChapter(chapterVal);
             setSelectedOption(translatedScripturesOptions.find(opt => opt.value === 'Other'));
         }
     };
@@ -1156,7 +1003,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                                 onMouseOver={(e) => e.currentTarget.style.borderColor = '#b794f4'}
                                 onMouseOut={(e) => e.currentTarget.style.borderColor = '#e2e8f0'}
                             >
-                                📖 {script}
+                                📖 {translateChapterField(script, language)}
                             </button>
                         ))}
                     </div>
