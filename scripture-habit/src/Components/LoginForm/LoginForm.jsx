@@ -11,6 +11,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useLanguage } from '../../Context/LanguageContext';
 import { UilGoogle, UilGithub } from '@iconscout/react-unicons';
 import { toast } from 'react-toastify';
+import Footer from '../Footer/Footer';
 
 export default function LoginForm() {
   const { t } = useLanguage();
@@ -182,6 +183,7 @@ export default function LoginForm() {
             </div>
           )}
         </div>
+        <Footer />
       </div>
     );
   }
@@ -269,15 +271,11 @@ export default function LoginForm() {
           </div>
         )}
 
-        {/* Switch to Sign Up */}
         <div className="auth-switch">
           <p>{t('login.noAccount')} <Link to="/signup" className="auth-link">{t('login.signupLink')}</Link></p>
-          <p style={{ marginTop: '1rem', fontSize: '0.8rem', opacity: 0.8, display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-            <Link to="/privacy" className="auth-link">{t('privacy.title')}</Link>
-            <Link to="/terms" className="auth-link">{t('terms.title')}</Link>
-          </p>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

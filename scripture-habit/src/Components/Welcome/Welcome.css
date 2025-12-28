@@ -125,7 +125,7 @@
 @media (max-width: 768px) {
     .AppGlass.welcome-container {
         width: 100%;
-        min-height: 100vh;
+        min-height: auto;
         border-radius: 0;
         background-color: transparent;
         border: none;
@@ -134,7 +134,6 @@
         padding: 1rem 1.5rem;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         margin: 0;
         gap: 1rem;
     }
