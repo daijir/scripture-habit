@@ -1,3 +1,40 @@
+// Helper to detect volume from input
+const detectVolume = (volume, chapterInput) => {
+    let volumeUrlPart = "";
+    const lowerVolume = volume ? volume.toLowerCase() : "";
+
+    if (lowerVolume === "old testament" || volume === "旧約聖書" || volume === "Velho Testamento" || volume === "舊約" || volume === "Antiguo Testamento" || volume === "Cựu Ước" || volume === "พันธสัญญาเดิม" || volume === "구약전서" || volume === "Lumang Tipan" || volume === "Agano la Kale" || lowerVolume === "ot") {
+        volumeUrlPart = "ot";
+    } else if (lowerVolume === "new testament" || volume === "新約聖書" || volume === "Novo Testamento" || volume === "新約" || volume === "Nuevo Testamento" || volume === "Tân Ước" || volume === "พันธสัญญาใหม่" || volume === "신약전서" || volume === "Bagong Tipan" || volume === "Agano Jipya" || lowerVolume === "nt") {
+        volumeUrlPart = "nt";
+    } else if (lowerVolume === "book of mormon" || volume === "モルモン書" || volume === "O Livro de Mórmon" || volume === "摩爾門經" || volume === "El Libro de Mormón" || volume === "Sách Mặc Môn" || volume === "พระคัมภีร์มอรมอน" || volume === "몰몬경" || volume === "Aklat ni Mormon" || volume === "Kitabu cha Mormoni" || lowerVolume === "bofm") {
+        volumeUrlPart = "bofm";
+    } else if (lowerVolume.includes("doctrine and") || volume === "教義と聖約" || volume === "Doutrina e Convênios" || volume === "教義和聖約" || volume === "Doctrina y Convenios" || volume === "Giáo Lý và Giao Ước" || volume === "หลักคำสอน和พันธสัญญา" || volume === "교리와 성약" || volume === "Doktrina at mga Tipan" || volume === "Mafundisho na Maagano" || lowerVolume === "dc-testament" || lowerVolume === "dc") {
+        volumeUrlPart = "dc-testament";
+    } else if (lowerVolume === "pearl of great price" || volume === "高価な真珠" || volume === "Pérola de Grande Valor" || volume === "無價珍珠" || volume === "La Perla de Gran Precio" || volume === "Trân Châu Vô Giá" || volume === "ไข่มุกอันล้ำค่า" || volume === "값진 진주" || volume === "Mahalagang Perlas" || volume === "Lulu ya Thamani Kuu" || lowerVolume === "pgp") {
+        volumeUrlPart = "pgp";
+    } else if (lowerVolume === "general conference" || volume === "総大会" || volume === "Conferência Geral" || volume === "總會大會" || volume === "Conferencia General" || volume === "Đại Hội Trung Ương" || volume === "การประชุมใหญ่สามัญ" || volume === "연차 대회" || volume === "Pangkalahatang Kumperensya" || volume === "Mkutano Mkuu" || lowerVolume === "gc") {
+        volumeUrlPart = "general-conference";
+    } else if (lowerVolume === "byu speeches" || volume === "BYU Speeches") {
+        volumeUrlPart = "byu-speeches";
+    } else if (lowerVolume === "ordinances and proclamations" || volume === "儀式と宣言" || volume === "Ordenanças e Declarações" || lowerVolume === "proclamations") {
+        volumeUrlPart = "ordinances-and-proclamations";
+    }
+
+    if (!volumeUrlPart && chapterInput) {
+        const lowerChap = chapterInput.toLowerCase();
+        if (lowerChap.includes("family") || lowerChap.includes("家族") ||
+            lowerChap.includes("living christ") || lowerChap.includes("生けるキリスト") ||
+            lowerChap.includes("restoration") || lowerChap.includes("回復")) {
+            volumeUrlPart = "ordinances-and-proclamations";
+        } else if (lowerChap.includes("doctrine and covenants") || lowerChap.includes("d&c") || lowerChap.includes("教義と聖約") || lowerChap.includes("official declarations")) {
+            volumeUrlPart = "dc-testament";
+        } else if (lowerChap.includes("joseph smith—history") || lowerChap.includes("joseph smith-history") || lowerChap.includes("faith") || lowerChap.includes("信條") || lowerChap.includes("moses") || lowerChap.includes("abr") || lowerChap.includes("信仰")) {
+            volumeUrlPart = "pgp";
+        }
+    }
+    return volumeUrlPart;
+};
 
 export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
     if (!chapterInput) return null;
@@ -16,49 +53,9 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
     else if (language === 'tl') langParam = "?lang=tgl";
     else if (language === 'sw') langParam = "?lang=swa";
 
-    // Normalize volume to get the URL part
-    let volumeUrlPart = "";
-    const lowerVolume = volume ? volume.toLowerCase() : "";
-
-    if (lowerVolume === "old testament" || volume === "旧約聖書" || volume === "Velho Testamento" || volume === "舊約" || volume === "Antiguo Testamento" || volume === "Cựu Ước" || volume === "พันธสัญญาเดิม" || volume === "구약전서" || volume === "Lumang Tipan" || volume === "Agano la Kale" || lowerVolume === "ot") {
-        volumeUrlPart = "ot";
-        // Vietnamese fallback for OT
-        if (language === 'vi') langParam = "?lang=eng";
-    } else if (lowerVolume === "new testament" || volume === "新約聖書" || volume === "Novo Testamento" || volume === "新約" || volume === "Nuevo Testamento" || volume === "Tân Ước" || volume === "พันธสัญญาใหม่" || volume === "신약전서" || volume === "Bagong Tipan" || volume === "Agano Jipya" || lowerVolume === "nt") {
-        volumeUrlPart = "nt";
-        // Vietnamese fallback for NT
-        if (language === 'vi') langParam = "?lang=eng";
-    } else if (lowerVolume === "book of mormon" || volume === "モルモン書" || volume === "O Livro de Mórmon" || volume === "摩爾門經" || volume === "El Libro de Mormón" || volume === "Sách Mặc Môn" || volume === "พระคัมภีร์มอรมอน" || volume === "몰몬경" || volume === "Aklat ni Mormon" || volume === "Kitabu cha Mormoni" || lowerVolume === "bofm") {
-        volumeUrlPart = "bofm";
-    } else if (lowerVolume.includes("doctrine and") || volume === "教義と聖約" || volume === "Doutrina e Convênios" || volume === "教義和聖約" || volume === "Doctrina y Convenios" || volume === "Giáo Lý và Giao Ước" || volume === "หลักคำสอน和พันธสัญญา" || volume === "교리와 성약" || volume === "Doktrina at mga Tipan" || volume === "Mafundisho na Maagano" || lowerVolume === "dc-testament" || lowerVolume === "dc") {
-        // Covers "Doctrine and Covenants", "Doctrine and Convenants" (typo), and Japanese/Portuguese/Chinese/Spanish/Vietnamese
-        volumeUrlPart = "dc-testament";
-    } else if (lowerVolume === "pearl of great price" || volume === "高価な真珠" || volume === "Pérola de Grande Valor" || volume === "無價珍珠" || volume === "La Perla de Gran Precio" || volume === "Trân Châu Vô Giá" || volume === "ไข่มุกอันล้ำค่า" || volume === "값진 진주" || volume === "Mahalagang Perlas" || volume === "Lulu ya Thamani Kuu" || lowerVolume === "pgp") {
-        volumeUrlPart = "pgp";
-    } else if (lowerVolume === "general conference" || volume === "総大会" || volume === "Conferência Geral" || volume === "總會大會" || volume === "Conferencia General" || volume === "Đại Hội Trung Ương" || volume === "การประชุมใหญ่สามัญ" || volume === "연차 대회" || volume === "Pangkalahatang Kumperensya" || volume === "Mkutano Mkuu" || lowerVolume === "gc") {
-        volumeUrlPart = "general-conference";
-    } else if (lowerVolume === "byu speeches" || volume === "BYU Speeches") {
-        volumeUrlPart = "byu-speeches";
-    } else if (lowerVolume === "ordinances and proclamations" || volume === "儀式と宣言" || volume === "Ordenanças e Declarações" || lowerVolume === "proclamations") {
-        volumeUrlPart = "ordinances-and-proclamations";
-    }
-
-    // --- Smart Volume Detection (Initial) ---
-    if (!volumeUrlPart) {
-        const lowerChap = chapterInput.toLowerCase();
-        // Check for special proclamations first
-        if (lowerChap.includes("family") || lowerChap.includes("家族") ||
-            lowerChap.includes("living christ") || lowerChap.includes("生けるキリスト") ||
-            lowerChap.includes("restoration") || lowerChap.includes("回復")) {
-            volumeUrlPart = "ordinances-and-proclamations";
-        } else if (lowerChap.includes("doctrine and covenants") || lowerChap.includes("d&c") || lowerChap.includes("教義と聖約")) {
-            volumeUrlPart = "dc-testament";
-        } else if (lowerChap.includes("joseph smith—history") || lowerChap.includes("joseph smith-history") || lowerChap.includes("信仰箇条") || lowerChap.includes("articles of faith")) {
-            volumeUrlPart = "pgp";
-        }
-    }
-
-
+    let volumeUrlPart = detectVolume(volume, chapterInput);
+    if (volumeUrlPart === 'ot' && language === 'vi') langParam = "?lang=eng";
+    if (volumeUrlPart === 'nt' && language === 'vi') langParam = "?lang=eng";
 
     // Special handling for General Conference
     if (volumeUrlPart === "general-conference") {
@@ -1022,6 +1019,21 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
     }
 
     return `${baseUrl}/${volumeUrlPart}/${bookUrlPart}/${chapterNum}${urlSuffix}`;
+};
+
+export const getCategoryFromScripture = (scriptureText) => {
+    const volumeUrlPart = detectVolume(null, scriptureText);
+    const mapping = {
+        'ot': 'Old Testament',
+        'nt': 'New Testament',
+        'bofm': 'Book of Mormon',
+        'dc-testament': 'Doctrine and Covenants',
+        'pgp': 'Pearl of Great Price',
+        'ordinances-and-proclamations': 'Ordinances and Proclamations',
+        'general-conference': 'General Conference',
+        'byu-speeches': 'BYU Speeches'
+    };
+    return mapping[volumeUrlPart] || 'Other';
 };
 
 export const getScriptureInfoFromText = (text) => {
