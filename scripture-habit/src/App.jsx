@@ -25,6 +25,7 @@ import InstallPrompt from './Components/InstallPrompt/InstallPrompt';
 import { handleLineRedirect } from './Utils/browserDetection';
 
 import PrivacyPolicy from './Components/PrivacyPolicy/PrivacyPolicy';
+import TermsOfService from './Components/TermsOfService/TermsOfService';
 
 const SEOManager = () => {
   const { t, language } = useLanguage();
@@ -121,6 +122,7 @@ const App = () => {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/join/:inviteCode" element={<InviteRedirect />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
 
         </Routes>
         <ToastContainer position="top-right" autoClose={3000} />

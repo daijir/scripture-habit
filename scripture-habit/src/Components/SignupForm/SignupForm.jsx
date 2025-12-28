@@ -189,9 +189,12 @@ export default function SignupForm() {
             </Button>
           </form>
           {error && <p style={{ color: 'red', marginTop: 10 }}>{error}</p>}
-          <div className="welcome-footer" style={{ marginTop: '2rem', textAlign: 'center' }}>
+          <div className="welcome-footer" style={{ marginTop: '2rem', textAlign: 'center', display: 'flex', gap: '1.5rem', justifyContent: 'center' }}>
             <Link to="/privacy" style={{ fontSize: '0.8rem', color: '#718096', textDecoration: 'underline' }}>
               {t('privacy.title')}
+            </Link>
+            <Link to="/terms" style={{ fontSize: '0.8rem', color: '#718096', textDecoration: 'underline' }}>
+              {t('terms.title')}
             </Link>
           </div>
         </div>
@@ -263,8 +266,9 @@ export default function SignupForm() {
 
         <div className="auth-switch">
           <p>{t('signup.hasAccount')} <Link to="/login" className="auth-link">{t('signup.loginLink')}</Link></p>
-          <p style={{ marginTop: '1rem', fontSize: '0.8rem', opacity: 0.8 }}>
+          <p style={{ marginTop: '1rem', fontSize: '0.8rem', opacity: 0.8, display: 'flex', gap: '1rem', justifyContent: 'center' }}>
             <Link to="/privacy" className="auth-link">{t('privacy.title')}</Link>
+            <Link to="/terms" className="auth-link">{t('terms.title')}</Link>
           </p>
         </div>
       </div>
