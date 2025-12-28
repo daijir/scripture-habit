@@ -539,6 +539,21 @@ export const translations = {
             instruction1: "Tap the Share button",
             instruction2: "Select 'Add to Home Screen'",
             close: "Close"
+        },
+        privacy: {
+            title: "Privacy Policy",
+            lastUpdated: "Last updated: December 28, 2025",
+            intro: "At Scripture Habit, we respect your privacy. This policy explains how we handle your information.",
+            dataCollection: "Data Collection",
+            dataCollectionItems: "We collect your email, nickname, and profile information (stake, ward, bio). We also store your study notes and group memberships to provide our services.",
+            dataUsage: "How We Use Your Data",
+            dataUsageItems: "Your data is used to maintain your study habit, facilitate group interactions, and generate AI-powered spiritual recaps. We do not sell your personal data to third parties.",
+            thirdParties: "Third-Party Services",
+            thirdPartiesItems: "We use Firebase for data storage and Gemini API for technical features like translations and recaps. These services follow their own privacy standards.",
+            rights: "Your Rights",
+            rightsItems: "You can update your profile or delete your study notes at any time within the app.",
+            contact: "Contact",
+            contactItems: "If you have questions, please contact us at dazhilangxianggen@gmail.com."
         }
     },
     ja: {
@@ -1088,6 +1103,21 @@ export const translations = {
             instruction1: "「共有」ボタンをタップ",
             instruction2: "「ホーム画面に追加」を選択",
             close: "閉じる"
+        },
+        privacy: {
+            title: "プライバシーポリシー",
+            lastUpdated: "最終更新日: 2025年12月28日",
+            intro: "Scripture Habitでは、ユーザーのプライバシーを尊重します。このポリシーでは、お客様の情報がどのように扱われるかをご説明します。",
+            dataCollection: "情報の収集について",
+            dataCollectionItems: "メールアドレス、ニックネーム、プロフィール情報（ステーク、ワード、自己紹介）を収集します。また、サービス提供のために学習ノートやグループへの所属情報を保存します。",
+            dataUsage: "情報の利用目的",
+            dataUsageItems: "収集した情報は、学習習慣の維持、グループ内での交流、AIによる振り返り機能の提供に利用されます。お客様の個人データを第三者に売却することはありません。",
+            thirdParties: "第三者サービス",
+            thirdPartiesItems: "データ保存にFirebase、翻訳や要約などの機能にGemini APIを利用しています。これらのサービスは各社のプライバシー基準に従います。",
+            rights: "ユーザーの権利",
+            rightsItems: "プロフィール情報の更新や、学習ノートの削除はアプリ内からいつでも行えます。",
+            contact: "お問い合わせ",
+            contactItems: "ご質問がある場合は、dazhilangxianggen@gmail.com までご連絡ください。"
         }
     },
     pt: {
@@ -1634,6 +1664,21 @@ export const translations = {
             instruction1: "Toque no menu e selecione 'Adicionar à Tela Inicial'.",
             instruction2: "Siga as instruções.",
             close: "Fechar"
+        },
+        privacy: {
+            title: "Política de Privacidade",
+            lastUpdated: "Última atualização: 28 de dezembro de 2025",
+            intro: "Na Scripture Habit, respeitamos a sua privacidade. Esta política explica como lidamos com as suas informações.",
+            dataCollection: "Coleta de Dados",
+            dataCollectionItems: "Coletamos seu e-mail, apelido e informações de perfil (estaca, ala, biografia). Também armazenamos suas notas de estudo e associações a grupos para fornecer nossos serviços.",
+            dataUsage: "Como Usamos os Seus Dados",
+            dataUsageItems: "Seus dados são usados para manter seu hábito de estudo, facilitar interações em grupo e gerar recapitulações espirituais com IA. Não vendemos seus dados pessoais a terceiros.",
+            thirdParties: "Serviços de Terceiros",
+            thirdPartiesItems: "Usamos o Firebase para armazenamento de dados e a API Gemini para recursos técnicos, como traduções e recapitulações. Esses serviços seguem seus próprios padrões de privacidade.",
+            rights: "Seus Direitos",
+            rightsItems: "Você pode atualizar seu perfil ou excluir suas notas de estudo a qualquer momento dentro do aplicativo.",
+            contact: "Contato",
+            contactItems: "Se você tiver dúvidas, entre em contato conosco em dazhilangxianggen@gmail.com."
         }
     },
     zho: {
@@ -2150,6 +2195,21 @@ export const translations = {
             instruction1: "點擊選單並選擇「加入主畫面」。",
             instruction2: "按照說明操作。",
             close: "關閉"
+        },
+        privacy: {
+            title: "隱私權政策",
+            lastUpdated: "最後更新：2025年12月28日",
+            intro: "在 Scripture Habit，我們尊重您的隱私。本政策說明我們如何處理您的資訊。",
+            dataCollection: "資料收集",
+            dataCollectionItems: "我們收集您的電子郵件、暱稱和個人檔案資訊（支聯會、支會、簡介）。我們也儲存您的研讀筆記和群組成員身份以提供服務。",
+            dataUsage: "我們如何使用您的資料",
+            dataUsageItems: "您的資料用於維持您的研讀習慣、促進群組互動，以及生成 AI 驅動的靈性總結。我們不會將您的個人資料出售給第三方。",
+            thirdParties: "第三方服務",
+            thirdPartiesItems: "我們使用 Firebase 進行資料儲存，並使用 Gemini API 提供翻譯和總結等技術功能。這些服務遵循其自身的隱私標準。",
+            rights: "您的權利",
+            rightsItems: "您可以隨時在應用程式內更新您的個人檔案或刪除您的研讀筆記。",
+            contact: "聯絡方式",
+            contactItems: "如果您有任何疑問，請透過 dazhilangxianggen@gmail.com 與我們聯絡。"
         }
     },
     es: {
@@ -2664,9 +2724,24 @@ export const translations = {
         installPrompt: {
             title: "Instalar App",
             description: "Para una mejor experiencia, instala esta aplicación en tu pantalla de inicio.",
-            instruction1: "Toca el menú y selecciona 'Añadir a pantalla de inicio'.",
+            instruction1: "Toca el menu y selecciona 'Añadir a pantalla de inicio'.",
             instruction2: "Sigue las instrucciones.",
             close: "Cerrar"
+        },
+        privacy: {
+            title: "Política de Privacidad",
+            lastUpdated: "Última actualización: 28 de diciembre de 2025",
+            intro: "En Scripture Habit, respetamos su privacidad. Esta política explica cómo manejamos su información.",
+            dataCollection: "Recopilación de Datos",
+            dataCollectionItems: "Recopilamos su correo electrónico, apodo e información de perfil (estaca, barrio, biografía). También almacenamos sus notas de estudio y membresías de grupo para proporcionar nuestros servicios.",
+            dataUsage: "Cómo Usamos Sus Datos",
+            dataUsageItems: "Sus datos se utilizan para mantener su hábito de estudio, facilitar interacciones grupales y generar resúmenes espirituales impulsados por IA. No vendemos sus datos personales a terceros.",
+            thirdParties: "Servicios de Terceros",
+            thirdPartiesItems: "Utilizamos Firebase para el almacenamiento de datos y la API de Gemini para funciones técnicas como traducciones y resúmenes. Estos servicios siguen sus propios estándares de privacidad.",
+            rights: "Sus Derechos",
+            rightsItems: "Puede actualizar su perfil o eliminar sus notas de estudio en cualquier momento dentro de la aplicación.",
+            contact: "Contacto",
+            contactItems: "Si tiene preguntas, contáctenos en dazhilangxianggen@gmail.com."
         }
     },
     vi: {
@@ -3182,6 +3257,21 @@ export const translations = {
             instruction1: "Nhấn vào menu và chọn 'Thêm vào màn hình chính'.",
             instruction2: "Làm theo hướng dẫn.",
             close: "Đóng"
+        },
+        privacy: {
+            title: "Chính sách quyền riêng tư",
+            lastUpdated: "Cập nhật lần cuối: Ngày 28 tháng 12 năm 2025",
+            intro: "Tại Scripture Habit, chúng tôi tôn trọng quyền riêng tưของ bạn. Chính sách này giải thích cách chúng tôi xử lý thông tin của bạn.",
+            dataCollection: "Thu thập dữ liệu",
+            dataCollectionItems: "Chúng tôi thu thập email, biệt danh và thông tin hồ sơ của bạn (giáo khu, tiểu khu, tiểu sử). Chúng tôi cũng lưu trữ các ghi chép học tập và tư cách thành viên nhóm của bạn để cung cấp dịch vụ.",
+            dataUsage: "Cách chúng tôi sử dụng dữ liệu của bạn",
+            dataUsageItems: "Dữ liệu của bạn được sử dụng để duy trì thói quen học tập của bạn, tạo điều kiện tương tác nhóm và tạo ra các bản tổng kết tâm linh do AI hỗ trợ. Chúng tôi không bán dữ liệu cá nhân của bạn cho bên thứ ba.",
+            thirdParties: "Dịch vụ bên thứ ba",
+            thirdPartiesItems: "Chúng tôi sử dụng Firebase để lưu trữ dữ liệu và Gemini API cho các tính năng kỹ thuật như dịch thuật và tổng kết. Các dịch vụ này tuân theo các tiêu chuẩn riêng tư của riêng họ.",
+            rights: "Quyền của bạn",
+            rightsItems: "Bạn có thể cập nhật hồ sơ hoặc xóa các ghi chép học tập của mình bất kỳ lúc nào trong ứng dụng.",
+            contact: "Liên hệ",
+            contactItems: "Nếu bạn có thắc mắc, vui lòng liên hệ với chúng tôi tại dazhilangxianggen@gmail.com."
         }
     },
     th: {
@@ -3723,6 +3813,21 @@ export const translations = {
             instruction1: "แตะที่เมนูและเลือก 'เพิ่มไปยังหน้าจอหลัก'",
             instruction2: "ทำตามคำแนะนำ",
             close: "ปิด"
+        },
+        privacy: {
+            title: "นโยบายความเป็นส่วนตัว",
+            lastUpdated: "อัปเดตล่าสุด: 28 ธันวาคม 2025",
+            intro: "ที่ Scripture Habit เราเคารพความเป็นส่วนตัวของคุณ นโยบายนี้อธิบายวิธีที่เราจัดการข้อมูลของคุณ",
+            dataCollection: "การเก็บรวบรวมข้อมูล",
+            dataCollectionItems: "เราเก็บรวบรวมอีเมล ชื่อเล่น และข้อมูลโปรไฟล์ของคุณ (สเตค วอร์ด ประวัติย่อ) นอกจากนี้เรายังจัดเก็บโน้ตการศึกษาและการเป็นสมาชิกกลุ่มของคุณเพื่อให้บริการของเรา",
+            dataUsage: "วิธีที่เราใช้ข้อมูลของคุณ",
+            dataUsageItems: "ข้อมูลของคุณจะถูกใช้เพื่อรักษานิสัยการศึกษาของคุณ อำนวยความสะดวกในการโต้ตอบในกลุ่ม และสร้างบทสรุปทางวิญญาณที่ขับเคลื่อนด้วย AI เราไม่ขายข้อมูลส่วนบุคคลของคุณให้กับบุคคลที่สาม",
+            thirdParties: "บริการของบุคคลที่สาม",
+            thirdPartiesItems: "เราใช้ Firebase สำหรับการจัดเก็บข้อมูลและ Gemini API สำหรับฟีเจอร์ทางเทคนิค เช่น การแปลและบทสรุป บริการเหล่านี้ปฏิบัติตามมาตรฐานความเป็นส่วนตัวของตนเอง",
+            rights: "สิทธิ์ของคุณ",
+            rightsItems: "คุณสามารถอัปเดตโปรไฟล์หรือลบโน้ตการศึกษาของคุณได้ตลอดเวลาภายในแอป",
+            contact: "ติดต่อ",
+            contactItems: "หากคุณมีคำถาม โปรดติดต่อเราที่ dazhilangxianggen@gmail.com"
         }
     },
     ko: {
@@ -4264,6 +4369,21 @@ export const translations = {
             instruction1: "메뉴를 탭하고 '홈 화면에 추가'를 선택하세요.",
             instruction2: "안내를 따르세요.",
             close: "닫기"
+        },
+        privacy: {
+            title: "개인정보처리방침",
+            lastUpdated: "최종 업데이트: 2025년 12월 28일",
+            intro: "Scripture Habit은 귀하의 개인정보를 존중합니다. 본 방침은 귀하의 정보를 처리하는 방법을 설명합니다.",
+            dataCollection: "데이터 수집",
+            dataCollectionItems: "귀하의 이메일, 닉네임 및 프로필 정보(스테이크, 와드, 소개)를 수집합니다. 또한 서비스 제공을 위해 귀하의 학습 노트 및 그룹 멤버십을 저장합니다.",
+            dataUsage: "데이터 사용 방식",
+            dataUsageItems: "귀하의 데이터는 학습 습관 유지, 그룹 상호 작용 촉진 및 AI 기반 영적 요약 생성을 위해 사용됩니다. 귀하의 개인 데이터를 제3자에게 판매하지 않습니다.",
+            thirdParties: "제3자 서비스",
+            thirdPartiesItems: "데이터 저장을 위해 Firebase를 사용하고, 번역 및 요약과 같은 기술적 기능을 위해 Gemini API를 사용합니다. 이 서비스들은 자체적인 개인정보 보호 표준을 따릅니다.",
+            rights: "귀하의 권리",
+            rightsItems: "앱 내에서 언제든지 프로필을 업데이트하거나 학습 노트를 삭제할 수 있습니다.",
+            contact: "연락처",
+            contactItems: "문의 사항이 있으시면 dazhilangxianggen@gmail.com으로 연락해 주시기 바랍니다."
         }
     },
     tl: {
@@ -4804,6 +4924,21 @@ export const translations = {
             instruction1: "I-tap ang menu at piliin ang 'Add to Home screen'.",
             instruction2: "Sundin ang mga tagubilin.",
             close: "Isara"
+        },
+        privacy: {
+            title: "Patakaran sa Privacy",
+            lastUpdated: "Huling na-update: Disyembre 28, 2025",
+            intro: "Sa Scripture Habit, iginagalang namin ang iyong privacy. Ipinapaliwanag ng patakarang ito kung paano namin pinangangasiwaan ang iyong impormasyon.",
+            dataCollection: "Pagkolekta ng Data",
+            dataCollectionItems: "Kinokolekta namin ang iyong email, palayaw, at impormasyon sa profile (stake, ward, bio). Iniimbak din namin ang iyong mga tala sa pag-aaral at mga membership sa grupo upang maibigay ang aming mga serbisyo.",
+            dataUsage: "Paano Namin Ginagamit ang Iyong Data",
+            dataUsageItems: "Ang iyong data ay ginagamit upang mapanatili ang iyong gawi sa pag-aaral, mapadali ang mga pakikipag-ugnayan sa grupo, at bumuo ng mga espirituwal na recap na pinapagana ng AI. Hindi namin ibinebenta ang iyong personal na data sa mga ikatlong partido.",
+            thirdParties: "Mga Serbisyo ng Third-Party",
+            thirdPartiesItems: "Ginagamit namin ang Firebase para sa pag-iimbak ng data at Gemini API para sa mga teknikal na feature tulad ng mga pagsasalin at recap. Ang mga serbisyong ito ay sumusunod sa sarili nilang mga pamantayan sa privacy.",
+            rights: "Ang Iyong mga Karapatan",
+            rightsItems: "Maaari mong i-update ang iyong profile o tanggalin ang iyong mga tala sa pag-aaral anumang oras sa loob ng app.",
+            contact: "Makipag-ugnayan",
+            contactItems: "Kung mayroon kang mga katanungan, mangyaring makipag-ugnayan sa amin sa dazhilangxianggen@gmail.com."
         }
     },
     sw: {
@@ -5345,6 +5480,21 @@ export const translations = {
             instruction1: "Gonga menyu na uchague 'Ongeza kwenye Skrini ya Nyumbani'.",
             instruction2: "Fuata maelekezo.",
             close: "Funga"
+        },
+        privacy: {
+            title: "Sera ya Faragha",
+            lastUpdated: "Ilisasishwa mwisho: Desemba 28, 2025",
+            intro: "Katika Scripture Habit, tunaheshimu faragha yako. Sera hii inaelezea jinsi tunavyoshughulikia taarifa zako.",
+            dataCollection: "Ukusanyaji wa Data",
+            dataCollectionItems: "Tunakusanya barua pepe yako, jina la utani, na maelezo ya wasifu (hekalu, kata, wasifu). Pia tunahifadhi maelezo yako ya funzo na uanachama wa kikundi ili kutoa huduma zetu.",
+            dataUsage: "Jinsi Tunavyotumia Data Yako",
+            dataUsageItems: "Data yako inatumiwa kudumisha tabia yako ya funzo, kuwezesha mwingiliano wa kikundi, na kutoa muhtasari wa kiroho unaoendeshwa na AI. Hatuzi data yako ya kibinafsi kwa watu wengine.",
+            thirdParties: "Huduma za Watu Wengine",
+            thirdPartiesItems: "Tunatumia Firebase kuhifadhi data na Gemini API kwa vipengele vya kiufundi kama tafsiri na muhtasari. Huduma hizi zinafuata viwango vyao vya faragha.",
+            rights: "Haki Zako",
+            rightsItems: "Unaweza kusasisha wasifu wako au kufuta maelezo yako ya funzo wakati wowote ndani ya programu.",
+            contact: "Wasiliana",
+            contactItems: "Ikiwa una maswali, tafadhali wasiliana nasi kwa dazhilangxianggen@gmail.com."
         }
     },
 };

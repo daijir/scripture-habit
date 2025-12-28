@@ -272,6 +272,9 @@ export default function LoginForm() {
         {/* Switch to Sign Up */}
         <div className="auth-switch">
           <p>{t('login.noAccount')} <Link to="/signup" className="auth-link">{t('login.signupLink')}</Link></p>
+          <p style={{ marginTop: '1rem', fontSize: '0.8rem', opacity: 0.8 }}>
+            <Link to="/privacy" className="auth-link">{t('privacy.title')}</Link>
+          </p>
         </div>
       </div>
     </div>

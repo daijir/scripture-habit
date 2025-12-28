@@ -1,42 +1,22 @@
 Checking against base language: ja
-Total base keys: 419
+Total base keys: 444
 
 [en] OK
 
 [pt] OK
 
-[zho] Missing 4 keys:
-  - groupChat.errorTranslation
-  - groupChat.translate
-  - groupChat.translating
-  - groupChat.translated
+[zho] OK
 
 [es] OK
 
 [vi] OK
 
-[th] Missing 4 keys:
-  - groupChat.errorTranslation
-  - groupChat.translate
-  - groupChat.translating
-  - groupChat.translated
+[th] OK
 
-[ko] Missing 4 keys:
-  - groupChat.errorTranslation
-  - groupChat.translate
-  - groupChat.translating
-  - groupChat.translated
+[ko] OK
 
-[tl] Missing 4 keys:
-  - groupChat.errorTranslation
-  - groupChat.translate
-  - groupChat.translating
-  - groupChat.translated
+[tl] OK
 
-[sw] Missing 4 keys:
-  - groupChat.errorTranslation
-  - groupChat.translate
-  - groupChat.translating
-  - groupChat.translated
+[sw] OK
 
-Found total 20 missing translations.
+Success: All languages match Japanese.

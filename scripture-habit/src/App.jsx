@@ -24,6 +24,8 @@ import * as Sentry from "@sentry/react";
 import InstallPrompt from './Components/InstallPrompt/InstallPrompt';
 import { handleLineRedirect } from './Utils/browserDetection';
 
+import PrivacyPolicy from './Components/PrivacyPolicy/PrivacyPolicy';
+
 const SEOManager = () => {
   const { t, language } = useLanguage();
 
@@ -118,6 +120,7 @@ const App = () => {
           <Route path="/group/:id" element={<GroupDetails />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/join/:inviteCode" element={<InviteRedirect />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
 
         </Routes>
         <ToastContainer position="top-right" autoClose={3000} />

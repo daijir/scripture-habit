@@ -116,6 +116,12 @@ const Welcome = () => {
                 </Button>
             </div>
 
+            <div className="welcome-footer" style={{ marginTop: '2rem', textAlign: 'center' }}>
+                <Link to="/privacy" style={{ fontSize: '0.8rem', color: '#718096', textDecoration: 'underline' }}>
+                    {t('privacy.title')}
+                </Link>
+            </div>
+
             <BrowserWarningModal
                 isOpen={showWarning}
                 onClose={() => setShowWarning(false)}
