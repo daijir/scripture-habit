@@ -38,9 +38,22 @@
   font-family: 'Inter', sans-serif;
 }
 
-.App.Dashboard {
+.App.Dashboard,
+.App.LoginForm,
+.App.SignupForm,
+.App.Welcome {
   flex-direction: column;
+}
+
+.App.Dashboard {
   align-items: stretch;
+}
+
+.App.LoginForm,
+.App.SignupForm,
+.App.Welcome {
+  align-items: center;
+  box-sizing: border-box;
 }
 
 .AppGlass {

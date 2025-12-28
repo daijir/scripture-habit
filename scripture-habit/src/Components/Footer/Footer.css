@@ -11,14 +11,15 @@
 
 .DashboardContent>.app-footer {
     width: auto;
-    margin: 2rem -2rem -2rem -2rem;
+    margin: auto -2rem -2rem -2rem;
+    /* margin-top: auto pushes it to the bottom */
 }
 
 @media screen and (max-width: 768px) {
     .DashboardContent>.app-footer {
-        margin: 2rem -1rem -1rem -1rem;
-        padding-bottom: 85px;
-        /* Add space so content isn't hidden by bottom nav */
+        margin: auto -1rem -1rem -1rem;
+        padding-bottom: 72px;
+        /* Close enough to navbar height (70px) */
     }
 }
 
@@ -96,9 +97,5 @@
     .footer-links {
         flex-direction: column;
         gap: 0.5rem;
-    }
-
-    .app-footer {
-        padding-bottom: 20px;
     }
 }
