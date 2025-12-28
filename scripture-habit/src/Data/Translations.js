@@ -89,6 +89,12 @@ export const translations = {
             daysStudied: "Days Studied",
             successUpdate: "Profile updated successfully!",
             errorUpdate: "Failed to update profile. Please try again.",
+            deleteAccount: "Delete Account",
+            deleteAccountWarning: "Warning: This action is permanent. All your data, including your notes and profile, will be permanently deleted.",
+            confirmDeleteAccount: "Delete My Account",
+            cancelDeleteAccount: "Cancel",
+            deleteAccountError: "Error deleting account. You may need to log out and log in again before performing this action for security reasons.",
+            deleteAccountSuccess: "Account deleted successfully.",
             appBackground: "App Development Background",
             backgroundStory: "Dear users, thank you very much for using this scripture study app.\n\nThe background of creating this app is to help as many people as possible establish and improve their scripture study habits. Before talking about why I made this app, let me talk a little about personal revelation.\n\nI listened to Clayton Christensen's talk \"Dealing with the Dangers of Success\" on BYU Speeches, and learned that programs currently introduced as official Church programs such as Sunday School, Primary, Family Home Evening, and Seminary were not originally created by \"instructions from Church headquarters,\" but were born from \"personal revelation\" by local members to solve problems they faced. Because they were effective, they were later adopted by central leadership and standardized worldwide.\n\nHowever, as organizations grow and everything becomes standardized, it becomes difficult for \"new solutions\" to emerge from the field. Brother Christensen told BYU students that he wanted them to \"not just follow standardized programs, but continue to receive inspiration and invent solutions to new problems they face.\"\n\nAfter hearing this talk, I learned that the current Church programs were created by personal revelation - in other words, actions that were very intrinsic and motivated by love, not instructions from above. I felt that if there are problems in local areas, rather than waiting for Church headquarters to solve them, it is important to rely on personal revelation and receive personal revelation for that area.\n\nI felt one problem common to almost all areas: the scripture study habits of members, new members, and investigators. This is something that should be done very personally and within family love, and is also an area that leaders cannot manage.\n\nHowever, I believe that deliberately avoiding addressing this topic results in several major problems.\n\nThis app was created as an extension of a school project, but I made it with the belief that it can more effectively address the problems I mentioned above. Through this app, I believe that more people can build \"the habit of scripture study\" in this rapidly changing and chaotic society, receive \"personal revelation,\" and make this society better.\n\nThank you for reading this long text. Finally, may the Lord's blessings be richly poured upon each of you."
         },
@@ -554,6 +560,19 @@ export const translations = {
             rightsItems: "You can update your profile or delete your study notes at any time within the app.",
             contact: "Contact",
             contactItems: "If you have questions, please contact us at dazhilangxianggen@gmail.com."
+        },
+        terms: {
+            title: "Terms of Service",
+            lastUpdated: "Last updated: December 28, 2025",
+            intro: "By using Scripture Habit, you agree to these terms. Please read them carefully.",
+            userConduct: "User Conduct",
+            userConductItems: "You agree to use this app for spiritual growth and to respect other members. Harassment, hate speech, and inappropriate content are strictly prohibited.",
+            aiDisclaimer: "AI Disclaimer",
+            aiDisclaimerItems: "Scripture Habit uses AI (Google Gemini) to generate recaps and translations. AI can make mistakes. Please use your own judgment and official church resources for doctrinal accuracy.",
+            termination: "Termination",
+            terminationItems: "We reserve the right to suspend or delete accounts that violate these terms or disrupt the community experience.",
+            limitation: "Limitation of Liability",
+            limitationItems: "Scripture Habit is provided 'as is'. We are not liable for any spiritual or technical issues arising from the use of the service."
         }
     },
     ja: {
@@ -645,7 +664,13 @@ export const translations = {
             nextLevel: "レベルアップまであと",
             daysStudied: "合計学習日数",
             successUpdate: "プロフィールを更新しました！",
-            errorUpdate: "プロフィールの更新に失敗しました。もう一度試してください。"
+            errorUpdate: "プロフィールの更新に失敗しました。もう一度試してください。",
+            deleteAccount: "アカウントを削除",
+            deleteAccountWarning: "警告: この操作は取り消せません。あなたのノートやプロフィールを含むすべてのデータが永久に削除されます。",
+            confirmDeleteAccount: "アカウントを削除する",
+            cancelDeleteAccount: "キャンセル",
+            deleteAccountError: "アカウントを削除できませんでした。セキュリティ上の理由から、この操作を行う前にもう一度ログインし直す必要がある場合があります。",
+            deleteAccountSuccess: "アカウントを削除しました。"
         },
         groupChat: {
             send: "送信",
@@ -1118,6 +1143,19 @@ export const translations = {
             rightsItems: "プロフィール情報の更新や、学習ノートの削除はアプリ内からいつでも行えます。",
             contact: "お問い合わせ",
             contactItems: "ご質問がある場合は、dazhilangxianggen@gmail.com までご連絡ください。"
+        },
+        terms: {
+            title: "利用規約",
+            lastUpdated: "最終更新日: 2025年12月28日",
+            intro: "Scripture Habitを利用することで、本規約に同意したものとみなされます。よくお読みください。",
+            userConduct: "ユーザーの行動規範",
+            userConductItems: "本アプリを霊的な成長のために利用し、他のメンバーを尊重することに同意するものとします。嫌がらせ、ヘイトスピーチ、不適切なコンテンツの投稿は固く禁じられています。",
+            aiDisclaimer: "AIに関する免責事項",
+            aiDisclaimerItems: "Scripture Habitは、振り返りや翻訳にAI（Google Gemini）を使用しています。AIは誤りを犯す可能性があります。教義的な正確性については、ご自身の判断や教会の公式リソースを参照してください。",
+            termination: "利用停止について",
+            terminationItems: "本規約に違反したり、コミュニティの体験を損なうアカウントについては、予告なく停止または削除する権利を留保します。",
+            limitation: "免責事項",
+            limitationItems: "Scripture Habitは「現状有姿」で提供されます。本サービスの利用から生じるいかなる問題についても、運営者は責任を負いかねます。"
         }
     },
     pt: {
@@ -1209,7 +1247,13 @@ export const translations = {
             nextLevel: "Para o próximo nível",
             daysStudied: "Dias Estudados",
             successUpdate: "Perfil atualizado com sucesso!",
-            errorUpdate: "Falha ao atualizar o perfil. Tente novamente."
+            errorUpdate: "Falha ao atualizar o perfil. Tente novamente.",
+            deleteAccount: "Excluir Conta",
+            deleteAccountWarning: "Aviso: Esta ação é permanente. Todos os seus dados, incluindo notas e perfil, serão excluídos permanentemente.",
+            confirmDeleteAccount: "Excluir Minha Conta",
+            cancelDeleteAccount: "Cancelar",
+            deleteAccountError: "Erro ao excluir conta. Você pode precisar sair e entrar novamente antes de realizar esta ação por motivos de segurança.",
+            deleteAccountSuccess: "Conta excluída com sucesso."
         },
         groupChat: {
             send: "Enviar",
@@ -1679,6 +1723,19 @@ export const translations = {
             rightsItems: "Você pode atualizar seu perfil ou excluir suas notas de estudo a qualquer momento dentro do aplicativo.",
             contact: "Contato",
             contactItems: "Se você tiver dúvidas, entre em contato conosco em dazhilangxianggen@gmail.com."
+        },
+        terms: {
+            title: "Termos de Serviço",
+            lastUpdated: "Última atualização: 28 de dezembro de 2025",
+            intro: "Ao usar o Scripture Habit, você concorda com estes termos. Leia-os com atenção.",
+            userConduct: "Conduta do Usuário",
+            userConductItems: "Você concorda em usar este app para crescimento espiritual e a respeitar os outros membros. Assédio, discurso de ódio e conteúdo inadequado são estritamente proibidos.",
+            aiDisclaimer: "Aviso de IA",
+            aiDisclaimerItems: "O Scripture Habit usa IA (Google Gemini) para gerar recapitulações e traduções. A IA pode cometer erros. Use seu próprio julgamento e recursos oficiais da igreja para precisão doutrinária.",
+            termination: "Rescisão",
+            terminationItems: "Reservamo-nos o direito de suspender ou excluir contas que violem estes termos ou interrompam a experiência da comunidade.",
+            limitation: "Limitação de Responsabilidade",
+            limitationItems: "O Scripture Habit é fornecido 'como está'. Não somos responsáveis por quaisquer problemas espirituais ou técnicos decorrentes do uso do serviço."
         }
     },
     zho: {
@@ -1770,7 +1827,13 @@ export const translations = {
             nextLevel: "距離下一級",
             daysStudied: "已學習天數",
             successUpdate: "個人檔案已成功更新！",
-            errorUpdate: "更新個人檔案失敗。請再試一次。"
+            errorUpdate: "更新個人檔案失敗。請再試一次。",
+            deleteAccount: "刪除帳號",
+            deleteAccountWarning: "警告：此操作無法復原。您的所有資料（包括筆記和個人檔案）將被永久刪除。",
+            confirmDeleteAccount: "刪除我的帳號",
+            cancelDeleteAccount: "取消",
+            deleteAccountError: "刪除帳號時出錯。基於安全原因，您可能需要在執行此操作前重新登入。",
+            deleteAccountSuccess: "帳號已成功刪除。"
         },
         groupChat: {
             send: "發送",
@@ -2210,6 +2273,19 @@ export const translations = {
             rightsItems: "您可以隨時在應用程式內更新您的個人檔案或刪除您的研讀筆記。",
             contact: "聯絡方式",
             contactItems: "如果您有任何疑問，請透過 dazhilangxianggen@gmail.com 與我們聯絡。"
+        },
+        terms: {
+            title: "服務條款",
+            lastUpdated: "最後更新：2025年12月28日",
+            intro: "使用 Scripture Habit 即表示您同意這些條款。請仔細閱讀。",
+            userConduct: "使用者行為規範",
+            userConductItems: "您同意將此應用程式用於靈性成長並尊重其他成員。嚴禁騷擾、仇恨言論和不當內容。",
+            aiDisclaimer: "AI 免責聲明",
+            aiDisclaimerItems: "Scripture Habit 使用 AI (Google Gemini) 生成總結和翻譯。AI 可能會犯錯。請運用您自己的判斷並參考教會官方資源以確保教義準確性。",
+            termination: "終止服務",
+            terminationItems: "我們保留暫停或刪除違反這些條款或破壞社群體驗之帳號的權利。",
+            limitation: "責任限制",
+            limitationItems: "Scripture Habit 按「現狀」提供。我們不對因使用服務而產生的任何靈性或技術問題負責。"
         }
     },
     es: {
@@ -2301,7 +2377,13 @@ export const translations = {
             nextLevel: "Para el siguiente nivel",
             daysStudied: "Días estudiados",
             successUpdate: "¡Perfil actualizado con éxito!",
-            errorUpdate: "Error al actualizar el perfil. Por favor, inténtelo de nuevo."
+            errorUpdate: "Error al actualizar el perfil. Por favor, inténtelo de nuevo.",
+            deleteAccount: "Eliminar Cuenta",
+            deleteAccountWarning: "Advertencia: Esta acción es permanente. Todos tus datos, incluidas tus notas y perfil, serán eliminados permanentemente.",
+            confirmDeleteAccount: "Eliminar Mi Cuenta",
+            cancelDeleteAccount: "Cancelar",
+            deleteAccountError: "Error al eliminar la cuenta. Es posible que deba cerrar sesión e iniciar sesión nuevamente antes de realizar esta acción por razones de seguridad.",
+            deleteAccountSuccess: "Cuenta eliminada con éxito."
         },
         groupChat: {
             send: "Enviar",
@@ -2742,6 +2824,19 @@ export const translations = {
             rightsItems: "Puede actualizar su perfil o eliminar sus notas de estudio en cualquier momento dentro de la aplicación.",
             contact: "Contacto",
             contactItems: "Si tiene preguntas, contáctenos en dazhilangxianggen@gmail.com."
+        },
+        terms: {
+            title: "Términos de Servicio",
+            lastUpdated: "Última actualización: 28 de diciembre de 2025",
+            intro: "Al usar Scripture Habit, usted acepta estos términos. Por favor, léalos cuidadosamente.",
+            userConduct: "Conducta del Usuario",
+            userConductItems: "Usted acepta usar esta aplicación para el crecimiento espiritual y respetar a los demás miembros. El acoso, el discurso de odio y el contenido inapropiado están estrictamente prohibidos.",
+            aiDisclaimer: "Aviso Legal de IA",
+            aiDisclaimerItems: "Scripture Habit utiliza IA (Google Gemini) para generar resúmenes y traducciones. La IA puede cometer errores. Por favor, use su propio juicio y los recursos oficiales de la iglesia para la precisión doctrinal.",
+            termination: "Terminación",
+            terminationItems: "Nos reservamos el derecho de suspender o eliminar cuentas que violen estos términos o interrumpan la experiencia de la comunidad.",
+            limitation: "Limitación de Responsabilidad",
+            limitationItems: "Scripture Habit se proporciona 'tal cual'. No somos responsables de ningún problema espiritual o técnico que surja del uso del servicio."
         }
     },
     vi: {
@@ -2833,7 +2928,13 @@ export const translations = {
             nextLevel: "Đến cấp độ tiếp theo",
             daysStudied: "Số ngày đã học",
             successUpdate: "Cập nhật hồ sơ thành công!",
-            errorUpdate: "Cập nhật hồ sơ thất bại. Vui lòng thử lại."
+            errorUpdate: "Cập nhật hồ sơ thất bại. Vui lòng thử lại.",
+            deleteAccount: "Xóa tài khoản",
+            deleteAccountWarning: "Cảnh báo: Hành động này là vĩnh viễn. Tất cả dữ liệu của bạn, bao gồm ghi chú và hồ sơ, sẽ bị xóa vĩnh viễn.",
+            confirmDeleteAccount: "Xóa tài khoản của tôi",
+            cancelDeleteAccount: "Hủy",
+            deleteAccountError: "Lỗi khi xóa tài khoản. Bạn có thể cần đăng xuất và đăng nhập lại trước khi thực hiện hành động này vì lý do bảo mật.",
+            deleteAccountSuccess: "Đã xóa tài khoản thành công."
         },
         groupChat: {
             send: "Gửi",
@@ -3272,6 +3373,19 @@ export const translations = {
             rightsItems: "Bạn có thể cập nhật hồ sơ hoặc xóa các ghi chép học tập của mình bất kỳ lúc nào trong ứng dụng.",
             contact: "Liên hệ",
             contactItems: "Nếu bạn có thắc mắc, vui lòng liên hệ với chúng tôi tại dazhilangxianggen@gmail.com."
+        },
+        terms: {
+            title: "Điều khoản dịch vụ",
+            lastUpdated: "Cập nhật lần cuối: Ngày 28 tháng 12 năm 2025",
+            intro: "Bằng cách sử dụng Scripture Habit, bạn đồng ý với các điều khoản này. Vui lòng đọc kỹ.",
+            userConduct: "Hành vi người dùng",
+            userConductItems: "Bạn đồng ý sử dụng ứng dụng này để phát triển tâm linh và tôn trọng các thành viên khác. Quấy rối, ngôn từ kích động thù địch và nội dung không phù hợp bị nghiêm cấm.",
+            aiDisclaimer: "Tuyên bố miễn trừ trách nhiệm về AI",
+            aiDisclaimerItems: "Scripture Habit sử dụng AI (Google Gemini) để tạo các bản tổng kết và dịch thuật. AI có thể mắc sai lầm. Vui lòng sử dụng sự phán đoán của riêng bạn và các nguồn lực chính thức của giáo hội để đảm bảo tính chuẩn xác về giáo lý.",
+            termination: "Chấm dứt",
+            terminationItems: "Chúng tôi có quyền tạm ngừng hoặc xóa các tài khoản vi phạm các điều khoản này hoặc làm gián đoạn trải nghiệm cộng đồng.",
+            limitation: "Giới hạn trách nhiệm pháp lý",
+            limitationItems: "Scripture Habit được cung cấp 'nguyên trạng'. Chúng tôi không chịu trách nhiệm cho bất kỳ vấn đề tâm linh hoặc kỹ thuật nào phát sinh từ việc sử dụng dịch vụ."
         }
     },
     th: {
@@ -3363,7 +3477,13 @@ export const translations = {
             nextLevel: "สู่ระดับถัดไป",
             daysStudied: "จำนวนวันที่ศึกษา",
             successUpdate: "อัปเดตโปรไฟล์สำเร็จแล้ว!",
-            errorUpdate: "อัปเดตโปรไฟล์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง"
+            errorUpdate: "อัปเดตโปรไฟล์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
+            deleteAccount: "ลบบัญชี",
+            deleteAccountWarning: "คำเตือน: การดำเนินการนี้ถาวร ข้อมูลทั้งหมดของคุณ รวมถึงบันทึกและโปรไฟล์ จะถูกลบทิ้งอย่างถาวร",
+            confirmDeleteAccount: "ลบบัญชีของฉัน",
+            cancelDeleteAccount: "ยกเลิก",
+            deleteAccountError: "เกิดข้อผิดพลาดในการลบบัญชี คุณอาจต้องออกจากระบบและเข้าสู่ระบบใหม่อีกครั้งก่อนดำเนินการนี้เพื่อความปลอดภัย",
+            deleteAccountSuccess: "ลบบัญชีสำเร็จ"
         },
         groupChat: {
             send: "ส่ง",
@@ -3828,6 +3948,19 @@ export const translations = {
             rightsItems: "คุณสามารถอัปเดตโปรไฟล์หรือลบโน้ตการศึกษาของคุณได้ตลอดเวลาภายในแอป",
             contact: "ติดต่อ",
             contactItems: "หากคุณมีคำถาม โปรดติดต่อเราที่ dazhilangxianggen@gmail.com"
+        },
+        terms: {
+            title: "ข้อกำหนดการให้บริการ",
+            lastUpdated: "แก้ไขล่าสุด: 28 ธันวาคม 2025",
+            intro: "เมื่อใช้ Scripture Habit คุณตกลงที่จะปฏิบัติตามข้อกำหนดเหล่านี้ โปรดอ่านอย่างละเอียด",
+            userConduct: "ความพฤติกรรมของผู้ใช้",
+            userConductItems: "คุณตกลงที่จะใช้แอปนี้เพื่อการเติบโตทางวิญญาณและเคารพสมาชิกคนอื่นๆ ห้ามการคุกคาม การพูดจาสร้างความเกลียดชัง และเนื้อหาที่ไม่เหมาะสมโดยเด็ดขาด",
+            aiDisclaimer: "ข้อจำกัดความรับผิดชอบเกี่ยวกับ AI",
+            aiDisclaimerItems: "Scripture Habit ใช้ AI (Google Gemini) ในการสรุปผลและแปลภาษา AI อาจมีความผิดพลาดได้ โปรดใช้วิจารณญาณของคุณเองและอ้างอิงแหล่งข้อมูลทางการของศาสนจักรเพื่อความถูกต้องของหลักคำสอน",
+            termination: "การยุติการให้บริการ",
+            terminationItems: "เราขอสงวนสิทธิ์ในการระงับหรือลบบัญชีที่ละเมิดข้อกำหนดเหล่านี้หรือรบกวนประสบการณ์ของชุมชน",
+            limitation: "ข้อจำกัดความรับผิดชอบ",
+            limitationItems: "Scripture Habit ให้บริการ 'ตามสภาพที่เป็นอยู่' เราจะไม่รับผิดชอบต่อปัญหาทางวิญญาณหรือทางเทคนิคใดๆ ที่เกิดจากการใช้บริการ"
         }
     },
     ko: {
@@ -3865,7 +3998,7 @@ export const translations = {
             contactTitle: "후원 관련 문의",
             contactDesc: "후원에 대한 도움이나 질문이 있으시면 dazhilangxianggen@gmail.com으로 문의해 주십시오.",
             appBackground: "앱 개발 배경",
-            backgroundStory: "이 앱을 만들게 된 계기는 클레이튼 크리스텐슨 형제님의 \"Dealing with the Dangers of Success(성공의 위험에 대처하기)\"라는 말씀을 듣고 나서였습니다. 그 말씀에서 형제님은 현재 교회의 '공식 프로그램'과 '개인적인 계시' 사이의 밀접한 관계에 대해 말씀하셨습니다.\n\n형제님은 현재 교회의 공식 프로그램으로 도입된 주일학교, 초등회, 가정의 밤, 세미나리 같은 프로그램들이 원래 '교회 본부의 지시'로 만들어진 것이 아니라고 지적하셨습니다. 대신, 현장의 회원들이 직면한 문제를 해결하기 위해 '개인적인 계시'를 통해 태어난 것이라고 하셨습니다. 그것이 효과적이었기 때문에 나중에 총관리 역원들이 채택하여 세계적으로 표준화된 것입니다.\n\n하지만 조직이 커지고 모든 것이 매뉴얼화되면, 현장에서의 '새로운 해결책'은 나오기 어려워집니다. 크리스텐슨 형제님은 BYU 학생들에게 \"표준화된 프로그램을 따를 뿐만 아니라, 직면한 새로운 문제에 대해 영감을 받아 해결책을 계속 발명해 나가길 바란다\"고 당부하셨습니다.\n\n실제로 개인에게 어떻게 계시가 임했는지 그 사례를 소개해 드립니다.\n\n \n\n1. 주일학교\n시기/장소: 1849년, 솔트레이크 분지\n개척자들이 솔트레이크에 도착한 직후, 어른들은 생활 기반을 잡느라 필사적이었고 아이들은 방치되어 있었습니다. 스코틀랜드 출신의 개종자인 발란타인 형제님은 아이들이 교육을 받지 못하고 복음도 배우지 못한 채 거칠어지는 모습을 보고 마음 아파했습니다. 그는 누구의 명령을 받은 것이 아니라 스스로 브리검 영 회장님께 허락을 구했고, 자신의 집(나중에 자신의 부지에 지은 건물)에 이웃 아이들을 모아 가르치기 시작했습니다. 이것이 매우 효과적이었기에 다른 와드로 퍼져 나갔고, 결국 모든 교회의 주일학교로 도입되었습니다.\n\n2. 초등회\n시기/장소: 1878년, 유타주 파밍턴\n아우렐리아 스펜서 로저스 자매님은 동네 소년들이 밤늦게까지 거리를 뛰어다니며 장난치는 것을 걱정했습니다. 자매님은 \"그들이 신권을 받는 나이(당시는 12세 전후)가 되기 전, 더 어릴 때부터 규율과 신앙을 가르치지 않으면 미래의 교회 지도자는 자라지 못할 것\"이라는 위기감을 느꼈습니다. 자매님은 이 아이디어를 당시 본부 상호부조회 회장(엘리자 R. 스노우)과 상의했고, 존 테일러 회장님의 승인을 얻어 자신의 지역(파밍턴)에서 시험적으로 아이들을 모으는 모임을 열었습니다. 첫 모임에는 224명의 아이가 모였습니다. 이 성공을 보고 교회 전체에 도입되었습니다.\n\n3. 세미나리\n시기/장소: 1912년, 솔트레이크시티(그래닛 고등학교 맞은편)\n당시 유타주에도 '공립 고등학교'가 보급되기 시작했지만, 법에 의해 종교 교육이 금지되어 있었습니다. 지역 스테이크 회장님은 \"청소년들이 하루 종일 하나님 없는 세상 지식만 배움으로써 신앙을 잃지 않을까\" 우려했습니다. 그들은 교회 교육위원회에 제안하여 그래닛 고등학교 맞은편에 있는 집을 빌려, 공과 시간에 학생들이 와서 경전을 배울 수 있는 반을 실험적으로 만들었습니다. 첫 교사는 토머스 J. 예이츠였습니다. 만약 이 '그래닛 스테이크의 실험'이 없었다면, 현재 전 세계로 퍼진 세미나리 제도는 없었을지도 모릅니다.\n\n4. 가정의 밤\n시기/장소: 1909년(스테이크 단위 시작), 1915년(전 교회 권고)\n20세기 초, 사회가 근대화되면서 가족이 함께 보내는 시간이 줄어들기 시작했습니다. 1915년에 조셉 F. 스미스 회장님이 '가정의 밤'을 전 교회에 공식적으로 권고했지만, 사실 그 수년 전인 1909년에 그래닛 스테이크에서 이미 실험적으로 시행되어 높은 성과를 거두었던 프로그램이 모델이 되었습니다. 제일회장단은 이 스테이크에서의 성공을 보고 \"이것은 모든 성도에게 필요한 것\"이라고 판단하여 채택한 것입니다.\n\n\n\n이 이야기를 듣고 저는 '개인적인 계시', 다시 말해 '위로부터의 지시가 아니라 매우 내발적이고 사랑을 동기로 한 행동'이 현재 교회의 프로그램을 만들었다는 것을 알게 되었습니다. 만약 지역 사회에 문제가 있다면 교회 본부가 해결해 주기를 기다리는 것이 아니라, 그 지역을 위해 개인적인 계시를 받는 것이 중요하다는 것을 느꼈습니다.\n\n여기서 저는 거의 모든 지역에 공통된 문제를 하나 발견했습니다. 그것은 회원, 신입 회원, 구도자(교회 친구)의 경전 학습 습관입니다. 이것은 '매우 개인적이고 가족적인 사랑 안에서 이루어져야 하는 것'이며, 지도자가 직접 관리할 수 없는 부분이기도 합니다.\n\n하지만 개인적이고 가족적인 사랑 안에서 이루어지기 때문에 몇 가지 큰 문제가 발생했다고 생각합니다.\n\n• 구도자와 신입 회원은 경전 학습 방법을 모르거나 누구에게 물어봐야 할지 모르는 문제를 겪고 있으며, 파트 멤버 가족은 가족 내에서 자신의 배움을 기쁘게 나누기 어려워 경전 학습에서 기쁨을 찾지 못하고 교회에서 멀어지기도 합니다.\n\n• 교회 본부가 많은 투자를 하여 '복음 라이브러리'와 양질의 리소스를 제공하고, 제일회장단과 십이사도 정원회 등 지도자들이 열심히 계시를 구해 '연차 대회'에서 그 내용을 전해주어도, 정작 회원이 배우는 습관을 갖지 않는다면 그 투자와 계시는 낭비되고 맙니다.\n\n• 연차 대회와 경전에서 가르치는 내용은 한 번 읽는 것만으로 터득할 수 있는 것이 아니며, 개인이 그 가르침을 내면 깊숙이 받아들여 자연스럽게 실천할 수 있는 수준까지 도달해야 합니다. 즉, '성령의 은사'를 의지하여 '개인적인 계시를 받을 수 있는 상태'가 되는 것입니다. 신권 축복과 의식, 교회와 가족 및 지역 사회에서의 봉사, 선교 사업과 성역 등이 그 예입니다. 이것들은 하루아침에 터득되는 것이 아니라 일상의 경전 학습 습관과 신앙의 실천을 통해 연마됩니다. 그것 없이는 이스라엘의 집합이 효과적으로 기능할 수 없다고 저는 믿습니다.\n\n이것들은 제가 생각한 일례일 뿐이며 실제 모든 문제를 완벽히 묘사한 것은 아니지만, 이것만으로도 경전 학습 습관의 중요성을 충분히 알 수 있습니다.\n\n몰몬경에는 백성들의 교만으로 인해 계명을 지키지 않게 되고, 결국 전쟁과 불화가 생겨 문명이 몰락하는 모습이 묘사되어 있습니다. 당시의 선지자들은 물론 정치적인 방법으로도 문제를 대처했지만, 특히 강조된 것은 '하나님 말씀의 활용'입니다. 앨마서 31장 5절에는 이에 대한 매우 강력한 말씀이 적혀 있습니다.\n\n\"이제 하나님의 말씀을 전파하는 것이 백성들을 인도하여 정의로운 일을 하게 하는 데 큰 효과가 있었으므로—참으로 그것은 칼이나 그들에게 일어났던 다른 어떤 일보다도 백성들의 마음에 강력한 영향을 미쳤던지라—그러므로 앨마는 하나님의 말씀의 힘을 시험해 보는 것이 마땅하다고 생각하였더라.\"\n\n저는 이 말씀이 현대의 국제적인 사회 문제, 정치 문제, 그리고 지역 사회의 문제를 대처하는 데에도 매우 유효하다고 믿습니다. 이 앱은 학교 과제의 연장으로 시작되었지만, 제가 위에서 언급한 문제들을 더욱 효과적으로 해결할 수 있다는 확신을 가지고 만들었습니다. 이 앱을 통해 한 분이라도 더 많은 분이 급변하고 혼란스러운 사회 속에서 '경전 학습 습관'을 세우고, '개인적인 계시'를 받아 이 세상을 더 나은 곳으로 만들 수 있기를 믿습니다.\n\n긴 글을 읽어주셔서 정말 감사합니다. 마지막으로 여러분 한 분 한 분의 삶에 주님의 은혜가 풍성히 쏟아지기를 기원합니다."
+            backgroundStory: "이 앱을 만들게 된 계기는 클레이튼 크리스텐슨 형제님의 \"Dealing with the Dangers of Success(성공의 위험에 대처하기)\"라는 말씀을 듣고 나서였습니다. 그 말씀에서 형제님은 현재 교회의 '공식 프로그램'과 '개인적인 계시' 사이의 밀접한 관계에 대해 말씀하셨습니다.\n\n형제님은 현재 교회의 공식 프로그램으로 도입된 주일학교, 초등회, 가정의 밤, 세미나리 같은 프로그램들이 원래 '교회 본부의 지시'로 만들어진 것이 아니라고 지적하셨습니다. 대신, 현장의 회원들이 직면한 문제를 해결하기 위해 '개인적인 계시'를 통해 태어난 것이라고 하셨습니다. 그것이 매우 효과적이었기에 다른 와드로 퍼져 나갔고, 결국 모든 교회의 주일학교로 도입되었습니다.\n\n2. 초등회\n시기/장소: 1878년, 유타주 파밍턴\n아우렐리아 스펜서 로저스 자매님은 동네 소년들이 밤늦게까지 거리를 뛰어다니며 장난치는 것을 걱정했습니다. 자매님은 \"그들이 신권을 받는 나이(당시는 12세 전후)가 되기 전, 더 어릴 때부터 규율과 신앙을 가르치지 않으면 미래의 교회 지도자는 자라지 못할 것\"이라는 위기감을 느꼈습니다. 자매님은 이 아이디어를 당시 본부 상호부조회 회장(엘리자 R. 스노우)과 상의했고, 존 테일러 회장님의 승인을 얻어 자신의 지역(파밍턴)에서 시험적으로 아이들을 모으는 모임을 열었습니다. 첫 모임에는 224명의 아이가 모였습니다. 이 성공을 보고 교회 전체에 도입되었습니다.\n\n3. 세미나리\n시기/장소: 1912년, 솔트레이크시티(그래닛 고등학교 맞은편)\n당시 유타주에도 '공립 고등학교'가 보급되기 시작했지만, 법에 의해 종교 교육이 금지되어 있었습니다. 지역 스테이크 회장님은 \"청소년들이 하루 종일 하나님 없는 세상 지식만 배움으로써 신앙을 잃지 않을까\" 우려했습니다. 그들은 교회 교육위원회에 제안하여 그래닛 고등학교 맞은편에 있는 집을 빌려, 공과 시간에 학생들이 와서 경전을 배울 수 있는 반을 실험적으로 만들었습니다. 첫 교사는 토머스 J. 예이츠였습니다. 만약 이 '그래닛 스테이크의 실험'이 없었다면, 현재 전 세계로 퍼진 세미나리 제도는 없었을지도 모릅니다.\n\n4. 가정의 밤\n시기/장소: 1909년(스테이크 단위 시작), 1915년(전 교회 권고)\n20세기 초, 사회가 근대화되면서 가족이 함께 보내는 시간이 줄어들기 시작했습니다. 1915년에 조셉 F. 스미스 회장님이 '가정의 밤'을 전 교회에 공식적으로 권고했지만, 사실 그 수년 전인 1909년에 그래닛 스테이크에서 이미 실험적으로 시행되어 높은 성과를 거두었던 프로그램이 모델이 되었습니다. 제일회장단은 이 스테이크에서의 성공을 보고 \"이것은 모든 성도에게 필요한 것\"이라고 판단하여 채택한 것입니다.\n\n\n\n이 이야기를 듣고 저는 '개인적인 계시', 다시 말해 '위로부터의 지시가 아니라 매우 내발적이고 사랑을 동기로 한 행동'이 현재 교회의 프로그램을 만들었다는 것을 알게 되었습니다. 만약 지역 사회에 문제가 있다면 교회 본부가 해결해 주기를 기다리는 것이 아니라, 그 지역을 위해 개인적인 계시를 받는 것이 중요하다는 것을 느꼈습니다.\n\n여기서 저는 거의 모든 지역에 공통된 문제를 하나 발견했습니다. 그것은 회원, 신입 회원, 구도자(교회 친구)의 경전 학습 습관입니다. 이것은 '매우 개인적이고 가족적인 사랑 안에서 이루어져야 하는 것'이며, 지도자가 직접 관리할 수 없는 부분이기도 합니다.\n\n하지만 개인적이고 가족적인 사랑 안에서 이루어지기 때문에 몇 가지 큰 문제가 발생했다고 생각합니다.\n\n• 구도자와 신입 회원은 경전 학습 방법을 모르거나 누구에게 물어봐야 할지 모르는 문제를 겪고 있으며, 파트 멤버 가족은 가족 내에서 자신의 배움을 기쁘게 나누기 어려워 경전 학습에서 기쁨을 찾지 못하고 교회에서 멀어지기도 합니다.\n\n• 교회 본부가 많은 투자를 하여 '복음 라이브러리'와 양질의 리소스를 제공하고, 제일회장단과 십이사도 정원회 등 지도자들이 열심히 계시를 구해 '연차 대회'에서 그 내용을 전해주어도, 정작 회원이 배우는 습관을 갖지 않는다면 그 투자와 계시는 낭비되고 맙니다.\n\n• 연차 대회와 경전에서 가르치는 내용은 한 번 읽는 것만으로 터득할 수 있는 것이 아니며, 개인이 그 가르침을 내면 깊숙이 받아들여 자연스럽게 실천할 수 있는 수준까지 도달해야 합니다. 즉, '성령의 은사'를 의지하여 '개인적인 계시를 받을 수 있는 상태'가 되는 것입니다. 신권 축복과 의식, 교회와 가족 및 지역 사회에서의 봉사, 선교 사업과 성역 등이 그 예입니다. 이것들은 하루아침에 터득되는 것이 아니라 일상의 경전 학습 습관과 신앙의 실천을 통해 연마됩니다. 그것 없이는 이스라엘의 집합이 효과적으로 기능할 수 없다고 저는 믿습니다.\n\n이것들은 제가 생각한 일례일 뿐이며 실제 모든 문제를 완벽히 묘사한 것은 아니지만, 이것만으로도 경전 학습 습관의 중요성을 충분히 알 수 있습니다.\n\n몰몬경에는 백성들의 교만으로 인해 계명을 지키지 않게 되고, 결국 전쟁과 불화가 생겨 문명이 몰락하는 모습이 묘사되어 있습니다. 당시의 선지자들은 물론 정치적인 방법으로도 문제를 대처했지만, 특히 강조된 것은 '하나님 말씀의 활용'입니다. 앨마서 31장 5절에는 이에 대한 매우 강력한 말씀이 적혀 있습니다.\n\n\"이제 하나님의 말씀을 전파하는 것이 백성들을 인도하여 정의로운 일을 하게 하는 데 큰 효과가 있었으므로—참으로 그것은 칼이나 그들에게 일어났던 다른 어떤 일보다도 백성들의 마음에 강력한 영향을 미쳤던지라—그러므로 앨마는 하나님의 말씀의 힘을 시험해 보는 것이 마땅하다고 생각하였더라.\"\n\n저는 이 말씀이 현대의 국제적인 사회 문제, 정치 문제, 그리고 지역 사회의 문제를 대처하는 데에도 매우 유효하다고 믿습니다. 이 앱은 학교 과제의 연장으로 시작되었지만, 제가 위에서 언급한 문제들을 더욱 효과적으로 해결할 수 있다는 확신을 가지고 만들었습니다. 이 앱을 통해 한 분이라도 더 많은 분이 급변하고 혼란스러운 사회 속에서 '경전 학습 습관'을 세우고, '개인적인 계시'를 받아 이 세상을 더 나은 곳으로 만들 수 있기를 믿습니다.\n\n긴 글을 읽어주셔서 정말 감사합니다. 마지막으로 여러분 한 분 한 분의 삶에 주님의 은혜가 풍성히 쏟아지기를 기원합니다."
         },
         dashboard: {
             welcomeBack: "환영합니다",
@@ -3919,7 +4052,13 @@ export const translations = {
             nextLevel: "다음 레벨까지",
             daysStudied: "학습한 일수",
             successUpdate: "프로필이 성공적으로 업데이트되었습니다!",
-            errorUpdate: "프로필 업데이트에 실패했습니다. 다시 시도해 주세요."
+            errorUpdate: "프로필 업데이트에 실패했습니다. 다시 시도해 주세요.",
+            deleteAccount: "계정 삭제",
+            deleteAccountWarning: "경고: 이 작업은 영구적입니다. 귀하의 노트를 포함한 모든 데이터와 프로필이 영구적으로 삭제됩니다.",
+            confirmDeleteAccount: "내 계정 삭제",
+            cancelDeleteAccount: "취소",
+            deleteAccountError: "계정을 삭제하는 중 오류가 발생했습니다. 보안상의 이유로 이 작업을 수행하기 전에 로그아웃했다가 다시 로그인해야 할 수 있습니다.",
+            deleteAccountSuccess: "계정이 성공적으로 삭제되었습니다."
         },
         groupChat: {
             send: "전송",
@@ -4382,8 +4521,21 @@ export const translations = {
             thirdPartiesItems: "데이터 저장을 위해 Firebase를 사용하고, 번역 및 요약과 같은 기술적 기능을 위해 Gemini API를 사용합니다. 이 서비스들은 자체적인 개인정보 보호 표준을 따릅니다.",
             rights: "귀하의 권리",
             rightsItems: "앱 내에서 언제든지 프로필을 업데이트하거나 학습 노트를 삭제할 수 있습니다.",
-            contact: "연락처",
-            contactItems: "문의 사항이 있으시면 dazhilangxianggen@gmail.com으로 연락해 주시기 바랍니다."
+            contact: "문의하기",
+            contactItems: "궁금한 점이 있으시면 dazhilangxianggen@gmail.com으로 문의해 주세요."
+        },
+        terms: {
+            title: "서비스 이용약관",
+            lastUpdated: "최종 업데이트: 2025년 12월 28일",
+            intro: "Scripture Habit을 사용함으로써 귀하는 본 약관에 동의하게 됩니다. 주의 깊게 읽어주시기 바랍니다.",
+            userConduct: "사용자 행동 수칙",
+            userConductItems: "귀하는 영적 성장을 위해 이 앱을 사용하고 다른 회원을 존중하는 데 동의합니다. 괴롭힘, 혐오 표현 및 부적절한 콘텐츠는 엄격히 금지됩니다.",
+            aiDisclaimer: "AI 면책 조항",
+            aiDisclaimerItems: "Scripture Habit은 요약 및 번역을 생성하기 위해 AI(Google Gemini)를 사용합니다. AI는 실수를 할 수 있습니다. 교리적 정확성을 위해 귀하의 판단과 공식 교회 자료를 참고하시기 바랍니다.",
+            termination: "종료",
+            terminationItems: "우리는 본 약관을 위반하거나 커뮤니티 경험을 저해하는 계정을 정지하거나 삭제할 권리를 보유합니다.",
+            limitation: "책임의 제한",
+            limitationItems: "Scripture Habit은 '있는 그대로' 제공됩니다. 당사는 서비스 사용으로 인해 발생하는 영적 또는 기술적 문제에 대해 책임을 지지 않습니다."
         }
     },
     tl: {
@@ -4475,7 +4627,13 @@ export const translations = {
             nextLevel: "Para sa susunod na antas",
             daysStudied: "Mga Araw na Nag-aral",
             successUpdate: "Matagumpay na na-update ang profile!",
-            errorUpdate: "Nabigong i-update ang profile. Pakisubukan muli."
+            errorUpdate: "Bigo ang pag-update ng profile. Mangyaring subukan muli.",
+            deleteAccount: "I-delete ang Account",
+            deleteAccountWarning: "Babala: Ang aksyong ito ay permanente. Lahat ng iyong data, kabilang ang iyong mga tala at profile, ay permanenteng mabubura.",
+            confirmDeleteAccount: "I-delete ang Aking Account",
+            cancelDeleteAccount: "I-cancel",
+            deleteAccountError: "Error sa pag-delete ng account. Maaaring kailangan mo munang mag-log out at mag-log in muli bago gawin ang aksyong ito para sa seguridad.",
+            deleteAccountSuccess: "Matagumpay na na-delete ang account."
         },
         groupChat: {
             send: "Ipadala",
@@ -4881,7 +5039,7 @@ export const translations = {
             page3RuleContent2: "Kung walang post sa loob ng 3 araw, awtomatiko kang magpapahinga (aalis), ngunit maaari kang muling sumali sa parehong grupo anumang oras.",
             page4Title: "Doktrina at mga Tipan 50:22",
             page4Quote: "\"Samakatwid, siya na nangangaral at siya na nakatatanggap ay nauunawaan ang isa't isa, at sila ay kapwa pinabuti at nagsasaya nang magkasama.\" - Jesucristo",
-            page4Content: "Kung makakaramdam ka ng kagalakan sa pamamagitan ng app na ito gaya ng sinasabi ng banal na kasulatang ito, ako ay magiging napakasaya. Ito ay kaluguran ng isang developer.",
+            page4Content: "Kung makakaramdam ka ng kagalakan sa pamamagitan ng app na ito gaya ng sinasabi ng banal na kasulatan, ako ay magiging napakasaya. Ito ay kaluguran ng isang developer.",
             page5Title: "Handa nang magsimula?",
             page5Content: "Magkaroon ng magandang paglalakbay sa pag-aaral ng banal na kasulatan!",
             startButton: "Magsimula",
@@ -4939,6 +5097,19 @@ export const translations = {
             rightsItems: "Maaari mong i-update ang iyong profile o tanggalin ang iyong mga tala sa pag-aaral anumang oras sa loob ng app.",
             contact: "Makipag-ugnayan",
             contactItems: "Kung mayroon kang mga katanungan, mangyaring makipag-ugnayan sa amin sa dazhilangxianggen@gmail.com."
+        },
+        terms: {
+            title: "Mga Tuntunin ng Serbisyo",
+            lastUpdated: "Huling na-update: Disyembre 28, 2025",
+            intro: "Sa paggamit ng Scripture Habit, sumasang-ayon ka sa mga tuntuning ito. Mangyaring basahin silang mabuti.",
+            userConduct: "Asal ng User",
+            userConductItems: "Sumasang-ayon ka na gamitin ang app na ito para sa espirituwal na paglago at igalang ang ibang mga miyembro. Ang harassment, hate speech, at hindi naaangkop na nilalaman ay mahigpit na ipinagbabawal.",
+            aiDisclaimer: "AI Disclaimer",
+            aiDisclaimerItems: "Ang Scripture Habit ay gumagamit ng AI (Google Gemini) upang bumuo ng mga recap at pagsasalin. Ang AI ay maaaring magkamali. Mangyaring gamitin ang iyong sariling pagpapasya at mga opisyal na mapagkukunan ng simbahan para sa katumpakan ng doktrina.",
+            termination: "Pagwawakas",
+            terminationItems: "Inirerebenta namin ang karapatang suspindihin o i-delete ang mga account na lumalabag sa mga tuntuning ito o nakakagambala sa karanasan ng komunidad.",
+            limitation: "Limitasyon ng Pananagutan",
+            limitationItems: "Ang Scripture Habit ay ibinibigay 'as is'. Hindi kami pananagutan para sa anumang espirituwal o teknikal na isyu na nagreresulta mula sa paggamit ng serbisyo."
         }
     },
     sw: {
@@ -5030,7 +5201,13 @@ export const translations = {
             nextLevel: "Kuelekea kiwango kijacho",
             daysStudied: "Siku Ulizosoma",
             successUpdate: "Wasifu umesasishwa kikamilifu!",
-            errorUpdate: "Imeshindwa kusasisha wasifu. Tafadhali jaribu tena."
+            errorUpdate: "Imeshindikana kusasisha wasifu. Tafadhali jaribu tena.",
+            deleteAccount: "Futa Akaunti",
+            deleteAccountWarning: "Onyo: Hatua hii ni ya kudumu. Data zako zote, ikiwa ni pamoja na maelezo na wasifu wako, zitafutwa kabisa.",
+            confirmDeleteAccount: "Futa Akaunti Yangu",
+            cancelDeleteAccount: "Ghairi",
+            deleteAccountError: "Hitilafu imetokea wakati wa kufuta akaunti. Unaweza kuhitaji kutoka na kuingia tena kabla ya kufanya hatua hii kwa sababu za kiusalama.",
+            deleteAccountSuccess: "Akaunti imefutwa kikamilifu."
         },
         groupChat: {
             send: "Tuma",
@@ -5108,7 +5285,6 @@ export const translations = {
             like: "Penda",
             unlike: "Ondoa upendo",
             original: "Asili",
-            reply: "Jibu",
             askAiTopic: "✨ Uliza AI Mada",
             generateWeeklyRecap: "✨ Tengeneza Muhtasari wa Wiki",
             noNotesForRecap: "Hakuna maelezo yaliyopatikana kwa wiki hii.",
@@ -5495,6 +5671,19 @@ export const translations = {
             rightsItems: "Unaweza kusasisha wasifu wako au kufuta maelezo yako ya funzo wakati wowote ndani ya programu.",
             contact: "Wasiliana",
             contactItems: "Ikiwa una maswali, tafadhali wasiliana nasi kwa dazhilangxianggen@gmail.com."
+        },
+        terms: {
+            title: "Masharti ya Huduma",
+            lastUpdated: "Ilisasishwa mwisho: Desemba 28, 2025",
+            intro: "Kwa kutumia Scripture Habit, unakubaliana na masharti haya. Tafadhali yasome kwa makini.",
+            userConduct: "Maadili ya Mtumiaji",
+            userConductItems: "Unakubali kutumia programu hii kwa ukuaji wa kiroho na kuwaheshimu washiriki wengine. Unyanyasaji, lugha ya chuki, na maudhui yasiyofaa yamepigwa marufuku kabisa.",
+            aiDisclaimer: "Kanusho la AI",
+            aiDisclaimerItems: "Scripture Habit inatumia AI (Google Gemini) kuzalisha muhtasari na tafsiri. AI inaweza kufanya makosa. Tafadhali tumia uamuzi wako mwenyewe na rasilimali rasmi za kanisa kwa usahihi wa mafundisho.",
+            termination: "Usitishaji",
+            terminationItems: "Tunahifadhi haki ya kusimamisha au kufuta akaunti zinazokiuka masharti haya au kuvuruga hali ya jumuiya.",
+            limitation: "Ukomo wa Dhima",
+            limitationItems: "Scripture Habit inatolewa 'kama ilivyo'. Hatuwajibiki kwa tatizo lolote la kiroho au kiufundi linalotokana na matumizi ya huduma hiyo."
         }
     },
 };
