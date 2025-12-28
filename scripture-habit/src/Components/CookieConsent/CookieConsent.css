@@ -1,0 +1,100 @@
+.cookie-consent-banner {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 800px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    padding: 1.2rem 1.5rem;
+    z-index: 10000;
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translate(-50%, 100px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translate(-50%, 0);
+        opacity: 1;
+    }
+}
+
+.cookie-consent-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.cookie-consent-content p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #4a5568;
+    line-height: 1.5;
+    flex: 1;
+}
+
+.privacy-link {
+    color: #4A90E2;
+    text-decoration: none;
+    margin-left: 0.5rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.privacy-link:hover {
+    text-decoration: underline;
+}
+
+.accept-button {
+    background: #4A90E2;
+    color: white;
+    border: none;
+    padding: 0.8rem 1.8rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.accept-button:hover {
+    background: #357ABD;
+    transform: translateY(-2px);
+}
+
+.accept-button:active {
+    transform: translateY(0);
+}
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+    .cookie-consent-banner {
+        bottom: 1rem;
+        padding: 1.2rem;
+    }
+
+    .cookie-consent-content {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .accept-button {
+        width: 100%;
+    }
+
+    .privacy-link {
+        display: inline-block;
+        margin: 0.3rem 0 0 0.5rem;
+    }
+}

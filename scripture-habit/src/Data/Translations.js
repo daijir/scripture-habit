@@ -33,6 +33,7 @@ export const translations = {
             button: "Donate via PayPal",
             contactTitle: "CONTACT US FOR HELP WITH YOUR DONATION",
             contactDesc: "For help or questions about your donation, please contact us at dazhilangxianggen@gmail.com.",
+            legalDisclosureLink: "Commercial Transactions Act Disclosure",
             appBackground: "App Development Background",
             backgroundStory: "The inspiration for creating this app came from a talk by Brother Clayton Christensen titled \"Dealing with the Dangers of Success.\" In his talk, he addressed the intimate relationship between the Church's official \"programs\" and \"personal revelation.\"\n\nHe pointed out that the programs currently implemented as official Church curriculum—such as Sunday School, Primary, Family Home Evening, and Seminary—did not originally originate from \"headquarters' instructions.\" Instead, they were born out of \"personal revelation\" by local members who were trying to solve the problems they faced. Because these solutions were so effective, they were later adopted by General Authorities and standardized worldwide.\n\nHowever, as an organization grows and everything becomes manualized, it becomes harder for \"new solutions\" to emerge from the field. Brother Christensen urged BYU students not only to follow standardized programs but to continue receiving inspiration to \"invent\" solutions for the new problems they encounter.\n\nHere are some examples of how personal revelation actually unfolded:\n\n \n\n1. Sunday School\nTime/Place: 1849, Salt Lake Basin\nShortly after the pioneers arrived in Salt Lake, adults were desperate to build a foundation for survival, leaving children often unattended. Brother Ballantyne, a convert from Scotland, was pained to see children growing up without an education or the gospel. Without being commanded by anyone, he sought permission from President Brigham Young and began gathering neighborhood children in his own home (later in a building he built on his property) to teach them. This was so effective that it spread to other wards and was eventually adopted by the entire Church as Sunday School.\n\n2. Primary\nTime/Place: 1878, Farmington, Utah\nSister Aurelia Spencer Rogers was concerned about local boys running through the streets late at night and getting into mischief. She felt a sense of urgency: \"If we do not teach them discipline and faith while they are young, before they reach the age to receive the Priesthood (around 12 at the time), our future Church leaders will not be prepared.\" She consulted with the General Relief Society President (Eliza R. Snow) and, with President John Taylor's approval, held experimental meetings for children in her local area (Farmington). 224 children attended the first meeting. Seeing this success, it was introduced Church-wide.\n\n3. Seminary\nTime/Place: 1912, Salt Lake City (across from Granite High School)\nAs public high schools became common in Utah, religious education was prohibited by law within those schools. A local Stake President worried that youth might lose their faith by spending all day learning only secular knowledge without God. They proposed an idea to the Church Board of Education and rented a house across from Granite High School to create an experimental class where students could study the scriptures during their release time. The first teacher was Thomas J. Yates. Without this \"Granite Stake experiment,\" the global Seminary system we have today might never have existed.\n\n4. Family Home Evening\nTime/Place: 1909 (Stake level), 1915 (Church-wide recommendation)\nIn the early 20th century, as society modernized, families began spending less time together. While President Joseph F. Smith officially recommended \"Family Home Evening\" to the entire Church in 1915, it was actually modeled after a program that had been experimentally run with great success in the Granite Stake since 1909. The First Presidency saw the success in that stake and determined, \"This is something all Saints need.\"\n\n\n\nHearing these stories made me realize that \"personal revelation\"—or to put it another way, \"actions that are not from top-down instructions, but are deeply intrinsic and motivated by love\"—is what built the Church's current programs. I felt that if there is a problem in our community, we shouldn't wait for Church headquarters to solve it; it is vital that we receive personal revelation for our own areas.\n\nI noticed one problem common to almost every region: the habit of scripture study among members, new converts, and friends of the Church. This is something that should be \"deeply personal and conducted within the love of the family,\" and it is an area that leaders cannot manage directly.\n\nHowever, precisely because it is personal and home-centered, I believe several major issues have arisen:\n\n• Investigators and new members often don't know how to study scriptures or who to ask for help. Part-member families may struggle to find joy in their studies because they cannot easily share their learning within their families, leading some to gradually drift away from the Church.\n\n• Even though the Church invests heavily in providing the \"Gospel Library\" and high-quality resources, and even though the First Presidency, Quorum of the Twelve Apostles, and other leaders fervently seek revelation to share in \"General Conference,\" those investments and revelations go to waste if members do not have the habit of learning.\n\n• The things taught in General Conference and the scriptures cannot be mastered by reading them once. Individuals are often required to internalize these teachings deeply and reach a level where they can naturally put them into practice. This is the state of being able to \"receive personal revelation\" by relying on the \"Gift of the Holy Ghost.\" Examples include Priesthood blessings and ordinances, service in the church, family, and community, and missionary and ministering work. These cannot be mastered through overnight study; they are refined through daily habits of scripture study and the exercise of faith. Without this, I believe the Gathering of Israel cannot function effectively.\n\nThese are just a few examples I have considered, and they may not perfectly describe every issue, but I believe they demonstrate the vital importance of a scripture study habit.\n\nThe Book of Mormon describes how, due to pride, the people stopped keeping the commandments, eventually leading to war, contention, and the fall of civilizations. While the prophets of that time certainly addressed these issues through political means, what is emphasized most is the \"use of the word of God.\" Alma 31:5 contains very powerful words regarding this:\n\n\"And now, as the preaching of the word had a great tendency to lead the people to do that which was just—yea, it had had more powerful effect upon the minds of the people than the sword, or anything else, which had happened unto them—therefore Alma thought it was expedient that they should try the virtue of the word of God.\"\n\nI believe these words are extremely effective in dealing with modern international social and political issues, as well as local community problems. Although this app started as an extension of a school project, I created it with the conviction that it can more effectively address the problems I have mentioned. My hope is that through this app, as many people as possible can establish a \"habit of scripture study\" in this rapidly changing and chaotic society, receive \"personal revelation,\" and make this world a better place.\n\nThank you so very much for reading this long message. Finally, I pray that the Lord's grace may be poured out abundantly upon each of you."
         },
@@ -136,6 +137,26 @@ export const translations = {
             loading: "Loading letters...",
             empty: "No letters yet. Generate a weekly recap to receive one!",
             defaultTitle: "Weekly Recap"
+        },
+        legalDisclosure: {
+            title: "Commercial Transactions Act",
+            provider: "Service Provider",
+            representative: "Representative",
+            address: "Address",
+            phone: "Phone Number",
+            email: "Email Address",
+            price: "Price",
+            paymentTiming: "Payment Timing",
+            paymentMethod: "Payment Method",
+            deliveryTiming: "Delivery Timing",
+            cancellation: "Cancellation/Returns",
+            environment: "Operating Environment",
+            priceDetail: "Displayed on the donation page or specified by the user.",
+            paymentTimingDetail: "At the time of transaction completion.",
+            deliveryTimingDetail: "Immediately after payment completion.",
+            cancelDetail: "Due to the nature of digital donations, no refunds or cancellations are accepted after payment.",
+            environmentDetail: "Can be used on the latest versions of various browsers and operating systems.",
+            requestDisclosure: "Personal contact information will be provided without delay upon request via email."
         },
         groupChat: {
             send: "Send",
@@ -274,7 +295,15 @@ export const translations = {
             errorDeleteMessage: "Failed to delete message",
             groupStatusUpdated: "Group is now {status}",
             errorUpdateGroupStatus: "Failed to update group status",
-            inactivityRemoval: "👋 **{count} member(s)** were removed due to inactivity (3+ days)."
+            inactivityRemoval: "👋 **{count} member(s)** were removed due to inactivity (3+ days).",
+            report: "Report",
+            reportUser: "Report Inappropriate Content",
+            reportReason: "Reason for reporting",
+            reportSuccess: "Report sent successfully. We will review it shortly.",
+            reportSpam: "Spam",
+            reportHarassment: "Harassment",
+            reportInappropriate: "Inappropriate Content",
+            reportOther: "Other",
         },
         newNote: {
             editTitle: "Edit Note",
@@ -569,16 +598,23 @@ export const translations = {
             userConductItems: "You agree to use this app for spiritual growth and to respect other members. Harassment, hate speech, and inappropriate content are strictly prohibited.",
             aiDisclaimer: "AI Disclaimer",
             aiDisclaimerItems: "Scripture Habit uses AI (Google Gemini) to generate recaps and translations. AI can make mistakes. Please use your own judgment and official church resources for doctrinal accuracy.",
+            officialDisclaimer: "Official Disclaimer",
+            officialDisclaimerItems: "Scripture Habit is a personal project and is not an official service of, or affiliated with, The Church of Jesus Christ of Latter-day Saints.",
             termination: "Termination",
             terminationItems: "We reserve the right to suspend or delete accounts that violate these terms or disrupt the community experience.",
             limitation: "Limitation of Liability",
             limitationItems: "Scripture Habit is provided 'as is'. We are not liable for any spiritual or technical issues arising from the use of the service."
+        },
+        cookieConsent: {
+            message: "We use cookies to improve your experience and analyze traffic. By continuing to use this site, you agree to our use of cookies.",
+            accept: "Accept",
+            privacyPolicy: "Privacy Policy"
         }
     },
     ja: {
         seo: {
             title: "Scripture Habit - 聖典学習を楽しく、習慣に",
-            description: "Scripture Habit（スクリプチャーハビット）は、仲間と一緒に聖典を学び、証を分かち合うことで、日々の学習を楽しく継続できるコミュニティツールです。"
+            description: "Scripture Habit（スクハビ）は、仲間と一緒に聖典を学び、証を分かち合うことで、日々の学習を楽しく継続できるコミュニティツールです。"
         },
         sidebar: {
             dashboard: "ダッシュボード",
@@ -609,6 +645,7 @@ export const translations = {
             button: "PayPalで寄付する",
             contactTitle: "寄付に関するお問い合わせ",
             contactDesc: "寄付に関するヘルプやご質問は、dazhilangxianggen@gmail.com までお問い合わせください。",
+            legalDisclosureLink: "特定商取引法に基づく表記",
             appBackground: "アプリ開発の背景",
             backgroundStory: "このアプリを作るきっかけはクレイトン・クリステンセン兄弟の\"Dealing with the Dangers of Success\"というお話を聞いたことです。そこでは現在の教会の「公式プログラム」と「個人の啓示」の密接な関係性について話されてました。\n\n現在教会の公式のプログラムとして導入されてる日曜学校、初等協会、家庭の夕べ、セミナリーといったプログラムはもともと「教会本部の指示」で作られたものではなく、現場の会員が直面した問題を解決するために「個人の啓示」で生まれたものだと指摘されてました。それが効果的だったため、後に中央幹部が採用し、世界標準化されたのです。\n\nしかし、組織が大きくなり、すべてがマニュアル化されると、今度は現場からの「新しい解決策」が生まれにくくなります。クリステンセン兄弟はBYUの学生たちに、「標準化されたプログラムに従うだけでなく、直面する新しい問題に対して、霊感を受けて解決策を発明し続けてほしい」と述べられてました。\n\nここでは実際に個人にどのように啓示が下ったのかご紹介します。\n\n \n\n1. 日曜学校\n時期/場所: 1849年、ソルトレイク盆地\n開拓者たちがソルトレイクに到着した直後、大人は生活の基盤を作るのに必死で、子供たちは放置されていました。スコットランド出身の改宗者のバランタイン兄弟は、子供たちが教育を受けず、福音も学ばずに荒れていく様子を見て心を痛めていました。彼は誰かに命じられたわけではなく、自らブリガム・ヤング大管長に許可を求め、自分の家(後に自分の敷地に建てた建物)に近所の子供たちを集めて教え始めました。これが非常に効果的だったため、他のワードにも広まり、最終的に全ての教会に日曜学校として導入されました。\n\n2. 初等協会\n時期/場所: 1878年、ユタ州ファーミントン\nオーレリア・スペンサー・ロジャース姉妹は、近所の少年たちが夜遅くまで通りを走り回り、いたずらをしているのを心配していました。「彼らが神権を受ける年齢(当時は12歳前後)になる前に、もっと幼いうちから規律や信仰を教えなければ、将来の教会指導者は育たない」という危機感を抱きました。彼女はこのアイデアを当時の扶助協会会長(エリザ・R・スノー)に相談し、ジョン・テーラー大管長の承認を得て、まずは自分の地元(ファーミントン)だけで試験的に子供たちを集める会合を開きました。最初の会合には224人の子供が集まりました。この成功を見て、教会全体に導入されました。\n\n3. セミナリー\n時期/場所: 1912年、ソルトレイクシティ(グラナイト高校の向かい)\n当時、ユタ州でも「公立高校」が普及し始めましたが、そこでは法律により宗教教育が禁止されていました。地元のステーク会長は、「若者たちが一日中、神のいない世俗的な知識ばかり学ぶことで、信仰を失うのではないか」と懸念しました。彼らは教会教育委員会に提案し、グラナイト高校の向かいにある家を借りて、空き時間に生徒が来て聖文を学べるクラスを実験的に作りました。最初の教師はトーマス・J・イェーツでした。もしこの「グラナイトステークの実験」がなければ、現在の全世界に広がるセミナリー制度はなかったかもしれません。\n\n4. 家庭の夕べ\n時期/場所: 1909年(ステークでの開始)、1915年(全教会への推奨)\n20世紀初頭、社会が近代化し、家族が揃って過ごす時間が減り始めていました。1915年にジョセフ・F・スミス大管長が「家庭の夕べ」を公式に全教会に推奨しましたが、実はその数年前の1909年に、グラナイトステークですでに実験的に行われ、高い成果を上げていたプログラムがモデルになっています。大管長会は、このステークでの成功を見て「これは全聖徒に必要なものだ」と判断し、採用したのです。\n\n\n\nこのお話を聞いて私は「個人の啓示」、言い方を変えるならば「上からの指示からではなく、非常に内発的で、愛を動機とした行動」が現在の教会のプログラムを作ったと知り、もし地域の中で問題があるならば教会本部が解決してくれるのを待つのではなく、その地域のために個人の啓示を受けることが重要だと感じました。\n\nここで私は一つ、ほとんどすべての地域に共通する問題に気が付きました。それは会員、新会員、求道者の聖典学習の習慣です。これは「非常に個人的かつ家族愛の中で行われるべきもの」であり、指導者が管理できない部分でもあります。\n\nしかし、個人的かつ家族愛の中で行われる故に、いくつか大きな問題が生じることになったと私は考察します。\n\n・求道者、新会員は聖典学習のやり方がわからない、誰に相談すればよいかわからないという問題を抱えており、パートメンバーは家族内で自分の学びを気軽に分かち合うことができないために聖典学習に喜びを見いだせず教会に集わなくなってしまいます。\n\n・せっかく教会本部が投資をし「福音ライブラリー」や良質なリソースを提供し、なおかつ大管長会、十二使徒定員会、七十人、リーダーが熱心に啓示を求め「総大会」で啓示の内容をお伝えしても、会員がもし学ぶ習慣をもってなければそれらの投資と啓示は無駄になってしまいます。\n\n・総大会、及び聖典で教えられてることは一度読んだことで会得できるものではなく、個人がその学びを内面に深く落とし込み、自然と実践できるようになるまでのレベルを要求されることがしばしばあります。いわば「聖霊の賜物」を頼り「個人の啓示を受けられる状態」です。神権による祝福と儀式、教会、家族、地域における奉仕、伝道活動やミニスタリングがその例になると思います。これらは一朝一夕の学習から会得できるものではなく、日常の聖典学習の習慣、信仰の行使によって修練されるものであります。それなしにはイスラエルの集合は効果的に機能しないと私は思います。\n\nこれらは私が考えた一例であり、実際の全て問題を正しく描写したものではありませんが、これだけでも聖典学習の習慣の重要性が伺えると思います。\n\nモルモン書の中には民の高慢により戒めを守らなくなり、やがて戦争、不和が生じ文明が失墜していく様子が描かれてます。当時の預言者達はもちろん政治的な方法でそれらの問題を対処してましたが、特筆して描かれてたのは「神の言葉の利用」です。アルマ31章5節にはそれについての非常に力強い言葉が書かれてます。\n\n「御言葉を説き教えることは民に正しいことを行わせるのに大きな効果があり、まことにそれは、剣やそのほか、これまで民に起こったどのようなことよりも民の心に力強い影響を及ぼしたので、アルマはこの度も神の言葉の力を使うのが望ましいと思った。」\n\nこの言葉は現代の国際的な社会問題、政治問題また地元地域における問題の対処にも非常に有効であると私は信じてます。このアプリは学校の課題の延長で作ったものですが、私がこれまでに上げた問題をより効果的に対処できるという信念をもって作りました。このアプリを通して一人でも多くの方々がこの目まぐるしく変化し、混沌とした社会の中で「聖典学習をする習慣」を築き、「個人の啓示」を受けてこの社会をより良いものにできると信じてます。\n\nここまで長い文章を読んでくださり、本当にありがとうございます。最後になりますが、皆さん一人ひとりの元に主の恵みが豊かに注がれますように。"
         },
@@ -810,7 +847,15 @@ export const translations = {
             errorDeleteMessage: "メッセージの削除に失敗しました",
             groupStatusUpdated: "グループを{status}に変更しました",
             errorUpdateGroupStatus: "グループステータスの更新に失敗しました",
-            inactivityRemoval: "👋 **{count}名**のメンバーが、3日以上活動がなかったため退出しました。"
+            inactivityRemoval: "👋 **{count}名**のメンバーが、3日以上活動がなかったため退出しました。",
+            report: "通報する",
+            reportUser: "不適切なコンテンツを通報",
+            reportReason: "通報の理由",
+            reportSuccess: "通報を送信しました。運営側で内容を確認いたします。",
+            reportSpam: "スパム",
+            reportHarassment: "嫌がらせ・ハラスメント",
+            reportInappropriate: "不適切なコンテンツ",
+            reportOther: "その他",
         },
         myNotes: {
             description: "ノートコレクション",
@@ -850,6 +895,26 @@ export const translations = {
             loading: "読み込み中...",
             empty: "まだ手紙がありません。振り返りを作成して手紙を受け取りましょう！",
             defaultTitle: "今週の振り返り"
+        },
+        legalDisclosure: {
+            title: "特定商取引法に基づく表記",
+            provider: "事業者名",
+            representative: "運営責任者",
+            address: "所在地",
+            phone: "電話番号",
+            email: "メールアドレス",
+            price: "販売価格（寄付金）",
+            paymentTiming: "代金の支払時期",
+            paymentMethod: "代金の支払方法",
+            deliveryTiming: "サービス提供時期",
+            cancellation: "返品・キャンセル",
+            environment: "動作環境",
+            priceDetail: "寄付ページに表示、またはユーザーが指定した金額",
+            paymentTimingDetail: "寄付手続きの完了時に決済されます。",
+            deliveryTimingDetail: "決済手続き完了後、直ちに提供（サービス運営への充当）されます。",
+            cancelDetail: "デジタルコンテンツおよび寄付の性質上、決済完了後の返金・キャンセルはお受けできません。",
+            environmentDetail: "各種ブラウザ、各OSの最新バージョンでご利用いただけます。",
+            requestDisclosure: "連絡先情報の開示を希望される場合は、メールにてご請求いただければ遅滞なく提供いたします。"
         },
         newNote: {
             editTitle: "ノートを編集",
@@ -1152,10 +1217,17 @@ export const translations = {
             userConductItems: "本アプリを霊的な成長のために利用し、他のメンバーを尊重することに同意するものとします。嫌がらせ、ヘイトスピーチ、不適切なコンテンツの投稿は固く禁じられています。",
             aiDisclaimer: "AIに関する免責事項",
             aiDisclaimerItems: "Scripture Habitは、振り返りや翻訳にAI（Google Gemini）を使用しています。AIは誤りを犯す可能性があります。教義的な正確性については、ご自身の判断や教会の公式リソースを参照してください。",
+            officialDisclaimer: "公式な免責事項",
+            officialDisclaimerItems: "Scripture Habit（スクリプチャーハビット）は個人プロジェクトであり、末日聖徒イエス・キリスト教会の公式なサービスではなく、また提携もしておりません。",
             termination: "利用停止について",
             terminationItems: "本規約に違反したり、コミュニティの体験を損なうアカウントについては、予告なく停止または削除する権利を留保します。",
             limitation: "免責事項",
             limitationItems: "Scripture Habitは「現状有姿」で提供されます。本サービスの利用から生じるいかなる問題についても、運営者は責任を負いかねます。"
+        },
+        cookieConsent: {
+            message: "当サイトでは、サービスの向上とトラフィックの分析のためにクッキーを使用しています。このサイトの利用を続けることで、クッキーの使用に同意したものとみなされます。",
+            accept: "同意する",
+            privacyPolicy: "プライバシーポリシー"
         }
     },
     pt: {
@@ -1192,6 +1264,7 @@ export const translations = {
             button: "Doar via PayPal",
             contactTitle: "CONTATE-NOS PARA AJUDA COM SUA DOAÇÃO",
             contactDesc: "Para ajuda ou dúvidas sobre sua doação, entre em contato conosco em dazhilangxianggen@gmail.com.",
+            legalDisclosureLink: "Divulgação da Lei de Transações Comerciais",
             appBackground: "Contexto do Desenvolvimento do App",
             backgroundStory: "A inspiração para criar este aplicativo surgiu ao ouvir um discurso do Irmão Clayton Christensen intitulado \"Dealing with the Dangers of Success\" (Lidando com os Perigos do Sucesso). Nele, ele abordou a relação íntima entre os \"programas oficiais\" da Igreja e a \"revelação pessoal\".\n\nEle apontou que os programas atualmente implementados como currículo oficial da Igreja — como a Escola Dominical, a Primária, a Noite Familiar e o Seminário — não se originaram originalmente de \"instruções da sede\". Em vez disso, nasceram da \"revelação pessoal\" de membros locais que enfrentavam problemas reais. Como essas soluções foram eficazes, foram posteriormente adotadas pelas Autoridades Gerais e padronizadas mundialmente.\n\nNo entanto, à medida que uma organização cresce e tudo se torna manualizado, torna-se mais difícil o surgimento de \"novas soluções\" vindas da base. O Irmão Christensen instou os alunos da BYU não apenas a seguirem programas padronizados, mas a continuarem recebendo inspiração para \"inventar\" soluções para os novos problemas que encontrarem.\n\nAqui estão alguns exemplos de como a revelação pessoal realmente aconteceu:\n\n \n\n1. Escola Dominical\nÉpoca/Local: 1849, Vale do Lago Salgado\nLogo após a chegada dos pioneiros ao Lago Salgado, os adultos estavam desesperados para construir uma base de sobrevivência, deixando as crianças muitas vezes sem assistência. O Irmão Ballantyne, um converso da Escócia, sentia-se angustiado ao ver as crianças crescendo sem educação ou sem o evangelho. Sem que ninguém o ordenasse, ele buscou permissão do Presidente Brigham Young e começou a reunir as crianças da vizinhança em sua própria casa (depois em um prédio que construiu em sua propriedade) para ensiná-las. Isso foi tão eficaz que se espalhou para outras alas e acabou sendo adotado por toda a Igreja como a Escola Dominical.\n\n2. Primária\nÉpoca/Local: 1878, Farmington, Utah\nA Irmã Aurelia Spencer Rogers estava preocupada com os meninos locais que corriam pelas ruas tarde da noite fazendo travessuras. Ela sentiu um senso de urgência: \"Se não os ensinarmos disciplina e fé enquanto são jovens, antes de chegarem à idade de receber o Sacerdócio (cerca de 12 anos na época), nossos futuros líderes da Igreja não estarão preparados\". Ela consultou a Presidente Geral da Sociedade de Socorro (Eliza R. Snow) e, com a aprovação do Presidente John Taylor, realizou reuniões experimentais para crianças em sua área local (Farmington). 224 crianças compareceram à primeira reunião. Vendo esse sucesso, o programa foi introduzido em toda a Igreja.\n\n3. Seminário\nÉpoca/Local: 1912, Salt Lake City (em frente à Granite High School)\nÀ medida que as escolas secundárias públicas se tornaram comuns em Utah, a educação religiosa foi proibida por lei dentro dessas escolas. Um Presidente de Estaca local temia que os jovens perdessem a fé ao passarem o dia todo aprendendo apenas conhecimentos seculares sem Deus. Eles propuseram uma ideia ao Conselho de Educação da Igreja e alugaram uma casa em frente à Granite High School para criar uma classe experimental onde os alunos pudessem estudar as escrituras durante seu tempo livre. O primeiro professor foi Thomas J. Yates. Sem esse \"experimento da Estaca Granite\", o sistema global do Seminário que temos hoje talvez nunca tivesse existido.\n\n4. Noite Familiar\nÉpoca/Local: 1909 (nível de Estaca), 1915 (recomendação para toda a Igreja)\nNo início do século XX, com a modernização da sociedade, as famílias começaram a passar menos tempo juntas. Embora o Presidente Joseph F. Smith tenha recomendado oficialmente a \"Noite Familiar\" para toda a Igreja em 1915, ela foi, na verdade, moldada a partir de um programa que vinha sendo executado experimentalmente com grande sucesso na Estaca Granite desde 1909. A Primeira Presidência viu o sucesso naquela estaca e determinou: \"Isto é algo que todos os santos precisam\".\n\n\n\nOuvir essas histórias me fez perceber que a \"revelação pessoal\" — ou, em outras palavras, \"ações que não vêm de instruções de cima para baixo, mas que são profundamente intrínsecas e motivadas pelo amor\" — foi o que construiu os atuais programas da Igreja. Senti que, se houver um problema em nossa comunidade, não devemos esperar que a sede da Igreja o resolva; é vital que recebamos revelação pessoal para nossas próprias áreas.\n\nPercebi um problema comum a quase todas as regiões: o hábito do estudo das escrituras entre membros, novos conversos e pesquisadores. Isso é algo que deve ser \"profundamente pessoal e realizado dentro do amor da família\", e é uma área que os líderes não podem gerenciar diretamente.\n\nNo entanto, precisamente por ser pessoal e centrado no lar, acredito que surgiram vários problemas graves:\n\n• Os pesquisadores e novos membros muitas vezes não sabem como estudar as escrituras ou a quem pedir ajuda. Famílias de membros parciais podem ter dificuldade em encontrar alegria em seus estudos porque não podem compartilhar facilmente seu aprendizado dentro de suas famílias, levando alguns a se afastarem gradualmente da Igreja.\n\n• Embora a Igreja invista pesadamente na \"Biblioteca do Evangelho\" e em recursos de alta qualidade, e embora a Primeira Presidência, o Quórum dos Doze Apóstolos e outros líderes busquem fervorosamente revelação para compartilhar na \"Conferência Geral\", esses investimentos e revelações são desperdiçados se os membros não tiverem o hábito de aprender.\n\n• As coisas ensinadas na Conferência Geral e nas escrituras não podem ser dominadas lendo-as apenas uma vez. Muitas vezes é exigido que os indivíduos internalizem esses ensinamentos profundamente e alcancem um nível onde possam colocá-los em prática naturalmente. Este é o estado de ser capaz de \"receber revelação pessoal\" confiando no \"Dom do Espírito Santo\". Exemplos incluem bênçãos e ordenanças do Sacerdócio, serviço na igreja, família e comunidade, e trabalho missionário e de ministração. Estes não podem ser dominados através de um estudo da noite para o dia; eles são refinados através de hábitos diários de estudo das escrituras e do exercício da fé. Sem isso, acredito que a Coligação de Israel não pode funcionar de maneira eficaz.\n\nEstes são apenas alguns exemplos que considerei e podem não descrever perfeitamente todos os problemas, mas acredito que demonstram a importância vital de um hábito de estudo das escrituras.\n\nO Livro de Mórmon descreve como, devido ao orgulho, o povo parou de guardar os mandamentos, levando eventualmente à guerra, discórdia e queda de civilizações. Embora os profetas daquela época certamente tenham abordado esses problemas através de meios políticos, o que é mais enfatizado é o \"uso da palavra de Deus\". Alma 31:5 contém palavras muito poderosas sobre isso:\n\n\"E como a pregação da palavra exercia uma grande influência sobre o povo, levando-o a praticar o que era justo — sim, surtia um efeito mais poderoso sobre a mente do povo do que a espada ou qualquer outra coisa que lhe houvesse acontecido — Alma, portanto, achou que seria aconselhável que experimentassem a virtude da palavra de Deus.\"\n\nAcredito que essas palavras são extremamente eficazes para lidar com os problemas sociais e políticos internacionais modernos, bem como com os problemas das comunidades locais. Embora este aplicativo tenha começado como uma extensão de um projeto escolar, eu o criei com a convicção de que ele pode abordar de forma mais eficaz os problemas que mencionei. Minha esperança é que, através deste aplicativo, o maior número possível de pessoas possa estabelecer um \"hábito de estudo das escrituras\" nesta sociedade em constante mudança e caótica, receber \"revelação personal\" e tornar este mundo um lugar melhor.\n\nMuito obrigado por ler esta longa mensagem. Finalmente, oro para que a graça do Senhor seja derramada abundantemente sobre cada um de vocês."
         },
@@ -1393,7 +1466,15 @@ export const translations = {
             errorDeleteMessage: "Falha ao excluir a mensagem",
             groupStatusUpdated: "O grupo agora é {status}",
             errorUpdateGroupStatus: "Falha ao atualizar o status do grupo",
-            inactivityRemoval: "👋 **{count} membro(s)** foram removidos por inatividade (mais de 3 dias)."
+            inactivityRemoval: "👋 **{count} membro(s)** foram removidos por inatividade (mais de 3 dias).",
+            report: "Denunciar",
+            reportUser: "Denunciar Conteúdo Inapropriado",
+            reportReason: "Razão da denúncia",
+            reportSuccess: "Relatório enviado com sucesso. Analisaremos em breve.",
+            reportSpam: "Spam",
+            reportHarassment: "Assédio",
+            reportInappropriate: "Conteúdo Inapropriado",
+            reportOther: "Outro"
         },
         myNotes: {
             description: "Coleção de Notas",
@@ -1438,6 +1519,26 @@ export const translations = {
             loading: "Carregando cartas...",
             empty: "Nenhuma carta ainda. Gere um resumo semanal para receber uma!",
             defaultTitle: "Resumo Semanal"
+        },
+        legalDisclosure: {
+            title: "Lei de Transações Comerciais",
+            provider: "Prestador de Serviço",
+            representative: "Representante",
+            address: "Endereço",
+            phone: "Telefone",
+            email: "Endereço de E-mail",
+            price: "Preço",
+            paymentTiming: "Tempo de Pagamento",
+            paymentMethod: "Método de Pagamento",
+            deliveryTiming: "Tempo de Entrega",
+            cancellation: "Cancelamento/Devoluções",
+            environment: "Ambiente de Operação",
+            priceDetail: "Exibido na página de doação ou especificado pelo usuário.",
+            paymentTimingDetail: "No momento da conclusão da transação.",
+            deliveryTimingDetail: "Imediatamente após a conclusão do pagamento.",
+            cancelDetail: "Devido à natureza das doações digitais, não são aceitos reembolsos ou cancelamentos após o pagamento.",
+            environmentDetail: "Pode ser usado nas versões mais recentes de vários navegadores e sistemas operacionais.",
+            requestDisclosure: "Informações de contato pessoal serão fornecidas sem atraso mediante solicitação via e-mail."
         },
         newNote: {
             editTitle: "Editar Anotação",
@@ -1732,10 +1833,17 @@ export const translations = {
             userConductItems: "Você concorda em usar este app para crescimento espiritual e a respeitar os outros membros. Assédio, discurso de ódio e conteúdo inadequado são estritamente proibidos.",
             aiDisclaimer: "Aviso de IA",
             aiDisclaimerItems: "O Scripture Habit usa IA (Google Gemini) para gerar recapitulações e traduções. A IA pode cometer erros. Use seu próprio julgamento e recursos oficiais da igreja para precisão doutrinária.",
+            officialDisclaimer: "Aviso de Isenção de Responsabilidade Oficial",
+            officialDisclaimerItems: "O Scripture Habit é um projeto pessoal e não é um serviço oficial ou afiliado d'A Igreja de Jesus Cristo dos Santos dos Últimos Dias.",
             termination: "Rescisão",
             terminationItems: "Reservamo-nos o direito de suspender ou excluir contas que violem estes termos ou interrompam a experiência da comunidade.",
             limitation: "Limitação de Responsabilidade",
             limitationItems: "O Scripture Habit é fornecido 'como está'. Não somos responsáveis por quaisquer problemas espirituais ou técnicos decorrentes do uso do serviço."
+        },
+        cookieConsent: {
+            message: "Usamos cookies para melhorar sua experiência e analisar o tráfego. Ao continuar a usar este site, você concorda com o uso de cookies.",
+            accept: "Aceitar",
+            privacyPolicy: "Política de Privacidade"
         }
     },
     zho: {
@@ -1772,6 +1880,7 @@ export const translations = {
             button: "通過 PayPal 捐款",
             contactTitle: "聯繫我們獲取捐款幫助",
             contactDesc: "有關捐款的幫助或疑問，請聯繫我們 dazhilangxianggen@gmail.com。",
+            legalDisclosureLink: "特定商業交易法公開",
             appBackground: "應用程式開發背景",
             backgroundStory: "開發這款應用程式的靈感，源自於克雷頓·克里斯坦森兄弟（Brother Clayton Christensen）的一篇演講，題目是《應對成功的危險》（Dealing with the Dangers of Success）。他在演講中談到了教會目前的「官方計畫」與「個人啟示」之間緊密的關係。\n\n他指出，目前作為教會官方課程導入的計畫——如主日學、初級會、家庭晚會和福音進修班——最初並非源自「教會總部的指示」。相反地，這些計畫是由面臨實際問題的基層成員，透過「個人啟示」而誕生的。正因為這些方法非常有效，後來才被總會持有權柄人員採納，並推行至全球標準化。\n\n然而，隨著組織規模擴大，一切都變得手冊化（SOP化）後，基層反而難以產生「新的解決方案」。克里斯坦森兄弟勉勵百翰·楊大學（BYU）的學生，不僅要遵循標準化的計畫，更要針對所面臨的新問題，持續尋求靈感並「發明」解決方法。\n\n以下是個人啟示在歷史中如何實際降臨的幾個例子：\n\n \n\n1. 主日學\n時間/地點：1849年，鹽湖谷\n在先驅者抵達鹽湖谷後不久，成年人正為了生存的基礎而拼命工作，孩子們往往處於乏人照顧的狀態。來自蘇格蘭的歸信者巴蘭坦兄弟，看到孩子們沒有接受教育，也沒有學習福音而變得荒廢，感到非常心痛。在沒有人命令他的情況下，他主動請求百翰·楊會長的許可，開始在自己家中（後來在自己土地上建造的建築中）聚集鄰里的孩子並教導他們。這項舉動效果驚人，隨即傳播到其他支會，最終被全教會採納為「主日學」。\n\n2. 初級會\n時間/地點：1878年，猶他州法明頓\n奧蕾莉亞·史賓塞·羅傑斯姊妹很擔心鄰里的少年們深夜仍在街上閒逛作惡。她產生了一種危機感：「如果我們不在他們還年幼時、在他們達到接受聖職的年齡（當時約為12歲）之前，就教導他們自律與信仰，未來的教會領袖將無法成長起來。」她向當時的總會婦女會會長（伊萊莎·史諾）諮詢了這個想法，並在約翰·泰勒會長的批准下，先在自己的家鄉（法明頓）進行試驗性聚會。第一次聚會就有224名兒童參加。看到這項成功後，計畫被推廣到了全教會。\n\n3. 福音進修班（Seminary）\n時間/地點：1912年，鹽湖城（格蘭尼特高中對面）\n當時，公立高中在猶他州開始普及，但受法律限制，校園內禁止宗教教育。當地的支聯會會長擔心：「青少年一整天都在學習沒有神的世俗知識，可能會失去信仰。」他們向教會教育委員會提議，並在格蘭尼特高中對面租了一間房子，嘗試開設讓學生在空檔時間來學習經文的課程。第一位教師是湯瑪斯·耶茨。如果沒有這項「格蘭尼特支聯會的實驗」，或許就不會有今日遍布全球的福音進修班制度。\n\n4. 家庭晚會\n時間/地點：1909年（支聯會層級開始）、1915年（推行至全教會）\n20世紀初，隨著社會現代化，家人聚在一起的時間開始減少。雖然約瑟·F·斯密會長在1915年正式向全教會推行「家庭晚會」，但其原型其實是幾年前（1909年）在格蘭尼特支聯會已經試行並取得顯著成果的計畫。總會會長團看到了該支聯會的成功，判定「這是所有聖徒都需要的」，因而採納。\n\n\n\n聽完這些故事，我意識到「個人啟示」——換句話說，「並非出自上而下的指示，而是源自於內心深處、以愛為動機的行動」——造就了教會現行的計畫。我感受到，如果社區中存在問題，我們不應等待教會總部來解決，為自己的地區尋求個人啟示是至關重要的。\n\n我注意到一個幾乎所有地區都存在的共同問題：成員、新成員及慕道友（教會的朋友）的經文研讀習慣。這應當是「極具個人色彩且在家庭愛中進行的事」，也是領導人無法直接管理的部分。\n\n然而，正因為這是在個人及家庭愛中進行的，我認為也因此衍生了幾個重大問題：\n\n• 慕道友和新成員往往不知道該「如何」研讀經文，或不知道該向誰諮詢。部分成員家庭可能因為無法輕鬆在家中分享心得，而在研讀中找不到喜悅，進而漸漸遠離教會。\n\n• 儘管教會總部投入大量資金提供「福音圖書館」和優質資源，且總會會長團、十二使徒定額組及各位領袖都熱切尋求啟示並在「總會大會」中傳達，但如果成員沒有研讀習慣，這些投入與啟示將化為烏有。\n\n• 總會大會及經文中所教導的事，並非讀過一遍就能掌握，個人往往需要將這些教導深植內心，直到能自然實踐的程度。這就是依靠「聖靈的恩賜」、處於「能接受個人啟示的狀態」。聖職祝福、教儀、教會與家庭及社區的服務、傳教活動與施助工作皆是如此。這些都無法一蹴而就，而是要透過日常研讀經文的習慣與行使信心來磨練。我相信，若沒有這一點，以色列的聚集將無法有效地運作。\n\n這些只是我思考的一小部分例子，或許無法完全精確地描述所有問題，但僅從這些就能看出建立經文研讀習慣的重要性。\n\n《摩爾門經》中描述了人民因驕傲而不守誡命，最終導致戰爭、不和與文明墜落的過程。當時的先知固然運用了政治手段處理問題，但書中特別強調的是「神的話語的運用」。阿爾瑪書31章5節有一段非常有力的話：\n\n「由於宣講神的話語有很大的傾向會引導人民做公正的事——是的，這對人民思想產生的影響，比刀劍或任何發生在他們身上的事都更有力——因此阿爾瑪認為他們應當試試神的話語的力量。」\n\n我相信這段話對於解決現代國際社會問題、政治問題以及地方社區問題依然非常有效。雖然這款應用程式最初是作為學校作業的延伸而製作的，但我深信它能更有效地應對我所提到的問題。我的希望是，透過這款程式，能讓更多人在這瞬息萬變且混沌的社會中，建立「研讀經文的習慣」，並獲得「個人啟示」，讓這個社會變得更美好。\n\n非常感謝各位閱讀這篇長文。最後，願主豐富的恩典臨到你們每一個人。"
         },
@@ -1947,7 +2056,15 @@ export const translations = {
             errorDeleteMessage: "刪除訊息失敗",
             groupStatusUpdated: "群組現在為 {status}",
             errorUpdateGroupStatus: "更新群組狀態失敗",
-            inactivityRemoval: "👋 **{count}名成員**因超過3天未活躍而被移除。"
+            inactivityRemoval: "👋 **{count}名成員**因超過3天未活躍而被移除。",
+            report: "舉報",
+            reportUser: "舉報不當內容",
+            reportReason: "舉報理由",
+            reportSuccess: "舉報已成功發送。我們將盡快審核。",
+            reportSpam: "垃圾信息",
+            reportHarassment: "騷擾",
+            reportInappropriate: "不當內容",
+            reportOther: "其他"
         },
         myNotes: {
             description: "筆記收藏",
@@ -1987,6 +2104,26 @@ export const translations = {
             loading: "載入信件中...",
             empty: "尚無信件。生成每週回顧以收到一封信！",
             defaultTitle: "每週回顧"
+        },
+        legalDisclosure: {
+            title: "特定商業交易法公開",
+            provider: "服務提供商",
+            representative: "負責人",
+            address: "地址",
+            phone: "電話號碼",
+            email: "電子郵件地址",
+            price: "價格",
+            paymentTiming: "付款時間",
+            paymentMethod: "付款方式",
+            deliveryTiming: "交付時間",
+            cancellation: "取消/退款",
+            environment: "運行環境",
+            priceDetail: "顯示在捐款頁面或由用戶指定。",
+            paymentTimingDetail: "交易完成時。",
+            deliveryTimingDetail: "付款完成後立即交付。",
+            cancelDetail: "由於數位捐款的性質，付款後不接受退款或取消。",
+            environmentDetail: "可在各種瀏覽器和操作系統的最新版本上使用。",
+            requestDisclosure: "個人聯繫信息將在通過電子郵件請求後及時提供。"
         },
         newNote: {
             editTitle: "編輯筆記",
@@ -2282,10 +2419,17 @@ export const translations = {
             userConductItems: "您同意將此應用程式用於靈性成長並尊重其他成員。嚴禁騷擾、仇恨言論和不當內容。",
             aiDisclaimer: "AI 免責聲明",
             aiDisclaimerItems: "Scripture Habit 使用 AI (Google Gemini) 生成總結和翻譯。AI 可能會犯錯。請運用您自己的判斷並參考教會官方資源以確保教義準確性。",
+            officialDisclaimer: "官方免責聲明",
+            officialDisclaimerItems: "Scripture Habit 是一個個人專案，並非耶穌基督後期聖徒教會的官方服務，也不代表其立場或與其有隸屬關係。",
             termination: "終止服務",
             terminationItems: "我們保留暫停或刪除違反這些條款或破壞社群體驗之帳號的權利。",
             limitation: "責任限制",
             limitationItems: "Scripture Habit 按「現狀」提供。我們不對因使用服務而產生的任何靈性或技術問題負責。"
+        },
+        cookieConsent: {
+            message: "我們使用 Cookie 來改善您的體驗並分析流量。繼續使用本網站即表示您同意我們使用 Cookie。",
+            accept: "同意",
+            privacyPolicy: "隱私政策"
         }
     },
     es: {
@@ -2322,6 +2466,7 @@ export const translations = {
             button: "Donar vía PayPal",
             contactTitle: "CONTÁCTANOS PARA AYUDA CON TU DONACIÓN",
             contactDesc: "Para ayuda o preguntas sobre tu donación, contáctanos en dazhilangxianggen@gmail.com.",
+            legalDisclosureLink: "Divulgación de la Ley de Transacciones Comerciales",
             appBackground: "Antecedentes del Desarrollo de la Aplicación",
             backgroundStory: "La inspiración para crear esta aplicación surgió al escuchar un discurso del hermano Clayton Christensen titulado \"Dealing with the Dangers of Success\" (Cómo lidiar con los peligros del éxito). En él, hablaba de la íntima relación entre los \"programas oficiales\" actuales de la Iglesia y la \"revelación personal\".\n\nSeñaló que los programas que actualmente funcionan como currículo oficial —como la Escuela Dominical, la Primaria, la Noche de Hogar y Seminario— no se originaron originalmente por \"instrucciones de las oficinas generales\". Más bien, nacieron de la \"revelación personal\" de miembros locales que enfrentaban problemas reales. Como esas soluciones fueron tan eficaces, más tarde fueron adoptadas por las Autoridades Generales y estandarizadas para todo el mundo.\n\nSin embargo, a medida que una organización crece y todo se manualiza, se vuelve más difícil que surjan \"nuevas soluciones\" desde el campo. El hermano Christensen instó a los estudiantes de BYU no solo a seguir los programas estandarizados, sino a seguir recibiendo inspiración para \"inventar\" soluciones a los nuevos problemas que enfrenten.\n\nAquí les presento cómo se recibió la revelación personal en la práctica:\n\n \n\n1. Escuela Dominical\nÉpoca/Lugar: 1849, Valle del Lago Salado\nPoco después de que los pioneros llegaran al Lago Salado, los adultos estaban desesperados por construir una base para sobrevivir, dejando a menudo a los niños desatendidos. El hermano Ballantyne, un converso de Escocia, se sentía dolido al ver que los niños crecían sin educación ni el evangelio. Sin que nadie se lo ordenara, pidió permiso al presidente Brigham Young y comenzó a reunir a los niños del vecindario en su propia casa (más tarde en un edificio que construyó en su propiedad) para enseñarles. Esto fue tan eficaz que se extendió a otros barrios y finalmente fue adoptado por toda la Iglesia como la Escuela Dominical.\n\n2. Primaria\nÉpoca/Lugar: 1878, Farmington, Utah\nLa hermana Aurelia Spencer Rogers estaba preocupada por los niños de su localidad que corrían por las calles tarde en la noche haciendo travesuras. Sintió una urgencia: \"Si no les enseñamos disciplina y fe mientras son jóvenes, antes de que tengan la edad para recibir el Sacerdocio (alrededor de los 12 años en ese entonces), nuestros futuros líderes de la Iglesia no estarán preparados\". Consultó esta idea con la Presidenta General de la Sociedad de Socorro (Eliza R. Snow) y, con la aprobación del presidente John Taylor, realizó reuniones experimentales para niños en su área local (Farmington). 224 niños asistieron a la primera reunión. Al ver este éxito, se introdujo en toda la Iglesia.\n\n3. Seminario\nÉpoca/Lugar: 1912, Salt Lake City (frente a Granite High School)\nA medida que las escuelas secundarias públicas se volvieron comunes en Utah, la educación religiosa fue prohibida por ley dentro de esas escuelas. Un presidente de estaca local temía que los jóvenes perdieran su fe al pasar todo el día aprendiendo solo conocimientos seculares sin Dios. Propusieron una idea a la Junta de Educación de la Iglesia y alquilaron una casa frente a la escuela Granite para crear una clase experimental donde los estudiantes pudieran estudiar las escrituras durante su tiempo libre. El primer maestro fue Thomas J. Yates. Sin este \"experimento de la Estaca Granite\", el sistema global de Seminario que tenemos hoy quizás nunca hubiera existido.\n\n4. Noche de Hogar\nÉpoca/Lugar: 1909 (nivel de estaca), 1915 (recomendación para toda la Iglesia)\nA principios del siglo XX, con la modernización de la sociedad, las familias comenzaron a pasar menos tiempo juntas. Aunque el presidente Joseph F. Smith recomendó oficialmente la \"Noche de Hogar\" a toda la Iglesia en 1915, en realidad se modeló a partir de un programa que se había ejecutado experimentalmente con gran éxito en la Estaca Granite desde 1909. La Primera Presidencia vio el éxito en esa estaca y determinó: \"Esto es algo que todos los Santos necesitan\".\n\n\n\nEscuchar estas historias me hizo darme cuenta de que la \"revelación personal\" —o, dicho de otra manera, las \"acciones que no provienen de instrucciones de arriba hacia abajo, sino que son profundamente intrínsecas y motivadas por el amor\"— es lo que construyó los programas actuales de la Iglesia. Sentí que si hay un problema en nuestra comunidad, no debemos esperar a que las oficinas generales lo resuelvan; es vital que recibamos revelación personal para nuestras propias áreas.\n\nNoté un problema común en casi todas las regiones: el hábito del estudio de las escrituras entre miembros, nuevos conversos y amigos de la Iglesia. Esto es algo que debe ser \"profundamente personal y llevarse a cabo dentro del amor de la familia\", y es un área que los líderes no pueden gestionar directamente.\n\nSin embargo, precisamente por ser personal y centrado en el hogar, creo que han surgido varios problemas graves:\n\n• Los investigadores y los nuevos miembros a menudo no saben cómo estudiar las Escrituras o a quién pedir ayuda. Las familias de miembros parciales pueden tener dificultades para encontrar alegría en sus estudios porque no pueden compartir fácilmente su aprendizaje dentro de sus familias, lo que lleva a algunos a alejarse gradualmente de la Iglesia.\n\n• Aunque la Iglesia invierte mucho en proporcionar la \"Biblioteca del Evangelio\" y recursos de alta calidad, y aunque la Primera Presidencia, el Cuórum de los Doce Apóstoles y otros líderes buscan fervientemente revelación para compartir en la \"Conferencia General\", esas inversiones y revelaciones se desperdician si los miembros no tienen el hábito de aprender.\n\n• Las cosas que se enseñan en la Conferencia General y en las escrituras no se pueden dominar leyéndolas una sola vez. A menudo se requiere que las personas interioricen estas enseñanzas profundamente y alcancen un nivel en el que puedan ponerlas en práctica de forma natural. Este es el estado de ser capaz de \"recibir revelación personal\" confiando en el \"Don del Espíritu Santo\". Ejemplos de esto son las bendiciones y ordenanzas del Sacerdocio, el servicio en la iglesia, la familia y la comunidad, y la obra misional y de ministración. Estos no se pueden dominar de la noche a la mañana; se perfeccionan a través de los hábitos diarios de estudio de las escrituras y el ejercicio de la fe. Sin esto, creo que el Recogimiento de Israel no puede funcionar eficazmente.\n\nEstos son solo algunos ejemplos que he considerado, y puede que no describan perfectamente cada problema, pero creo que demuestran la importancia vital de un hábito de estudio de las escrituras.\n\nEl Libro de Mormón describe cómo, debido al orgullo, el pueblo dejó de guardar los mandamientos, lo que eventualmente llevó a la guerra, la contención y la caída de civilizaciones. Aunque los profetas de esa época ciertamente abordaron estos problemas por medios políticos, lo que más se destaca es el \"uso de la palabra de Dios\". Alma 31:5 contiene palabras muy poderosas al respecto:\n\n\"Y como la predicación de la palabra tenía gran propensión a orientar a la gente a hacer lo que era justo —sí, había surtido un efecto más potente en la mente del pueblo que la espada o cualquier otra cosa que les había acontecido— por tanto, Alma consideró prudente que probaran la virtud de la palabra de Dios.\"\n\nCreo que estas palabras son extremadamente eficaces para tratar los problemas sociales y políticos internacionales modernos, así como los problemas de las comunidades locales. Aunque esta aplicación comenzó como una extensión de un proyecto escolar, la creé con la convicción de que puede abordar de manera más eficaz los problemas que he mencionado. Mi esperanza es que, a través de esta aplicación, tantas personas como sea posible puedan establecer un \"hábito de estudio de las escrituras\" en esta sociedad tan cambiante y caótica, recibir \"revelación personal\" y hacer de este mundo un lugar mejor.\n\nMuchas gracias por leer este largo mensaje. Finalmente, ruego que la gracia del Señor se derrame abundantemente sobre cada uno de ustedes."
         },
@@ -2523,7 +2668,15 @@ export const translations = {
             errorDeleteMessage: "Error al eliminar el mensaje",
             groupStatusUpdated: "El grupo ahora es {status}",
             errorUpdateGroupStatus: "Error al actualizar el estado del grupo",
-            inactivityRemoval: "👋 **{count} miembro(s)** fueron eliminados por inactividad (más de 3 días)."
+            inactivityRemoval: "👋 **{count} miembro(s)** fueron eliminados por inactividad (más de 3 días).",
+            report: "Informar",
+            reportUser: "Informar contenido inapropiado",
+            reportReason: "Razón del informe",
+            reportSuccess: "Informe enviado exitosamente. Lo revisaremos pronto.",
+            reportSpam: "Spam",
+            reportHarassment: "Acoso",
+            reportInappropriate: "Contenido inapropiado",
+            reportOther: "Otro"
         },
         myNotes: {
             description: "Colección de Notas",
@@ -2563,6 +2716,26 @@ export const translations = {
             loading: "Cargando cartas...",
             empty: "No hay cartas todavía. ¡Genera un resumen semanal para recibir una!",
             defaultTitle: "Resumen Semanal"
+        },
+        legalDisclosure: {
+            title: "Ley de Transacciones Comerciales",
+            provider: "Proveedor del Servicio",
+            representative: "Representante",
+            address: "Dirección",
+            phone: "Número de Teléfono",
+            email: "Correo Electrónico",
+            price: "Precio",
+            paymentTiming: "Momento del Pago",
+            paymentMethod: "Método de Pago",
+            deliveryTiming: "Momento de Entrega",
+            cancellation: "Cancelación/Devoluciones",
+            environment: "Entorno Operativo",
+            priceDetail: "Mostrado en la página de donación o especificado por el usuario.",
+            paymentTimingDetail: "En el momento de la finalización de la transacción.",
+            deliveryTimingDetail: "Inmediatamente después de completar el pago.",
+            cancelDetail: "Debido a la naturaleza de las donaciones digitales, no se aceptan reembolsos ni cancelaciones después del pago.",
+            environmentDetail: "Se puede usar en las últimas versiones de varios navegadores y sistemas operativos.",
+            requestDisclosure: "La información de contacto personal se proporcionará sin demora previa solicitud por correo electrónico."
         },
         newNote: {
             editTitle: "Editar Nota",
@@ -2833,10 +3006,17 @@ export const translations = {
             userConductItems: "Usted acepta usar esta aplicación para el crecimiento espiritual y respetar a los demás miembros. El acoso, el discurso de odio y el contenido inapropiado están estrictamente prohibidos.",
             aiDisclaimer: "Aviso Legal de IA",
             aiDisclaimerItems: "Scripture Habit utiliza IA (Google Gemini) para generar resúmenes y traducciones. La IA puede cometer errores. Por favor, use su propio juicio y los recursos oficiales de la iglesia para la precisión doctrinal.",
+            officialDisclaimer: "Descargo de Responsabilidad Oficial",
+            officialDisclaimerItems: "Scripture Habit es un proyecto personal y no es un servicio oficial ni está afiliado a La Iglesia de Jesucristo de los Santos de los Últimos Días.",
             termination: "Terminación",
             terminationItems: "Nos reservamos el derecho de suspender o eliminar cuentas que violen estos términos o interrumpan la experiencia de la comunidad.",
             limitation: "Limitación de Responsabilidad",
             limitationItems: "Scripture Habit se proporciona 'tal cual'. No somos responsables de ningún problema espiritual o técnico que surja del uso del servicio."
+        },
+        cookieConsent: {
+            message: "Utilizamos cookies para mejorar su experiencia y analizar el tráfico. Al continuar usando este sitio, usted acepta nuestro uso de cookies.",
+            accept: "Aceptar",
+            privacyPolicy: "Política de Privacidad"
         }
     },
     vi: {
@@ -2873,6 +3053,7 @@ export const translations = {
             button: "Quyên góp qua PayPal",
             contactTitle: "LIÊN HỆ VỚI CHÚNG TÔI ĐỂ ĐƯỢC HỖ TRỢ VỀ KHOẢN QUYÊN GÓP CỦA BẠN",
             contactDesc: "Để được trợ giúp hoặc có câu hỏi về khoản quyên góp của bạn, vui lòng liên hệ với chúng tôi tại dazhilangxianggen@gmail.com.",
+            legalDisclosureLink: "Công bố theo Luật Giao dịch Thương mại",
             appBackground: "Bối Cảnh Phát Triển Ứng Dụng",
             backgroundStory: "Cảm hứng để tôi tạo ra ứng dụng này đến từ một bài nói chuyện của Anh Clayton Christensen có tiêu đề \"Dealing with the Dangers of Success\" (Đối phó với những nguy hiểm của sự thành công). Trong đó, anh ấy đã đề cập đến mối quan hệ mật thiết giữa các \"chương trình chính thức\" hiện nay của Giáo hội và \"sự mặc khải cá nhân\".\n\nAnh ấy đã chỉ ra rằng các chương trình hiện đang được triển khai như là chương trình giảng dạy chính thức của Giáo hội—như Trường Chủ Nhật, Hội Thiếu Nhi, Buổi họp tối gia đình và Lớp Viện giáo lý—ban đầu không xuất phát từ \"chỉ thị của trụ sở chính\". Thay vào đó, chúng được sinh ra từ \"sự mặc khải cá nhân\" của những thành viên tại địa phương, những người đang đối mặt với các vấn đề thực tế. Bởi vì những giải pháp đó quá hiệu quả, nên sau đó chúng đã được các Thẩm quyền Trung ương chấp thuận và tiêu chuẩn hóa trên toàn thế giới.\n\nTuy nhiên, khi một tổ chức lớn mạnh và mọi thứ đều được đưa vào sách hướng dẫn, thì các \"giải pháp mới\" từ địa phương sẽ trở nên khó xuất hiện hơn. Anh Christensen đã thúc giục các sinh viên BYU không chỉ tuân theo các chương trình đã được tiêu chuẩn hóa, mà hãy tiếp tục nhận được sự soi dẫn để \"sáng tạo\" ra các giải pháp cho những vấn đề mới mà họ gặp phải.\n\nDưới đây là một số ví dụ về cách mà sự mặc khải cá nhân đã thực sự diễn ra:\n\n \n\n1. Trường Chủ Nhật\nThời gian/Địa điểm: Năm 1849, Thung lũng Salt Lake\nNgay sau khi những người tiên phong đến Salt Lake, những người lớn đã phải nỗ lực hết mình để xây dựng nền tảng cho sự sinh tồn, khiến trẻ em thường xuyên bị bỏ mặc. Anh Ballantyne, một người cải đạo từ Scotland, đã rất đau lòng khi thấy trẻ em lớn lên mà không được giáo dục hay học hỏi về phúc âm. Không có ai ra lệnh cho anh; chính anh đã xin phép Chủ tịch Brigham Young và bắt đầu tập hợp trẻ em trong xóm tại chính ngôi nhà của mình (sau đó là trong một tòa nhà mà anh đã xây trên đất của mình) để dạy dỗ chúng. Điều này hiệu quả đến mức nó đã lan sang các tiểu giáo khu khác và cuối cùng được toàn thể Giáo hội chấp nhận là Trường Chủ Nhật.\n\n2. Hội Thiếu Nhi\nThời gian/Địa điểm: Năm 1878, Farmington, Utah\nChị Aurelia Spencer Rogers đã lo lắng về những cậu bé trong địa phương chạy nhảy ngoài đường vào ban đêm và nghịch ngợm. Chị cảm thấy một sự thôi thúc mãnh liệt: \"Nếu chúng ta không dạy cho các em kỷ luật và đức tin khi các em còn nhỏ, trước khi các em đến tuổi nhận Chức Tư Tế (khoảng 12 tuổi vào thời điểm đó), thì các vị lãnh đạo Giáo hội trong tương lai của chúng ta sẽ không được chuẩn bị sẵn sàng.\" Chị đã bàn bạc ý tưởng này với Chủ tịch Hội Phụ Nữ Trung ương (Eliza R. Snow) và với sự chấp thuận của Chủ tịch John Taylor, chị đã tổ chức các buổi họp thử nghiệm cho trẻ em tại địa phương mình (Farmington). 224 trẻ em đã tham dự buổi họp đầu tiên. Thấy được sự thành công này, chương trình đã được áp dụng trong toàn Giáo hội.\n\n3. Lớp Viện Giáo Lý (Seminary)\nThời gian/Địa điểm: Năm 1912, Thành phố Salt Lake (đối diện trường trung học Granite)\nKhi các trường trung học công lập trở nên phổ biến ở Utah, giáo dục tôn giáo đã bị luật pháp cấm trong các trường học đó. Một Chủ tịch Giáo khu địa phương đã lo lắng rằng giới trẻ có thể đánh mất đức tin khi dành cả ngày chỉ để học những kiến thức thế gian mà không có Thượng Đế. Họ đã đề xuất một ý tưởng với Hội đồng Giáo dục Giáo hội và thuê một ngôi nhà đối diện trường trung học Granite để tạo ra một lớp học thử nghiệm, nơi học sinh có thể đến học thánh thư trong thời gian rảnh. Giáo viên đầu tiên là Thomas J. Yates. Nếu không có \"thử nghiệm của Giáo khu Granite\" này, hệ thống Viện giáo lý toàn cầu mà chúng ta có ngày nay có lẽ đã không bao giờ tồn tại.\n\n4. Buổi Họp Tối Gia Đình\nThời gian/Địa điểm: Năm 1909 (cấp Giáo khu), năm 1915 (khuyến nghị cho toàn Giáo hội)\nVào đầu thế kỷ 20, khi xã hội hiện đại hóa, các gia đình bắt đầu dành ít thời gian cho nhau hơn. Mặc dù Chủ tịch Joseph F. Smith đã chính thức khuyến nghị \"Buổi họp tối gia đình\" cho toàn thể Giáo hội vào năm 1915, nhưng trên thực tế, nó được mô phỏng theo một chương trình đã được thực hiện thử nghiệm và đạt được thành công lớn tại Giáo khu Granite từ năm 1909. Đệ Nhất Chủ Tịch Đoàn đã thấy được sự thành công tại giáo khu đó và xác định rằng: \"Đây là điều mà tất cả các Thánh Hữu đều cần.\"\n\n\n\nNghe những câu chuyện này giúp tôi nhận ra rằng \"sự mặc khải cá nhân\"—hay nói cách khác là \"những hành động không đến từ chỉ thị từ trên xuống, mà xuất phát sâu sắc từ bên trong và được thúc đẩy bởi tình yêu thương\"—chính là thứ đã xây dựng nên các chương trình hiện tại của Giáo hội. Tôi cảm thấy rằng nếu có vấn đề trong cộng đồng của mình, chúng ta không nên chờ đợi trụ sở Giáo hội giải quyết; điều quan trọng là chúng ta phải nhận được sự mặc khải cá nhân cho chính khu vực của mình.\n\nTôi nhận thấy một vấn đề chung cho hầu hết mọi khu vực: đó là thói quen học tập thánh thư của các thành viên, những người mới cải đạo và những người tìm hiểu (những người bạn của Giáo hội). Đây là một việc cần được thực hiện một cách \"rất cá nhân và trong tình yêu thương gia đình\", và là một lĩnh vực mà các vị lãnh đạo không thể quản lý trực tiếp.\n\nTuy nhiên, chính vì nó mang tính cá nhân và tập trung vào gia đình, tôi tin rằng đã có một vài vấn đề lớn nảy sinh:\n\n• Những người tìm hiểu và những người mới cải đạo thường không biết cách học thánh thư hoặc không biết hỏi ai để được giúp đỡ. Những gia đình có người không phải là thành viên Giáo hội có thể gặp khó khăn trong việc tìm thấy niềm vui trong việc học tập vì họ không thể dễ dàng chia sẻ những hiểu biết của mình trong gia đình, dẫn đến việc một số người dần rời xa Giáo hội.\n\n• Mặc dù Giáo hội đầu tư rất nhiều vào việc cung cấp \"Thư viện Phúc âm\" và các nguồn tài liệu chất lượng cao, và mặc dù Đệ Nhất Chủ Tịch Đoàn, Nhóm Túc Số Mười Hai Sứ Đồ và các vị lãnh đạo khác thiết tha tìm kiếm sự mặc khải để chia sẻ trong \"Đại Hội Trung Ương\", nhưng những sự đầu tư và mặc khải đó sẽ trở nên lãng phí nếu các thành viên không có thói quen học tập.\n\n• Những điều được dạy trong Đại Hội Trung Ương và trong thánh thư không thể được nắm vững chỉ bằng cách đọc một lần. Các cá nhân thường được yêu cầu phải tiếp thu những lời giảng dạy này một cách sâu sắc và đạt đến mức có thể thực hành chúng một cách tự nhiên. Đó là trạng thái có thể \"nhận được sự mặc khải cá nhân\" bằng cách dựa vào \"Ân tứ Đức Thánh Linh\". Các ví dụ bao gồm các phước lành và các giáo lễ Chức Tư Tế, sự phục vụ trong giáo hội, gia đình và cộng đồng, công việc truyền giáo và công việc phục vụ. Những điều này không thể thành thạo được qua việc học tập một sớm một chiều; chúng được tinh lọc thông qua thói quen học tập thánh thư hàng ngày và việc vận dụng đức tin. Nếu không có điều đó, tôi tin rằng sự Tập Họp Y Sơ Ra Ên không thể hoạt động hiệu quả.\n\nĐây chỉ là một vài ví dụ mà tôi đã cân nhắc, và chúng có thể không mô tả hoàn hảo mọi vấn đề, nhưng tôi tin rằng chúng chứng minh tầm quan trọng sống còn của thói quen học tập thánh thư.\n\nSách Mặc Môn mô tả việc vì sự kiêu ngạo mà dân chúng đã ngừng tuân giữ các lệnh truyền, cuối cùng dẫn đến chiến tranh, tranh chấp và sự sụp đổ của các nền văn minh. Mặc dù các vị tiên tri thời đó chắc chắn đã giải quyết các vấn đề đó thông qua các biện pháp chính trị, nhưng điều được nhấn mạnh nhất là \"việc sử dụng lời của Thượng Đế\". An Ma 31:5 có những lời rất mạnh mẽ về điều này:\n\n\"Và giờ đây, vì việc thuyết giảng lời của Thượng Đế có một khuynh hướng rất mạnh mẽ đưa dẫn dân chúng làm những việc công bằng—phải, nó có một ảnh hưởng mãnh liệt vào tâm trí dân chúng hơn cả gươm giáo hay bất cứ một việc gì khác đã xảy ra cho họ—vậy nên An Ma nghĩ rằng họ nên thử dùng hiệu năng của lời Thượng Đế.\"\n\nTôi tin rằng những lời này cực kỳ hiệu quả trong việc giải quyết các vấn đề xã hội và chính trị quốc tế hiện đại, cũng như các vấn đề của cộng đồng địa phương. Mặc dù ứng dụng này bắt đầu như một phần mở rộng của một dự án trường học, nhưng tôi đã tạo ra nó với niềm tin rằng nó có thể giải quyết hiệu quả hơn các vấn đề mà tôi đã đề cập. Hy vọng của tôi là thông qua ứng dụng này, càng có nhiều người càng tốt có thể thiết lập \"thói quen học tập thánh thư\" trong xã hội đang thay đổi nhanh chóng và hỗn loạn này, nhận được \"sự mặc khải cá nhân\" và làm cho thế giới này trở nên tốt đẹp hơn.\n\nCảm ơn các bạn rất nhiều vì đã đọc thông điệp dài này. Cuối cùng, tôi cầu nguyện xin ân điển của Chúa tuôn đổ dồi dào trên mỗi người trong các bạn."
         },
@@ -3048,7 +3229,15 @@ export const translations = {
             errorDeleteMessage: "Không thể xóa tin nhắn",
             groupStatusUpdated: "Nhóm hiện đang là {status}",
             errorUpdateGroupStatus: "Không thể cập nhật trạng thái nhóm",
-            inactivityRemoval: "👋 **{count} thành viên** đã bị xóa do không hoạt động (hơn 3 ngày)."
+            inactivityRemoval: "👋 **{count} thành viên** đã bị xóa do không hoạt động (hơn 3 ngày).",
+            report: "Báo cáo",
+            reportUser: "Báo cáo nội dung không phù hợp",
+            reportReason: "Lý do báo cáo",
+            reportSuccess: "Báo cáo đã được gửi thành công. Chúng tôi sẽ xem xét sớm.",
+            reportSpam: "Spam",
+            reportHarassment: "Quấy rối",
+            reportInappropriate: "Nội dung không phù hợp",
+            reportOther: "Khác"
         },
         myNotes: {
             description: "Bộ Sưu Tập Ghi Chép",
@@ -3088,6 +3277,26 @@ export const translations = {
             loading: "Đang tải thư...",
             empty: "Chưa có thư nào. Hãy tạo bản tóm tắt hàng tuần để nhận được một lá thư!",
             defaultTitle: "Tóm tắt hàng tuần"
+        },
+        legalDisclosure: {
+            title: "Luật Giao dịch Thương mại",
+            provider: "Nhà cung cấp Dịch vụ",
+            representative: "Đại diện",
+            address: "Địa chỉ",
+            phone: "Số Điện thoại",
+            email: "Địa chỉ Email",
+            price: "Giá",
+            paymentTiming: "Thời điểm Thanh toán",
+            paymentMethod: "Phương thức Thanh toán",
+            deliveryTiming: "Thời điểm Giao hàng",
+            cancellation: "Hủy/Trả hàng",
+            environment: "Môi trường Hoạt động",
+            priceDetail: "Hiển thị trên trang quyên góp hoặc do người dùng chỉ định.",
+            paymentTimingDetail: "Tại thời điểm hoàn thành giao dịch.",
+            deliveryTimingDetail: "Ngay sau khi hoàn thành thanh toán.",
+            cancelDetail: "Do tính chất của quyên góp kỹ thuật số, không chấp nhận hoàn tiền hoặc hủy bỏ sau khi thanh toán.",
+            environmentDetail: "Có thể sử dụng trên các phiên bản mới nhất của nhiều trình duyệt và hệ điều hành.",
+            requestDisclosure: "Thông tin liên hệ cá nhân sẽ được cung cấp ngay lập tức theo yêu cầu qua email."
         },
         newNote: {
             editTitle: "Chỉnh sửa ghi chép",
@@ -3382,10 +3591,17 @@ export const translations = {
             userConductItems: "Bạn đồng ý sử dụng ứng dụng này để phát triển tâm linh và tôn trọng các thành viên khác. Quấy rối, ngôn từ kích động thù địch và nội dung không phù hợp bị nghiêm cấm.",
             aiDisclaimer: "Tuyên bố miễn trừ trách nhiệm về AI",
             aiDisclaimerItems: "Scripture Habit sử dụng AI (Google Gemini) để tạo các bản tổng kết và dịch thuật. AI có thể mắc sai lầm. Vui lòng sử dụng sự phán đoán của riêng bạn và các nguồn lực chính thức của giáo hội để đảm bảo tính chuẩn xác về giáo lý.",
+            officialDisclaimer: "Tuyên Bố Miễn Trừ Trách Nhiệm Chính Thức",
+            officialDisclaimerItems: "Scripture Habit là một dự án cá nhân và không phải là một dịch vụ chính thức hoặc liên kết với Giáo Hội Các Thánh Hữu Ngày Sau của Chúa Giê Su Ky Tô.",
             termination: "Chấm dứt",
             terminationItems: "Chúng tôi có quyền tạm ngừng hoặc xóa các tài khoản vi phạm các điều khoản này hoặc làm gián đoạn trải nghiệm cộng đồng.",
             limitation: "Giới hạn trách nhiệm pháp lý",
             limitationItems: "Scripture Habit được cung cấp 'nguyên trạng'. Chúng tôi không chịu trách nhiệm cho bất kỳ vấn đề tâm linh hoặc kỹ thuật nào phát sinh từ việc sử dụng dịch vụ."
+        },
+        cookieConsent: {
+            message: "Chúng tôi sử dụng cookie để cải thiện trải nghiệm của bạn và phân tích lưu lượng truy cập. Bằng cách tiếp tục sử dụng trang web này, bạn đồng ý với việc chúng tôi sử dụng cookie.",
+            accept: "Chấp nhận",
+            privacyPolicy: "Chính sách Bảo mật"
         }
     },
     th: {
@@ -3422,6 +3638,7 @@ export const translations = {
             button: "บริจาคผ่าน PayPal",
             contactTitle: "ติดต่อเราเพื่อขอความช่วยเหลือเกี่ยวกับการบริจาคของคุณ",
             contactDesc: "สำหรับความช่วยเหลือหรือคำถามเกี่ยวกับการบริจาคของคุณ โปรดติดต่อเราที่ dazhilangxianggen@gmail.com",
+            legalDisclosureLink: "เปิดเผยข้อมูลตามกฎหมายการทำธุรกรรมทางการค้า",
             appBackground: "ประวัติการพัฒนาแอปพลิเคชัน",
             backgroundStory: "แรงบันดาลใจในการสร้างแอปพลิเคชันนี้มาจากการที่ผมได้ฟังคำพูดของบราเดอร์ เคลย์ตัน คริสเตนเซน (Brother Clayton Christensen) เรื่อง \"Dealing with the Dangers of Success\" (การรับมือกับอันตรายของความสำเร็จ) ในตอนนั้น ท่านได้พูดถึงความสัมพันธ์ที่ใกล้ชิดระหว่าง \"โปรแกรมอย่างเป็นทางการ\" ของศาสนจักรในปัจจุบัน กับ \"การเปิดเผยส่วนตัว\"\n\nท่านชี้ให้เห็นว่า โปรแกรมต่างๆ ที่ศาสนจักรนำมาใช้เป็นหลักสูตรมาตรฐานในปัจจุบัน เช่น โรงเรียนวันอาทิตย์, ประถมศึกษา, การสังสรรค์ในครอบครัว และเซมินารี เดิมทีไม่ได้เกิดจาก \"คำสั่งจากส่วนกลาง\" แต่เกิดจาก \"การเปิดเผยส่วนตัว\" ของสมาชิกในพื้นที่ที่ต้องเผชิญกับปัญหาจริงๆ และพยายามหาทางแก้ไข เมื่อวิธีการเหล่านั้นได้ผลดีมาก ในเวลาต่อมาฝ่ายประธานสูงสุดและโควรัมอัครสาวกสิบสองจึงได้นำมาใช้เป็นมาตรฐานเดียวกันทั่วโลก\n\nอย่างไรก็ตาม เมื่อองค์กรใหญ่ขึ้นและทุกอย่างกลายเป็นคู่มือหรือกฎระเบียบ การจะเกิด \"ทางออกใหม่ๆ\" จากสมาชิกในพื้นที่ก็ยากขึ้น บราเดอร์ คริสเตนเซนจึงกระตุ้นให้นักศึกษา BYU ไม่เพียงแต่ทำตามโปรแกรมที่วางไว้เท่านั้น แต่ควรแสวงหาแรงบันดาลใจเพื่อ \"ประดิษฐ์\" วิธีการแก้ปัญหาใหม่ๆ ที่เราต้องเผชิญอยู่เสมอ\n\nนี่คือตัวอย่างของการเปิดเผยส่วนตัวที่เกิดขึ้นจริงในประวัติศาสตร์ครับ:\n\n \n\n1. โรงเรียนวันอาทิตย์ (Sunday School)\nช่วงเวลา/สถานที่: ปี 1849, แอ่งซอลต์เลก\nหลังจากที่เหล่าบุกเบิกมาถึงซอลต์เลกได้ไม่นาน ผู้ใหญ่ต่างมุ่งมั่นกับการสร้างรากฐานเพื่อความอยู่รอด จนเด็กๆ มักจะถูกปล่อยปละละเลย บราเดอร์บัลแลนไทน์ ผู้เปลี่ยนใจเลื่อมใสจากสกอตแลนด์ รู้สึกสะเทือนใจที่เห็นเด็กๆ เติบโตขึ้นโดยไม่ได้รับการศึกษาและไม่ได้เรียนรู้พระกิตติคุณ ท่านไม่ได้รอให้ใครสั่ง แต่ได้ไปขออนุญาตจากประธานบริคัม ยัง และเริ่มรวบรวมเด็กๆ ในละแวกบ้านมาสอนที่บ้านของตนเอง (ซึ่งต่อมาได้สร้างอาคารในพื้นที่ของตน) วิธีนี้ได้ผลดีมากจนขยายไปยังวอร์ดอื่นๆ และในที่สุดศาสนจักรก็ได้นำมาใช้เป็น \"โรงเรียนวันอาทิตย์\" ทั่วโลก\n\n2. ประถมศึกษา (Primary)\nช่วงเวลา/สถานที่: ปี 1878, ฟาร์มิงตัน รัฐยูทาห์\nซิสเตอร์ออเรเลีย สเปนเซอร์ โรเจอร์ส รู้สึกกังวลที่เห็นเด็กชายในหมู่บ้านวิ่งเล่นและซุกซนตามท้องถนนจนดึกดื่น ท่านรู้สึกถึงความเร่งด่วนว่า \"หากเราไม่สอนระเบียบวินัยและความเชื่อแก่พวกเขาตั้งแต่ยังเด็ก ก่อนที่พวกเขาจะมีอายุถึงเกณฑ์รับฐานะปุโรหิต (ในตอนนั้นคือประมาณ 12 ปี) ผู้นำศาสนจักรในอนาคตจะเติบโตขึ้นมาอย่างไม่มีคุณภาพ\" ท่านได้ปรึกษาเรื่องนี้กับประธานสมาคมสงเคราะห์สามัญ (เอลิซา อาร์. สโนว์) และได้รับอนุมัติจากประธานจอห์น เทย์เลอร์ ให้ทดลองจัดการประชุมสำหรับเด็กๆ ในพื้นที่ของตนเอง (ฟาร์มิงตัน) ในการประชุมครั้งแรกมีเด็กเข้าร่วมถึง 224 คน เมื่อเห็นความสำเร็จนี้ ศาสนจักรจึงได้นำไปใช้ทั่วโลก\n\n3. เซมินารี (Seminary)\nช่วงเวลา/สถานที่: ปี 1912, เมืองซอลต์เลก (ตรงข้ามโรงเรียนมัธยมแกรนิต)\nในตอนนั้น โรงเรียนมัธยมของรัฐเริ่มแพร่หลายในรัฐยูทาห์ แต่ตามกฎหมายห้ามมีการสอนศาสนาในโรงเรียน ประธานสเตคในพื้นที่กังวลว่า \"เยาวชนที่เรียนรู้แต่ความรู้ทางโลกที่ไม่มีพระเจ้ามาตลอดทั้งวัน อาจจะสูญเสียศรัทธาไปได้\" พวกเขาจึงเสนอต่อคณะกรรมการการศึกษาของศาสนจักร และเช่าบ้านหลังหนึ่งที่อยู่ตรงข้ามโรงเรียนมัธยมแกรนิต เพื่อจัดชั้นเรียนทดลองให้เด็กนักเรียนมาศึกษาพระคัมภีร์ในช่วงเวลาว่าง ครูคนแรกคือ โธมัส เจ. เยตส์ หากไม่มี \"การทดลองที่สเตคแกรนิต\" ในวันนั้น ระบบเซมินารีที่แผ่ขยายไปทั่วโลกในปัจจุบันก็คงไม่เกิดขึ้น\n\n4. การสังสรรค์ในครอบครัว (Family Home Evening)\nช่วงเวลา/สถานที่: ปี 1909 (เริ่มในระดับสเตค), ปี 1915 (แนะนำแก่ทุกครอบครัวในศาสนจักร)\nในช่วงต้นศตวรรษที่ 20 เมื่อสังคมเริ่มทันสมัยขึ้น ครอบครัวมีเวลาอยู่ด้วยกันน้อยลง แม้ประธานโจเซฟ เอฟ. สมิธ จะประกาศแนะนำ \"การสังสรรค์ในครอบครัว\" อย่างเป็นทางการในปี 1915 แต่จริงๆ แล้วต้นแบบมาจากโปรแกรมที่ทดลองทำจนประสบความสำเร็จในสเตคแกรนิตมาตั้งแต่ปี 1909 ฝ่ายประธานสูงสุดเห็นความสำเร็จในสเตคนั้นและตัดสินใจว่า \"นี่คือสิ่งที่วิสุทธิชนทุกคนจำเป็นต้องมี\"\n\n\n\nเมื่อได้ฟังเรื่องราวเหล่านี้ ผมตระหนักว่า \"การเปิดเผยส่วนตัว\" หรือพูดอีกนัยหนึ่งคือ \"การกระทำที่ไม่ได้มาจากคำสั่งเบื้องบน แต่มาจากแรงจูงใจภายในที่เปี่ยมด้วยความรัก\" คือสิ่งที่สร้างโปรแกรมต่างๆ ของศาสนจักรในปัจจุบัน ผมรู้สึกว่าหากมีปัญหาเกิดขึ้นในชุมชน เราไม่ควรรอให้สำนักงานใหญ่มาแก้ไข แต่การแสวงหาการเปิดเผยส่วนตัวเพื่อท้องถิ่นของเราเองนั้นเป็นเรื่องสำคัญยิ่ง\n\nผมสังเกตเห็นปัญหาอย่างหนึ่งที่เกิดขึ้นในเกือบทุกพื้นที่ นั่นคือ นิสัยการศึกษาพระคัมภีร์ของสมาชิก สมาชิกใหม่ และผู้สนใจ (เพื่อนของศาสนจักร) สิ่งนี้เป็นเรื่องที่ \"เป็นส่วนตัวอย่างยิ่งและควรทำภายใต้ความรักในครอบครัว\" ซึ่งผู้นำไม่สามารถเข้าไปจัดการโดยตรงได้\n\nอย่างไรก็ตาม เพราะเป็นเรื่องส่วนตัวและทำภายในบ้าน ผมจึงมองว่ามีปัญหาใหญ่บางประการเกิดขึ้น:\n\n• สมาชิกใหม่และเพื่อนของศาสนจักร มักจะไม่รู้วิธีศึกษาพระคัมภีร์ หรือไม่รู้จะไปปรึกษาใคร ครอบครัวที่มีสมาชิกเพียงบางส่วนเป็นสมาชิกศาสนจักร อาจจะหาความสุขจากการศึกษาได้ยากเพราะไม่สามารถแบ่งปันสิ่งที่เรียนรู้ภายในครอบครัวได้ จนทำให้ค่อยๆ ห่างจากศาสนจักรไป\n\n• แม้ศาสนจักรจะลงทุนมหาศาลเพื่อสร้าง \"คลังความรู้พระกิตติคุณ\" (Gospel Library) และแหล่งข้อมูลที่ดีเยี่ยม อีกทั้งฝ่ายประธานสูงสุด อัครสาวกสิบสอง และผู้นำท่านอื่นๆ จะแสวงหาการเปิดเผยเพื่อมาแบ่งปันใน \"การประชุมใหญ่สามัญ\" อย่างเต็มที่ แต่ถ้าสมาชิกไม่มีนิสัยการเรียนรู้ การลงทุนและการเปิดเผยเหล่านั้นก็จะสูญเปล่า\n\n• สิ่งที่สอนในการประชุมใหญ่สามัญและในพระคัมภีร์ ไม่ได้เป็นสิ่งที่อ่านครั้งเดียวแล้วจะเข้าใจและทำได้ทันที บ่อยครั้งที่เราจำเป็นต้องรับความรู้เหล่านั้นเข้าไปในจิตใจให้ลึกซึ้ง จนสามารถนำไปปฏิบัติได้จริงอย่างเป็นธรรมชาติ นั่นคือสภาวะที่ต้องอาศัย \"ของประทานแห่งพระวิญญาณบริสุทธิ์\" และ \"อยู่ในสภาพที่พร้อมรับการเปิดเผยส่วนตัว\" เช่น การให้พรและศาสนพิธีฐานะปุโรหิต การรับใช้ในครอบครัวและชุมชน งานเผยแผ่ หรืองานปฏิบัติศาสนกิจ สิ่งเหล่านี้ไม่สามารถเรียนรู้ได้เพียงชั่วข้ามคืน แต่ต้องผ่านการฝึกฝนจากนิสัยการศึกษาพระคัมภีร์ในทุกๆ วันและการใช้ศรัทธา หากไม่มีสิ่งนี้ ผมเชื่อว่าการรวบรวมอิสราเอลจะไม่สามารถดำเนินไปได้อย่างมีประสิทธิภาพ\n\nนี่เป็นเพียงตัวอย่างส่วนหนึ่งที่ผมคิดขึ้นมา แม้อาจจะไม่สามารถอธิบายปัญหาได้ทั้งหมด แต่ก็เพียงพอที่จะเห็นถึงความสำคัญของการสร้างนิสัยการศึกษาพระคัมภีร์ครับ\n\nในพระคัมภีร์มอรมอนได้พรรณนาถึงผู้คนที่ไม่รักษาบัญญัติเพราะความจองหอง จนเกิดสงคราม ความขัดแย้ง และอารยธรรมล่มสลาย เหล่าศาสดาพยากรณ์ในสมัยนั้นแน่นอนว่าได้แก้ปัญหาด้วยวิธีทางการเมือง แต่สิ่งที่เน้นย้ำเป็นพิเศษคือ \"การใช้พระดำรัสของพระเจ้า\" ในแอลมา 31:5 มีคำพูดที่ทรงพลังมากว่า:\n\n\"และการสั่งสอนพระดำรัสมีแนวโน้มอย่างมากที่จะชักนำผู้คนให้ทำสิ่งที่ยุติธรรม—แท้จริงแล้ว, มันมีอิทธิพลอันทรงพลังต่อจิตใจของผู้คนมากกว่าดาบ, หรือสิ่งอื่นใด, ซึ่งได้เกิดขึ้นกับพวกเขา—ดังนั้นแอลมาคิดว่าเป็นเรื่องสมควรที่พวกเขาควรลองใช้พลังของพระดำรัสของพระเจ้า\"\n\nผมเชื่อว่าคำพูดนี้ยังคงมีผลอย่างยิ่งต่อการแก้ปัญหาสังคมระหว่างประเทศ ปัญหาการเมือง หรือปัญหาในชุมชนท้องถิ่นในปัจจุบัน แอปพลิเคชันนี้เริ่มต้นจากการเป็นโปรเจกต์ในโรงเรียน แต่ผมสร้างมันขึ้นมาด้วยความเชื่อมั่นว่ามันจะสามารถช่วยแก้ปัญหาที่ผมได้กล่าวมาข้างต้นได้อย่างมีประสิทธิภาพ ผมเชื่อว่าผ่านแอปพลิเคชันนี้ จะมีผู้คนจำนวนมากที่สามารถสร้าง \"นิสัยการศึกษาพระคัมภีร์\" ในสังคมที่วุ่นวายและเปลี่ยนแปลงอย่างรวดเร็วนี้ เพื่อรับ \"การเปิดเผยส่วนตัว\" และทำให้สังคมนี้ดีขึ้นได้ครับ\n\nขอบพระคุณทุกท่านที่อ่านข้อความอันยาวเหยียดนี้ครับ สุดท้ายนี้ ขอให้พระคุณของพระเจ้าสถิตอยู่กับท่านทุกๆ คนอย่างเหลือล้นครับ"
         },
@@ -3623,7 +3840,15 @@ export const translations = {
             errorDeleteMessage: "ไม่สามารถลบข้อความได้",
             groupStatusUpdated: "ขณะนี้กลุ่มเป็น {status}",
             errorUpdateGroupStatus: "ไม่สามารถอัปเดตสถานะกลุ่มได้",
-            inactivityRemoval: "👋 **{count} สมาชิก** ถูกลบออกเนื่องจากไม่มีการใช้งาน (มากกว่า 3 วัน)"
+            inactivityRemoval: "👋 **{count} สมาชิก** ถูกลบออกเนื่องจากไม่มีการใช้งาน (มากกว่า 3 วัน)",
+            report: "รายงาน",
+            reportUser: "รายงานเนื้อหาที่ไม่เหมาะสม",
+            reportReason: "เหตุผลในการรายงาน",
+            reportSuccess: "รายงานถูกส่งเรียบร้อยแล้ว เราจะตรวจสอบในไม่ช้า",
+            reportSpam: "สแปม",
+            reportHarassment: "การคุกคาม",
+            reportInappropriate: "เนื้อหาไม่เหมาะสม",
+            reportOther: "อื่นๆ"
         },
         myNotes: {
             description: "คลังบันทึก",
@@ -3663,6 +3888,26 @@ export const translations = {
             loading: "กำลังโหลดจดหมาย...",
             empty: "ยังไม่มีจดหมาย สร้างสรุปรายสัปดาห์เพื่อรับจดหมาย!",
             defaultTitle: "สรุปรายสัปดาห์"
+        },
+        legalDisclosure: {
+            title: "กฎหมายการทำธุรกรรมทางการค้า",
+            provider: "ผู้ให้บริการ",
+            representative: "ตัวแทน",
+            address: "ที่อยู่",
+            phone: "หมายเลขโทรศัพท์",
+            email: "ที่อยู่อีเมล",
+            price: "ราคา",
+            paymentTiming: "เวลาชำระเงิน",
+            paymentMethod: "วิธีการชำระเงิน",
+            deliveryTiming: "เวลาจัดส่ง",
+            cancellation: "การยกเลิก/การคืนสินค้า",
+            environment: "สภาพแวดล้อมการใช้งาน",
+            priceDetail: "แสดงบนหน้าบริจาคหรือกำหนดโดยผู้ใช้",
+            paymentTimingDetail: "ณ เวลาที่ทำธุรกรรมเสร็จสมบูรณ์",
+            deliveryTimingDetail: "ทันทีหลังจากชำระเงินเสร็จสมบูรณ์",
+            cancelDetail: "เนื่องจากลักษณะของการบริจาคดิจิทัล ไม่รับคืนเงินหรือยกเลิกหลังจากชำระเงิน",
+            environmentDetail: "สามารถใช้งานได้บนเว็บเบราว์เซอร์และระบบปฏิบัติการเวอร์ชันล่าสุด",
+            requestDisclosure: "ข้อมูลติดต่อส่วนบุคคลจะถูกให้ไปโดยไม่ชักช้าเมื่อได้รับการร้องขอทางอีเมล"
         },
         newNote: {
             editTitle: "แก้ไขบันทึก",
@@ -3957,10 +4202,17 @@ export const translations = {
             userConductItems: "คุณตกลงที่จะใช้แอปนี้เพื่อการเติบโตทางวิญญาณและเคารพสมาชิกคนอื่นๆ ห้ามการคุกคาม การพูดจาสร้างความเกลียดชัง และเนื้อหาที่ไม่เหมาะสมโดยเด็ดขาด",
             aiDisclaimer: "ข้อจำกัดความรับผิดชอบเกี่ยวกับ AI",
             aiDisclaimerItems: "Scripture Habit ใช้ AI (Google Gemini) ในการสรุปผลและแปลภาษา AI อาจมีความผิดพลาดได้ โปรดใช้วิจารณญาณของคุณเองและอ้างอิงแหล่งข้อมูลทางการของศาสนจักรเพื่อความถูกต้องของหลักคำสอน",
+            officialDisclaimer: "คำสงวนสิทธิ์ความรับผิดชอบอย่างเป็นทางการ",
+            officialDisclaimerItems: "Scripture Habit เป็นโครงการส่วนบุคคลและไม่ใช่อภิบาลอย่างเป็นทางการหรือมีความเกี่ยวข้องกับศาสนจักรของพระเยซูคริสต์แห่งวิสุทธิชนยุคสุดท้าย",
             termination: "การยุติการให้บริการ",
             terminationItems: "เราขอสงวนสิทธิ์ในการระงับหรือลบบัญชีที่ละเมิดข้อกำหนดเหล่านี้หรือรบกวนประสบการณ์ของชุมชน",
             limitation: "ข้อจำกัดความรับผิดชอบ",
             limitationItems: "Scripture Habit ให้บริการ 'ตามสภาพที่เป็นอยู่' เราจะไม่รับผิดชอบต่อปัญหาทางวิญญาณหรือทางเทคนิคใดๆ ที่เกิดจากการใช้บริการ"
+        },
+        cookieConsent: {
+            message: "เราใช้คุกกี้เพื่อปรับปรุงประสบการณ์ของคุณและวิเคราะห์ปริมาณการใช้งาน การใช้ไซต์นี้ต่อไปแสดงว่าคุณยอมรับการใช้คุกกี้ของเรา",
+            accept: "ยอมรับ",
+            privacyPolicy: "นโยบายความเป็นส่วนตัว"
         }
     },
     ko: {
@@ -3997,6 +4249,7 @@ export const translations = {
             button: "PayPal로 후원하기",
             contactTitle: "후원 관련 문의",
             contactDesc: "후원에 대한 도움이나 질문이 있으시면 dazhilangxianggen@gmail.com으로 문의해 주십시오.",
+            legalDisclosureLink: "상거래법에 따른 공개",
             appBackground: "앱 개발 배경",
             backgroundStory: "이 앱을 만들게 된 계기는 클레이튼 크리스텐슨 형제님의 \"Dealing with the Dangers of Success(성공의 위험에 대처하기)\"라는 말씀을 듣고 나서였습니다. 그 말씀에서 형제님은 현재 교회의 '공식 프로그램'과 '개인적인 계시' 사이의 밀접한 관계에 대해 말씀하셨습니다.\n\n형제님은 현재 교회의 공식 프로그램으로 도입된 주일학교, 초등회, 가정의 밤, 세미나리 같은 프로그램들이 원래 '교회 본부의 지시'로 만들어진 것이 아니라고 지적하셨습니다. 대신, 현장의 회원들이 직면한 문제를 해결하기 위해 '개인적인 계시'를 통해 태어난 것이라고 하셨습니다. 그것이 매우 효과적이었기에 다른 와드로 퍼져 나갔고, 결국 모든 교회의 주일학교로 도입되었습니다.\n\n2. 초등회\n시기/장소: 1878년, 유타주 파밍턴\n아우렐리아 스펜서 로저스 자매님은 동네 소년들이 밤늦게까지 거리를 뛰어다니며 장난치는 것을 걱정했습니다. 자매님은 \"그들이 신권을 받는 나이(당시는 12세 전후)가 되기 전, 더 어릴 때부터 규율과 신앙을 가르치지 않으면 미래의 교회 지도자는 자라지 못할 것\"이라는 위기감을 느꼈습니다. 자매님은 이 아이디어를 당시 본부 상호부조회 회장(엘리자 R. 스노우)과 상의했고, 존 테일러 회장님의 승인을 얻어 자신의 지역(파밍턴)에서 시험적으로 아이들을 모으는 모임을 열었습니다. 첫 모임에는 224명의 아이가 모였습니다. 이 성공을 보고 교회 전체에 도입되었습니다.\n\n3. 세미나리\n시기/장소: 1912년, 솔트레이크시티(그래닛 고등학교 맞은편)\n당시 유타주에도 '공립 고등학교'가 보급되기 시작했지만, 법에 의해 종교 교육이 금지되어 있었습니다. 지역 스테이크 회장님은 \"청소년들이 하루 종일 하나님 없는 세상 지식만 배움으로써 신앙을 잃지 않을까\" 우려했습니다. 그들은 교회 교육위원회에 제안하여 그래닛 고등학교 맞은편에 있는 집을 빌려, 공과 시간에 학생들이 와서 경전을 배울 수 있는 반을 실험적으로 만들었습니다. 첫 교사는 토머스 J. 예이츠였습니다. 만약 이 '그래닛 스테이크의 실험'이 없었다면, 현재 전 세계로 퍼진 세미나리 제도는 없었을지도 모릅니다.\n\n4. 가정의 밤\n시기/장소: 1909년(스테이크 단위 시작), 1915년(전 교회 권고)\n20세기 초, 사회가 근대화되면서 가족이 함께 보내는 시간이 줄어들기 시작했습니다. 1915년에 조셉 F. 스미스 회장님이 '가정의 밤'을 전 교회에 공식적으로 권고했지만, 사실 그 수년 전인 1909년에 그래닛 스테이크에서 이미 실험적으로 시행되어 높은 성과를 거두었던 프로그램이 모델이 되었습니다. 제일회장단은 이 스테이크에서의 성공을 보고 \"이것은 모든 성도에게 필요한 것\"이라고 판단하여 채택한 것입니다.\n\n\n\n이 이야기를 듣고 저는 '개인적인 계시', 다시 말해 '위로부터의 지시가 아니라 매우 내발적이고 사랑을 동기로 한 행동'이 현재 교회의 프로그램을 만들었다는 것을 알게 되었습니다. 만약 지역 사회에 문제가 있다면 교회 본부가 해결해 주기를 기다리는 것이 아니라, 그 지역을 위해 개인적인 계시를 받는 것이 중요하다는 것을 느꼈습니다.\n\n여기서 저는 거의 모든 지역에 공통된 문제를 하나 발견했습니다. 그것은 회원, 신입 회원, 구도자(교회 친구)의 경전 학습 습관입니다. 이것은 '매우 개인적이고 가족적인 사랑 안에서 이루어져야 하는 것'이며, 지도자가 직접 관리할 수 없는 부분이기도 합니다.\n\n하지만 개인적이고 가족적인 사랑 안에서 이루어지기 때문에 몇 가지 큰 문제가 발생했다고 생각합니다.\n\n• 구도자와 신입 회원은 경전 학습 방법을 모르거나 누구에게 물어봐야 할지 모르는 문제를 겪고 있으며, 파트 멤버 가족은 가족 내에서 자신의 배움을 기쁘게 나누기 어려워 경전 학습에서 기쁨을 찾지 못하고 교회에서 멀어지기도 합니다.\n\n• 교회 본부가 많은 투자를 하여 '복음 라이브러리'와 양질의 리소스를 제공하고, 제일회장단과 십이사도 정원회 등 지도자들이 열심히 계시를 구해 '연차 대회'에서 그 내용을 전해주어도, 정작 회원이 배우는 습관을 갖지 않는다면 그 투자와 계시는 낭비되고 맙니다.\n\n• 연차 대회와 경전에서 가르치는 내용은 한 번 읽는 것만으로 터득할 수 있는 것이 아니며, 개인이 그 가르침을 내면 깊숙이 받아들여 자연스럽게 실천할 수 있는 수준까지 도달해야 합니다. 즉, '성령의 은사'를 의지하여 '개인적인 계시를 받을 수 있는 상태'가 되는 것입니다. 신권 축복과 의식, 교회와 가족 및 지역 사회에서의 봉사, 선교 사업과 성역 등이 그 예입니다. 이것들은 하루아침에 터득되는 것이 아니라 일상의 경전 학습 습관과 신앙의 실천을 통해 연마됩니다. 그것 없이는 이스라엘의 집합이 효과적으로 기능할 수 없다고 저는 믿습니다.\n\n이것들은 제가 생각한 일례일 뿐이며 실제 모든 문제를 완벽히 묘사한 것은 아니지만, 이것만으로도 경전 학습 습관의 중요성을 충분히 알 수 있습니다.\n\n몰몬경에는 백성들의 교만으로 인해 계명을 지키지 않게 되고, 결국 전쟁과 불화가 생겨 문명이 몰락하는 모습이 묘사되어 있습니다. 당시의 선지자들은 물론 정치적인 방법으로도 문제를 대처했지만, 특히 강조된 것은 '하나님 말씀의 활용'입니다. 앨마서 31장 5절에는 이에 대한 매우 강력한 말씀이 적혀 있습니다.\n\n\"이제 하나님의 말씀을 전파하는 것이 백성들을 인도하여 정의로운 일을 하게 하는 데 큰 효과가 있었으므로—참으로 그것은 칼이나 그들에게 일어났던 다른 어떤 일보다도 백성들의 마음에 강력한 영향을 미쳤던지라—그러므로 앨마는 하나님의 말씀의 힘을 시험해 보는 것이 마땅하다고 생각하였더라.\"\n\n저는 이 말씀이 현대의 국제적인 사회 문제, 정치 문제, 그리고 지역 사회의 문제를 대처하는 데에도 매우 유효하다고 믿습니다. 이 앱은 학교 과제의 연장으로 시작되었지만, 제가 위에서 언급한 문제들을 더욱 효과적으로 해결할 수 있다는 확신을 가지고 만들었습니다. 이 앱을 통해 한 분이라도 더 많은 분이 급변하고 혼란스러운 사회 속에서 '경전 학습 습관'을 세우고, '개인적인 계시'를 받아 이 세상을 더 나은 곳으로 만들 수 있기를 믿습니다.\n\n긴 글을 읽어주셔서 정말 감사합니다. 마지막으로 여러분 한 분 한 분의 삶에 주님의 은혜가 풍성히 쏟아지기를 기원합니다."
         },
@@ -4198,7 +4451,15 @@ export const translations = {
             errorDeleteMessage: "메시지 삭제 실패",
             groupStatusUpdated: "그룹이 이제 {status} 상태입니다",
             errorUpdateGroupStatus: "그룹 상태 업데이트 실패",
-            inactivityRemoval: "👋 **{count}명의 회원**이 3일 이상 활동하지 않아 제거되었습니다."
+            inactivityRemoval: "👋 **{count}명의 회원**이 3일 이상 활동하지 않아 제거되었습니다.",
+            report: "신고",
+            reportUser: "부적절한 콘텐츠 신고",
+            reportReason: "신고 사유",
+            reportSuccess: "신고가 성공적으로 제출되었습니다. 곧 검토하겠습니다.",
+            reportSpam: "스팸",
+            reportHarassment: "괴롭힘",
+            reportInappropriate: "부적절한 콘텐츠",
+            reportOther: "기타"
         },
         myNotes: {
             description: "노트 컬렉션",
@@ -4238,6 +4499,26 @@ export const translations = {
             loading: "편지 로딩 중...",
             empty: "아직 편지가 없습니다. 주간 요약을 생성하여 편지를 받으세요!",
             defaultTitle: "주간 요약"
+        },
+        legalDisclosure: {
+            title: "상거래법",
+            provider: "서비스 제공자",
+            representative: "대표자",
+            address: "주소",
+            phone: "전화번호",
+            email: "이메일 주소",
+            price: "가격",
+            paymentTiming: "결제 시기",
+            paymentMethod: "결제 방법",
+            deliveryTiming: "배송 시기",
+            cancellation: "취소/반품",
+            environment: "운영 환경",
+            priceDetail: "기부 페이지에 표시되거나 사용자가 지정합니다.",
+            paymentTimingDetail: "거래 완료 시.",
+            deliveryTimingDetail: "결제 완료 직후.",
+            cancelDetail: "디지털 기부의 특성상 결제 후 환불 또는 취소가 불가능합니다.",
+            environmentDetail: "다양한 브라우저 및 운영 체제의 최신 버전에서 사용할 수 있습니다.",
+            requestDisclosure: "개인 연락처 정보는 이메일 요청 시 지체 없이 제공됩니다."
         },
         newNote: {
             editTitle: "노트 편집",
@@ -4532,10 +4813,17 @@ export const translations = {
             userConductItems: "귀하는 영적 성장을 위해 이 앱을 사용하고 다른 회원을 존중하는 데 동의합니다. 괴롭힘, 혐오 표현 및 부적절한 콘텐츠는 엄격히 금지됩니다.",
             aiDisclaimer: "AI 면책 조항",
             aiDisclaimerItems: "Scripture Habit은 요약 및 번역을 생성하기 위해 AI(Google Gemini)를 사용합니다. AI는 실수를 할 수 있습니다. 교리적 정확성을 위해 귀하의 판단과 공식 교회 자료를 참고하시기 바랍니다.",
+            officialDisclaimer: "공식 면책 조항",
+            officialDisclaimerItems: "Scripture Habit은 개인 프로젝트이며 예수 그리스도 후기 성도 교회의 공식 서비스가 아니며 제휴되어 있지 않습니다.",
             termination: "종료",
             terminationItems: "우리는 본 약관을 위반하거나 커뮤니티 경험을 저해하는 계정을 정지하거나 삭제할 권리를 보유합니다.",
             limitation: "책임의 제한",
             limitationItems: "Scripture Habit은 '있는 그대로' 제공됩니다. 당사는 서비스 사용으로 인해 발생하는 영적 또는 기술적 문제에 대해 책임을 지지 않습니다."
+        },
+        cookieConsent: {
+            message: "우리는 귀하의 경험을 개선하고 트래픽을 분석하기 위해 쿠키를 사용합니다. 이 사이트를 계속 사용하면 쿠키 사용에 동의하는 것으로 간주됩니다.",
+            accept: "수락",
+            privacyPolicy: "개인정보 처리방침"
         }
     },
     tl: {
@@ -4572,6 +4860,7 @@ export const translations = {
             button: "Mag-donate gamit ang PayPal",
             contactTitle: "MAKIPAG-UGNAYAN SA AMIN PARA SA TULONG SA IYONG DONASYON",
             contactDesc: "Para sa tulong o mga katanungan tungkol sa iyong donasyon, mangyaring makipag-ugnayan sa amin sa dazhilangxianggen@gmail.com.",
+            legalDisclosureLink: "Pagsisiwalat ng Batas sa Komersyong Transaksyon",
             appBackground: "Kasaysayan ng Pagbuo ng App",
             backgroundStory: "Ang inspirasyon sa pagbuo ng app na ito ay nagmula sa pakikinig sa mensahe ni Brother Clayton Christensen na pinamagatang \"Dealing with the Dangers of Success.\" Doon ay tinalakay niya ang malapit na ugnayan sa pagitan ng kasalukuyang mga \"opisyal na programa\" ng Simbahan at ng \"personal na pahayag.\"\n\nBinigyang-diin niya na ang mga programang ipinatutupad ngayon bilang opisyal na kurikulum ng Simbahan—gaya ng Sunday School, Primary, Family Home Evening, at Seminary—ay hindi orihinal na nagmula sa \"mga instruksyon ng headquarters.\" Sa halip, ang mga ito ay isinilang mula sa \"personal na pahayag\" ng mga lokal na miyembro na hinarap ang mga totoong problema. Dahil naging epektibo ang mga ito, kalaunan ay pinagtibay ng mga General Authority at ginawang standard sa buong mundo.\n\nGayunpaman, habang lumalaki ang organisasyon at lahat ay nagiging \"manualized,\" nagiging mahirap na para sa mga bagong solusyon na magmula sa mga lokal na unit. Hinikayat ni Brother Christensen ang mga estudyante ng BYU na huwag lamang sumunod sa mga standard na programa, kundi patuloy na humiling ng inspirasyon upang \"mag-imbento\" ng mga solusyon sa mga bagong problemang kinakaharap.\n\nNarito ang ilang halimbawa kung paano aktwal na dumating ang personal na pahayag:\n\n \n\n1. Sunday School\nPanahon/Lugar: 1849, Salt Lake Basin\nPagkarating na pagkarating ng mga pioneer sa Salt Lake, ang mga matatanda ay abala sa pagbuo ng pundasyon para sa kaligtasan, kaya ang mga bata ay madalas na napapabayaan. Si Brother Ballantyne, isang convert mula sa Scotland, ay nasaktan ang kalooban nang makitang lumalaki ang mga bata na walang edukasyon at hindi natututo ng ebanghelyo. Hindi siya inutusan ng sinuman; siya mismo ang humingi ng pahintulot kay Pangulong Brigham Young at nagsimulang tipunin ang mga bata sa kanilang kapitbahayan sa sarili niyang bahay (kalaunan sa isang gusaling itinayo niya sa kanyang lupa) upang turuan sila. Naging napaka-epektibo nito kaya kumalat sa ibang mga ward at kalaunan ay pinagtibay ng buong Simbahan bilang Sunday School.\n\n2. Primary\nPanahon/Lugar: 1878, Farmington, Utah\nNag-alala si Sister Aurelia Spencer Rogers sa mga batang lalaki sa kanilang lugar na nagtatakbuhan sa mga kalsada gabi na at gumagawa ng mga kalokohan. Nakaramdam siya ng matinding pangangailangan: \"Kung hindi natin sila tuturuan ng disiplina at pananampalataya habang bata pa sila, bago sila dumating sa edad para tanggapin ang Priesthood (mga 12 taong gulang noon), ang ating mga susunod na lider ng Simbahan ay hindi magiging handa.\" Isinangguni niya ang ideyang ito sa General Relief Society President (Eliza R. Snow) at, sa pag-apruba ni Pangulong John Taylor, nagsagawa ng mga experimental meeting para sa mga bata sa kanilang lokal na lugar (Farmington). 224 na bata ang dumalo sa unang meeting. Nang makita ang tagumpay na ito, ipinatupad ito sa buong Simbahan.\n\n3. Seminary\nPanahon/Lugar: 1912, Salt Lake City (tapat ng Granite High School)\nNang maging laganap ang mga public high school sa Utah, ipinagbawal ng batas ang pagtuturo ng relihiyon sa loob ng mga paaralang iyon. Nag-alala ang isang lokal na Stake President na baka mawalan ng pananampalataya ang mga kabataan dahil sa buong araw na pag-aaral ng mga sekular na kaalaman na walang Diyos. Nagpanukala sila ng ideya sa Church Board of Education at umarkila ng isang bahay sa tapat ng Granite High School upang gumawa ng experimental class kung saan maaaring mag-aral ng scriptures ang mga estudyante sa kanilang bakanteng oras. Ang unang guro ay si Thomas J. Yates. Kung wala ang \"Granite Stake experiment\" na ito, ang pandaigdigang sistema ng Seminary na mayroon tayo ngayon ay maaaring hindi kailanman naitatag.\n\n4. Family Home Evening\nPanahon/Lugar: 1909 (antas ng Stake), 1915 (rekomendasyon sa buong Simbahan)\nSa simula ng ika-20 siglo, habang nagiging moderno ang lipunan, ang mga pamilya ay nagsimulang magkaroon ng mas kaunting oras para sa isa't isa. Bagaman opisyal na inirekomenda ni Pangulong Joseph F. Smith ang \"Family Home Evening\" sa buong Simbahan noong 1915, ito ay aktwal na hinalaw mula sa isang programa na matagumpay na naisagawa bilang eksperimento sa Granite Stake noong 1909. Nakita ng Unang Panguluhan ang tagumpay sa stake na iyon at nagpasya na, \"Ito ay isang bagay na kailangan ng lahat ng mga Banal.\"\n\n\n\nAng pakikinig sa mga kuwentong ito ay nagpabatid sa akin na ang \"personal na pahayag\"—o sa madaling salita, \"mga kilos na hindi nagmula sa mga instruksyon mula sa itaas, kundi malalim na nagmumula sa loob at udyok ng pag-ibig\"—ang bumuo sa mga kasalukuyang programa ng Simbahan. Naramdaman ko na kung may problema sa ating komunidad, hindi tayo dapat maghintay na lutasin ito ng headquarters ng Simbahan; mahalaga na tayo ay makatanggap ng personal na pahayag para sa ating sariling mga lugar.\n\nNapansin ko ang isang problema na karaniwan sa halos lahat ng rehiyon: ang gawi sa pag-aaral ng scriptures ng mga miyembro, mga bagong miyembro, at mga investigator (mga kaibigan ng Simbahan). Ito ay isang bagay na dapat ay \"napaka-personal at isinasagawa sa loob ng pagmamahalan ng pamilya,\" at ito ay isang aspeto na hindi direktang mapapamahalaan ng mga lider.\n\nGayunpaman, dahil ito ay personal at nakasentro sa tahanan, naniniwala ako na may ilang malalaking problemang lumitaw:\n\n• Ang mga investigator at mga bagong miyembro ay madalas na hindi alam kung paano mag-aral ng scriptures o kung kanino hihingi ng tulong. Ang mga pamilyang may miyembrong hindi kabilang sa Simbahan ay maaaring mahirapan na makahanap ng kagalakan sa kanilang pag-aaral dahil hindi nila madaling maibahagi ang kanilang mga natutunan sa loob ng kanilang pamilya, na nagiging sanhi ng paglayo ng ilan sa Simbahan.\n\n• Bagaman malaki ang investment ng Simbahan sa pagbibigay ng \"Gospel Library\" at de-kalidad na resources, at bagaman ang Unang Panguluhan, Korum ng Labindalawang Apostol, at iba pang mga lider ay taimtim na humihiling ng pahayag upang ibahagi sa \"General Conference,\" ang mga investment at pahayag na iyon ay masasayang kung ang mga miyembro ay walang gawi sa pag-aaral.\n\n• Ang mga itinuturo sa General Conference at sa scriptures ay hindi maaaring makuha sa isang basahan lamang. Madalas na kinakailangan na isapuso ng bawat isa ang mga turong ito nang malalim hanggang sa maabot ang antas na natural na nilang naisasabuhay ang mga ito. Ito ang kalagayan ng pagiging handang \"makatanggap ng personal na pahayag\" sa pamamagitan ng pag-asa sa \"Kaloob ng Espiritu Santo.\" Ang mga halimbawa nito ay ang mga basbas ng Priesthood at mga ordenansa, paglilingkod sa simbahan, pamilya, at komunidad, at gawaing misyonero at ministering. Ang mga ito ay hindi natututunan sa isang gabi lamang; ang mga ito ay hinahasa sa pamamagitan ng pang-araw-araw na gawi sa pag-aaral ng scriptures at paggamit ng pananampalataya. Kung wala ito, naniniwala ako na ang Pagtitipon ng Israel (Gathering of Israel) ay hindi gagana nang epektibo.\n\nIlan lamang ito sa mga halimbawang naisip ko, at maaaring hindi nito perpektong nailalarawan ang lahat ng problema, ngunit naniniwala ako na ipinapakita nito ang mahalagang kahalagahan ng gawi sa pag-aaral ng scriptures.\n\nInilalarawan sa Aklat ni Mormon kung paano, dahil sa pagmamataas, ang mga tao ay huminto sa pagsunod sa mga utos, na kalaunan ay humantong sa digmaan, pagtatalo, at pagbagsak ng sibilisasyon. Bagaman ang mga propeta noon ay tiyak na tinugunan ang mga problemang iyon sa pamamagitan ng politikal na paraan, ang higit na binigyang-diin ay ang \"paggamit ng salita ng Diyos.\" Ang Alma 31:5 ay naglalaman ng napakamakapangyarihang mga salita tungkol dito:\n\n\"At ngayon, dahil ang pangangaral ng salita ay may malaking hilig na akayin ang mga tao na gawin ang yaong makatarungan—oo, ito ay may higit na malakas na epekto sa isipan ng mga tao kaysa sa espada, o anupaman, na nangyari sa kanila—kaya nga inisip ni Alma na nararapat na subukan nila ang bisa ng salita ng Diyos.\"\n\nNaniniwala ako na ang mga salitang ito ay napaka-epektibo sa pagharap sa mga modernong pandaigdigang problemang panlipunan at pampolitika, gayundin sa mga problema sa lokal na komunidad. Bagaman ang app na ito ay nagsimula bilang extension ng isang school project, binuo ko ito nang may matinding paniniwala na mas epektibo nitong matutugunan ang mga problemang nabanggit ko. Naniniwala ako na sa pamamagitan ng app na ito, mas maraming tao ang makakabuo ng \"gawi sa pag-aaral ng scriptures\" sa gitna ng mabilis na nagbabago at magulong lipunang ito, makakatanggap ng \"personal na pahayag,\" at gagawing mas mabuti ang mundong ito.\n\nMaraming salamat sa pagbabasa ng mahabang mensaheng ito. Bilang panghuli, idinadalangin ko na ang biyaya ng Panginoon ay masaganang ibuhos sa bawat isa sa inyo."
         },
@@ -4772,7 +5061,15 @@ export const translations = {
             errorDeleteMessage: "Nabigong burahin ang mensahe",
             groupStatusUpdated: "Ang grupo ay {status} na ngayon",
             errorUpdateGroupStatus: "Nabigong i-update ang status ng grupo",
-            inactivityRemoval: "👋 **{count} miyembro** ay inalis dahil sa kawalan ng aktibidad (higit sa 3 araw)."
+            inactivityRemoval: "👋 Ang **{count} (mga) miyembro** ay naalis dahil sa kawalang-aktibidad (higit sa 3 araw).",
+            report: "I-report",
+            reportUser: "I-report ang hindi naaangkop na nilalaman",
+            reportReason: "Dahilan ng pag-report",
+            reportSuccess: "Matagumpay na naipadala ang report. Susuriin namin ito sa lalong madaling panahon.",
+            reportSpam: "Spam",
+            reportHarassment: "Pang-aabuso",
+            reportInappropriate: "Hindi naaangkop na nilalaman",
+            reportOther: "Iba pa"
         },
         myNotes: {
             description: "Koleksyon ng mga Tala",
@@ -4811,7 +5108,27 @@ export const translations = {
             back: "Bumalik sa Listahan",
             loading: "Naglo-load ng mga sulat...",
             empty: "Wala pang mga sulat. Gumawa ng lingguhang buod upang makatanggap ng isa!",
-            defaultTitle: "Lingguhang Buod"
+            defaultTitle: "Buod ng Linggo"
+        },
+        legalDisclosure: {
+            title: "Batas sa Komersyong Transaksyon",
+            provider: "Tagapagbigay ng Serbisyo",
+            representative: "Kinatawan",
+            address: "Address",
+            phone: "Numero ng Telepono",
+            email: "Email Address",
+            price: "Presyo",
+            paymentTiming: "Oras ng Pagbabayad",
+            paymentMethod: "Paraan ng Pagbabayad",
+            deliveryTiming: "Oras ng Paghahatid",
+            cancellation: "Pagkansela/Pagbabalik",
+            environment: "Kapaligiran sa Operasyon",
+            priceDetail: "Ipinapakita sa pahina ng donasyon o itinakda ng user.",
+            paymentTimingDetail: "Sa oras ng pagkumpleto ng transaksyon.",
+            deliveryTimingDetail: "Kaagad pagkatapos ng pagkumpleto ng pagbabayad.",
+            cancelDetail: "Dahil sa katangian ng mga digital na donasyon, walang tinatanggap na refund o cancellation pagkatapos ng pagbabayad.",
+            environmentDetail: "Maaaring gamitin sa mga pinakabagong bersyon ng iba't ibang browser at operating system.",
+            requestDisclosure: "Ang personal na impormasyon sa pakikipag-ugnayan ay ibibigay nang walang pagkaantala sa kahilingan sa pamamagitan ng email."
         },
         newNote: {
             editTitle: "I-edit ang Tala",
@@ -5106,10 +5423,17 @@ export const translations = {
             userConductItems: "Sumasang-ayon ka na gamitin ang app na ito para sa espirituwal na paglago at igalang ang ibang mga miyembro. Ang harassment, hate speech, at hindi naaangkop na nilalaman ay mahigpit na ipinagbabawal.",
             aiDisclaimer: "AI Disclaimer",
             aiDisclaimerItems: "Ang Scripture Habit ay gumagamit ng AI (Google Gemini) upang bumuo ng mga recap at pagsasalin. Ang AI ay maaaring magkamali. Mangyaring gamitin ang iyong sariling pagpapasya at mga opisyal na mapagkukunan ng simbahan para sa katumpakan ng doktrina.",
+            officialDisclaimer: "Opisyal na Disclaimer",
+            officialDisclaimerItems: "Ang Scripture Habit ay isang personal na proyekto at hindi isang opisyal na serbisyo ng, o kaakibat ng, Ang Simbahan ni Jesucristo ng mga Banal sa mga Huling Araw.",
             termination: "Pagwawakas",
             terminationItems: "Inirerebenta namin ang karapatang suspindihin o i-delete ang mga account na lumalabag sa mga tuntuning ito o nakakagambala sa karanasan ng komunidad.",
             limitation: "Limitasyon ng Pananagutan",
             limitationItems: "Ang Scripture Habit ay ibinibigay 'as is'. Hindi kami pananagutan para sa anumang espirituwal o teknikal na isyu na nagreresulta mula sa paggamit ng serbisyo."
+        },
+        cookieConsent: {
+            message: "Gumagamit kami ng mga cookie para mapabuti ang iyong karanasan at suriin ang trapiko. Sa pagpapatuloy sa paggamit ng site na ito, sumasang-ayon ka sa aming paggamit ng mga cookie.",
+            accept: "Tanggapin",
+            privacyPolicy: "Patakaran sa Privacy"
         }
     },
     sw: {
@@ -5146,6 +5470,7 @@ export const translations = {
             button: "Changia kupitia PayPal",
             contactTitle: "WASILIANA NASI KWA MSAADA WA MCHANGO WAKO",
             contactDesc: "Kwa msaada au maswali kuhusu mchango wako, tafadhali wasiliana nasi kwa dazhilangxianggen@gmail.com.",
+            legalDisclosureLink: "Ufichuzi wa Sheria ya Miamala ya Kibiashara",
             appBackground: "Historia ya Maendeleo ya Programu",
             backgroundStory: "Uvuvio wa kuunda programu hii ulitokana na kusikiliza hotuba ya Kaka Clayton Christensen iliyoitwa \"Dealing with the Dangers of Success\" (Kukabiliana na Hatari za Mafanikio). Katika hotuba hiyo, alizungumzia uhusiano wa karibu kati ya \"mipango rasmi\" ya sasa ya Kanisa na \"ufunuo wa kibinafsi.\"\n\nAlibainisha kuwa mipango inayotekelezwa sasa kama mtaala rasmi wa Kanisa—kama vile Shule ya Jumapili, Msingi, Jioni ya Familia Nyumbani, na Seminari—hapo awali haikutokana na \"maelekezo ya makao makuu.\" Badala yake, ilizaliwa kutokana na \"ufunuo wa kibinafsi\" wa waumini wa mahali hapo waliokuwa wakikabiliana na matatizo halisi. Kwa sababu suluhisho hizo zilikuwa na ufanisi mkubwa, baadaye zilikubaliwa na viongozi wakuu (General Authorities) na kuwekwa kama viwango vya Kanisa ulimwenguni kote.\n\nHata hivyo, shirika linapokuwa kubwa na kila kitu kuwekwa katika vitabu vya miongozo, inakuwa vigumu kwa \"suluhisho mpya\" kutoka kwa waumini wa kawaida kujitokeza. Kaka Christensen aliwahimiza wanafunzi wa BYU siyo tu kufuata mipango iliyowekwa, bali kuendelea kupokea uvuvio ili \"kuvumbua\" suluhisho la matatizo mapya wanayokabiliana nayo.\n\nHapa kuna mifano ya jinsi ufunuo wa kibinafsi ulivyotokea katika hali halisi:\n\n \n\n1. Shule ya Jumapili\nWakati/Mahali: 1849, Salt Lake Basin\nMuda mfupi baada ya waanzilishi (pioneers) kuwasili Salt Lake, watu wazima walikuwa na shughuli nyingi za kujenga misingi ya maisha, na kuwaacha watoto mara nyingi bila uangalizi. Kaka Ballantyne, muumini mpya kutoka Scotland, aliumizwa moyo kuona watoto wakikua bila elimu wala kujifunza injili. Hakuamriwa na yeyote; yeye mwenyewe aliomba ruhusa kwa Rais Brigham Young na kuanza kuwakusanya watoto wa majirani katika nyumba yake mwenyewe (baadaye katika jengo aliloljenga kwenye ardhi yake) ili kuwafundisha. Jambo hili lilikuwa na ufanisi mkubwa kiasi kwamba lilienea katika kata (wards) nyingine na hatimaye kukubaliwa na Kanisa zima kama Shule ya Jumapili.\n\n2. Msingi (Primary)\nWakati/Mahali: 1878, Farmington, Utah\nDada Aurelia Spencer Rogers alikuwa na wasiwasi kuhusu wavulana wa hapo waliokuwa wakikimbia barabarani usiku sana na kufanya utukutu. Alihisi umuhimu wa haraka: \"Ikiwa hatutawafundisha nidhamu na imani wakiwa wadogo, kabla ya kufikia umri wa kupokea Ukuhani (karibu miaka 12 wakati huo), viongozi wetu wa baadaye wa Kanisa hawatakuwa tayari.\" Alishauriana kuhusu wazo hili na Rais Mkuu wa Muungano wa Usaidizi wa Kina Mama (Eliza R. Snow) na, kwa idhini ya Rais John Taylor, alifanya mikutano ya majaribio kwa watoto katika eneo lake (Farmington). Watoto 224 walihudhuria mkutano wa kwanza. Alipoona mafanikio haya, ilianzishwa katika Kanisa zima.\n\n3. Seminari\nWakati/Mahali: 1912, Salt Lake City (mkabala na Shule ya Upili ya Granite)\nWakati shule za upili za serikali zilipoanza kuenea huko Utah, elimu ya dini ilipigwa marufuku na sheria ndani ya shule hizo. Rais wa kigingi wa hapo alihofia kwamba vijana wanaweza kupoteza imani yao kwa kutumia siku nzima kujifunza maarifa ya kidunia tu bila Mungu. Walipendekeza wazo kwa Bodi ya Elimu ya Kanisa na kukodisha nyumba mkabala na Shule ya Upili ya Granite ili kuunda darasa la majaribio ambapo wanafunzi wangeweza kuja kujifunza maandiko wakati wa saa zao za mapumziko. Mwalimu wa kwanza alikuwa Thomas J. Yates. Bila \"majaribio ya Kigingi cha Granite,\" mfumo wa kimataifa wa Seminari tulionao leo huenda usingekuwepo.\n\n4. Jioni ya Familia Nyumbani\nWakati/Mahali: 1909 (ngazi ya Kigingi), 1915 (pendekezo kwa Kanisa zima)\nMapema katika karne ya 20, jamii ilipoanza kuwa ya kisasa, familia zilianza kutumia muda mchache pamoja. Ingawa Rais Joseph F. Smith alipendekeza rasmi \"Jioni ya Familia Nyumbani\" kwa Kanisa zima mnamo 1915, kiukweli ilitokana na mpango ambao ulikuwa umeendeshwa kwa majaribio na mafanikio makubwa katika Kigingi cha Granite tangu 1909. Urais wa Kwanza uliona mafanikio katika kigingi hicho na kuamua, \"Hili ni jambo ambalo Watakatifu wote wanahitaji.\"\n\n\n\nKusikiliza hadithi hizi kulinifanya nitambue kuwa \"ufunuo wa kibinafsi\"—au kwa njia nyingine, \"matendo ambayo hayatoki katika maelekezo ya juu, bali yanatoka ndani kabisa na kuchochewa na upendo\"—ndiyo yaliyojenga mipango ya sasa ya Kanisa. Nilihisi kuwa ikiwa kuna tatizo katika jamii yetu, hatupaswi kusubiri makao makuu ya Kanisa yaitatue; ni muhimu tupokee ufunuo wa kibinafsi kwa ajili ya maeneo yetu wenyewe.\n\nNiligundua tatizo moja ambalo ni la kawaida katika karibu kila eneo: tabia ya kujifunza maandiko miongoni mwa waumini, waumini wapya, na watafiti (marafiki wa Kanisa). Hili ni jambo ambalo linapaswa kuwa la \"kibinafsi sana na kufanyika ndani ya upendo wa familia,\" na ni eneo ambalo viongozi hawawezi kulisimamia moja kwa moja.\n\nHata hivyo, kwa sababu ni la kibinafsi na linaegemea nyumbani, ninaamini kuwa matatizo makubwa yamejitokeza:\n\n• Watafiti na waumini wapya mara nyingi hawajui jinsi ya kujifunza maandiko au nani wa kumwomba msaada. Familia zenye muumini mmoja tu zinaweza kupata shida kupata furaha katika kujifunza kwa sababu haziwezi kushiriki ufahamu wao kwa urahisi ndani ya familia zao, jambo linalowafanya wengine wajitenge na Kanisa.\n\n• Ingawa Kanisa linawekeza sana katika kutoa \"Maktaba ya Injili\" na rasilimali zenye ubora wa juu, na ingawa Urais wa Kwanza, Akidi ya Mitume Kumi na Wawili, na viongozi wengine wanatafuta ufunuo kwa bidii ili kuushiriki katika \"Mkutano Mkuu,\" uwekezaji na ufunuo huo hupotea bure ikiwa waumini hawana tabia ya kujifunza.\n\n• Mambo yanayofundishwa katika Mkutano Mkuu na katika maandiko hayawezi kueleweka kikamilifu kwa kuyasoma mara moja tu. Mara nyingi watu wanatakiwa kuyaingiza mafundisho haya ndani ya mioyo yao na kufikia kiwango ambacho wanaweza kuyatekeleza kwa asili. Hali hii ni ile ya kuweza \"kupokea ufunuo wa kibinafsi\" kwa kutegemea \"Karama ya Roho Mtakatifu.\" Mifano ni pamoja na baraka za Ukuhani na ibada, huduma kanisani, katika familia na jamii, na kazi ya umishenari na uhudumiaji. Mambo haya hayawezi kueleweka kwa usiku mmoja tu; yanaboreshwa kupitia tabia za kila siku za kujifunza maandiko na kutumia imani. Bila hili, ninaamini Ukusanyaji wa Israeli hauwezi kufanya kazi kwa ufanisi.\n\nHii ni mifano michache tu niliyozingatia, na inaweza isielezee kila tatizo kikamilifu, lakini ninaamini inaonyesha umuhimu mkubwa wa tabia ya kujifunza maandiko.\n\nKitabu cha Mormoni kinaelezea jinsi, kwa sababu ya kiburi, watu waliacha kushika amri, na hatimaye kusababisha vita, mizozo, na kuanguka kwa ustaarabu. Ingawa manabii wa wakati huo hakika walishughulikia matatizo hayo kupitia njia za kisiasa, kile kilichosisitizwa zaidi ni \"matumizi ya neno la Mungu.\" Alma 31:5 ina maneno yenye nguvu sana kuhusu hili:\n\n\"Na sasa, kwani kuhubiri kwa neno kulikuwa na elekeo kubwa la kuongoza watu kufanya yaliyo ya haki—ndiyo, kulikuwa na uwezo mkuu zaidi akilini mwa watu kuliko upanga, au kitu kingine chochote, ambacho kiliwapata—kwa hivyo Alma alifikiria kwamba ilikuwa vyema kwamba wajaribu uwezo wa neno la Mungu.\"\n\nNinaamini maneno haya ni yenye ufanisi mkubwa katika kushughulikia masuala ya kisasa ya kijamii na kisiasa ya kimataifa, pamoja na matatizo ya jamii za mahali hapo. Ingawa programu hii ilianza kama sehemu ya mradi wa shule, niliiunda kwa kusadiki kwamba inaweza kushughulikia kwa ufanisi zaidi matatizo niliyoyataja. Tumaini langu ni kwamba kupitia programu hii, watu wengi iwezekanavyo wataweza kuanzisha \"tabia ya kujifunza maandiko\" katika jamii hii inayobadilika haraka na yenye machafuko, kupokea \"ufunuo wa kibinafsi,\" na kuufanya ulimwengu huu kuwa mahali bora zaidi.\n\nAsante sana kwa kusoma ujumbe huu mrefu. Hatimaye, ninaomba kwamba neema ya Bwana imiminike kwa wingi juu ya kila mmoja wenu."
         },
@@ -5346,7 +5671,15 @@ export const translations = {
             errorDeleteMessage: "Imeshindwa kufuta ujumbe",
             groupStatusUpdated: "Kikundi sasa ni {status}",
             errorUpdateGroupStatus: "Imeshindwa kusasisha hali ya kikundi",
-            inactivityRemoval: "👋 **Wanachama {count}** wameondolewa kwa sababu ya kutokuwepo (zaidi ya siku 3)."
+            inactivityRemoval: "👋 **Wanachama {count}** wameondolewa kwa kutokuwa na shughuli (zaidi ya siku 3).",
+            report: "Ripoti",
+            reportUser: "Ripoti maudhui yasiyofaa",
+            reportReason: "Sababu ya kuripoti",
+            reportSuccess: "Ripoti imetumwa kwa mafanikio. Tutaiangalia hivi karibuni.",
+            reportSpam: "Barua taka",
+            reportHarassment: "Unyanyasaji",
+            reportInappropriate: "Maudhui yasiyofaa",
+            reportOther: "Nyingine"
         },
         myNotes: {
             description: "Mkusanyiko wa Maelezo",
@@ -5385,7 +5718,27 @@ export const translations = {
             back: "Rudi kwenye Orodha",
             loading: "Inapakia barua...",
             empty: "Hakuna barua bado. Tengeneza muhtasari wa wiki ili kupokea moja!",
-            defaultTitle: "Muhtasari wa Wiki"
+            defaultTitle: "Muhtasari wa Kila Wiki"
+        },
+        legalDisclosure: {
+            title: "Sheria ya Miamala ya Kibiashara",
+            provider: "Mtoa Huduma",
+            representative: "Mwakilishi",
+            address: "Anwani",
+            phone: "Nambari ya Simu",
+            email: "Anwani ya Barua pepe",
+            price: "Bei",
+            paymentTiming: "Wakati wa Malipo",
+            paymentMethod: "Njia ya Malipo",
+            deliveryTiming: "Wakati wa Utumaji",
+            cancellation: "Kufuta/Kurejesha",
+            environment: "Mazingira ya Uendeshaji",
+            priceDetail: "Inaonyeshwa kwenye ukurasa wa mchango au kuchaguliwa na mtumiaji.",
+            paymentTimingDetail: "Wakati wa kukamilisha muamala.",
+            deliveryTimingDetail: "Mara baada ya kukamilisha malipo.",
+            cancelDetail: "Kwa sababu ya asili ya michango ya kidijitali, hakuna marejesho au kufutwa yanayokubalika baada ya malipo.",
+            environmentDetail: "Inaweza kutumiwa kwenye matoleo ya hivi karibuni ya vivinjari na mifumo ya uendeshaji mbalimbali.",
+            requestDisclosure: "Maelezo ya mawasiliano ya kibinafsi yatatolewa bila kuchelewa baada ya kuombwa kupitia barua pepe."
         },
         newNote: {
             editTitle: "Hariri Ujumbe",
@@ -5680,10 +6033,17 @@ export const translations = {
             userConductItems: "Unakubali kutumia programu hii kwa ukuaji wa kiroho na kuwaheshimu washiriki wengine. Unyanyasaji, lugha ya chuki, na maudhui yasiyofaa yamepigwa marufuku kabisa.",
             aiDisclaimer: "Kanusho la AI",
             aiDisclaimerItems: "Scripture Habit inatumia AI (Google Gemini) kuzalisha muhtasari na tafsiri. AI inaweza kufanya makosa. Tafadhali tumia uamuzi wako mwenyewe na rasilimali rasmi za kanisa kwa usahihi wa mafundisho.",
+            officialDisclaimer: "Opisyal na Kanusho",
+            officialDisclaimerItems: "Scripture Habit ni mradi wa kibinafsi na si huduma rasmi ya, au inayohusiana na, Kanisa la Yesu Kristo la Watakatifu wa Siku za Mwisho.",
             termination: "Usitishaji",
             terminationItems: "Tunahifadhi haki ya kusimamisha au kufuta akaunti zinazokiuka masharti haya au kuvuruga hali ya jumuiya.",
             limitation: "Ukomo wa Dhima",
             limitationItems: "Scripture Habit inatolewa 'kama ilivyo'. Hatuwajibiki kwa tatizo lolote la kiroho au kiufundi linalotokana na matumizi ya huduma hiyo."
+        },
+        cookieConsent: {
+            message: "Tunatumia biskuti (cookies) ili kuboresha hali yako ya matumizi na kuchanganua trafiki. Kwa kuendelea kutumia tovuti hii, unakubali matumizi yetu ya biskuti.",
+            accept: "Kubali",
+            privacyPolicy: "Sera ya Faragha"
         }
     },
 };

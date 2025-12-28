@@ -2039,3 +2039,67 @@ input:checked+.slider:before {
         transform: scale(1.1) rotate(-3deg);
     }
 }
+
+/* Report Modal Styles */
+.report-modal {
+    max-width: 360px !important;
+    text-align: left !important;
+}
+
+.report-hint {
+    font-weight: 600;
+    color: var(--black) !important;
+    margin-bottom: 1rem !important;
+}
+
+.report-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.report-option-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem;
+    background: #f8f8f8;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.report-option-label:hover {
+    background: #f0f0f0;
+}
+
+.report-option-label.selected {
+    background: #fff5f6;
+    border-color: var(--pink);
+}
+
+.report-option-label input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--pink);
+}
+
+.report-option-label span {
+    font-weight: 500;
+    color: var(--black);
+}
+
+.report-submit {
+    background: #E53E3E !important;
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.25) !important;
+}
+
+.report-submit:hover {
+    background: #C53030 !important;
+    box-shadow: 0 6px 16px rgba(229, 62, 62, 0.35) !important;
+}
+
+.report-option {
+    color: #E53E3E !important;
+}
