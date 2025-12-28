@@ -25,7 +25,9 @@ import { getTodayReadingPlan } from '../../Data/DailyReadingPlan';
 import WelcomeStoryModal from '../WelcomeStoryModal/WelcomeStoryModal';
 import Donate from '../Donate/Donate';
 import Mascot from '../Mascot/Mascot';
+import Footer from '../Footer/Footer';
 import { DashboardSkeleton } from '../Skeleton/Skeleton';
+
 
 
 
@@ -1005,6 +1007,7 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
+            <Footer />
           </div>
         )}
 

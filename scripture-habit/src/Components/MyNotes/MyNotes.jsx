@@ -18,6 +18,7 @@ import { useLanguage } from '../../Context/LanguageContext.jsx';
 import NoteDetailModal from './NoteDetailModal';
 import Mascot from '../Mascot/Mascot';
 import { NoteGridSkeleton } from '../Skeleton/Skeleton';
+import Footer from '../Footer/Footer';
 
 const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
   const { language, t } = useLanguage();
@@ -434,6 +435,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
         initialData={newNoteInitialData}
         onDelete={() => setIsDeleteModalOpen(true)}
       />
+      <Footer />
     </div >
   );
 };

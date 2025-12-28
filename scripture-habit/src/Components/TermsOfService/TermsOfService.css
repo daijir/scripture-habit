@@ -52,7 +52,11 @@
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     transition: all 0.2s ease;
-    color: #4a90e2;
+    color: #000000;
+}
+
+.back-button svg {
+    stroke: #000000;
 }
 
 .back-button:hover {

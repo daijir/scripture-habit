@@ -55,6 +55,7 @@
   box-sizing: border-box;
 }
 
+
 .dashboard-header {
   display: flex;
   flex-direction: column;
@@ -409,7 +410,6 @@
 
   .DashboardContent {
     padding: 1rem;
-    padding-bottom: 90px;
     height: 100%;
   }
 
