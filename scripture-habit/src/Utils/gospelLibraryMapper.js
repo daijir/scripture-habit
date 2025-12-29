@@ -1022,7 +1022,29 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
 };
 
 export const getCategoryFromScripture = (scriptureText) => {
-    const volumeUrlPart = detectVolume(null, scriptureText);
+    // Try to get a URL to see where it leads (this uses the full smart mapping logic)
+    const url = getGospelLibraryUrl(null, scriptureText);
+
+    let volumeUrlPart = "";
+    if (url) {
+        // Extract volume from URL
+        // Example: https://www.churchofjesuschrist.org/study/scriptures/ot/gen/1?lang=eng
+        // We look for /scriptures/([^/]+)/
+        const scriptMatch = url.match(/\/scriptures\/([^/?#]+)/);
+        if (scriptMatch) {
+            volumeUrlPart = scriptMatch[1];
+        } else if (url.includes('/general-conference/')) {
+            volumeUrlPart = 'general-conference';
+        } else if (url.includes('speeches.byu.edu')) {
+            volumeUrlPart = 'byu-speeches';
+        }
+    }
+
+    // If still not found, try the old detectVolume as fallback
+    if (!volumeUrlPart) {
+        volumeUrlPart = detectVolume(null, scriptureText);
+    }
+
     const mapping = {
         'ot': 'Old Testament',
         'nt': 'New Testament',
