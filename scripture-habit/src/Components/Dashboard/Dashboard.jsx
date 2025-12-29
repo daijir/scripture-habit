@@ -598,7 +598,8 @@ const Dashboard = () => {
   }
 
   if (!user) {
-    return <Navigate to="/" replace />;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    return <Navigate to={isStandalone ? "/welcome" : "/"} replace />;
   }
 
   if (!userData) {

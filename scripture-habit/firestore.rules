@@ -32,8 +32,8 @@ service cloud.firestore {
     
     // Rules for the 'groups' collection
     match /groups/{groupId} {
-      // 読み取り: ログインユーザーなら基本読み取りは許可（権限確認やリスト表示に必要）
-      allow read: if request.auth != null;
+      // 読み取り: プレビュー表示などのためにパブリックに許可（メッセージは別で保護）
+      allow read: if true;
 
       // A user can create a group, but they must set themselves as the owner.
       allow create: if request.auth != null &&

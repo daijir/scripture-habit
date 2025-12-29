@@ -423,7 +423,12 @@ export const translations = {
             notes: "Notes",
             createdAt: "Created at",
             joiningFromInvite: "Joining from invitation...",
-            joiningFromInviteSuccess: "Welcome! You've successfully joined the group via your friend's invitation."
+            joiningFromInviteSuccess: "Welcome! You've successfully joined the group via your friend's invitation.",
+            invitedToJoin: "You have been invited to join:",
+            invalidInvite: "Invalid or expired invitation link.",
+            goBackHome: "Go Back Home",
+            fetchingInvite: "Fetching invitation details...",
+            pwaInviteHint: "If you've already added this app to your Home Screen,\nopen it from there to automatically apply this invitation."
         },
         groupForm: {
             title: "Create a Study Group",
@@ -1085,7 +1090,12 @@ export const translations = {
             notes: "ノート",
             createdAt: "作成日",
             joiningFromInvite: "招待から参加中...",
-            joiningFromInviteSuccess: "ようこそ！友達の招待からグループに参加しました。"
+            joiningFromInviteSuccess: "ようこそ！友達の招待からグループに参加しました。",
+            invitedToJoin: "以下のグループに招待されました：",
+            invalidInvite: "無効な招待リンク、または期限が切れています。",
+            goBackHome: "ホームに戻る",
+            fetchingInvite: "招待情報を取得中...",
+            pwaInviteHint: "すでにアプリをホーム画面に追加している場合は、\nホーム画面から「Scripture Habit」を開くと、この招待が自動的に適用されます。"
         },
         groupForm: {
             title: "学習グループを作成",
@@ -1782,7 +1792,12 @@ export const translations = {
             notes: "Anotações",
             createdAt: "Criado em",
             joiningFromInvite: "Entrando pelo convite...",
-            joiningFromInviteSuccess: "Bem-vindo! Você entrou no grupo através de um convite."
+            joiningFromInviteSuccess: "Bem-vindo! Você entrou no grupo através de um convite.",
+            invitedToJoin: "Você foi convidado a participar de:",
+            invalidInvite: "Link de convite inválido ou expirado.",
+            goBackHome: "Voltar para a Página Inicial",
+            fetchingInvite: "Buscando detalhes do convite...",
+            pwaInviteHint: "Se você já adicionou este aplicativo à sua Tela de Início,\nabra-o por lá para aplicar este convite automaticamente."
         },
         groupForm: {
             title: "Criar um Grupo de Estudo",
@@ -2411,7 +2426,12 @@ export const translations = {
             notes: "筆記",
             createdAt: "建立於",
             joiningFromInvite: "正在通過邀請加入...",
-            joiningFromInviteSuccess: "歡迎！您已通過邀請加入群組。"
+            joiningFromInviteSuccess: "歡迎！您已通過邀請加入群組。",
+            invitedToJoin: "您已被邀請加入：",
+            invalidInvite: "無效或已過期的邀請連結。",
+            goBackHome: "返回首頁",
+            fetchingInvite: "正在取得邀請詳情...",
+            pwaInviteHint: "如果您已將此應用程式添加到主螢幕，\n請從那裡開啟它以自動套用此邀請。"
         },
         groupForm: {
             title: "建立研讀群組",
@@ -3041,7 +3061,12 @@ export const translations = {
             notes: "Notas",
             createdAt: "Creado el",
             joiningFromInvite: "Uniéndose desde la invitación...",
-            joiningFromInviteSuccess: "¡Bienvenido! Te has unido al grupo a través de una invitación."
+            joiningFromInviteSuccess: "¡Bienvenido! Te has unido al grupo a través de una invitación.",
+            invitedToJoin: "Has sido invitado a unirte a:",
+            invalidInvite: "Enlace de invitación inválido o expirado.",
+            goBackHome: "Volver al Inicio",
+            fetchingInvite: "Obteniendo detalles de la invitación...",
+            pwaInviteHint: "Si ya has añadido esta aplicación a tu pantalla de inicio,\nábrela desde allí para aplicar esta invitación automáticamente."
         },
         groupForm: {
             title: "Crear un Grupo de Estudio",
@@ -3669,7 +3694,12 @@ export const translations = {
             notes: "Ghi chép",
             createdAt: "Ngày tạo",
             joiningFromInvite: "Đang tham gia từ lời mời...",
-            joiningFromInviteSuccess: "Chào mừng! Bạn đã tham gia nhóm thông qua lời mời."
+            joiningFromInviteSuccess: "Chào mừng! Bạn đã tham gia nhóm thông qua lời mời.",
+            invitedToJoin: "Bạn đã được mời tham gia:",
+            invalidInvite: "Liên kết mời không hợp lệ hoặc đã hết hạn.",
+            goBackHome: "Quay lại trang chủ",
+            fetchingInvite: "Đang lấy chi tiết lời mời...",
+            pwaInviteHint: "Nếu bạn đã thêm ứng dụng này vào Màn hình chính,\nhãy mở ứng dụng từ đó để tự động áp dụng lời mời này."
         },
         groupForm: {
             title: "Tạo nhóm học tập",
@@ -4323,7 +4353,12 @@ export const translations = {
             notes: "บันทึก",
             createdAt: "สร้างเมื่อ",
             joiningFromInvite: "กำลังเข้าร่วมจากคำเชิญ...",
-            joiningFromInviteSuccess: "ยินดีต้อนรับ! คุณได้เข้าร่วมกลุ่มผ่านคำเชิญแล้ว"
+            joiningFromInviteSuccess: "ยินดีต้อนรับ! คุณได้เข้าร่วมกลุ่มผ่านคำเชิญแล้ว",
+            invitedToJoin: "คุณได้รับเชิญให้เข้าร่วม:",
+            invalidInvite: "ลิงก์คำเชิญไม่ถูกต้องหรือหมดอายุ",
+            goBackHome: "กลับสู่หน้าหลัก",
+            fetchingInvite: "กำลังดึงข้อมูลคำเชิญ...",
+            pwaInviteHint: "หากคุณได้เพิ่มแอปนี้ลงในหน้าจอหลักแล้ว\nให้เปิดจากที่นั่นเพื่อใช้คำเชิญนี้โดยอัตโนมัติ"
         },
         groupForm: {
             title: "สร้างกลุ่มศึกษา",
@@ -4977,7 +5012,12 @@ export const translations = {
             notes: "노트",
             createdAt: "생성일",
             joiningFromInvite: "초대로 참여 중...",
-            joiningFromInviteSuccess: "환영합니다! 초대를 통해 그룹에 참여하셨습니다."
+            joiningFromInviteSuccess: "환영합니다! 초대를 통해 그룹에 참여하셨습니다.",
+            invitedToJoin: "당신은 다음 그룹에 초대되었습니다:",
+            invalidInvite: "유효하지 않거나 만료된 초대 링크입니다.",
+            goBackHome: "홈으로 돌아가기",
+            fetchingInvite: "초대 정보 가져오는 중...",
+            pwaInviteHint: "이미 이 앱을 홈 화면에 추가했다면,\n거기에서 앱을 열어 이 초대를 자동으로 적용하세요."
         },
         groupForm: {
             title: "학습 그룹 생성",
@@ -5630,7 +5670,12 @@ export const translations = {
             notes: "Mga Tala",
             createdAt: "Nilikha noong",
             joiningFromInvite: "Sumasali mula sa imbita...",
-            joiningFromInviteSuccess: "Maligayang pagdating! Nakasali ka sa grupo sa pamamagitan ng isang imbita."
+            joiningFromInviteSuccess: "Maligayang pagdating! Nakasali ka sa grupo sa pamamagitan ng isang imbita.",
+            invitedToJoin: "Naimbitahan ka na sumali sa:",
+            invalidInvite: "Inbalido o expired na ang invite link.",
+            goBackHome: "Bumalik sa Home",
+            fetchingInvite: "Kinukuha ang mga detalye ng invite...",
+            pwaInviteHint: "Kung naidagdag mo na ang app na ito sa iyong Home Screen,\nbuksan ito doon para awtomatikong magamit ang imbitasyong ito."
         },
         groupForm: {
             title: "Lumikha ng Study Group",
@@ -6283,7 +6328,12 @@ export const translations = {
             notes: "Maelezo",
             createdAt: "Imeundwa mnamo",
             joiningFromInvite: "Inajiunga kutoka kwa mwaliko...",
-            joiningFromInviteSuccess: "Karibu! Umejiunga na kikundi kupitia mwaliko."
+            joiningFromInviteSuccess: "Karibu! Umejiunga na kikundi kupitia mwaliko.",
+            invitedToJoin: "Umealikwa kujiunga na:",
+            invalidInvite: "Kiungo cha mwaliko ni batili au kimeisha muda wake.",
+            goBackHome: "Rudi Nyumbani",
+            fetchingInvite: "Inachukua maelezo ya mwaliko...",
+            pwaInviteHint: "Ikiwa tayari umeongeza programu hii kwenye Skrini yako ya Nyumbani,\nifungue kutoka hapo ili utumie mwaliko huu kiotomatiki."
         },
         groupForm: {
             title: "Unda Kikundi cha Kujifunza",

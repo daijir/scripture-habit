@@ -1,10 +1,11 @@
-import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from 'react';
 import { Analytics } from "@vercel/analytics/react";
-import { db } from './firebase';
+import { db, auth } from './firebase';
 import { doc, onSnapshot } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
 
 import SignupForm from './Components/SignupForm/SignupForm';
 import LoginForm from './Components/LoginForm/LoginForm';
@@ -60,6 +61,17 @@ const SEOManager = () => {
 };
 
 const App = () => {
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setAuthLoading(false);
+    });
+    return unsubscribe;
+  }, []);
+
   useEffect(() => {
     handleLineRedirect();
   }, []);
@@ -116,6 +128,10 @@ const App = () => {
     return 'App';
   };
 
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+  if (authLoading) return null; // Or a loading spinner
+
   return (
     <LanguageProvider>
       <SEOManager />
@@ -123,7 +139,7 @@ const App = () => {
         <Routes>
           <Route
             path="/"
-            element={<LandingPage />}
+            element={isStandalone ? <Navigate to="/dashboard" replace /> : <LandingPage />}
           />
           <Route path="/welcome" element={<Welcome />} />
           <Route path="/login" element={<LoginForm />} />

@@ -1,0 +1,108 @@
+.invite-redirect-container {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.invite-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    animation: slideUp 0.5s ease-out;
+}
+
+.invite-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.invite-card h1 {
+    color: #242d49;
+    margin: 0 0 10px 0;
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.invite-text {
+    color: #788097;
+    margin-bottom: 20px;
+}
+
+.group-preview {
+    background: rgba(102, 126, 234, 0.05);
+    border: 1px solid rgba(102, 126, 234, 0.1);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.group-name {
+    color: #667eea;
+    margin: 0 0 8px 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+}
+
+.group-desc {
+    color: #788097;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.join-btn {
+    width: 100% !important;
+    padding: 1.2rem !important;
+    font-size: 1.1rem !important;
+    border-radius: 12px !important;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(102, 126, 234, 0.1);
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    animation: spin 1s linear infinite;
+}
+
+.pwa-hint {
+    margin-top: 20px;
+    font-size: 0.8rem;
+    color: #788097;
+    white-space: pre-line;
+    line-height: 1.4;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
