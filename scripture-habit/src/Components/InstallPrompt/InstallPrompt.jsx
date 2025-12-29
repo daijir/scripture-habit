@@ -11,46 +11,61 @@ const InstallPrompt = () => {
     const [deferredPrompt, setDeferredPrompt] = useState(null);
     const [platform, setPlatform] = useState(null);
 
+    // Capture beforeinstallprompt event and detect platform
     useEffect(() => {
-        // Android/Chrome logic
         const handleBeforeInstallPrompt = (e) => {
+            console.log('beforeinstallprompt event fired (handled in component)');
             // Prevent Chrome 76 and later from automatically showing the prompt
             e.preventDefault();
             // Stash the event so it can be triggered later.
             setDeferredPrompt(e);
             setPlatform('android');
-
-            const isDashboard = location.pathname === '/dashboard';
-            const hasDismissed = sessionStorage.getItem('pwaInstallPromptDismissed');
-
-            if (isDashboard && !hasDismissed) {
-                setShowPrompt(true);
-            }
         };
 
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-        // iOS Check
+        // Check if the event was already captured globally (in main.jsx)
+        if (window.deferredPWAPrompt) {
+            console.log('Using globally captured PWA prompt event');
+            handleBeforeInstallPrompt(window.deferredPWAPrompt);
+            window.deferredPWAPrompt = null; // Clear it to avoid double handling logic if any
+        }
+
+        // Detect if iOS
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+        if (isIOS && !isStandalone) {
+            setPlatform('ios');
+        }
+
+        return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    }, []);
+
+    // Handle showing/hiding the prompt based on route and state
+    useEffect(() => {
         const isDashboard = location.pathname === '/dashboard';
         const hasDismissed = sessionStorage.getItem('pwaInstallPromptDismissed');
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
-        if (isIOS && !isStandalone && !hasDismissed && isDashboard && platform !== 'android') {
-            setPlatform('ios');
+        if (!isDashboard || hasDismissed || isStandalone) {
+            setShowPrompt(false);
+            return;
+        }
+
+        // Android logic: Show if we have the deferred prompt
+        if (platform === 'android' && deferredPrompt) {
+            setShowPrompt(true);
+        }
+
+        // iOS logic: Show after a short delay
+        if (platform === 'ios') {
             const timer = setTimeout(() => {
                 setShowPrompt(true);
             }, 3000);
             return () => clearTimeout(timer);
         }
-
-        // Hide if navigating away from dashboard
-        if (!isDashboard) {
-            setShowPrompt(false);
-        }
-
-        return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    }, [location.pathname, platform]);
+    }, [location.pathname, platform, deferredPrompt]);
 
     const handleInstallClick = async () => {
         if (!deferredPrompt) return;
@@ -108,7 +123,7 @@ const InstallPrompt = () => {
                     </p>
                     <button className="pwa-install-button" onClick={handleInstallClick}>
                         <UilApps size="20" />
-                        {t('installPrompt.installButton')}
+                        {t('installPrompt.title')} {/* Fallback to title or adding a specific key if needed, using Title "Install App" as button text is common */}
                     </button>
                 </div>
             )}

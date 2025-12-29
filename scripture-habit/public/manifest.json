@@ -4,20 +4,14 @@
     "description": "仲間と一緒に聖典を学び、証を分かち合うコミュニティアプリ。",
     "icons": [
         {
-            "src": "/logo.svg",
-            "sizes": "192x192 512x512",
-            "type": "image/svg+xml",
+            "src": "/favicon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
             "purpose": "any"
         },
         {
-            "src": "/logo.svg",
-            "sizes": "192x192 512x512",
-            "type": "image/svg+xml",
-            "purpose": "maskable"
-        },
-        {
             "src": "/apple-touch-icon.png",
-            "sizes": "512x512",
+            "sizes": "1024x1024",
             "type": "image/png",
             "purpose": "any"
         },
@@ -26,6 +20,21 @@
             "sizes": "192x192",
             "type": "image/png",
             "purpose": "any"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/og-image.png",
+            "sizes": "1024x1024",
+            "type": "image/png",
+            "form_factor": "wide",
+            "label": "Scripture Habit Desktop"
+        },
+        {
+            "src": "/og-image.png",
+            "sizes": "1024x1024",
+            "type": "image/png",
+            "label": "Scripture Habit Mobile"
         }
     ],
     "start_url": "/dashboard",

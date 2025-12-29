@@ -5,6 +5,16 @@ import * as Sentry from "@sentry/react";
 import './index.css'
 import App from './App.jsx'
 
+// Capture beforeinstallprompt event globally to prevent it from being missed during app initialization/auth loading
+window.deferredPWAPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Prevent Chrome 67 and later from automatically showing the prompt
+  e.preventDefault();
+  // Stash the event so it can be triggered later.
+  window.deferredPWAPrompt = e;
+  console.log('Global beforeinstallprompt captured in main.jsx');
+});
+
 Sentry.init({
   dsn: import.meta.env.VITE_SENTRY_DSN || "",
   integrations: [
