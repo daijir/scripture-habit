@@ -20,7 +20,7 @@
 }
 
 .back-btn {
-    background: white;
+    background: transparent;
     border: none;
     width: 45px;
     height: 45px;
@@ -29,9 +29,8 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     transition: all 0.3s ease;
-    color: var(--black);
+    color: #000000 !important;
 }
 
 .back-btn:hover {

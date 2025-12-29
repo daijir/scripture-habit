@@ -791,13 +791,13 @@
         border-bottom-right-radius: 0.5rem;
     }
 
-    .back-button {
+    .chat-header .back-button {
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white !important;
-        background: transparent !important;
-        box-shadow: none !important;
+        color: white;
+        background: transparent;
+        box-shadow: none;
         cursor: pointer;
     }
 

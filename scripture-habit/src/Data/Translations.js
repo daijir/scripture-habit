@@ -57,7 +57,9 @@ export const translations = {
             todaysComeFollowMe: "Today's 'Come, Follow Me'",
             noReadingPlan: "No plan for today.",
             postedANote: "{nickname} posted a note! ✨",
-            sentAMessage: "{nickname} sent a message! ✨"
+            sentAMessage: "{nickname} sent a message! ✨",
+            joinGroupStudy: "Would you like to study scriptures with everyone?",
+            joinCreateGroup: "Join/Create a Group"
         },
         languages: {
             title: "Languages",
@@ -94,6 +96,7 @@ export const translations = {
             deleteAccountWarning: "Warning: This action is permanent. All your data, including your notes and profile, will be permanently deleted.",
             confirmDeleteAccount: "Delete My Account",
             cancelDeleteAccount: "Cancel",
+            typeToConfirmNickname: "Please type your nickname '{nickname}' to confirm deletion.",
             deleteAccountError: "Error deleting account. You may need to log out and log in again before performing this action for security reasons.",
             deleteAccountSuccess: "Account deleted successfully.",
             appBackground: "App Development Background",
@@ -669,7 +672,9 @@ export const translations = {
             todaysComeFollowMe: "今日の「わたしに従ってきなさい」",
             noReadingPlan: "今日の「わたしに従ってきなさい」はありません。",
             postedANote: "{nickname}さんがノートを投稿しました！✨",
-            sentAMessage: "{nickname}さんがメッセージを送信しました！✨"
+            sentAMessage: "{nickname}さんがメッセージを送信しました！✨",
+            joinGroupStudy: "みんなと聖典学習しませんか？",
+            joinCreateGroup: "グループに参加・作成する"
         },
         languages: {
             title: "言語設定",
@@ -703,9 +708,10 @@ export const translations = {
             successUpdate: "プロフィールを更新しました！",
             errorUpdate: "プロフィールの更新に失敗しました。もう一度試してください。",
             deleteAccount: "アカウントを削除",
-            deleteAccountWarning: "警告: この操作は取り消せません。あなたのノートやプロフィールを含むすべてのデータが永久に削除されます。",
+            deleteAccountWarning: "アカウントを削除すると、これまでに作成したすべての学習ノート、学習履歴、およびプロフィール設定が完全に消去されます。この操作は取り消すことができず、データの復元もできません。本当によろしいですか？",
             confirmDeleteAccount: "アカウントを削除する",
             cancelDeleteAccount: "キャンセル",
+            typeToConfirmNickname: "確認のため、あなたのニックネーム「{nickname}」を入力してください。",
             deleteAccountError: "アカウントを削除できませんでした。セキュリティ上の理由から、この操作を行う前にもう一度ログインし直す必要がある場合があります。",
             deleteAccountSuccess: "アカウントを削除しました。"
         },
@@ -1288,7 +1294,9 @@ export const translations = {
             todaysComeFollowMe: "'Vem, e Segue-Me' de Hoje",
             noReadingPlan: "Nenhum plano para hoje.",
             postedANote: "{nickname} postou uma nota! ✨",
-            sentAMessage: "{nickname} enviou uma mensagem! ✨"
+            sentAMessage: "{nickname} enviou uma mensagem! ✨",
+            joinGroupStudy: "Gostaria de estudar as escrituras com todos?",
+            joinCreateGroup: "Entrar/Criar um Grupo"
         },
         languages: {
             title: "Idiomas",
@@ -1322,9 +1330,10 @@ export const translations = {
             successUpdate: "Perfil atualizado com sucesso!",
             errorUpdate: "Falha ao atualizar o perfil. Tente novamente.",
             deleteAccount: "Excluir Conta",
-            deleteAccountWarning: "Aviso: Esta ação é permanente. Todos os seus dados, incluindo notas e perfil, serão excluídos permanentemente.",
+            deleteAccountWarning: "Ao excluir sua conta, todas as suas notas de estudo, histórico e configurações de perfil serão apagados permanentemente. Esta ação não pode ser desfeita e os dados não podem ser restaurados. Você tem certeza?",
             confirmDeleteAccount: "Excluir Minha Conta",
             cancelDeleteAccount: "Cancelar",
+            typeToConfirmNickname: "Por favor, digite seu apelido '{nickname}' para confirmar a exclusão.",
             deleteAccountError: "Erro ao excluir conta. Você pode precisar sair e entrar novamente antes de realizar esta ação por motivos de segurança.",
             deleteAccountSuccess: "Conta excluída com sucesso."
         },
@@ -1904,7 +1913,9 @@ export const translations = {
             todaysComeFollowMe: "今日的《來跟從我》",
             noReadingPlan: "今日無計畫。",
             postedANote: "{nickname} 發布了一則筆記！✨",
-            sentAMessage: "{nickname} 發送了一則訊息！✨"
+            sentAMessage: "{nickname} 發送了一則訊息！✨",
+            joinGroupStudy: "想和大家一起學習聖經嗎？",
+            joinCreateGroup: "加入/創建群組"
         },
         languages: {
             title: "語言",
@@ -1938,9 +1949,10 @@ export const translations = {
             successUpdate: "個人檔案已成功更新！",
             errorUpdate: "更新個人檔案失敗。請再試一次。",
             deleteAccount: "刪除帳號",
-            deleteAccountWarning: "警告：此操作無法復原。您的所有資料（包括筆記和個人檔案）將被永久刪除。",
+            deleteAccountWarning: "刪除帳號將永久抹除您所有的學習筆記、歷史記錄和個人資料設定。此操作無法撤銷，數據也無法恢復。您確定要繼續嗎？",
             confirmDeleteAccount: "刪除我的帳號",
             cancelDeleteAccount: "取消",
+            typeToConfirmNickname: "請輸入您的暱稱「{nickname}」以確認刪除。",
             deleteAccountError: "刪除帳號時出錯。基於安全原因，您可能需要在執行此操作前重新登入。",
             deleteAccountSuccess: "帳號已成功刪除。"
         },
@@ -2490,7 +2502,9 @@ export const translations = {
             todaysComeFollowMe: "'Ven, sígueme' de hoy",
             noReadingPlan: "No hay plan para hoy.",
             postedANote: "¡{nickname} publicó una nota! ✨",
-            sentAMessage: "¡{nickname} envió un mensaje! ✨"
+            sentAMessage: "¡{nickname} envió un mensaje! ✨",
+            joinGroupStudy: "¿Te gustaría estudiar las escrituras con todos?",
+            joinCreateGroup: "Unirse/Crear un Grupo"
         },
         languages: {
             title: "Idiomas",
@@ -2524,9 +2538,10 @@ export const translations = {
             successUpdate: "¡Perfil actualizado con éxito!",
             errorUpdate: "Error al actualizar el perfil. Por favor, inténtelo de nuevo.",
             deleteAccount: "Eliminar Cuenta",
-            deleteAccountWarning: "Advertencia: Esta acción es permanente. Todos tus datos, incluidas tus notas y perfil, serán eliminados permanentemente.",
+            deleteAccountWarning: "Al eliminar su cuenta se borrarán permanentemente todas sus notas de estudio, historial y configuración de perfil. Esta acción no se puede deshacer y los datos no se pueden restaurar. ¿Está seguro?",
             confirmDeleteAccount: "Eliminar Mi Cuenta",
             cancelDeleteAccount: "Cancelar",
+            typeToConfirmNickname: "Escriba su apodo '{nickname}' para confirmar la eliminación.",
             deleteAccountError: "Error al eliminar la cuenta. Es posible que deba cerrar sesión e iniciar sesión nuevamente antes de realizar esta acción por razones de seguridad.",
             deleteAccountSuccess: "Cuenta eliminada con éxito."
         },
@@ -3077,7 +3092,9 @@ export const translations = {
             todaysComeFollowMe: "'Hãy Đến Mà Theo Ta' Hôm nay",
             noReadingPlan: "Không có kế hoạch cho hôm nay.",
             postedANote: "{nickname} đã đăng một ghi chú! ✨",
-            sentAMessage: "{nickname} đã gửi một tin nhắn! ✨"
+            sentAMessage: "{nickname} đã gửi một tin nhắn! ✨",
+            joinGroupStudy: "Bạn có muốn học thánh thư cùng mọi người không?",
+            joinCreateGroup: "Tham gia/Tạo một nhóm"
         },
         languages: {
             title: "Ngôn ngữ",
@@ -3111,9 +3128,10 @@ export const translations = {
             successUpdate: "Cập nhật hồ sơ thành công!",
             errorUpdate: "Cập nhật hồ sơ thất bại. Vui lòng thử lại.",
             deleteAccount: "Xóa tài khoản",
-            deleteAccountWarning: "Cảnh báo: Hành động này là vĩnh viễn. Tất cả dữ liệu của bạn, bao gồm ghi chú và hồ sơ, sẽ bị xóa vĩnh viễn.",
+            deleteAccountWarning: "Xóa tài khoản sẽ xóa vĩnh viễn tất cả ghi chú học tập, lịch sử và cài đặt hồ sơ của bạn. Hành động này không thể hoàn tác và dữ liệu không thể khôi phục. Bạn có chắc chắn không?",
             confirmDeleteAccount: "Xóa tài khoản của tôi",
             cancelDeleteAccount: "Hủy",
+            typeToConfirmNickname: "Vui lòng nhập biệt danh '{nickname}' của bạn để xác nhận xóa.",
             deleteAccountError: "Lỗi khi xóa tài khoản. Bạn có thể cần đăng xuất và đăng nhập lại trước khi thực hiện hành động này vì lý do bảo mật.",
             deleteAccountSuccess: "Đã xóa tài khoản thành công."
         },
@@ -3662,7 +3680,9 @@ export const translations = {
             todaysComeFollowMe: "'จงตามเรามา' ของวันนี้",
             noReadingPlan: "ไม่มีแผนสำหรับวันนี้",
             postedANote: "{nickname} โพสต์บันทึกแล้ว! ✨",
-            sentAMessage: "{nickname} ส่งข้อความแล้ว! ✨"
+            sentAMessage: "{nickname} ส่งข้อความแล้ว! ✨",
+            joinGroupStudy: "อยากศึกษาสถาบันกับทุกคนไหม?",
+            joinCreateGroup: "เข้าร่วม/สร้างกลุ่ม"
         },
         languages: {
             title: "ภาษา",
@@ -3696,9 +3716,10 @@ export const translations = {
             successUpdate: "อัปเดตโปรไฟล์สำเร็จแล้ว!",
             errorUpdate: "อัปเดตโปรไฟล์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
             deleteAccount: "ลบบัญชี",
-            deleteAccountWarning: "คำเตือน: การดำเนินการนี้ถาวร ข้อมูลทั้งหมดของคุณ รวมถึงบันทึกและโปรไฟล์ จะถูกลบทิ้งอย่างถาวร",
+            deleteAccountWarning: "การลบบัญชีของคุณจะลบโน้ตการศึกษา ประวัติ และการตั้งค่าโปรไฟล์ทั้งหมดของคุณอย่างถาวร การดำเนินการนี้ไม่สามารถย้อนกลับได้และไม่สามารถกู้คืนข้อมูลได้ คุณแน่ใจหรือไม่?",
             confirmDeleteAccount: "ลบบัญชีของฉัน",
             cancelDeleteAccount: "ยกเลิก",
+            typeToConfirmNickname: "กรุณาพิมพ์ชื่อเล่นของคุณ '{nickname}' เพื่อยืนยันการลบ",
             deleteAccountError: "เกิดข้อผิดพลาดในการลบบัญชี คุณอาจต้องออกจากระบบและเข้าสู่ระบบใหม่อีกครั้งก่อนดำเนินการนี้เพื่อความปลอดภัย",
             deleteAccountSuccess: "ลบบัญชีสำเร็จ"
         },
@@ -4273,7 +4294,9 @@ export const translations = {
             todaysComeFollowMe: "오늘의 '와서 나를 따르라'",
             noReadingPlan: "오늘의 계획이 없습니다.",
             postedANote: "{nickname}님이 노트를 게시했습니다! ✨",
-            sentAMessage: "{nickname}님이 메시지를 보냈습니다! ✨"
+            sentAMessage: "{nickname}님이 메시지를 보냈습니다! ✨",
+            joinGroupStudy: "모두와 함께 경전 공부를 하시겠습니까?",
+            joinCreateGroup: "그룹 가입/생성"
         },
         languages: {
             title: "언어",
@@ -4307,9 +4330,10 @@ export const translations = {
             successUpdate: "프로필이 성공적으로 업데이트되었습니다!",
             errorUpdate: "프로필 업데이트에 실패했습니다. 다시 시도해 주세요.",
             deleteAccount: "계정 삭제",
-            deleteAccountWarning: "경고: 이 작업은 영구적입니다. 귀하의 노트를 포함한 모든 데이터와 프로필이 영구적으로 삭제됩니다.",
+            deleteAccountWarning: "계정을 삭제하면 모든 학습 노트, 학습 기록 및 프로필 설정이 영구적으로 삭제됩니다. 이 작업은 취소할 수 없으며 데이터를 복구할 수 없습니다. 정말로 삭제하시겠습니까?",
             confirmDeleteAccount: "내 계정 삭제",
             cancelDeleteAccount: "취소",
+            typeToConfirmNickname: "삭제를 확인하려면 닉네임 '{nickname}'을(를) 입력해 주세요.",
             deleteAccountError: "계정을 삭제하는 중 오류가 발생했습니다. 보안상의 이유로 이 작업을 수행하기 전에 로그아웃했다가 다시 로그인해야 할 수 있습니다.",
             deleteAccountSuccess: "계정이 성공적으로 삭제되었습니다."
         },
@@ -4884,7 +4908,9 @@ export const translations = {
             todaysComeFollowMe: "'Pumarito Ka, Sumunod Ka sa Akin' Ngayon",
             noReadingPlan: "Walang plano para sa araw na ito.",
             postedANote: "Nag-post si {nickname} ng isang tala! ✨",
-            sentAMessage: "Nagpadala si {nickname} ng isang mensahe! ✨"
+            sentAMessage: "Nagpadala si {nickname} ng isang mensahe! ✨",
+            joinGroupStudy: "Gusto mo bang mag-aral ng mga banal na kasulatan kasama ang lahat?",
+            joinCreateGroup: "Sumali/Gumawa ng Grupo"
         },
         languages: {
             title: "Mga Wika",
@@ -4918,9 +4944,10 @@ export const translations = {
             successUpdate: "Matagumpay na na-update ang profile!",
             errorUpdate: "Bigo ang pag-update ng profile. Mangyaring subukan muli.",
             deleteAccount: "I-delete ang Account",
-            deleteAccountWarning: "Babala: Ang aksyong ito ay permanente. Lahat ng iyong data, kabilang ang iyong mga tala at profile, ay permanenteng mabubura.",
+            deleteAccountWarning: "Ang pag-delete ng iyong account ay permanenteng magbubura sa lahat ng iyong mga study notes, history, at profile settings. Ang aksyong ito ay hindi na maaaring bawiin at ang data ay hindi na maibabalik. Sigurado ka ba?",
             confirmDeleteAccount: "I-delete ang Aking Account",
             cancelDeleteAccount: "I-cancel",
+            typeToConfirmNickname: "Pakisulat ang iyong nickname na '{nickname}' para kumpirmahin ang pag-delete.",
             deleteAccountError: "Error sa pag-delete ng account. Maaaring kailangan mo munang mag-log out at mag-log in muli bago gawin ang aksyong ito para sa seguridad.",
             deleteAccountSuccess: "Matagumpay na na-delete ang account."
         },
@@ -5494,7 +5521,9 @@ export const translations = {
             todaysComeFollowMe: "'Njoo, Unifuate' ya Leo",
             noReadingPlan: "Hakuna mpango wa leo.",
             postedANote: "{nickname} amechapisha dokezo! ✨",
-            sentAMessage: "{nickname} ametuma ujumbe! ✨"
+            sentAMessage: "{nickname} ametuma ujumbe! ✨",
+            joinGroupStudy: "Je, ungependa kujifunza maandiko na kila mtu?",
+            joinCreateGroup: "Jiunge/Unda Kikundi"
         },
         languages: {
             title: "Lugha",
@@ -5528,9 +5557,10 @@ export const translations = {
             successUpdate: "Wasifu umesasishwa kikamilifu!",
             errorUpdate: "Imeshindikana kusasisha wasifu. Tafadhali jaribu tena.",
             deleteAccount: "Futa Akaunti",
-            deleteAccountWarning: "Onyo: Hatua hii ni ya kudumu. Data zako zote, ikiwa ni pamoja na maelezo na wasifu wako, zitafutwa kabisa.",
+            deleteAccountWarning: "Kufuta akaunti yako kutafuta kabisa maelezo yako yote ya funzo, historia, na mipangilio ya wasifu. Kitendo hiki hakiwezi kubatilishwa na data haiwezi kurejeshwa. Una uhakika?",
             confirmDeleteAccount: "Futa Akaunti Yangu",
             cancelDeleteAccount: "Ghairi",
+            typeToConfirmNickname: "Tafadhali andika jina lako la utani '{nickname}' ili kuthibitisha kufuta.",
             deleteAccountError: "Hitilafu imetokea wakati wa kufuta akaunti. Unaweza kuhitaji kutoka na kuingia tena kabla ya kufanya hatua hii kwa sababu za kiusalama.",
             deleteAccountSuccess: "Akaunti imefutwa kikamilifu."
         },
