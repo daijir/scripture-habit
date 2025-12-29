@@ -106,12 +106,8 @@ export default function LoginForm() {
 
       await setDoc(doc(db, 'users', pendingGoogleUser.uid), userData);
 
-      const inviteCode = localStorage.getItem('pendingInviteCode');
-      if (inviteCode) {
-        navigate('/dashboard');
-      } else {
-        navigate('/group-options');
-      }
+      // Profile complete, redirect to dashboard
+      navigate('/dashboard');
 
     } catch (firestoreError) {
       console.error("Error writing user data to Firestore:", firestoreError);
