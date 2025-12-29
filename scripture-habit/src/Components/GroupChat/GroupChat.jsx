@@ -1219,7 +1219,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   };
 
   const handleGenerateWeeklyRecap = async () => {
-    if (!userData || !groupId) return;
+    if (!userData || !groupId || isRecapLoading) return;
 
     // Optional: Check if user is owner, or just let anyone generate for engagement (but maybe rate limit or only owner?)
     // For now, let's restrict to owner to avoid spamming system messages
@@ -1228,6 +1228,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       return;
     }
 
+    setIsRecapLoading(true);
     toast.info(t('groupChat.generatingWeeklyRecap') || "Generating weekly recap... This may take a moment.");
     setShowMobileMenu(false);
 
@@ -1262,6 +1263,8 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     } catch (error) {
       console.error("Error generating recap:", error);
       toast.error(t('groupChat.errorWeeklyRecap') || "Failed to generate weekly recap.");
+    } finally {
+      setIsRecapLoading(false);
     }
   };
 
@@ -1841,10 +1844,10 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   const isRecapAvailable = daysSinceLastRecap >= 7;
 
   const handleRecapClick = (e) => {
+    if (isRecapLoading) return;
     if (!isRecapAvailable) {
       e.stopPropagation();
       toast.info(t('groupChat.recapRateLimit') || "Weekly recap can only be generated once a week.");
-      setIsRecapLoading(false); // Ensure loading state is off if somehow on
       return;
     }
     handleGenerateWeeklyRecap();
@@ -2067,13 +2070,16 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
               {isOwner && (
                 <div
-                  className={`invite-code-display members-btn-desktop ${!isRecapAvailable ? 'disabled' : ''}`}
+                  className={`invite-code-display members-btn-desktop ${(!isRecapAvailable || isRecapLoading) ? 'disabled' : ''}`}
                   onClick={handleRecapClick}
                   title={!isRecapAvailable ? (t('groupChat.recapRateLimit') || "Weekly recap available next week") : (t('groupChat.generateWeeklyRecap') || "Weekly Recap")}
                   style={{
                     marginRight: '8px',
-                    opacity: !isRecapAvailable ? 0.5 : 1,
-                    cursor: !isRecapAvailable ? 'not-allowed' : 'pointer'
+                    opacity: (!isRecapAvailable || isRecapLoading) ? 0.5 : 1,
+                    cursor: (!isRecapAvailable || isRecapLoading) ? 'not-allowed' : 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
                   }}
                 >
                   <span style={{ fontSize: '1.1rem' }}>📊</span>
@@ -2186,8 +2192,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
               {/* Weekly Recap - Owner Only */}
               {isOwner && (
                 <div
-                  className={`mobile-menu-item ${!isRecapAvailable ? 'disabled' : ''}`}
+                  className={`mobile-menu-item ${(!isRecapAvailable || isRecapLoading) ? 'disabled' : ''}`}
                   onClick={(e) => {
+                    if (isRecapLoading) return;
                     if (!isRecapAvailable) {
                       e.stopPropagation();
                       toast.info(t('groupChat.recapRateLimit') || "Weekly recap can only be generated once a week.");
@@ -2196,16 +2203,16 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                     }
                   }}
                   style={{
-                    opacity: !isRecapAvailable ? 0.5 : 1,
-                    cursor: !isRecapAvailable ? 'not-allowed' : 'pointer'
+                    opacity: (!isRecapAvailable || isRecapLoading) ? 0.5 : 1,
+                    cursor: (!isRecapAvailable || isRecapLoading) ? 'not-allowed' : 'pointer'
                   }}
                 >
                   <div className="menu-item-icon">
-                    <span style={{ fontSize: '1.2rem' }}>📊</span>
+                    {isRecapLoading ? <div className="spinner-mini"></div> : <span style={{ fontSize: '1.2rem' }}>📊</span>}
                   </div>
                   <div className="menu-item-content">
-                    <span className="menu-item-label">{t('groupChat.generateWeeklyRecap') || "Weekly Recap"}</span>
-                    {!isRecapAvailable && (
+                    <span className="menu-item-label">{isRecapLoading ? (t('groupChat.generatingWeeklyRecap') || "Generating...") : (t('groupChat.generateWeeklyRecap') || "Weekly Recap")}</span>
+                    {!isRecapAvailable && !isRecapLoading && (
                       <span style={{ fontSize: '0.7rem', color: 'var(--red)' }}>
                         {Math.ceil(7 - daysSinceLastRecap) > 0
                           ? (t('groupChat.daysLeft') || "{days} days left").replace('{days}', Math.ceil(7 - daysSinceLastRecap))
