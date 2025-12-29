@@ -11,8 +11,8 @@ service cloud.firestore {
       // A user can read any user document (needed for group members list).
       allow read: if request.auth != null;
 
-      // A user can update their own document.
-      allow update: if request.auth != null && request.auth.uid == userId;
+      // A user can update or delete their own document.
+      allow update, delete: if request.auth != null && request.auth.uid == userId;
 
       // Rules for the 'notes' subcollection
       match /notes/{noteId} {
@@ -43,10 +43,18 @@ service cloud.firestore {
       allow update: if request.auth != null && (
         // A. オーナーは何でも更新可能
         resource.data.get('ownerUserId', '') == request.auth.uid ||
-        // B. メンバーは統計情報の更新のみ可能（重要な設定などは変更不可）
+        // B. メンバーは自身の脱退、または統計情報の更新が可能
         (
           request.auth.uid in resource.data.get('members', []) &&
-          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['ownerUserId', 'inviteCode', 'members'])
+          (
+            // 特例: メンバーリストから「自分のUIDのみ」が削除される操作を許可（脱退）
+            (
+              request.resource.data.diff(resource.data).affectedKeys().hasOnly(['members']) &&
+              !(request.auth.uid in request.resource.data.members)
+            ) ||
+            // または、重要な管理項目（オーナー、招待コード、メンバー）が変更されていない（統計更新）
+            !request.resource.data.diff(resource.data).affectedKeys().hasAny(['ownerUserId', 'inviteCode', 'members'])
+          )
         )
       );
       

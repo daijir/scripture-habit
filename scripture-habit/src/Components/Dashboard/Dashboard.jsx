@@ -92,12 +92,20 @@ const Dashboard = () => {
               if (data.hasSeenWelcomeStory === undefined) {
                 setTimeout(() => setShowWelcomeStory(true), 500);
               }
+              setLoading(false);
+              setError(null);
             } else {
-              console.log("No such user document!");
-              setError("User profile not found.");
+              // Sign of deletion or missing profile - keep quiet and let navigate() handle it
+              console.log("User profile document no longer exists (might be deleting account).");
+              setLoading(false);
             }
-            setLoading(false);
           }, (err) => {
+            // Silence "permission-denied" errors during account deletion or logout
+            if (err.code === 'permission-denied') {
+              console.log("Silenced permission error during possible logout/deletion.");
+              setLoading(false);
+              return;
+            }
             console.error("Error fetching user data:", err);
             setError(err.message);
             setLoading(false);
@@ -212,6 +220,10 @@ const Dashboard = () => {
               return newGroups;
             });
           }
+        }, (err) => {
+          if (err.code !== 'permission-denied') {
+            console.error(`Error fetching group ${gid}:`, err);
+          }
         });
         unsubscribers.push(unsub);
       });
@@ -239,6 +251,11 @@ const Dashboard = () => {
         states[doc.id] = doc.data();
       });
       setGroupStates(states);
+      setLoadingGroupStates(false);
+    }, (err) => {
+      if (err.code !== 'permission-denied') {
+        console.error("Error fetching group states:", err);
+      }
       setLoadingGroupStates(false);
     });
 
@@ -581,7 +598,7 @@ const Dashboard = () => {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/" replace />;
   }
 
   if (!userData) {
@@ -601,10 +618,6 @@ const Dashboard = () => {
   // Allow access if user has groups, even if groupId is not set (migration case)
   const hasGroups = (userData.groupIds && userData.groupIds.length > 0) || userData.groupId;
   const pendingInviteCode = localStorage.getItem('pendingInviteCode');
-
-  if (!hasGroups && !pendingInviteCode && !isJoiningInvite) {
-    return <Navigate to="/group-options" replace />;
-  }
 
   const getDisplayStreak = () => {
     try {
@@ -767,6 +780,15 @@ const Dashboard = () => {
                 userData={userData}
                 onClick={() => setShowWelcomeStory(true)}
               />
+
+              {!hasGroups && (
+                <div className="no-group-cta">
+                  <p>{t('dashboard.joinGroupStudy')}</p>
+                  <Link to="/group-options">
+                    <button className="cta-btn">{t('dashboard.joinCreateGroup')}</button>
+                  </Link>
+                </div>
+              )}
 
               {latestNoteNotification && (
                 <div

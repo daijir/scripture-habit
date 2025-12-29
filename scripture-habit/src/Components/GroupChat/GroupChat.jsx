@@ -411,6 +411,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         setGroupData({ ...docSnap.data(), _groupId: groupId });
       }
     }, (err) => {
+      if (err.code === 'permission-denied') {
+        return;
+      }
       console.error("Error listening to group:", err);
       const isQuota = err.code === 'resource-exhausted' || err.message.toLowerCase().includes('quota exceeded');
       if (isQuota) {
@@ -515,6 +518,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                 });
               }
             }, (err) => {
+              if (err.code === 'permission-denied') {
+                return;
+              }
               console.error("Error listening to new messages:", err);
               if (err.code === 'resource-exhausted' || err.message.toLowerCase().includes('quota exceeded')) {
                 setError(t('systemErrors.quotaExceededMessage'));
@@ -554,6 +560,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
             });
             setLoading(false);
           }, (err) => {
+            if (err.code === 'permission-denied') {
+              return;
+            }
             console.error("Error listening to all messages:", err);
             if (err.code === 'resource-exhausted' || err.message.toLowerCase().includes('quota exceeded')) {
               setError(t('systemErrors.quotaExceededMessage'));

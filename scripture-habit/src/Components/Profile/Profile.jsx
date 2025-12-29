@@ -4,7 +4,7 @@ import { useLanguage } from '../../Context/LanguageContext.jsx';
 import { auth, db } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 import { UilSignOutAlt } from '@iconscout/react-unicons';
-import { doc, updateDoc, deleteDoc, collection, query, where, getDocs, writeBatch } from 'firebase/firestore';
+import { doc, updateDoc, deleteDoc, collection, query, where, getDocs, writeBatch, getDoc } from 'firebase/firestore';
 import { deleteUser } from 'firebase/auth';
 import Button from '../Button/Button';
 import { toast } from 'react-toastify';
@@ -22,6 +22,7 @@ const Profile = ({ userData, stats }) => {
     const [showSignOutModal, setShowSignOutModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [confirmNickname, setConfirmNickname] = useState('');
 
     useEffect(() => {
         if (userData?.nickname) {
@@ -88,34 +89,87 @@ const Profile = ({ userData, stats }) => {
 
         setIsDeleting(true);
         try {
+            // --- STEP 1: Exit all groups first (for system stability) ---
+            const groupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
+
+            for (const gid of groupIds) {
+                try {
+                    const groupRef = doc(db, 'groups', gid);
+                    const groupSnap = await getDoc(groupRef);
+                    if (groupSnap.exists()) {
+                        const gData = groupSnap.data();
+                        const members = gData.members || [];
+                        const updatedMembers = members.filter(uid => uid !== user.uid);
+
+                        if (gData.ownerUserId === user.uid) {
+                            if (updatedMembers.length > 0) {
+                                // Transfer ownership
+                                await updateDoc(groupRef, {
+                                    ownerUserId: updatedMembers[0],
+                                    members: updatedMembers
+                                });
+                            } else {
+                                // Delete group
+                                await deleteDoc(groupRef);
+                            }
+                        } else {
+                            // Leave group
+                            await updateDoc(groupRef, {
+                                members: updatedMembers
+                            });
+                        }
+                    }
+                } catch (err) {
+                    console.error(`Group cleanup failed for ${gid}:`, err);
+                }
+            }
+
+            // --- STEP 2: Delete personal data in a batch ---
             const batch = writeBatch(db);
 
             // 1. Delete user notes
-            const notesQuery = query(collection(db, 'notes'), where('userId', '==', user.uid));
-            const notesSnapshot = await getDocs(notesQuery);
+            const notesRef = collection(db, 'users', user.uid, 'notes');
+            const notesSnapshot = await getDocs(notesRef);
             notesSnapshot.forEach((doc) => {
                 batch.delete(doc.ref);
             });
 
-            // 2. Delete user profile
+            // 2. Delete groupStates
+            const statesRef = collection(db, 'users', user.uid, 'groupStates');
+            const statesSnapshot = await getDocs(statesRef);
+            statesSnapshot.forEach((doc) => {
+                batch.delete(doc.ref);
+            });
+
+            // 3. Delete letters
+            const lettersRef = collection(db, 'users', user.uid, 'letters');
+            const lettersSnapshot = await getDocs(lettersRef);
+            lettersSnapshot.forEach((doc) => {
+                batch.delete(doc.ref);
+            });
+
+            // 4. Finally, delete the profile
             const userRef = doc(db, 'users', user.uid);
             batch.delete(userRef);
 
-            // Commit Firestore deletions
             await batch.commit();
 
-            // 3. Delete from Firebase Auth
-            await deleteUser(user);
-
-            toast.success(t('profile.deleteAccountSuccess'));
-            navigate('/welcome');
-        } catch (error) {
-            console.error("Error deleting account:", error);
-            if (error.code === 'auth/requires-recent-login') {
-                toast.error(t('profile.deleteAccountError'));
-            } else {
-                toast.error(t('profile.deleteAccountError') || "Error deleting account");
+            // --- STEP 3: Delete from Firebase Auth ---
+            try {
+                await deleteUser(user);
+                toast.success(t('profile.deleteAccountSuccess'));
+                navigate('/');
+            } catch (authError) {
+                console.error("Auth deletion failed:", authError);
+                // Even if auth delete fails, the data is gone, so sign out is fine
+                await auth.signOut();
+                navigate('/');
             }
+        } catch (error) {
+            console.error("Error during account deletion process:", error);
+            toast.error(t('profile.deleteAccountError') || "Error deleting account");
+            await auth.signOut();
+            navigate('/');
         } finally {
             setIsDeleting(false);
             setShowDeleteModal(false);
@@ -223,10 +277,10 @@ const Profile = ({ userData, stats }) => {
 
 
 
-            <div className="profile-section" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', color: 'var(--red)', marginTop: '20px', marginBottom: '20px' }} onClick={handleSignOut}>
+            <div className="profile-section" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', color: 'var(--red)', marginTop: '20px', marginBottom: '20px' }} onClick={handleSignOut}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <UilSignOutAlt />
-                    <span style={{ fontSize: '1.1rem', fontWeight: '500' }}>{t('signOut.title')}</span>
+                    <span style={{ fontSize: '1.2rem', fontWeight: '500' }}>{t('signOut.title')}</span>
                 </div>
             </div>
 
@@ -342,9 +396,12 @@ const Profile = ({ userData, stats }) => {
             }
 
             {/* Account Deletion Verification */}
-            <div className="profile-section" style={{ marginTop: '40px', borderTop: '1px solid #eee', paddingTop: '20px' }}>
+            <div className="profile-section" style={{ marginTop: '40px', borderTop: '1px solid #eee', paddingTop: '20px', display: 'flex', justifyContent: 'center' }}>
                 <button
-                    onClick={() => setShowDeleteModal(true)}
+                    onClick={() => {
+                        setConfirmNickname('');
+                        setShowDeleteModal(true);
+                    }}
                     style={{
                         background: 'none',
                         border: 'none',
@@ -363,26 +420,40 @@ const Profile = ({ userData, stats }) => {
                 <div className="group-modal-overlay" onClick={() => setShowDeleteModal(false)}>
                     <div className="group-modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '400px', textAlign: 'center' }}>
                         <h3 style={{ color: 'var(--red)' }}>{t('profile.deleteAccount')}</h3>
-                        <p style={{ margin: '1rem 0', lineHeight: '1.5' }}>{t('profile.deleteAccountWarning')}</p>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1.5rem' }}>
-                            <button
-                                className="close-modal-btn"
-                                onClick={handleDeleteAccount}
-                                disabled={isDeleting}
+                        <p style={{ margin: '1rem 0', lineHeight: '1.5', fontWeight: 'bold' }}>{t('profile.deleteAccountWarning')}</p>
+
+                        <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
+                            <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '0.5rem' }}>
+                                {t('profile.typeToConfirmNickname').replace('{nickname}', userData.nickname)}
+                            </p>
+                            <input
+                                type="text"
+                                value={confirmNickname}
+                                onChange={(e) => setConfirmNickname(e.target.value)}
+                                placeholder={userData.nickname}
                                 style={{
-                                    marginTop: 0,
-                                    background: 'var(--red)',
-                                    color: 'white',
-                                    border: 'none',
-                                    width: '100%'
+                                    width: '100%',
+                                    padding: '0.8rem',
+                                    borderRadius: '8px',
+                                    border: '1px solid #ddd',
+                                    boxSizing: 'border-box'
                                 }}
+                            />
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                            <button
+                                className={`close-modal-btn ${confirmNickname.trim() === userData.nickname.trim() ? 'delete-btn-active' : 'delete-btn-disabled'}`}
+                                onClick={handleDeleteAccount}
+                                disabled={isDeleting || confirmNickname.trim() !== userData.nickname.trim()}
+                                style={{ marginTop: 0 }}
                             >
                                 {isDeleting ? '...' : t('profile.confirmDeleteAccount')}
                             </button>
                             <button
                                 className="close-modal-btn"
                                 onClick={() => setShowDeleteModal(false)}
-                                style={{ marginTop: 0, width: '100%' }}
+                                style={{ marginTop: 0 }}
                             >
                                 {t('profile.cancelDeleteAccount')}
                             </button>

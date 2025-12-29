@@ -1,22 +1,30 @@
 Checking against base language: ja
-Total base keys: 493
+Total base keys: 494
 
 [en] OK
 
-[pt] OK
+[pt] Missing 1 keys:
+  - profile.typeToConfirmNickname
 
-[zho] OK
+[zho] Missing 1 keys:
+  - profile.typeToConfirmNickname
 
-[es] OK
+[es] Missing 1 keys:
+  - profile.typeToConfirmNickname
 
-[vi] OK
+[vi] Missing 1 keys:
+  - profile.typeToConfirmNickname
 
-[th] OK
+[th] Missing 1 keys:
+  - profile.typeToConfirmNickname
 
-[ko] OK
+[ko] Missing 1 keys:
+  - profile.typeToConfirmNickname
 
-[tl] OK
+[tl] Missing 1 keys:
+  - profile.typeToConfirmNickname
 
-[sw] OK
+[sw] Missing 1 keys:
+  - profile.typeToConfirmNickname
 
-Success: All languages match Japanese.
+Found total 8 missing translations.
