@@ -9,6 +9,10 @@
   color: var(--black);
 }
 
+.LoginForm .AppGlass {
+  margin: auto;
+}
+
 .LoginForm form {
   display: flex;
   flex-direction: column;

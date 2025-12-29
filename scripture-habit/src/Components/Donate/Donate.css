@@ -198,7 +198,7 @@
 .donate-action-btn {
     color: white;
     border: none;
-    padding: 12px 30px;
+    padding: 15px 30px;
     font-size: 1rem;
     font-weight: 600;
     border-radius: 50px;
@@ -206,6 +206,12 @@
     transition: all 0.3s ease;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     min-width: 200px;
+    white-space: pre-line;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
 }
 
 .paypay-btn {
@@ -216,6 +222,12 @@
     background-color: #C91E29;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(235, 51, 63, 0.3);
+}
+
+.stripe-btn:hover {
+    background-color: #554cef !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(99, 91, 255, 0.4) !important;
 }
 
 .paypal-btn {

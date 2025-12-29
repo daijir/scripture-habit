@@ -26,7 +26,7 @@ const Donate = ({ userData }) => {
                         {t('donate.vision')}
                     </p>
 
-                    <div style={{ marginTop: '1.5rem', marginBottom: '1.5rem', textAlign: 'center' }}>
+                    <div className="donate-background-btn-container" style={{ display: 'flex', justifyContent: 'center', margin: '2rem 0' }}>
                         <button
                             className="donate-action-btn"
                             onClick={() => setShowBackgroundModal(true)}
@@ -55,8 +55,6 @@ const Donate = ({ userData }) => {
                         <h3>{t('donate.suggestionTitle')}</h3>
                         <ul className="donate-suggestions-list">
                             <li>{t('donate.suggestion1')}</li>
-                            <li>{t('donate.suggestion2')}</li>
-                            <li>{t('donate.suggestion3')}</li>
                         </ul>
                     </div>
 
@@ -87,6 +85,65 @@ const Donate = ({ userData }) => {
                                 >
                                     {t('donate.button')}
                                 </button>
+                            </div>
+
+                            <div className="stripe-under-review-container" style={{
+                                width: '100%',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                gap: '2rem',
+                                flexWrap: 'wrap',
+                                position: 'relative',
+                                padding: '1rem',
+                                background: 'rgba(0,0,0,0.03)',
+                                borderRadius: '20px',
+                                border: '1px dashed #cbd5e0'
+                            }}>
+                                <span style={{
+                                    position: 'absolute',
+                                    top: '-12px',
+                                    left: '50%',
+                                    transform: 'translateX(-50%)',
+                                    background: '#718096',
+                                    color: 'white',
+                                    padding: '2px 12px',
+                                    borderRadius: '50px',
+                                    fontSize: '0.8rem',
+                                    fontWeight: '600',
+                                    whiteSpace: 'nowrap'
+                                }}>
+                                    {t('donate.stripeUnderReview')}
+                                </span>
+
+                                <div className="donate-btn-wrapper" style={{ opacity: 0.6, cursor: 'not-allowed' }}>
+                                    <button
+                                        className="donate-action-btn stripe-btn"
+                                        disabled
+                                        style={{
+                                            background: '#635bff',
+                                            color: '#fff',
+                                            boxShadow: 'none',
+                                            cursor: 'not-allowed'
+                                        }}
+                                    >
+                                        💳 {t('donate.stripeOneOffButton')}
+                                    </button>
+                                </div>
+
+                                <div className="donate-btn-wrapper" style={{ opacity: 0.6, cursor: 'not-allowed' }}>
+                                    <button
+                                        className="donate-action-btn stripe-btn"
+                                        disabled
+                                        style={{
+                                            background: '#32325d',
+                                            color: '#fff',
+                                            boxShadow: 'none',
+                                            cursor: 'not-allowed'
+                                        }}
+                                    >
+                                        ✨ {t('donate.stripeMonthlyButton')}
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>

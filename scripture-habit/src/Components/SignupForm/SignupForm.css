@@ -3,7 +3,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 80vh;
 }
 
 .SignupForm form {
@@ -13,13 +12,16 @@
 }
 
 .Form {
-  min-height: 80vh;
   align-content: center;
 }
 
 .SignupForm h2 {
   color: black;
   -webkit-text-fill-color: black;
+}
+
+.SignupForm .AppGlass {
+  margin: auto;
 }
 
 .auth-switch {

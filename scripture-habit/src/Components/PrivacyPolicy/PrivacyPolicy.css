@@ -54,11 +54,11 @@
     color: #000000 !important;
 }
 
-.back-button svg {
+.privacy-header .back-button svg {
     stroke: #000000 !important;
 }
 
-.back-button:hover {
+.privacy-header .back-button:hover {
     transform: translateX(-4px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
 }

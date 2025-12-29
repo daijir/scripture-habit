@@ -25,6 +25,11 @@
   --border-radius: 16px;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+}
+
 .App {
   background: linear-gradient(106.37deg,
       #feac5e 29.63%,
@@ -44,6 +49,12 @@
 .App.SignupForm,
 .App.Welcome {
   flex-direction: column;
+}
+
+.App.LoginForm,
+.App.SignupForm,
+.App.Welcome {
+  justify-content: flex-start;
 }
 
 .App.Dashboard {
