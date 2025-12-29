@@ -57,6 +57,11 @@ body {
   justify-content: flex-start;
 }
 
+.App.Dashboard,
+.App.LandingPage {
+  align-items: stretch;
+}
+
 .App.Dashboard {
   align-items: stretch;
 }

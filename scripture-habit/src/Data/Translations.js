@@ -614,6 +614,44 @@ export const translations = {
             message: "We use cookies to improve your experience and analyze traffic. By continuing to use this site, you agree to our use of cookies.",
             accept: "Accept",
             privacyPolicy: "Privacy Policy"
+        },
+        landing: {
+            hero: {
+                title: "Where Scripture Study Becomes a Habit of Joy",
+                subtitle: "Study together, share your insights, and turn your daily routine into a source of joy.",
+                cta: "Start Now"
+            },
+            features: {
+                title: "Features of Scripture Habit",
+                sharing: {
+                    title: "Deepen Bonds through Sharing",
+                    desc: "Share your progress with family and friends. Your insights (output) help edify those around you."
+                },
+                rule: {
+                    title: "3-Day Rule for Consistency",
+                    desc: "A challenge to stay consistent: overcome the 'trial' of staying active every 3 days together with your peers to build a lifelong habit."
+                },
+                ai: {
+                    title: "Weekly Learning Recap",
+                    desc: "Once a week, AI summarizes your insights into a 'Weekly Letter', helping you visualize your spiritual growth."
+                },
+                link: {
+                    title: "Gospel Library Integration",
+                    desc: "Direct links to Gospel Library and BYU Speeches. Jump straight into the scriptures without distraction."
+                },
+                recommend: {
+                    title: "Surprise Me Scripture",
+                    desc: "Get suggestions based on 'Come, Follow Me' or your current feelings (Peace, Adversity, etc.) when you need inspiration."
+                }
+            },
+            unity: {
+                title: "Edifying One Another",
+                desc: "See the glorious rising sun when every member of your group achieves a 100% post rate for the day."
+            },
+            finalCta: {
+                title: "Ready to start a new habit?",
+                button: "Start Fresh Today"
+            }
         }
     },
     ja: {
@@ -1238,12 +1276,88 @@ export const translations = {
             message: "当サイトでは、サービスの向上とトラフィックの分析のためにクッキーを使用しています。このサイトの利用を続けることで、クッキーの使用に同意したものとみなされます。",
             accept: "同意する",
             privacyPolicy: "プライバシーポリシー"
+        },
+        landing: {
+            hero: {
+                title: "聖典学習を、楽しく、習慣に",
+                subtitle: "仲間と共に学び、証を分かち合うことで、日々の習慣を大きな「喜び」へと変えましょう。",
+                cta: "今すぐはじめる"
+            },
+            features: {
+                title: "Scripture Habit の特徴",
+                sharing: {
+                    title: "絆を深める共有機能",
+                    desc: "家族や友達と進捗を共有。あなたの気づき（アウトプット）が、誰かの教化に繋がります。"
+                },
+                rule: {
+                    title: "継続を支える3日間ルール",
+                    desc: "3日間投稿がないとグループから退出するという「試練」を仲間と一緒に乗り越えることで、一生モノの習慣を身につけます。"
+                },
+                ai: {
+                    title: "学習の振り返り",
+                    desc: "週に一度、AIがあなたの学びを要約して「今週の手紙」を届けます。自分の霊的な成長を視覚化しましょう。"
+                },
+                link: {
+                    title: "福音ライブラリーとの連携",
+                    desc: "福音ライブラリーや BYU Speeches への直接リンク。読みたい聖句へ迷わずジャンプできます。"
+                },
+                recommend: {
+                    title: "おまかせ聖句",
+                    desc: "「今日のわたしに従ってきなさい」や、今の心境（平安・逆境など）に合わせたおすすめ聖句を提案します。"
+                }
+            },
+            unity: {
+                title: "互いに教化し合う",
+                desc: "その日のグループ全員が投稿率が100%を達成すると、栄光の日の出をみることができます。"
+            },
+            finalCta: {
+                title: "あなたも、新しい習慣を始めませんか？",
+                button: "今すぐ新しく始める"
+            }
         }
     },
     pt: {
         seo: {
             title: "Scripture Habit - Torne o estudo das escrituras um hábito diário",
             description: "Scripture Habit é uma ferramenta comunitária para ajudá-lo a estudar as escrituras com amigos e compartilhar seus aprendizados diariamente."
+        },
+        landing: {
+            hero: {
+                title: "Torne o Estudo das Escrituras uma Hábito Alegre",
+                subtitle: "Estude com amigos, compartilhe seus aprendizados e transforme sua rotina diária em uma fonte de alegria.",
+                cta: "Comece Agora"
+            },
+            features: {
+                title: "Recursos do Scripture Habit",
+                sharing: {
+                    title: "Aprofunde Laços Através do Compartilhamento",
+                    desc: "Compartilhe seu progresso com familiares e amigos. Seus insights (output) ajudam a edificar aquelas ao seu redor."
+                },
+                rule: {
+                    title: "Regra de 3 Dias para Consistência",
+                    desc: "Um desafio para manter a consistência: supere a 'provação' de permanecer ativo a cada 3 dias junto com seus companheiros para construir um hábito para a vida toda."
+                },
+                ai: {
+                    title: "Recapitulação Semanal do Aprendizado",
+                    desc: "Uma vez por semana, a IA resume seus aprendizados em uma 'Carta Semanal', ajudando você a visualizar seu crescimento espiritual."
+                },
+                link: {
+                    title: "Integração com a Biblioteca do Evangelho",
+                    desc: "Links diretos para a Biblioteca do Evangelho e BYU Speeches. Pule diretamente para as escrituras sem distrações."
+                },
+                recommend: {
+                    title: "Escritura Surpresa",
+                    desc: "Receba sugestões baseadas no 'Vem, e Segue-Me' ou em seus sentimentos atuais (Paz, Adversidade, etc.) quando precisar de inspiração."
+                }
+            },
+            unity: {
+                title: "Edificando uns aos Outros",
+                desc: "Veja o glorioso sol nascente quando cada membro do seu grupo atinge uma taxa de postagem de 100% no dia."
+            },
+            finalCta: {
+                title: "Pronto para começar um novo hábito?",
+                button: "Comece do Zero Hoje"
+            }
         },
         sidebar: {
             dashboard: "Painel",
@@ -1866,6 +1980,44 @@ export const translations = {
             title: "Scripture Habit - 讓經文研讀成為日常習慣",
             description: "Scripture Habit 是一個社區工具，旨在幫助您與朋友一起研讀經文並每天分享您的心得。"
         },
+        landing: {
+            hero: {
+                title: "讓研讀經文成為快樂的習慣",
+                subtitle: "與朋友一起研讀、分享心得，將日常鎖事轉化為喜悅的泉源。",
+                cta: "立即開始"
+            },
+            features: {
+                title: "Scripture Habit 的特色",
+                sharing: {
+                    title: "透過分享加深聯繫",
+                    desc: "與家人和朋友分享您的進度。您的心得（輸出）將幫助啟發周圍的人。"
+                },
+                rule: {
+                    title: "維持一致性的3天規則",
+                    desc: "一個保持一致性的挑戰：與同伴一起克服每3天保持活躍的「試煉」，建立終身的習慣。"
+                },
+                ai: {
+                    title: "每週學習總結",
+                    desc: "每週一次，AI 會將您的心得總結成一封「每週信件」，幫助您將靈性成長視覺化。"
+                },
+                link: {
+                    title: "連結福音圖書館",
+                    desc: "直接連結到福音圖書館和 BYU Speeches。心無旁騖地直接進入經文。"
+                },
+                recommend: {
+                    title: "驚喜聖句",
+                    desc: "根據「我跟從你」或您當前的心情（平安、逆境等）獲取建議，在您需要靈感時提供幫助。"
+                }
+            },
+            unity: {
+                title: "互相啟發",
+                desc: "當您小組的每位成員當天的發文率都達到 100% 時，就能看見榮耀的日出。"
+            },
+            finalCta: {
+                title: "準備好開始新習慣了嗎？",
+                button: "今天就重新開始"
+            }
+        },
         sidebar: {
             dashboard: "儀表板",
             myNotes: "我的筆記",
@@ -2456,6 +2608,44 @@ export const translations = {
         seo: {
             title: "Scripture Habit - Haz del estudio de las escrituras un hábito diario",
             description: "Scripture Habit es una herramienta comunitaria para ayudarte a estudiar las escrituras con amigos y compartir lo aprendido diariamente."
+        },
+        landing: {
+            hero: {
+                title: "Haz del estudio de las escrituras un hábito alegre",
+                subtitle: "Estudia junto a otros, comparte tus reflexiones y convierte tu rutina diaria en una fuente de gozo.",
+                cta: "Comienza ahora"
+            },
+            features: {
+                title: "Características de Scripture Habit",
+                sharing: {
+                    title: "Profundiza vínculos compartiendo",
+                    desc: "Comparte tu progreso con familiares y amigos. Tus reflexiones (output) ayudan a edificar a quienes te rodean."
+                },
+                rule: {
+                    title: "Regla de 3 días para la constancia",
+                    desc: "Un desafío para mantener la constancia: supera la 'prueba' de mantenerte activo cada 3 días junto con tus compañeros para crear un hábito de por vida."
+                },
+                ai: {
+                    title: "Resumen de aprendizaje semanal",
+                    desc: "Una vez por semana, la IA resume tus reflexiones en una 'Carta Semanal', ayudándote a visualizar tu crecimiento espiritual."
+                },
+                link: {
+                    title: "Integración con la Biblioteca del Evangelio",
+                    desc: "Enlaces directos a la Biblioteca del Evangelio y BYU Speeches. Entra directamente en las escrituras sin distracciones."
+                },
+                recommend: {
+                    title: "Escritura sorpresa",
+                    desc: "Obtén sugerencias basadas en 'Ven, sígueme' o en tus sentimientos actuales (Paz, Adversidad, etc.) cuando necesites inspiración."
+                }
+            },
+            unity: {
+                title: "Edificándonos unos a otros",
+                desc: "Mira el glorioso amanecer cuando cada miembro de tu grupo logre una tasa de publicación del 100% en el día."
+            },
+            finalCta: {
+                title: "¿Listo para comenzar un nuevo hábito?",
+                button: "Empieza de nuevo hoy"
+            }
         },
         sidebar: {
             dashboard: "Tablero",
@@ -3049,6 +3239,44 @@ export const translations = {
             title: "Scripture Habit - Biến việc học thánh thư thành thói quen hàng ngày",
             description: "Scripture Habit là một công cụ cộng đồng giúp bạn học thánh thư cùng bạn bè và chia sẻ những hiểu biết của mình hàng ngày."
         },
+        landing: {
+            hero: {
+                title: "Biến việc học thánh thư thành thói quen vui vẻ",
+                subtitle: "Cùng nhau học tập, chia sẻ những hiểu biết của bạn và biến thói quen hàng ngày của bạn thành nguồn vui.",
+                cta: "Bắt đầu ngay"
+            },
+            features: {
+                title: "Các tính năng của Scripture Habit",
+                sharing: {
+                    title: "Thắt chặt tình cảm thông qua chia sẻ",
+                    desc: "Chia sẻ tiến trình của bạn với gia đình và bạn bè. Những hiểu biết của bạn (đầu ra) giúp gây dựng những người xung quanh bạn."
+                },
+                rule: {
+                    title: "Quy tắc 3 ngày để nhất quán",
+                    desc: "Một thử thách để duy trì sự nhất quán: cùng với bạn bè vượt qua 'thử thách' duy trì hoạt động sau mỗi 3 ngày để xây dựng thói quen trọn đời."
+                },
+                ai: {
+                    title: "Tóm tắt học tập hàng tuần",
+                    desc: "Mỗi tuần một lần, AI sẽ tóm tắt những hiểu biết của bạn thành một 'Lá thư hàng tuần', giúp bạn hình dung được sự phát triển tâm linh của mình."
+                },
+                link: {
+                    title: "Tích hợp Thư viện Phúc âm",
+                    desc: "Liên kết trực tiếp đến Thư viện Phúc âm và BYU Speeches. Đi thẳng vào thánh thư mà không bị xao nhãng."
+                },
+                recommend: {
+                    title: "Thánh thư gây bất ngờ",
+                    desc: "Nhận các gợi ý dựa trên 'Hãy Đi Theo Ta' hoặc cảm xúc hiện tại của bạn (Bình an, Nghịch cảnh, v.v.) khi bạn cần cảm hứng."
+                }
+            },
+            unity: {
+                title: "Cùng gây dựng lẫn nhau",
+                desc: "Ngắm nhìn bình minh rực rỡ khi mọi thành viên trong nhóm của bạn đạt được tỷ lệ đăng bài 100% trong ngày."
+            },
+            finalCta: {
+                title: "Sẵn sàng để bắt đầu một thói quen mới?",
+                button: "Bắt đầu mới ngay hôm nay"
+            }
+        },
         sidebar: {
             dashboard: "Trang chủ",
             myNotes: "Ghi chép của tôi",
@@ -3638,6 +3866,44 @@ export const translations = {
         seo: {
             title: "Scripture Habit - ทำให้การศึกษาพระคัมภีร์เป็นนิสัยประจำวัน",
             description: "Scripture Habit เป็นเครื่องมือชุมชนที่จะช่วยให้คุณศึกษาพระคัมภีร์ไปพร้อมกับเพื่อนๆ และแบ่งปันสิ่งที่คุณเรียนรู้ได้ทุกวัน"
+        },
+        landing: {
+            hero: {
+                title: "ทำให้การศึกษาพระคัมภีร์เป็นนิสัยที่สนุกสนาน",
+                subtitle: "ศึกษาร่วมกัน แบ่งปันข้อคิด และเปลี่ยนกิจวัตรประจำวันของคุณให้เป็นแหล่งแห่งความสุข",
+                cta: "เริ่มตอนนี้"
+            },
+            features: {
+                title: "คุณสมบัติของ Scripture Habit",
+                sharing: {
+                    title: "กระชับความสัมพันธ์ผ่านการแบ่งปัน",
+                    desc: "แบ่งปันความก้าวหน้าของคุณกับครอบครัวและเพื่อนๆ ข้อคิดของคุณ (ผลลัพธ์) จะช่วยจรรโลงใจคนรอบข้าง"
+                },
+                rule: {
+                    title: "กฎ 3 วันเพื่อความสม่ำเสมอ",
+                    desc: "ความท้าทายในการรักษาความสม่ำเสมอ: ก้าวข้าม 'การทดลอง' ในการกระตือรือร้นทุกๆ 3 วันร่วมกับเพื่อนๆ เพื่อสร้างนิสัยตลอดชีวิต"
+                },
+                ai: {
+                    title: "สรุปการเรียนรู้รายสัปดาห์",
+                    desc: "สัปดาห์ละครั้ง AI จะสรุปข้อคิดของคุณเป็น 'จดหมายรายสัปดาห์' ช่วยให้คุณเห็นภาพการเติบโตทางวิญญาณของคุณ"
+                },
+                link: {
+                    title: "การเชื่อมต่อกับคลังค้นคว้าพระกิตติคุณ",
+                    desc: "ลิงก์โดยตรงไปยังคลังค้นคว้าพระกิตติคุณและ BYU Speeches เข้าสู่พระคัมภีร์โดยตรงโดยไม่มีสิ่งรบกวน"
+                },
+                recommend: {
+                    title: "พระคัมภีร์ที่ทำให้คุณประหลาดใจ",
+                    desc: "รับคำแนะนำตาม 'จงตามเรามา' หรือความรู้สึกปัจจุบันของคุณ (สันติสุข, ความยากลำบาก ฯลฯ) เมื่อคุณต้องการแรงบันดาลใจ"
+                }
+            },
+            unity: {
+                title: "การจรรโลงใจซึ่งกันและกัน",
+                desc: "มองเห็นพระอาทิตย์ขึ้นอันรุ่งโรจน์เมื่อสมาชิกทุกคนในกลุ่มของคุณมีอัตราการโพสต์ 100% ในวันนั้น"
+            },
+            finalCta: {
+                title: "พร้อมที่จะเริ่มนิสัยใหม่หรือยัง?",
+                button: "เริ่มต้นใหม่วันนี้"
+            }
         },
         sidebar: {
             dashboard: "แผงควบคุม",
@@ -4255,6 +4521,44 @@ export const translations = {
             title: "Scripture Habit - 경전 공부를 매일의 습관으로",
             description: "Scripture Habit은 친구들과 함께 경전을 공부하고 매일 배운 내용을 나눌 수 있도록 돕는 커뮤니티 도구입니다."
         },
+        landing: {
+            hero: {
+                title: "경전 공부를 즐거운 습관으로 만드세요",
+                subtitle: "함께 공부하고, 통찰을 나누며, 일상을 기쁨의 원천으로 바꾸어 보세요.",
+                cta: "지금 시작하기"
+            },
+            features: {
+                title: "Scripture Habit의 특징",
+                sharing: {
+                    title: "나눔을 통한 연대 강화",
+                    desc: "가족 및 친구들과 진척 상황을 공유하세요. 여러분의 통찰(아웃풋)은 주변 사람들을 교화하는 데 도움이 됩니다."
+                },
+                rule: {
+                    title: "꾸준함을 위한 3일 규칙",
+                    desc: "꾸준함을 유지하기 위한 도전: 동료들과 함께 3일마다 활동을 유지하는 '시련'을 극복하며 평생의 습관을 만드세요."
+                },
+                ai: {
+                    title: "주간 학습 요약",
+                    desc: "일주일에 한 번, AI가 여러분의 통찰을 '주간 편지'로 요약해 줍니다. 영적 성장을 시각화해 보세요."
+                },
+                link: {
+                    title: "복음 라이브러리 연동",
+                    desc: "복음 라이브러리 및 BYU Speeches로 직접 연결됩니다. 딴 길로 새지 않고 경전 공부에만 집중하세요."
+                },
+                recommend: {
+                    title: "깜짝 성구",
+                    desc: "'와서 나를 따르라' 또는 현재 기분(평화, 역경 등)에 맞춘 추천 성구가 받아보세요. 영감이 필요할 때 큰 도움이 됩니다."
+                }
+            },
+            unity: {
+                title: "서로를 교화함",
+                desc: "그룹의 모든 멤버가 게시물 작성률 100%를 달성하면 영광스러운 일출을 볼 수 있습니다."
+            },
+            finalCta: {
+                title: "새로운 습관을 시작할 준비가 되셨나요?",
+                button: "오늘부터 새롭게 시작하기"
+            }
+        },
         sidebar: {
             dashboard: "대시보드",
             myNotes: "내 노트",
@@ -4871,6 +5175,44 @@ export const translations = {
             title: "Scripture Habit - Gawing pang-araw-araw na gawi ang pag-aaral ng banal na kasulatan",
             description: "Ang Scripture Habit ay isang community tool upang matulungan kang mag-aral ng mga banal na kasulatan kasama ang mga kaibigan at ibahagi ang iyong mga natutunan araw-araw."
         },
+        landing: {
+            hero: {
+                title: "Gawing Masaya at Ugali ang Pag-aaral ng Banal na Kasulatan",
+                subtitle: "Mag-aral nang sama-sama, ibahagi ang iyong mga insight, at gawing mapagkukunan ng kagalakan ang iyong pang-araw-araw na gawain.",
+                cta: "Simulan Na"
+            },
+            features: {
+                title: "Mga Tampok ng Scripture Habit",
+                sharing: {
+                    title: "Palalimin ang Bigkis sa Pamamagitan ng Pagbabahagi",
+                    desc: "Ibahagi ang iyong progreso sa pamilya at mga kaibigan. Ang iyong mga insight (output) ay tumutulong sa pag-edify ng mga nasa paligid mo."
+                },
+                rule: {
+                    title: "3-Day Rule para sa Consistency",
+                    desc: "Isang hamon na manatiling consistent: pagtagumpayan ang 'pagsubok' ng pananatiling aktibo tuwing 3 araw kasama ang iyong mga kasama upang bumuo ng panghabambuhay na ugali."
+                },
+                ai: {
+                    title: "Lingguhang Recap ng Pag-aaral",
+                    desc: "Minsan sa isang linggo, ibubuod ng AI ang iyong mga insight sa isang 'Lingguhang Liham', na tinutulungan kang makita ang iyong espirituwal na paglago."
+                },
+                link: {
+                    title: "Gospel Library Integration",
+                    desc: "Direktang mga link sa Gospel Library at BYU Speeches. Tumungo agad sa mga banal na kasulatan nang walang abala."
+                },
+                recommend: {
+                    title: "Surprise Me Scripture",
+                    desc: "Kumuha ng mga mungkahi batay sa 'Halina, Sumunod Ka sa Akin' o sa iyong kasalukuyang nararamdaman (Kapayapaan, Kahirapan, atbp.) kapag kailangan mo ng inspirasyon."
+                }
+            },
+            unity: {
+                title: "Pag-edify sa Isa't Isa",
+                desc: "Makita ang maluwalhating pagsikat ng araw kapag ang bawat miyembro ng iyong grupo ay nakamit ang 100% post rate para sa araw na iyon."
+            },
+            finalCta: {
+                title: "Handa ka na bang magsimula ng bagong ugali?",
+                button: "Magsimula Nang Bago Ngayon"
+            }
+        },
         sidebar: {
             dashboard: "Dashboard",
             myNotes: "Aking mga Tala",
@@ -5485,6 +5827,44 @@ export const translations = {
         seo: {
             title: "Scripture Habit - Fanya mafunzo ya maandiko kuwa tabia ya kila siku",
             description: "Scripture Habit ni chombo cha jumuiya cha kukusaidia kujifunza maandiko na marafiki na kushiriki mafunzo yako kila siku."
+        },
+        landing: {
+            hero: {
+                title: "Jifunze Maandiko kwa Kufurahia na Kuifanya Tabia",
+                subtitle: "Jifunzeni pamoja, shiriki maarifa yako, na ugeuze utaratibu wako wa kila siku kuwa chanzo cha furaha.",
+                cta: "Anza Sasa"
+            },
+            features: {
+                title: "Vipengele vya Scripture Habit",
+                sharing: {
+                    title: "Kuimarisha Vifungo Kupitia Kushiriki",
+                    desc: "Shiriki maendeleo yako na familia na marafiki. Maarifa yako (output) yanasaidia kuwajenga wale wanaokuzunguka."
+                },
+                rule: {
+                    title: "Sheria ya Siku 3 kwa Uthabiti",
+                    desc: "Changamoto ya kubaki thabiti: shinda 'jaribu' la kubaki mwenye bidii kila baada ya siku 3 pamoja na wenzio ili kujenga tabia ya maisha yote."
+                },
+                ai: {
+                    title: "Muhtasari wa Mafunzo wa Kila Wiki",
+                    desc: "Mara moja kwa wiki, AI inafupisha maarifa yako katika 'Barua ya Kila Wiki', ikikusaidia kuona ukuaji wako wa kiroho."
+                },
+                link: {
+                    title: "Ushirikiano na Maktaba ya Injili",
+                    desc: "Viungo vya moja kwa moja vya Maktaba ya Injili na Hotuba za BYU. Ingia moja kwa moja kwenye maandiko bila usumbufu."
+                },
+                recommend: {
+                    title: "Andiko la Kunistajabisha",
+                    desc: "Pata mapendekezo kulingana na 'Njoo, Unifuate' au hisia zako za sasa (Amani, Shida, nk.) unapohitaji msukumo."
+                }
+            },
+            unity: {
+                title: "Kujengana Mmoja na Mwenzake",
+                desc: "Ona jua linavyochomoza kwa utukufu wakati kila mwanachama wa kikundi chako anapofikia kiwango cha 100% cha kuchapisha kwa siku."
+            },
+            finalCta: {
+                title: "Uko tayari kuanza tabia mpya?",
+                button: "Anza Upya Leo"
+            }
         },
         sidebar: {
             dashboard: "Dashibodi",

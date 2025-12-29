@@ -1,4 +1,4 @@
-import { Routes, Route, Link } from 'react-router-dom';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from 'react';
@@ -14,6 +14,7 @@ import GroupForm from './Components/GroupForm/GroupForm';
 import JoinGroup from './Components/JoinGroup/JoinGroup';
 import GroupDetails from "./Components/GroupDetails/GroupDetails";
 import GroupOptions from './Components/GroupOptions/GroupOptions';
+import LandingPage from './Components/LandingPage/LandingPage';
 import Welcome from './Components/Welcome/Welcome';
 import { LanguageProvider, useLanguage } from './Context/LanguageContext.jsx';
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
@@ -104,15 +105,27 @@ const App = () => {
     );
   }
 
+  const location = useLocation();
+  const getAppClass = () => {
+    const path = location.pathname;
+    if (path === '/') return 'App LandingPage';
+    if (path === '/welcome') return 'App Welcome';
+    if (path === '/login') return 'App LoginForm';
+    if (path === '/signup') return 'App SignupForm';
+    if (path === '/dashboard') return 'App Dashboard';
+    return 'App';
+  };
+
   return (
     <LanguageProvider>
       <SEOManager />
-      <div className="App">
+      <div className={getAppClass()}>
         <Routes>
           <Route
             path="/"
-            element={<Welcome />}
+            element={<LandingPage />}
           />
+          <Route path="/welcome" element={<Welcome />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/signup" element={<SignupForm />} />
           <Route path="/dashboard" element={<Dashboard />} />

@@ -79,7 +79,7 @@ const Profile = ({ userData, stats }) => {
 
     const confirmSignOut = () => {
         auth.signOut();
-        navigate('/login');
+        navigate('/welcome');
         setShowSignOutModal(false);
     };
 
@@ -158,18 +158,18 @@ const Profile = ({ userData, stats }) => {
             try {
                 await deleteUser(user);
                 toast.success(t('profile.deleteAccountSuccess'));
-                navigate('/');
+                navigate('/welcome');
             } catch (authError) {
                 console.error("Auth deletion failed:", authError);
                 // Even if auth delete fails, the data is gone, so sign out is fine
                 await auth.signOut();
-                navigate('/');
+                navigate('/welcome');
             }
         } catch (error) {
             console.error("Error during account deletion process:", error);
             toast.error(t('profile.deleteAccountError') || "Error deleting account");
             await auth.signOut();
-            navigate('/');
+            navigate('/welcome');
         } finally {
             setIsDeleting(false);
             setShowDeleteModal(false);

@@ -5,9 +5,22 @@ const LanguageContext = createContext();
 
 export const LanguageProvider = ({ children }) => {
     // Load language from localStorage, default to 'en'
+    // Load language from localStorage, default to browser language or 'en'
     const [language, setLanguageState] = useState(() => {
         const saved = localStorage.getItem('language');
-        return saved || 'en';
+        if (saved) return saved;
+
+        // Auto-detect browser language
+        const browserLang = navigator.language || navigator.userLanguage;
+        const shortLang = browserLang ? browserLang.split('-')[0].toLowerCase() : 'en';
+
+        // Map supported codes
+        const supported = ['en', 'ja', 'pt', 'zho', 'zh', 'es', 'vi', 'th', 'ko', 'tl', 'sw'];
+
+        if (shortLang === 'zh') return 'zho'; // Map Chinese
+        if (supported.includes(shortLang)) return shortLang;
+
+        return 'en';
     });
 
     // Wrapper to save to localStorage when language changes
