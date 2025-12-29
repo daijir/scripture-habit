@@ -627,7 +627,7 @@ export const translations = {
                 cta: "Start Now"
             },
             features: {
-                title: "Features of Scripture Habit",
+                title: "Features of\nScripture Habit",
                 sharing: {
                     title: "Deepen Bonds through Sharing",
                     desc: "Share your progress with family and friends. Your insights (output) help edify those around you."
@@ -1294,7 +1294,7 @@ export const translations = {
                 cta: "今すぐはじめる"
             },
             features: {
-                title: "Scripture Habit の特徴",
+                title: "Scripture Habit\nの特徴",
                 sharing: {
                     title: "絆を深める共有機能",
                     desc: "家族や友達と進捗を共有。あなたの気づき（アウトプット）が、誰かの教化に繋がります。"
@@ -1338,7 +1338,7 @@ export const translations = {
                 cta: "Comece Agora"
             },
             features: {
-                title: "Recursos do Scripture Habit",
+                title: "Recursos do\nScripture Habit",
                 sharing: {
                     title: "Aprofunde Laços Através do Compartilhamento",
                     desc: "Compartilhe seu progresso com familiares e amigos. Seus insights (output) ajudam a edificar aquelas ao seu redor."
@@ -2002,7 +2002,7 @@ export const translations = {
                 cta: "立即開始"
             },
             features: {
-                title: "Scripture Habit 的特色",
+                title: "Scripture Habit\n的特色",
                 sharing: {
                     title: "透過分享加深聯繫",
                     desc: "與家人和朋友分享您的進度。您的心得（輸出）將幫助啟發周圍的人。"
@@ -2636,7 +2636,7 @@ export const translations = {
                 cta: "Comienza ahora"
             },
             features: {
-                title: "Características de Scripture Habit",
+                title: "Características de\nScripture Habit",
                 sharing: {
                     title: "Profundiza vínculos compartiendo",
                     desc: "Comparte tu progreso con familiares y amigos. Tus reflexiones (output) ayudan a edificar a quienes te rodean."
@@ -3271,7 +3271,7 @@ export const translations = {
                 cta: "Bắt đầu ngay"
             },
             features: {
-                title: "Các tính năng của Scripture Habit",
+                title: "Các tính năng của\nScripture Habit",
                 sharing: {
                     title: "Thắt chặt tình cảm thông qua chia sẻ",
                     desc: "Chia sẻ tiến trình của bạn với gia đình và bạn bè. Những hiểu biết của bạn (đầu ra) giúp gây dựng những người xung quanh bạn."
@@ -3904,7 +3904,7 @@ export const translations = {
                 cta: "เริ่มตอนนี้"
             },
             features: {
-                title: "คุณสมบัติของ Scripture Habit",
+                title: "คุณสมบัติของ\nScripture Habit",
                 sharing: {
                     title: "กระชับความสัมพันธ์ผ่านการแบ่งปัน",
                     desc: "แบ่งปันความก้าวหน้าของคุณกับครอบครัวและเพื่อนๆ ข้อคิดของคุณ (ผลลัพธ์) จะช่วยจรรโลงใจคนรอบข้าง"
@@ -4563,7 +4563,7 @@ export const translations = {
                 cta: "지금 시작하기"
             },
             features: {
-                title: "Scripture Habit의 특징",
+                title: "Scripture Habit\n의 특징",
                 sharing: {
                     title: "나눔을 통한 연대 강화",
                     desc: "가족 및 친구들과 진척 상황을 공유하세요. 여러분의 통찰(아웃풋)은 주변 사람들을 교화하는 데 도움이 됩니다."
@@ -5222,7 +5222,7 @@ export const translations = {
                 cta: "Simulan Na"
             },
             features: {
-                title: "Mga Tampok ng Scripture Habit",
+                title: "Mga Tampok ng\nScripture Habit",
                 sharing: {
                     title: "Palalimin ang Bigkis sa Pamamagitan ng Pagbabahagi",
                     desc: "Ibahagi ang iyong progreso sa pamilya at mga kaibigan. Ang iyong mga insight (output) ay tumutulong sa pag-edify ng mga nasa paligid mo."
@@ -5880,7 +5880,7 @@ export const translations = {
                 cta: "Anza Sasa"
             },
             features: {
-                title: "Vipengele vya Scripture Habit",
+                title: "Vipengele vya\nScripture Habit",
                 sharing: {
                     title: "Kuimarisha Vifungo Kupitia Kushiriki",
                     desc: "Shiriki maendeleo yako na familia na marafiki. Maarifa yako (output) yanasaidia kuwajenga wale wanaokuzunguka."

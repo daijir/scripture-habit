@@ -340,6 +340,10 @@ section {
         padding: 60px 24px;
     }
 
+    .section-title {
+        white-space: pre-line;
+    }
+
     .unity-content {
         flex-direction: column;
         text-align: center;
