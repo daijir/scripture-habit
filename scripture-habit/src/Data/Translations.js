@@ -580,7 +580,7 @@ export const translations = {
         },
         installPrompt: {
             title: "Install App",
-            description: "Install this app on your iPhone for a better experience.",
+            description: "Install this app on your device for a better experience.",
             instruction1: "Tap the Share button",
             instruction2: "Select 'Add to Home Screen'",
             close: "Close"
@@ -1247,7 +1247,7 @@ export const translations = {
         },
         installPrompt: {
             title: "アプリをインストール",
-            description: "iPhoneのホーム画面に追加して、より快適に利用しましょう。",
+            description: "デバイスのホーム画面に追加して、より快適に利用しましょう。",
             instruction1: "「共有」ボタンをタップ",
             instruction2: "「ホーム画面に追加」を選択",
             close: "閉じる"
