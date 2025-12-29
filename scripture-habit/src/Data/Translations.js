@@ -1289,7 +1289,7 @@ export const translations = {
         },
         landing: {
             hero: {
-                title: "聖典学習を、楽しく、習慣に",
+                title: "聖典学習を\n楽しく、習慣に",
                 subtitle: "仲間と共に学び、証を分かち合うことで、日々の習慣を大きな「喜び」へと変えましょう。",
                 cta: "今すぐはじめる"
             },

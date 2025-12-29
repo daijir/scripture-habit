@@ -340,7 +340,8 @@ section {
         padding: 60px 24px;
     }
 
-    .section-title {
+    .section-title,
+    .hero-title {
         white-space: pre-line;
     }
 
