@@ -3,6 +3,7 @@ const path = require('path');
 const admin = require('firebase-admin');
 const cors = require('cors');
 const axios = require('axios'); // Add axios
+const cheerio = require('cheerio');
 const crypto = require('crypto');
 
 // Load .env from project root (one level up from backend/ directory)
@@ -516,32 +517,53 @@ app.post('/migrate-data', async (req, res) => {
 
 // Scraping Endpoint for General Conference Metadata
 app.get('/fetch-gc-metadata', async (req, res) => {
-  console.log('Received metadata request:', req.query); // Debug log
+  console.log('DEBUG: GC Metadata Request received for URL:', req.query.url);
   const { url, lang } = req.query;
 
   if (!url) return res.status(400).send({ error: 'URL is required' });
 
-  // Dynamically require axios/cheerio to avoid crashing if they aren't installed (though they should be in root)
-  let axios, cheerio;
   try {
-    axios = require('axios');
-    cheerio = require('cheerio');
-  } catch (e) {
-    console.error("Missing dependencies for scraping:", e);
-    return res.status(500).send({ error: 'Backend missing scraping dependencies.' });
-  }
+    let targetUrl;
+    try {
+      targetUrl = new URL(url);
+    } catch (e) {
+      return res.status(400).json({ error: 'Invalid URL format' });
+    }
 
-  try {
-    const targetUrl = new URL(url);
     if (lang) {
       targetUrl.searchParams.set('lang', lang);
     }
 
-    const response = await axios.get(targetUrl.toString(), {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    let response;
+    try {
+      response = await axios.get(targetUrl.toString(), {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        },
+        timeout: 10000
+      });
+    } catch (axiosError) {
+      // Fallback: If requested language fails (common for magazines), try without lang param
+      if (lang) {
+        try {
+          targetUrl.searchParams.delete('lang');
+          response = await axios.get(targetUrl.toString(), {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            },
+            timeout: 10000
+          });
+        } catch (fallbackError) {
+          return res.json({ title: '', speaker: '' });
+        }
+      } else {
+        return res.json({ title: '', speaker: '' });
       }
-    });
+    }
+
+    if (!response || !response.data) {
+      return res.json({ title: '', speaker: '' });
+    }
 
     const $ = cheerio.load(response.data);
 
@@ -580,15 +602,18 @@ app.get('/fetch-gc-metadata', async (req, res) => {
       speaker = $('a.author-name').first().text().trim();
     } else if ($('.speaker-name').length) {
       speaker = $('.speaker-name').text().trim();
+    } else if ($('div.byline p').length) {
+      speaker = $('div.byline p').first().text().trim();
     }
 
-    // Clean up title/speaker if needed
-    // e.g., remove "By " prefix if present? usually raw text is fine.
+    if (speaker) {
+      speaker = speaker.replace(/^(By|Par|De|Por)\s+/i, '').trim();
+    }
 
     res.json({ title, speaker });
   } catch (error) {
-    console.error('Error scraping GC:', error.message);
-    res.status(500).json({ error: 'Failed to fetch metadata' });
+    console.error('CRITICAL ERROR in /fetch-gc-metadata:', error);
+    res.json({ title: '', speaker: '' });
   }
 });
 

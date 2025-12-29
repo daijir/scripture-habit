@@ -10,8 +10,8 @@ import LinkPreview from '../LinkPreview/LinkPreview';
 // Helper to check if a string is likely a GC URL or Shortcode
 const isGCUrl = (str) => {
     if (!str) return false;
-    // URL check
-    if (str.includes('churchofjesuschrist.org') && (str.includes('general-conference') || str.includes('study/general-conference'))) return true;
+    // URL check: Any churchofjesuschrist.org study URL might have metadata
+    if (str.includes('churchofjesuschrist.org') && (str.includes('/study/') || str.includes('general-conference'))) return true;
     // Shortcode check: "2023/04/nelson" or "2023/10/peacemakers-needed"
     // Regex: 4 digits / 2 digits / chars
     return /^\d{4}\/\d{2}\/.+$/.test(str);
@@ -193,7 +193,13 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
     const chapterValue = chapterMatch ? chapterMatch[1].trim() : '';
 
     // Check if it's GC
-    if (scriptureName === 'General Conference' || scriptureName === '総大会') {
+    const gcVariants = [
+        'General Conference', '総大会', 'Conferência Geral', '總會大會',
+        'Conferencia General', 'Đại Hội Trung Ương', 'การประชุมใหญ่สามัญ',
+        '연차 대회', 'Pangkalahatang Kumperensya', 'Mkutano Mkuu'
+    ];
+
+    if (gcVariants.includes(scriptureName)) {
         // If chapterValue is a clean URL, use the GC Renderer
         if (isGCUrl(chapterValue)) {
             const parts = {

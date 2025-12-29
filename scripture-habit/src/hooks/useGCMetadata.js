@@ -59,16 +59,14 @@ export const useGCMetadata = (urlOrSlug, language) => {
                 }
 
                 const API_BASE = Capacitor.isNativePlatform() ? 'https://scripture-habit.vercel.app' : '';
-                const apiUrl = `${API_BASE}/api/fetch-gc-metadata?url=${encodeURIComponent(fetchUrl)}&lang=${language === 'ja' ? 'jpn' : 'eng'}`;
-                // defaulting to eng if not ja, logic can be expanded. 
-                // The user supports many languages now. We need a map.
+                // Logic for mapping languages to Church website language codes
 
                 const langMap = {
                     'en': 'eng',
                     'ja': 'jpn',
                     'pt': 'por',
                     'es': 'spa',
-                    'zho': 'zho', // traditional chinese? url lang param usually 'zho' or 'cmn'? Church uses 'zho' for Chinese (Traditional) on some paths, check specific codes.
+                    'zho': 'zho', 
                     'vi': 'vie',
                     'th': 'tha',
                     'ko': 'kor',

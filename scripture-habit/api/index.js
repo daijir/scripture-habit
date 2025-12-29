@@ -557,7 +557,12 @@ app.get('/api/fetch-gc-metadata', async (req, res) => {
     if (!url) return res.status(400).send({ error: 'URL is required' });
 
     try {
-        const targetUrl = new URL(url);
+        let targetUrl;
+        try {
+            targetUrl = new URL(url);
+        } catch (e) {
+            return res.status(400).json({ error: 'Invalid URL format' });
+        }
 
         // SSRF Protection: Validate Hostname
         if (targetUrl.hostname !== 'www.churchofjesuschrist.org' && targetUrl.hostname !== 'churchofjesuschrist.org') {
@@ -571,11 +576,36 @@ app.get('/api/fetch-gc-metadata', async (req, res) => {
             targetUrl.searchParams.set('lang', lang);
         }
 
-        const response = await axios.get(targetUrl.toString(), {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        let response;
+        try {
+            response = await axios.get(targetUrl.toString(), {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+                },
+                timeout: 10000
+            });
+        } catch (axiosError) {
+            // Fallback: If requested language fails, try without lang param
+            if (lang) {
+                try {
+                    targetUrl.searchParams.delete('lang');
+                    response = await axios.get(targetUrl.toString(), {
+                        headers: {
+                            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+                        },
+                        timeout: 10000
+                    });
+                } catch (fallbackError) {
+                    return res.json({ title: '', speaker: '' });
+                }
+            } else {
+                return res.json({ title: '', speaker: '' });
             }
-        });
+        }
+
+        if (!response || !response.data) {
+            return res.json({ title: '', speaker: '' });
+        }
 
         const $ = cheerio.load(response.data);
 
@@ -612,12 +642,18 @@ app.get('/api/fetch-gc-metadata', async (req, res) => {
             speaker = $('p.author-name').first().text().trim();
         } else if ($('a.author-name').length) {
             speaker = $('a.author-name').first().text().trim();
+        } else if ($('div.byline p').length) {
+            speaker = $('div.byline p').first().text().trim();
+        }
+
+        if (speaker) {
+            speaker = speaker.replace(/^(By|Par|De|Por)\s+/i, '').trim();
         }
 
         res.json({ title, speaker });
     } catch (error) {
         console.error('Error scraping GC:', error.message);
-        res.status(500).json({ error: 'Failed to fetch metadata' });
+        res.json({ title: '', speaker: '' });
     }
 });
 
