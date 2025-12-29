@@ -1,4 +1,6 @@
-.Donate {}
+.Donate {
+    overflow-x: hidden;
+}
 
 .donate-mascot-wrapper {
     margin: 1.5rem 0;
