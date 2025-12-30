@@ -18,6 +18,7 @@ import GroupOptions from './Components/GroupOptions/GroupOptions';
 import LandingPage from './Components/LandingPage/LandingPage';
 import Welcome from './Components/Welcome/Welcome';
 import { LanguageProvider, useLanguage } from './Context/LanguageContext.jsx';
+import { SettingsProvider } from './Context/SettingsContext.jsx';
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
 import InviteRedirect from './Components/InviteRedirect/InviteRedirect';
 import Maintenance from './Components/Maintenance/Maintenance';
@@ -115,10 +116,12 @@ const App = () => {
 
   if (MAINTENANCE_MODE || systemStatus.error === 'quota' || systemStatus.maintenance) {
     return (
-      <LanguageProvider>
-        <SEOManager />
-        <Maintenance isQuota={systemStatus.error === 'quota'} />
-      </LanguageProvider>
+      <SettingsProvider>
+        <LanguageProvider>
+          <SEOManager />
+          <Maintenance isQuota={systemStatus.error === 'quota'} />
+        </LanguageProvider>
+      </SettingsProvider>
     );
   }
 
@@ -138,40 +141,42 @@ const App = () => {
   if (authLoading) return null; // Or a loading spinner
 
   return (
-    <LanguageProvider>
-      <SEOManager />
-      <div className={getAppClass()}>
-        <Routes>
-          <Route
-            path="/"
-            element={isStandalone ? <Navigate to="/dashboard" replace /> : <LandingPage />}
+    <SettingsProvider>
+      <LanguageProvider>
+        <SEOManager />
+        <div className={getAppClass()}>
+          <Routes>
+            <Route
+              path="/"
+              element={isStandalone ? <Navigate to="/dashboard" replace /> : <LandingPage />}
+            />
+            <Route path="/welcome" element={<Welcome />} />
+            <Route path="/login" element={<LoginForm />} />
+            <Route path="/signup" element={<SignupForm />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/group-form" element={<GroupForm />} />
+            <Route path="/join-group" element={<JoinGroup />} />
+
+            <Route path="/group-options" element={<GroupOptions />} />
+            <Route path="/group/:id" element={<GroupDetails />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/join/:inviteCode" element={<InviteRedirect />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/legal" element={<LegalDisclosure />} />
+
+          </Routes>
+          <ToastContainer position="top-right" autoClose={3000} />
+          <Analytics />
+          <InstallPrompt />
+          <CookieConsent />
+          <BrowserWarningWrapper
+            isOpen={showBrowserWarning}
+            onClose={() => setShowBrowserWarning(false)}
           />
-          <Route path="/welcome" element={<Welcome />} />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/signup" element={<SignupForm />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/group-form" element={<GroupForm />} />
-          <Route path="/join-group" element={<JoinGroup />} />
-
-          <Route path="/group-options" element={<GroupOptions />} />
-          <Route path="/group/:id" element={<GroupDetails />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/join/:inviteCode" element={<InviteRedirect />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<TermsOfService />} />
-          <Route path="/legal" element={<LegalDisclosure />} />
-
-        </Routes>
-        <ToastContainer position="top-right" autoClose={3000} />
-        <Analytics />
-        <InstallPrompt />
-        <CookieConsent />
-        <BrowserWarningWrapper
-          isOpen={showBrowserWarning}
-          onClose={() => setShowBrowserWarning(false)}
-        />
-      </div>
-    </LanguageProvider>
+        </div>
+      </LanguageProvider>
+    </SettingsProvider>
   );
 };
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
+import { useSettings } from '../../Context/SettingsContext.jsx';
 import { auth, db } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 import { UilSignOutAlt } from '@iconscout/react-unicons';
@@ -12,6 +13,7 @@ import Footer from '../Footer/Footer';
 
 const Profile = ({ userData, stats }) => {
     const { language, setLanguage, t } = useLanguage();
+    const { fontSize, setFontSize } = useSettings();
     const navigate = useNavigate();
     const [nickname, setNickname] = useState('');
     const [stake, setStake] = useState('');
@@ -277,10 +279,41 @@ const Profile = ({ userData, stats }) => {
 
 
 
-            <div className="profile-section" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', color: 'var(--red)', marginTop: '20px', marginBottom: '20px' }} onClick={handleSignOut}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <UilSignOutAlt />
-                    <span style={{ fontSize: '1.2rem', fontWeight: '500' }}>{t('signOut.title')}</span>
+
+
+
+            <div className="profile-section">
+                <h2>{t('profile.fontSize.title')}</h2>
+                <p style={{ marginBottom: '1.2rem', fontSize: '0.9rem', color: 'var(--gray)' }}>{t('profile.fontSize.description')}</p>
+                <div className="font-size-options">
+                    <div
+                        className={`font-option ${fontSize === 'small' ? 'active' : ''}`}
+                        onClick={() => setFontSize('small')}
+                    >
+                        <span style={{ fontSize: '0.8rem', fontWeight: 'bold' }}>A</span>
+                        <span>{t('profile.fontSize.small')}</span>
+                    </div>
+                    <div
+                        className={`font-option ${fontSize === 'medium' ? 'active' : ''}`}
+                        onClick={() => setFontSize('medium')}
+                    >
+                        <span style={{ fontSize: '1rem', fontWeight: 'bold' }}>A</span>
+                        <span>{t('profile.fontSize.medium')}</span>
+                    </div>
+                    <div
+                        className={`font-option ${fontSize === 'large' ? 'active' : ''}`}
+                        onClick={() => setFontSize('large')}
+                    >
+                        <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>A</span>
+                        <span>{t('profile.fontSize.large')}</span>
+                    </div>
+                    <div
+                        className={`font-option ${fontSize === 'extraLarge' ? 'active' : ''}`}
+                        onClick={() => setFontSize('extraLarge')}
+                    >
+                        <span style={{ fontSize: '1.4rem', fontWeight: 'bold' }}>A</span>
+                        <span>{t('profile.fontSize.extraLarge')}</span>
+                    </div>
                 </div>
             </div>
 
@@ -357,6 +390,14 @@ const Profile = ({ userData, stats }) => {
                         <span className="lang-flag">🇰🇪</span>
                         <span className="lang-name">{t('languages.swahili')}</span>
                     </div>
+                </div>
+
+            </div>
+
+            <div className="profile-section" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', color: 'var(--red)', marginTop: '20px', marginBottom: '20px' }} onClick={handleSignOut}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <UilSignOutAlt />
+                    <span style={{ fontSize: '1.2rem', fontWeight: '500' }}>{t('signOut.title')}</span>
                 </div>
             </div>
 

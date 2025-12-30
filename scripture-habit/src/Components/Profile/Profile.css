@@ -230,7 +230,52 @@
     text-align: center;
 }
 
+/* Font Size Options */
+.font-size-options {
+    display: flex;
+    gap: 1rem;
+    justify-content: space-between;
+}
+
+.font-option {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    padding: 1rem 0.5rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s ease;
+    min-width: 0;
+}
+
+.font-option:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.font-option.active {
+    background: rgba(255, 145, 157, 0.2);
+    border-color: var(--pink);
+    color: var(--black);
+}
+
+.font-option span:last-child {
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-align: center;
+}
+
 @media (max-width: 768px) {
+    .font-size-options {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+
     .language-options {
         grid-template-columns: repeat(2, 1fr);
     }

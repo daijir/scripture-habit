@@ -100,6 +100,14 @@ export const translations = {
             typeToConfirmNickname: "Please type your nickname '{nickname}' to confirm deletion.",
             deleteAccountError: "Error deleting account. You may need to log out and log in again before performing this action for security reasons.",
             deleteAccountSuccess: "Account deleted successfully.",
+            fontSize: {
+                title: "Font Size",
+                description: "Adjust the text size for readability.",
+                small: "Small",
+                medium: "Medium",
+                large: "Large",
+                extraLarge: "Extra Large"
+            },
             appBackground: "App Development Background",
             backgroundStory: "Dear users, thank you very much for using this scripture study app.\n\nThe background of creating this app is to help as many people as possible establish and improve their scripture study habits. Before talking about why I made this app, let me talk a little about personal revelation.\n\nI listened to Clayton Christensen's talk \"Dealing with the Dangers of Success\" on BYU Speeches, and learned that programs currently introduced as official Church programs such as Sunday School, Primary, Family Home Evening, and Seminary were not originally created by \"instructions from Church headquarters,\" but were born from \"personal revelation\" by local members to solve problems they faced. Because they were effective, they were later adopted by central leadership and standardized worldwide.\n\nHowever, as organizations grow and everything becomes standardized, it becomes difficult for \"new solutions\" to emerge from the field. Brother Christensen told BYU students that he wanted them to \"not just follow standardized programs, but continue to receive inspiration and invent solutions to new problems they face.\"\n\nAfter hearing this talk, I learned that the current Church programs were created by personal revelation - in other words, actions that were very intrinsic and motivated by love, not instructions from above. I felt that if there are problems in local areas, rather than waiting for Church headquarters to solve them, it is important to rely on personal revelation and receive personal revelation for that area.\n\nI felt one problem common to almost all areas: the scripture study habits of members, new members, and investigators. This is something that should be done very personally and within family love, and is also an area that leaders cannot manage.\n\nHowever, I believe that deliberately avoiding addressing this topic results in several major problems.\n\nThis app was created as an extension of a school project, but I made it with the belief that it can more effectively address the problems I mentioned above. Through this app, I believe that more people can build \"the habit of scripture study\" in this rapidly changing and chaotic society, receive \"personal revelation,\" and make this society better.\n\nThank you for reading this long text. Finally, may the Lord's blessings be richly poured upon each of you."
         },
@@ -764,7 +772,15 @@ export const translations = {
             cancelDeleteAccount: "キャンセル",
             typeToConfirmNickname: "確認のため、あなたのニックネーム「{nickname}」を入力してください。",
             deleteAccountError: "アカウントを削除できませんでした。セキュリティ上の理由から、この操作を行う前にもう一度ログインし直す必要がある場合があります。",
-            deleteAccountSuccess: "アカウントを削除しました。"
+            deleteAccountSuccess: "アカウントを削除しました。",
+            fontSize: {
+                title: "文字の大きさ",
+                description: "読みやすいサイズに調整してください。",
+                small: "小さめ",
+                medium: "標準",
+                large: "大きめ",
+                extraLarge: "特大"
+            }
         },
         groupChat: {
             send: "送信",
@@ -1474,7 +1490,15 @@ export const translations = {
             cancelDeleteAccount: "Cancelar",
             typeToConfirmNickname: "Por favor, digite seu apelido '{nickname}' para confirmar a exclusão.",
             deleteAccountError: "Erro ao excluir conta. Você pode precisar sair e entrar novamente antes de realizar esta ação por motivos de segurança.",
-            deleteAccountSuccess: "Conta excluída com sucesso."
+            deleteAccountSuccess: "Conta excluída com sucesso.",
+            fontSize: {
+                title: "Tamanho da Fonte",
+                description: "Ajuste o tamanho do texto para melhor leitura.",
+                small: "Pequeno",
+                medium: "Médio",
+                large: "Grande",
+                extraLarge: "Extra Grande"
+            }
         },
         groupChat: {
             send: "Enviar",
@@ -2143,7 +2167,15 @@ export const translations = {
             cancelDeleteAccount: "取消",
             typeToConfirmNickname: "請輸入您的暱稱「{nickname}」以確認刪除。",
             deleteAccountError: "刪除帳號時出錯。基於安全原因，您可能需要在執行此操作前重新登入。",
-            deleteAccountSuccess: "帳號已成功刪除。"
+            deleteAccountSuccess: "帳號已成功刪除。",
+            fontSize: {
+                title: "字體大小",
+                description: "調整為適合閱讀的大小。",
+                small: "偏小",
+                medium: "標準",
+                large: "偏大",
+                extraLarge: "特大"
+            }
         },
         groupChat: {
             send: "發送",
@@ -2782,7 +2814,15 @@ export const translations = {
             cancelDeleteAccount: "Cancelar",
             typeToConfirmNickname: "Escriba su apodo '{nickname}' para confirmar la eliminación.",
             deleteAccountError: "Error al eliminar la cuenta. Es posible que deba cerrar sesión e iniciar sesión nuevamente antes de realizar esta acción por razones de seguridad.",
-            deleteAccountSuccess: "Cuenta eliminada con éxito."
+            deleteAccountSuccess: "Cuenta eliminada con éxito.",
+            fontSize: {
+                title: "Tamaño de la fuente",
+                description: "Ajuste el tamaño del texto para una mejor lectura.",
+                small: "Pequeño",
+                medium: "Medio",
+                large: "Grande",
+                extraLarge: "Extra grande"
+            }
         },
         groupChat: {
             send: "Enviar",
@@ -3422,7 +3462,15 @@ export const translations = {
             cancelDeleteAccount: "Hủy",
             typeToConfirmNickname: "Vui lòng nhập biệt danh '{nickname}' của bạn để xác nhận xóa.",
             deleteAccountError: "Lỗi khi xóa tài khoản. Bạn có thể cần đăng xuất và đăng nhập lại trước khi thực hiện hành động này vì lý do bảo mật.",
-            deleteAccountSuccess: "Đã xóa tài khoản thành công."
+            deleteAccountSuccess: "Đã xóa tài khoản thành công.",
+            fontSize: {
+                title: "Kích thước chữ",
+                description: "Điều chỉnh kích thước văn bản để dễ đọc hơn.",
+                small: "Nhỏ",
+                medium: "Vừa",
+                large: "Lớn",
+                extraLarge: "Rất lớn"
+            }
         },
         groupChat: {
             send: "Gửi",
@@ -4060,7 +4108,15 @@ export const translations = {
             cancelDeleteAccount: "ยกเลิก",
             typeToConfirmNickname: "กรุณาพิมพ์ชื่อเล่นของคุณ '{nickname}' เพื่อยืนยันการลบ",
             deleteAccountError: "เกิดข้อผิดพลาดในการลบบัญชี คุณอาจต้องออกจากระบบและเข้าสู่ระบบใหม่อีกครั้งก่อนดำเนินการนี้เพื่อความปลอดภัย",
-            deleteAccountSuccess: "ลบบัญชีสำเร็จ"
+            deleteAccountSuccess: "ลบบัญชีสำเร็จ",
+            fontSize: {
+                title: "ขนาดตัวอักษร",
+                description: "ปรับขนาดตัวอักษรเพื่อให้อ่านง่ายขึ้น",
+                small: "เล็ก",
+                medium: "ปกติ",
+                large: "ใหญ่",
+                extraLarge: "ใหญ่พิเศษ"
+            }
         },
         groupChat: {
             send: "ส่ง",
@@ -4724,7 +4780,15 @@ export const translations = {
             cancelDeleteAccount: "취소",
             typeToConfirmNickname: "삭제를 확인하려면 닉네임 '{nickname}'을(를) 입력해 주세요.",
             deleteAccountError: "계정을 삭제하는 중 오류가 발생했습니다. 보안상의 이유로 이 작업을 수행하기 전에 로그아웃했다가 다시 로그인해야 할 수 있습니다.",
-            deleteAccountSuccess: "계정이 성공적으로 삭제되었습니다."
+            deleteAccountSuccess: "계정이 성공적으로 삭제되었습니다.",
+            fontSize: {
+                title: "글자 크기",
+                description: "읽기 편한 크기로 텍스트 크기를 조절하세요.",
+                small: "작게",
+                medium: "보통",
+                large: "크게",
+                extraLarge: "가장 크게"
+            }
         },
         groupChat: {
             send: "전송",
@@ -5388,7 +5452,15 @@ export const translations = {
             cancelDeleteAccount: "I-cancel",
             typeToConfirmNickname: "Pakisulat ang iyong nickname na '{nickname}' para kumpirmahin ang pag-delete.",
             deleteAccountError: "Error sa pag-delete ng account. Maaaring kailangan mo munang mag-log out at mag-log in muli bago gawin ang aksyong ito para sa seguridad.",
-            deleteAccountSuccess: "Matagumpay na na-delete ang account."
+            deleteAccountSuccess: "Matagumpay na na-delete ang account.",
+            fontSize: {
+                title: "Laki ng Font",
+                description: "Ayusin ang laki ng teksto para mas madaling basahin.",
+                small: "Maliit",
+                medium: "Katamtaman",
+                large: "Malaki",
+                extraLarge: "Napakalaki"
+            }
         },
         groupChat: {
             send: "Ipadala",
@@ -6051,7 +6123,15 @@ export const translations = {
             cancelDeleteAccount: "Ghairi",
             typeToConfirmNickname: "Tafadhali andika jina lako la utani '{nickname}' ili kuthibitisha kufuta.",
             deleteAccountError: "Hitilafu imetokea wakati wa kufuta akaunti. Unaweza kuhitaji kutoka na kuingia tena kabla ya kufanya hatua hii kwa sababu za kiusalama.",
-            deleteAccountSuccess: "Akaunti imefutwa kikamilifu."
+            deleteAccountSuccess: "Akaunti imefutwa kikamilifu.",
+            fontSize: {
+                title: "Ukubwa wa Maandishi",
+                description: "Rekebisha ukubwa wa maandishi kwa usomaji bora.",
+                small: "Ndogo",
+                medium: "Wastani",
+                large: "Kubwa",
+                extraLarge: "Kubwa Sana"
+            }
         },
         groupChat: {
             send: "Tuma",
