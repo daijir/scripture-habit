@@ -562,13 +562,18 @@ export const translations = {
         browserWarning: {
             modalTitle: "Default Browser Recommended",
             modalDescription: "For the best experience and security, we recommend using a standard browser like Chrome, Safari, or Edge. Some features, such as Google Sign-in, may be restricted within app-specific browsers (LINE, Instagram, Messenger, etc.).",
-            continueButton: "Continue anyway",
-            copyLink: "Copy Link",
+            continueButton: "Continue to App",
+            copyLinkIos: "Copy Link & Open in Safari",
+            copyLinkAndroid: "Copy Link & Open in Chrome",
+            copyLinkDefault: "Copy Link to Clipboard",
             linkCopied: "Link copied!",
+            recommended: "Recommended Browsers",
             howToOpen: {
                 line: "Tap the three-dot menu (⋮) in the top right and select 'Open in browser'.",
                 instagram: "Tap the three-dot menu (⋮) in the top right and select 'Open in browser'.",
                 messenger: "Tap the ellipsis (...) and select 'Open in external browser'.",
+                facebook_ios: "Tap the ellipsis (...) in the bottom right and select 'Open in browser'.",
+                facebook_android: "Tap the ellipsis (...) in the top right and select 'Open in browser'.",
                 whatsapp: "Copy the link and paste it into Chrome or Safari."
             }
         },
@@ -1229,13 +1234,18 @@ export const translations = {
         browserWarning: {
             modalTitle: "標準ブラウザでのご利用を推奨します",
             modalDescription: "Scripture Habitを安全かつ快適にご利用いただくため、ChromeやSafariなどの標準ブラウザでのご利用を強く推奨しております。LINEやInstagramなどのアプリ内ブラウザでは、Googleログインなどの重要な機能が制限される場合があります。",
-            continueButton: "このまま進む",
-            copyLink: "URLをコピーする",
+            continueButton: "このままアプリを開く",
+            copyLinkIos: "URLをコピーしてSafariで開く",
+            copyLinkAndroid: "URLをコピーしてChrome等で開く",
+            copyLinkDefault: "URLをコピーする",
             linkCopied: "URLをコピーしました",
+            recommended: "推奨ブラウザ",
             howToOpen: {
                 line: "右上のメニュー（︙）から「他のブラウザで開く」をタップしてください。",
                 instagram: "右上のメニュー（︙）から「ブラウザで開く」をタップしてください。",
                 messenger: "右上のメニュー（⋯）から「外部ブラウザで開く」をタップしてください。",
+                facebook_ios: "右下の（⋯）メニューから「ブラウザで開く」をタップしてください。",
+                facebook_android: "右上の（⋯）メニューから「ブラウザで開く」をタップしてください。",
                 whatsapp: "URLをコピーして、ChromeやSafariに貼り付けてください。"
             }
         },
@@ -1929,15 +1939,20 @@ export const translations = {
             welcomeMessage: "Bem-vindo ao\nScripture Habit!"
         },
         browserWarning: {
-            modalTitle: "Use o navegador padrão",
-            modalDescription: "Navegadores integrados em aplicativos (LINE, Instagram, Messenger, WhatsApp, etc.) geralmente têm restrições de segurança que impedem o funcionamento correto do login ou do login do Google.",
-            notRecommended: "Não recomendado",
-            recommended: "Recomendado",
-            continueButton: "Entendi, Continuar",
+            modalTitle: "Navegador Padrão Recomendado",
+            modalDescription: "Para uma melhor experiência e segurança, recomendamos o uso de um navegador padrão como Chrome, Safari ou Edge. Alguns recursos, como o login do Google, podem ser restritos em navegadores internos de aplicativos (LINE, Instagram, Messenger, etc.).",
+            continueButton: "Continuar para o aplicativo",
+            copyLinkIos: "Copiar link e abrir no Safari",
+            copyLinkAndroid: "Copiar link e abrir no Chrome",
+            copyLinkDefault: "Copiar link para a área de transferência",
+            linkCopied: "Link copiado!",
+            recommended: "Navegadores Recomendados",
             howToOpen: {
                 line: "Toque no menu de três pontos (⋮) no canto superior direito e selecione 'Abrir no navegador'.",
                 instagram: "Toque no menu de três pontos (⋮) no canto superior direito e selecione 'Abrir no navegador'.",
                 messenger: "Toque nas reticências (...) e selecione 'Abrir no navegador externo'.",
+                facebook_ios: "Toque nas reticências (...) no canto inferior direito e selecione 'Abrir no navegador'.",
+                facebook_android: "Toque nas reticências (...) no canto superior direito e selecione 'Abrir no navegador'.",
                 whatsapp: "Copie o link e cole-o no Chrome ou Safari."
             }
         },
@@ -2563,15 +2578,20 @@ export const translations = {
             welcomeMessage: "歡迎來到\nScripture Habit！"
         },
         browserWarning: {
-            modalTitle: "請使用預設瀏覽器",
-            modalDescription: "應用程式內瀏覽器（LINE、Instagram、Messenger、WhatsApp 等）通常有安全性限制，可能會導致登入或 Google 登入無法正常運作。",
-            notRecommended: "不推薦",
-            recommended: "推薦",
-            continueButton: "我明白，繼續",
+            modalTitle: "建議使用預設瀏覽器",
+            modalDescription: "為了獲得最佳體驗和安全性，我們建議使用 Chrome、Safari 或 Edge 等標準瀏覽器。LINE、Instagram、Messenger 等應用程式內瀏覽器可能會限制某些功能（如 Google 登入）。",
+            continueButton: "繼續前往應用程式",
+            copyLinkIos: "複製連結並在 Safari 中開啟",
+            copyLinkAndroid: "複製連結並在 Chrome 中開啟",
+            copyLinkDefault: "複製連結到剪貼簿",
+            linkCopied: "連結已複製！",
+            recommended: "推薦瀏覽器",
             howToOpen: {
                 line: "點擊右上角的三圓點選單 (⋮)，然後選擇「在瀏覽器中開啟」。",
-                instagram: "點擊右上角 三圓點選單 (⋮)，然後選擇「在瀏覽器中開啟」。",
+                instagram: "點擊右上角的三圓點選單 (⋮)，然後選擇「在瀏覽器中開啟」。",
                 messenger: "點擊省略號 (...) 並選擇「在外部瀏覽器中開啟」。",
+                facebook_ios: "點擊右下角的 (...) 選單並選擇「在瀏覽器中開啟」。",
+                facebook_android: "點擊右上角的 (...) 選單並選擇「在瀏覽器中開啟」。",
                 whatsapp: "複製連結並將其貼到 Chrome 或 Safari 中。"
             }
         },
@@ -3198,15 +3218,20 @@ export const translations = {
             welcomeMessage: "¡Bienvenido a\nScripture Habit!"
         },
         browserWarning: {
-            modalTitle: "Usa el navegador predeterminado",
-            modalDescription: "Los navegadores dentro de aplicaciones (LINE, Instagram, Messenger, WhatsApp, etc.) suelen tener restricciones de seguridad que impiden que el inicio de sesión o el inicio de sesión de Google funcionen correctamente.",
-            notRecommended: "No recomendado",
-            recommended: "Recomendado",
-            continueButton: "Entiendo, continuar",
+            modalTitle: "Navegador predeterminado recomendado",
+            modalDescription: "Para una mejor experiencia y seguridad, recomendamos usar un navegador estándar como Chrome, Safari o Edge. Los navegadores internos de aplicaciones (LINE, Instagram, Messenger, etc.) pueden restringir algunas funciones como el inicio de sesión de Google.",
+            continueButton: "Continuar a la aplicación",
+            copyLinkIos: "Copiar enlace y abrir en Safari",
+            copyLinkAndroid: "Copiar enlace y abrir en Chrome",
+            copyLinkDefault: "Copiar enlace al portapapeles",
+            linkCopied: "¡Enlace copiado!",
+            recommended: "Navegadores recomendados",
             howToOpen: {
                 line: "Toca el menú de tres puntos (⋮) en la esquina superior derecha y selecciona 'Abrir en el navegador'.",
                 instagram: "Toca el menú de tres puntos (⋮) en la esquina superior derecha y selecciona 'Abrir en el navegador'.",
                 messenger: "Toca los puntos suspensivos (...) y selecciona 'Abrir en navegador externo'.",
+                facebook_ios: "Toca los puntos suspensivos (...) en la esquina inferior derecha y selecciona 'Abrir en el navegador'.",
+                facebook_android: "Toca los puntos suspensivos (...) en la esquina superior derecha y selecciona 'Abrir en el navegador'.",
                 whatsapp: "Copia el enlace y pégalo en Chrome o Safari."
             }
         },
@@ -3831,15 +3856,20 @@ export const translations = {
             welcomeMessage: "Chào mừng bạn đến với\nScripture Habit!"
         },
         browserWarning: {
-            modalTitle: "Sử dụng trình duyệt mặc định",
-            modalDescription: "Trình duyệt trong ứng dụng (LINE, Instagram, Messenger, WhatsApp, v.v.) thường có các hạn chế bảo mật ngăn cản việc đăng nhập hoặc Đăng nhập Google hoạt động chính xác.",
-            notRecommended: "Không khuyến khích",
-            recommended: "Được khuyến khích",
-            continueButton: "Tôi hiểu, Tiếp tục",
+            modalTitle: "Khuyến nghị sử dụng trình duyệt mặc định",
+            modalDescription: "Để có trải nghiệm và bảo mật tốt nhất, chúng tôi khuyên bạn nên sử dụng trình duyệt tiêu chuẩn như Chrome, Safari hoặc Edge. Trình duyệt nội bộ của ứng dụng (LINE, Instagram, Messenger, v.v.) có thể hạn chế một số tính năng như đăng nhập Google.",
+            continueButton: "Tiếp tục vào ứng dụng",
+            copyLinkIos: "Sao chép liên kết và mở trong Safari",
+            copyLinkAndroid: "Sao chép liên kết và mở trong Chrome",
+            copyLinkDefault: "Sao chép liên kết vào bộ nhớ tạm",
+            linkCopied: "Đã sao chép liên kết!",
+            recommended: "Trình duyệt được khuyến nghị",
             howToOpen: {
                 line: "Nhấn vào menu ba chấm (⋮) ở góc trên bên phải và chọn 'Mở trong trình duyệt'.",
                 instagram: "Nhấn vào menu ba chấm (⋮) ở góc trên bên phải và chọn 'Mở trong trình duyệt'.",
                 messenger: "Nhấn vào dấu ba chấm (...) và chọn 'Mở trong trình duyệt bên ngoài'.",
+                facebook_ios: "Nhấn vào dấu ba chấm (...) ở góc dưới bên phải và chọn 'Mở trong trình duyệt'.",
+                facebook_android: "Nhấn vào dấu ba chấm (...) ở góc trên bên phải và chọn 'Mở trong trình duyệt'.",
                 whatsapp: "Sao chép liên kết và dán vào Chrome hoặc Safari."
             }
         },
@@ -4490,15 +4520,20 @@ export const translations = {
             welcomeMessage: "ยินดีต้อนรับสู่\nScripture Habit!"
         },
         browserWarning: {
-            modalTitle: "ใช้เบราว์เซอร์เริ่มต้น",
-            modalDescription: "เบราว์เซอร์ในแอป (LINE, Instagram, Messenger, WhatsApp ฯลฯ) มักจะมีข้อจำกัดด้านความปลอดภัยที่ขัดขวางไม่ให้การเข้าสู่ระบบหรือการเข้าสู่ระบบของ Google ทำงานอย่างถูกต้อง",
-            notRecommended: "ไม่แนะนำ",
-            recommended: "แนะนำ",
-            continueButton: "ฉันเข้าใจแล้ว ดำเนินการต่อ",
+            modalTitle: "แนะนำให้ใช้เบราว์เซอร์หลัก",
+            modalDescription: "เพื่อประสบการณ์และความปลอดภัยที่ดีที่สุด เราแนะนำให้ใช้เบราว์เซอร์มาตรฐาน เช่น Chrome, Safari หรือ Edge เบราว์เซอร์ภายในแอป (LINE, Instagram, Messenger ฯลฯ) อาจจำกัดฟีเจอร์บางอย่าง เช่น การเข้าสู่ระบบด้วย Google",
+            continueButton: "เข้าสู่แอปพลิเคชัน",
+            copyLinkIos: "คัดลอกลิงก์และเปิดใน Safari",
+            copyLinkAndroid: "คัดลอกลิงก์และเปิดใน Chrome",
+            copyLinkDefault: "คัดลอกลิงก์ไปยังคลิปบอร์ด",
+            linkCopied: "คัดลอกลิงก์แล้ว!",
+            recommended: "เบราว์เซอร์ที่แนะนำ",
             howToOpen: {
                 line: "แตะเมนูสามจุด (⋮) ที่มุมขวาบนแล้วเลือก 'เปิดในเบราว์เซอร์'",
                 instagram: "แตะเมนูสามจุด (⋮) ที่มุมขวาบนแล้วเลือก 'เปิดในเบราว์เซอร์'",
                 messenger: "แตะจุดไข่ปลา (...) แล้วเลือก 'เปิดในเบราว์เซอร์ภายนอก'",
+                facebook_ios: "แตะจุดไข่ปลา (...) ที่มุมขวาล่างแล้วเลือก 'เปิดในเบราว์เซอร์'",
+                facebook_android: "แตะจุดไข่ปลา (...) ที่มุมขวาบนแล้วเลือก 'เปิดในเบราว์เซอร์'",
                 whatsapp: "คัดลอกลิงก์แล้ววางใน Chrome หรือ Safari"
             }
         },
@@ -5149,15 +5184,20 @@ export const translations = {
             welcomeMessage: "Scripture Habit에 오신 것을\n환영합니다!"
         },
         browserWarning: {
-            modalTitle: "기본 브라우저 사용",
-            modalDescription: "인앱 브라우저(LINE, Instagram, Messenger, WhatsApp 등)는 종종 보안 제한으로 인해 로그인이나 Google 로그인이 올바르게 작동하지 않을 수 있습니다.",
-            notRecommended: "권장하지 않음",
-            recommended: "권장됨",
-            continueButton: "이해했습니다, 계속하기",
+            modalTitle: "기본 브라우저 사용 권장",
+            modalDescription: "더 나은 환경과 보안을 위해 Chrome, Safari 또는 Edge와 같은 표준 브라우저를 사용하시기를 권장합니다. LINE, Instagram, Messenger 등 인앱 브라우저에서는 Google 로그인 등의 일부 기능이 제한될 수 있습니다.",
+            continueButton: "앱으로 계속하기",
+            copyLinkIos: "링크 복사 및 Safari에서 열기",
+            copyLinkAndroid: "링크 복사 및 Chrome에서 열기",
+            copyLinkDefault: "클립보드에 링크 복사",
+            linkCopied: "링크가 복사되었습니다!",
+            recommended: "권장 브라우저",
             howToOpen: {
                 line: "오른쪽 상단의 점 세 개 메뉴(⋮)를 누르고 '다른 브라우저로 열기'를 선택하세요.",
                 instagram: "오른쪽 상단의 점 세 개 메뉴(⋮)를 누르고 '브라우저에서 열기'를 선택하세요.",
                 messenger: "줄임표(...)를 누르고 '외부 브라우저에서 열기'를 선택하세요.",
+                facebook_ios: "오른쪽 하단의 (...) 메뉴를 누르고 '브라우저에서 열기'를 선택하세요.",
+                facebook_android: "오른쪽 상단의 (...) 메뉴를 누르고 '브라우저에서 열기'를 선택하세요.",
                 whatsapp: "링크를 복사하여 Chrome 또는 Safari에 붙여넣으세요."
             }
         },
@@ -5807,15 +5847,20 @@ export const translations = {
             welcomeMessage: "Maligayang pagdating sa\nScripture Habit!"
         },
         browserWarning: {
-            modalTitle: "Gamitin ang Default Browser",
-            modalDescription: "Ang mga in-app browser (LINE, Instagram, Messenger, WhatsApp, atbp.) ay madalas na may mga restriksyon sa seguridad na pumipigil sa tamang pag-login o Google Sign-in.",
-            notRecommended: "Hindi Inirerekomenda",
-            recommended: "Inirerekomenda",
-            continueButton: "Naiintindihan ko, Ituloy",
+            modalTitle: "Inirerekomendang Gamitin ang Default Browser",
+            modalDescription: "Para sa pinakamagandang karanasan at seguridad, inirerekomenda namin ang paggamit ng mga standard na browser tulad ng Chrome, Safari, o Edge. Ang mga in-app browser (LINE, Instagram, Messenger, atbp.) ay maaaring maglimita sa ilang feature tulad ng Google Login.",
+            continueButton: "Magpatuloy sa App",
+            copyLinkIos: "Kopyahin ang link at buksan sa Safari",
+            copyLinkAndroid: "Kopyahin ang link at buksan sa Chrome",
+            copyLinkDefault: "Kopyahin ang link sa clipboard",
+            linkCopied: "Nakopya ang link!",
+            recommended: "Inirerekomendang Browser",
             howToOpen: {
                 line: "I-tap ang three-dot menu (⋮) sa kanang bahagi sa itaas at piliin ang 'Buksan sa browser'.",
                 instagram: "I-tap ang three-dot menu (⋮) sa kanang bahagi sa itaas at piliin ang 'Buksan sa browser'.",
                 messenger: "I-tap ang ellipsis (...) at piliin ang 'Buksan sa external browser'.",
+                facebook_ios: "I-tap ang ellipsis (...) sa kanang bahagi sa ibaba at piliin ang 'Buksan sa browser'.",
+                facebook_android: "I-tap ang ellipsis (...) sa kanang bahagi sa itaas at piliin ang 'Buksan sa browser'.",
                 whatsapp: "Kopyahin ang link at i-paste ito sa Chrome o Safari"
             }
         },
@@ -6465,15 +6510,20 @@ export const translations = {
             welcomeMessage: "Karibu kwenye\nScripture Habit!"
         },
         browserWarning: {
-            modalTitle: "Tumia Kivinjari Chaguo-msingi",
-            modalDescription: "Vivinjari vya ndani ya programu (LINE, Instagram, Messenger, WhatsApp, nk.) mara nyingi huwa na vizuizi vya usalama ambavyo huzuia kuingia au Kuingia kwa Google kufanya kazi vizuri.",
-            notRecommended: "Haipendekezwi",
-            recommended: "Inapendekezwi",
-            continueButton: "Nimeelewa, Endelea",
+            modalTitle: "Tunapendekeza Kivinjari Chaguo-msingi",
+            modalDescription: "Kwa matumizi bora na usalama, tunapendekeza utumie kivinjari cha kawaida kama Chrome, Safari, au Edge. Vivinjari vya ndani ya programu (LINE, Instagram, Messenger, nk.) vinaweza kuzuia baadhi ya vipengele kama vile kuingia kupitia Google.",
+            continueButton: "Endelea kwenye Programu",
+            copyLinkIos: "Nakili kiungo na ufungue kwenye Safari",
+            copyLinkAndroid: "Nakili kiungo na ufungue kwenye Chrome",
+            copyLinkDefault: "Nakili kiungo kwenye ubao wa kunakili",
+            linkCopied: "Kiungo kimenakiliwa!",
+            recommended: "Vivinjari Vinavyopendekezwi",
             howToOpen: {
                 line: "Gusa menyu ya vitone vitatu (⋮) upande wa juu kulia na uchague 'Fungua kwenye kivinjari'.",
                 instagram: "Gusa menyu ya vitone vitatu (⋮) upande wa juu kulia na uchague 'Fungua kwenye kivinjari'.",
                 messenger: "Gusa dokezo (...) na uchague 'Fungua kwenye kivinjari cha nje'.",
+                facebook_ios: "Gusa dokezo (...) upande wa chini kulia na uchague 'Fungua kwenye kivinjari'.",
+                facebook_android: "Gusa dokezo (...) upande wa juu kulia na uchague 'Fungua kwenye kivinjari'.",
                 whatsapp: "Nakili kiungo na ukibandike kwenye Chrome au Safari."
             }
         },

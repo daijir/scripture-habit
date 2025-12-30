@@ -1,16 +1,44 @@
 import React, { useMemo } from 'react';
-import { detectInAppBrowser } from '../../Utils/browserDetection';
+import { detectInAppBrowser, getAndroidIntentUrl } from '../../Utils/browserDetection';
 import './BrowserWarningModal.css';
-import { UilCheckCircle, UilTimesCircle, UilInfoCircle } from '@iconscout/react-unicons';
+import { UilCheckCircle, UilInfoCircle, UilCopyAlt, UilExternalLinkAlt } from '@iconscout/react-unicons';
+import { toast } from 'react-toastify';
 
 const BrowserWarningModal = ({ isOpen, onClose, onContinue, t }) => {
-    const detectedApp = useMemo(() => {
-        return detectInAppBrowser();
+    const { detectedApp, isAndroid, isIos } = useMemo(() => {
+        const ua = navigator.userAgent || navigator.vendor || window.opera;
+        return {
+            detectedApp: detectInAppBrowser(),
+            isAndroid: /Android/i.test(ua),
+            isIos: /iPhone|iPad|iPod/i.test(ua)
+        };
     }, []);
 
-    const handleCopyLink = () => {
-        navigator.clipboard.writeText(window.location.href);
-        alert(t('browserWarning.linkCopied'));
+    const getCopyButtonText = () => {
+        if (isIos) return t('browserWarning.copyLinkIos');
+        if (isAndroid) return t('browserWarning.copyLinkAndroid');
+        return t('browserWarning.copyLinkDefault');
+    };
+
+    const handleActionClick = () => {
+        if (isAndroid) {
+            // On Android, try to launch Chrome via Intent
+            window.location.href = getAndroidIntentUrl();
+            // Also copy to clipboard as fallback
+            navigator.clipboard.writeText(window.location.href);
+        } else {
+            // On iOS/others, copy to clipboard
+            navigator.clipboard.writeText(window.location.href);
+            toast.info(t('browserWarning.linkCopied'), {
+                position: "bottom-center",
+                autoClose: 2000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                theme: "colored",
+            });
+        }
     };
 
     if (!isOpen) return null;
@@ -30,17 +58,22 @@ const BrowserWarningModal = ({ isOpen, onClose, onContinue, t }) => {
                     <div className="in-app-instruction">
                         <div className="instruction-header">
                             <UilInfoCircle size="20" className="info-icon" />
-                            <span>{t(`browserWarning.howToOpen.${detectedApp}`)}</span>
+                            <span>
+                                {detectedApp === 'facebook'
+                                    ? (isIos ? t('browserWarning.howToOpen.facebook_ios') : t('browserWarning.howToOpen.facebook_android'))
+                                    : t(`browserWarning.howToOpen.${detectedApp}`)}
+                            </span>
                         </div>
                     </div>
                 )}
 
                 <div className="browser-action-buttons">
-                    <button className="browser-copy-btn" onClick={handleCopyLink}>
-                        <UilInfoCircle size="18" />
-                        {t('browserWarning.copyLink')}
+                    <button className="browser-copy-btn" onClick={handleActionClick}>
+                        <UilCopyAlt size="20" />
+                        {getCopyButtonText()}
                     </button>
                     <button className="browser-continue-btn" onClick={onContinue}>
+                        <UilExternalLinkAlt size="20" />
                         {t('browserWarning.continueButton')}
                     </button>
                 </div>

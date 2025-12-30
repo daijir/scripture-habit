@@ -1,8 +1,25 @@
 export const detectInAppBrowser = () => {
+    // For testing: allow overriding via URL parameter ?debugBrowser=instagram
+    const urlParams = new URLSearchParams(window.location.search);
+    const debugBrowser = urlParams.get('debugBrowser');
+    if (debugBrowser) return debugBrowser;
+
     const ua = navigator.userAgent || navigator.vendor || window.opera;
     if (/Line\//i.test(ua)) return 'line';
     if (/Instagram/i.test(ua)) return 'instagram';
-    if (/FBAN|FBAV/i.test(ua)) return 'messenger';
+
+    // Distinguish between Facebook and Messenger
+    if (/FBAN|FBAV/i.test(ua)) {
+        if (/Messenger/i.test(ua)) return 'messenger';
+        return 'facebook';
+    }
+
+    // Android-specific patterns
+    if (/FB_IAB/i.test(ua)) {
+        if (/MESSENGER/i.test(ua)) return 'messenger';
+        return 'facebook';
+    }
+
     if (/WhatsApp/i.test(ua)) return 'whatsapp';
     return null;
 };
@@ -15,10 +32,7 @@ export const handleInAppBrowserRedirect = () => {
     const app = detectInAppBrowser();
     if (!app) return false;
 
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
-    const isAndroid = /Android/i.test(ua);
-
-    // LINE: Use built-in external browser parameter
+    // LINE: Use built-in external browser parameter (This works automatically)
     if (app === 'line') {
         if (window.location.search.indexOf('openExternalBrowser=1') === -1) {
             const separator = window.location.search ? '&' : '?';
@@ -27,13 +41,12 @@ export const handleInAppBrowserRedirect = () => {
         }
     }
 
-    // Android: Use Intent URL to force open in default browser (Chrome)
-    // This works for Instagram, Facebook, and Messenger on Android
-    if (isAndroid && (app === 'instagram' || app === 'messenger' || app === 'facebook')) {
-        const url = window.location.href.replace(/^https?:\/\//, '');
-        window.location.href = `intent://${url}#Intent;scheme=https;action=android.intent.action.VIEW;end`;
-        return true;
-    }
-
+    // Android/Instagram/FB: Automatic redirect often fails due to "User Gesture" requirements.
+    // We will handle this via a button click in the BrowserWarningModal instead.
     return false;
+};
+
+export const getAndroidIntentUrl = () => {
+    const url = window.location.href.replace(/^https?:\/\//, '');
+    return `intent://${url}#Intent;scheme=https;action=android.intent.action.VIEW;end`;
 };
