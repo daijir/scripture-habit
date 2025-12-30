@@ -30,7 +30,7 @@
 .chat-header h2 {
     margin: 0;
     font-size: 1.25rem;
-    color: var(--black);
+    color: black;
     font-weight: 700;
 }
 
@@ -53,7 +53,7 @@
 .member-count-badge {
     margin-left: 8px;
     font-size: 0.9em;
-    color: var(--black);
+    color: black;
     font-weight: bold;
 }
 
@@ -805,85 +805,85 @@
         stroke: white !important;
         fill: white !important;
     }
-}
 
-.edit-group-name-btn {
-    display: none !important;
-}
+    .edit-group-name-btn {
+        display: none !important;
+    }
 
-.chat-header h2 {
-    font-size: 1.15rem;
-    color: white !important;
-}
+    .chat-header h2 {
+        font-size: 1.15rem;
+        color: white !important;
+    }
 
-.member-count-badge {
-    color: white !important;
-    font-size: 1rem;
-}
+    .member-count-badge {
+        color: white !important;
+        font-size: 1rem;
+    }
 
-.unity-score-badge {
-    font-size: 1.1rem !important;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 2px 8px;
-    border-radius: 8px;
-    margin-left: 0.5rem !important;
-}
+    .unity-score-badge {
+        font-size: 1.1rem !important;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 2px 8px;
+        border-radius: 8px;
+        margin-left: 0.5rem !important;
+    }
 
-/* Change hamburger menu color to white on mobile */
-.hamburger-icon span {
-    background: white !important;
-}
+    /* Change hamburger menu color to white on mobile */
+    .hamburger-icon span {
+        background: white !important;
+    }
 
-.invite-code-display {
-    font-size: 0.7rem;
-    padding: 0.2rem 0.5rem;
-}
+    .invite-code-display {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+    }
 
-.GroupChat {
-    border-radius: 0;
-}
+    .GroupChat {
+        border-radius: 0;
+    }
 
-.send-message-form {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    border-radius: 0;
-    padding: 0.75rem 1rem;
-    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
-    background-color: #f0f2f5;
-    backdrop-filter: none;
-    z-index: 1001;
-    /* Ensure it covers the sidebar (z-index 999) */
-}
+    .send-message-form {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        border-radius: 0;
+        padding: 0.75rem 1rem;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+        background-color: #f0f2f5;
+        backdrop-filter: none;
+        z-index: 1001;
+        /* Ensure it covers the sidebar (z-index 999) */
+    }
 
-.input-wrapper {
-    gap: 0.5rem;
-    padding: 0.3rem 0.5rem;
-    background-color: white;
-    border: 1px solid rgba(0, 0, 0, 0.05);
-}
+    .input-wrapper {
+        gap: 0.5rem;
+        padding: 0.3rem 0.5rem;
+        background-color: white;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
 
-.input-wrapper textarea {
-    font-size: 0.95rem;
-    min-width: 0;
-}
+    .input-wrapper textarea {
+        font-size: 0.95rem;
+        min-width: 0;
+    }
 
-.input-wrapper button[type="submit"] {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-}
+    .input-wrapper button[type="submit"] {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+    }
 
-.add-entry-btn {
-    width: 32px;
-    height: 32px;
-}
+    .add-entry-btn {
+        width: 32px;
+        height: 32px;
+    }
 
-.messages-container {
-    /* Adjusted for tighter header: Safe Area + approx 60px */
-    padding-top: calc(env(safe-area-inset-top, 24px) + 65px);
-    padding-bottom: 120px;
-    /* Clear fixed input */
+    .messages-container {
+        /* Adjusted for tighter header: Safe Area + approx 60px */
+        padding-top: calc(env(safe-area-inset-top, 24px) + 65px);
+        padding-bottom: 120px;
+        /* Clear fixed input */
+    }
 }
 
 /* Disable text selection on messages for long-press context menu */
