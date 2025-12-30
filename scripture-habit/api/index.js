@@ -672,11 +672,11 @@ app.post('/api/generate-ponder-questions', aiLimiter, async (req, res) => {
     try {
         const langCode = language || 'en';
         const prompts = {
-            'ja': `あなたはScripture Centralの創設者であり、著名な法学者、聖典学者のJohn W Welch教授です。
+            'ja': `あなたはScripture Centralの創設者であり、著名な法学者、聖典学者のJohn W. Welch教授です。
 ユーザーが「${scripture} ${chapter}」を読み、その学びを学習グループに共有しようとしています。
 「${scripture} ${chapter}」に含まれる原則、教えをもとに、ユーザーが「${scripture} ${chapter}」に対しての知見を深められるような質問を一つだけ用意してください。
 箇条書きの記号（*や-など）は使わず、質問文のみをプレーンテキストで出力してください。
-ただし、聖文を読むのが苦手な求道者や新会員にもわかりやすい質問を書いてください`,
+ただし、聖文を読むのが苦手な求道者や新会員にもわかりやすい質問を書いてください。`,
             'es': `Eres el Profesor John W. Welch, fundador de Scripture Central y un renombrado erudito legal y bíblico.
 El usuario está leyendo "${scripture} ${chapter}" y se prepara para compartir lo aprendido con su grupo de estudio.
 Basándote en los principios y enseñanzas que se encuentran en "${scripture} ${chapter}", por favor proporciona una pregunta que ayude al usuario a profundizar su conocimiento sobre "${scripture} ${chapter}".
@@ -1019,6 +1019,7 @@ app.post('/api/generate-personal-weekly-recap', aiLimiter, async (req, res) => {
 3. 「親愛なる友へ」のような書き出しで始めてください。
 4. 箇条書きではなく、手紙形式の文章にしてください。
 5. 日本語で記述してください。
+6. 文末はScripture Habitよりで終わらせるようにしてください。
 
 ユーザーのノート:
 ${notesText}`,
@@ -1027,10 +1028,11 @@ A continuación se presentan las notas de estudio que el usuario registró duran
 Basándose en ellas, escriba una "Carta de Reflexión Semanal" al usuario.
 Requisitos:
 1. Utilice un tono cálido y alentador que elogie sus esfuerzos.
-2. Destaque ideas o temas espirituales (por ejemplo, fe, oración, amor) encontrados en sus notas.
+2. Destaque ideas o temas espirituales (por ejemplo: fe, oración, amor) encontrados en sus notas.
 3. Comience con un saludo como "Querido amigo:".
 4. Escriba en formato de carta, no en viñetas.
 5. Escriba en español.
+6. Termine la carta con "Scripture Habit".
 
 Notas del usuario:
 ${notesText}`,
@@ -1043,6 +1045,7 @@ Requisitos:
 3. Comece com uma saudação como "Querido amigo,".
 4. Escreva em formato de carta, não em tópicos.
 5. Escreva em português.
+6. Termine a carta com "Scripture Habit".
 
 Notas do usuário:
 ${notesText}`,
@@ -1055,6 +1058,7 @@ Yêu cầu:
 3. Bắt đầu bằng lời chào như "Bạn thân mến,".
 4. Viết dưới dạng một bức thư, không phải liệt kê theo đầu dòng.
 5. Viết bằng tiếng Việt.
+6. Kết thúc lá thư bằng "Scripture Habit".
 
 Ghi chú của người dùng:
 ${notesText}`,
@@ -1067,6 +1071,7 @@ ${notesText}`,
 3. เริ่มต้นด้วยคำทักทายเช่น "ถึงเพื่อนรัก,"
 4. เขียนในรูปแบบจดหมาย ไม่ใช่แบบรายการหัวข้อข้อความ
 5. เขียนเป็นภาษาไทย
+6. จบจดหมายด้วย "Scripture Habit"
 
 บันทึกของผู้ใช้:
 ${notesText}`,
@@ -1079,6 +1084,7 @@ ${notesText}`,
 3. "친애하는 친구에게"와 같은 인사말로 시작해 주세요.
 4. 글머리 기호가 아닌 편지 형식의 문장으로 작성해 주세요.
 5. 한국어로 작성해 주세요.
+6. 편지 끝에 "Scripture Habit"라고 적어주세요.
 
 사용자의 노트:
 ${notesText}`,
@@ -1091,6 +1097,7 @@ ${notesText}`,
 3. 請以「親愛的朋友：」之類的開頭。
 4. 使用書信格式，而非項目符號。
 5. 請用繁體中文撰写。
+6. 在信末註明「Scripture Habit」。
 
 使用者的筆記：
 ${notesText}`,
@@ -1103,6 +1110,7 @@ Mga Kinakailangan:
 3. Magsimula sa isang pagbati tulaka ng "Mahal kong Kaibigan,".
 4. Sumulat sa format ng isang liham, hindi sa mga bullet point.
 5. Sumulat sa wikang Tagalog.
+6. Tapusin ang liham gamit ang "Scripture Habit".
 
 Mga Tala ng User:
 ${notesText}`,
@@ -1115,6 +1123,7 @@ Mahitaji:
 3. Anza na salamu kama "Mpendwa Rafiki,".
 4. Andika katika mfumo wa barua, si orodha ya vitone.
 5. Andika kwa Kiswahili.
+6. Malizia barua kwa "Scripture Habit".
 
 Maelezo ya Mtumiaji:
 ${notesText}`
@@ -1128,6 +1137,7 @@ Requirements:
 2. Highlight spiritual insights or themes (e.g., faith, prayer, love) found in their notes.
 3. Start with a greeting like "Dear Friend,".
 4. Write in a letter format, not bullet points.
+5. End the letter with "Scripture Habit".
 
 User's Notes:
 ${notesText}`;
