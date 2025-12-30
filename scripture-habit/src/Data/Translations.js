@@ -560,11 +560,11 @@ export const translations = {
             welcomeMessage: "Welcome to\nScripture Habit!"
         },
         browserWarning: {
-            modalTitle: "Use Default Browser",
-            modalDescription: "In-app browsers (LINE, Instagram, Messenger, WhatsApp, etc.) often have security restrictions that prevent login or Google Sign-in from working correctly.",
-            notRecommended: "Not Recommended",
-            recommended: "Recommended",
-            continueButton: "I understand, Continue",
+            modalTitle: "Default Browser Recommended",
+            modalDescription: "For the best experience and security, we recommend using a standard browser like Chrome, Safari, or Edge. Some features, such as Google Sign-in, may be restricted within app-specific browsers (LINE, Instagram, Messenger, etc.).",
+            continueButton: "Continue anyway",
+            copyLink: "Copy Link",
+            linkCopied: "Link copied!",
             howToOpen: {
                 line: "Tap the three-dot menu (⋮) in the top right and select 'Open in browser'.",
                 instagram: "Tap the three-dot menu (⋮) in the top right and select 'Open in browser'.",
@@ -1227,11 +1227,11 @@ export const translations = {
             welcomeMessage: "Scripture Habitへ\nようこそ！"
         },
         browserWarning: {
-            modalTitle: "デフォルトブラウザを使用してください",
-            modalDescription: "LINE、Instagram、メッセンジャー、WhatsAppなどのアプリ内ブラウザでは、セキュリティ制限によりログインやGoogleサインインが正常に動作しないことが多くあります。",
-            notRecommended: "非推奨（おすすめしません）",
-            recommended: "推奨ブラウザ",
-            continueButton: "理解しました。このまま進む",
+            modalTitle: "標準ブラウザでのご利用を推奨します",
+            modalDescription: "Scripture Habitを安全かつ快適にご利用いただくため、ChromeやSafariなどの標準ブラウザでのご利用を強く推奨しております。LINEやInstagramなどのアプリ内ブラウザでは、Googleログインなどの重要な機能が制限される場合があります。",
+            continueButton: "このまま進む",
+            copyLink: "URLをコピーする",
+            linkCopied: "URLをコピーしました",
             howToOpen: {
                 line: "右上のメニュー（︙）から「他のブラウザで開く」をタップしてください。",
                 instagram: "右上のメニュー（︙）から「ブラウザで開く」をタップしてください。",

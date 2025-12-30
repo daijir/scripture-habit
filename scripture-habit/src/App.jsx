@@ -24,8 +24,9 @@ import Maintenance from './Components/Maintenance/Maintenance';
 import { MAINTENANCE_MODE } from './config';
 import * as Sentry from "@sentry/react";
 import InstallPrompt from './Components/InstallPrompt/InstallPrompt';
-import { handleLineRedirect } from './Utils/browserDetection';
+import { handleInAppBrowserRedirect, isInAppBrowser } from './Utils/browserDetection';
 import CookieConsent from './Components/CookieConsent/CookieConsent';
+import BrowserWarningModal from './Components/BrowserWarningModal/BrowserWarningModal';
 
 import PrivacyPolicy from './Components/PrivacyPolicy/PrivacyPolicy';
 import TermsOfService from './Components/TermsOfService/TermsOfService';
@@ -63,6 +64,7 @@ const SEOManager = () => {
 const App = () => {
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
+  const [showBrowserWarning, setShowBrowserWarning] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -73,7 +75,10 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    handleLineRedirect();
+    const isRedirecting = handleInAppBrowserRedirect();
+    if (!isRedirecting && isInAppBrowser()) {
+      setShowBrowserWarning(true);
+    }
   }, []);
 
   const [systemStatus, setSystemStatus] = useEffectSpecialState(() => {
@@ -161,8 +166,24 @@ const App = () => {
         <Analytics />
         <InstallPrompt />
         <CookieConsent />
+        <BrowserWarningWrapper
+          isOpen={showBrowserWarning}
+          onClose={() => setShowBrowserWarning(false)}
+        />
       </div>
     </LanguageProvider>
+  );
+};
+
+const BrowserWarningWrapper = ({ isOpen, onClose }) => {
+  const { t } = useLanguage();
+  return (
+    <BrowserWarningModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onContinue={onClose}
+      t={t}
+    />
   );
 };
 

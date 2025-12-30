@@ -170,8 +170,33 @@
     color: #38A169;
 }
 
-.browser-warning-footer {
+.browser-action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
     margin-top: 0.5rem;
+}
+
+.browser-copy-btn {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    border: 2px solid #E2E8F0;
+    background: white;
+    color: #4A5568;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.browser-copy-btn:hover {
+    background: #F7FAFC;
+    border-color: #CBD5E0;
 }
 
 .browser-continue-btn {

@@ -8,6 +8,11 @@ const BrowserWarningModal = ({ isOpen, onClose, onContinue, t }) => {
         return detectInAppBrowser();
     }, []);
 
+    const handleCopyLink = () => {
+        navigator.clipboard.writeText(window.location.href);
+        alert(t('browserWarning.linkCopied'));
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -30,29 +35,17 @@ const BrowserWarningModal = ({ isOpen, onClose, onContinue, t }) => {
                     </div>
                 )}
 
-                <div className="browser-comparison">
-                    <div className="comparison-group not-recommended">
-                        <h3>{t('browserWarning.notRecommended')}</h3>
-                        <div className="browser-icons">
-                            <div className="browser-icon-item">
-                                <img src="/images/line.png" alt="LINE" className="browser-icon-img" />
-                                <UilTimesCircle className="status-mark x-mark" size="24" />
-                            </div>
-                            <div className="browser-icon-item">
-                                <img src="/images/messenger.png" alt="Messenger" className="browser-icon-img" />
-                                <UilTimesCircle className="status-mark x-mark" size="24" />
-                            </div>
-                            <div className="browser-icon-item">
-                                <img src="/images/instagram.png" alt="Instagram" className="browser-icon-img" />
-                                <UilTimesCircle className="status-mark x-mark" size="24" />
-                            </div>
-                            <div className="browser-icon-item">
-                                <img src="/images/whatsapp.png" alt="WhatsApp" className="browser-icon-img" />
-                                <UilTimesCircle className="status-mark x-mark" size="24" />
-                            </div>
-                        </div>
-                    </div>
+                <div className="browser-action-buttons">
+                    <button className="browser-copy-btn" onClick={handleCopyLink}>
+                        <UilInfoCircle size="18" />
+                        {t('browserWarning.copyLink')}
+                    </button>
+                    <button className="browser-continue-btn" onClick={onContinue}>
+                        {t('browserWarning.continueButton')}
+                    </button>
+                </div>
 
+                <div className="browser-comparison">
                     <div className="comparison-group recommended">
                         <h3>{t('browserWarning.recommended')}</h3>
                         <div className="browser-icons">
@@ -70,12 +63,6 @@ const BrowserWarningModal = ({ isOpen, onClose, onContinue, t }) => {
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div className="browser-warning-footer">
-                    <button className="browser-continue-btn" onClick={onContinue}>
-                        {t('browserWarning.continueButton')}
-                    </button>
                 </div>
             </div>
         </div>
