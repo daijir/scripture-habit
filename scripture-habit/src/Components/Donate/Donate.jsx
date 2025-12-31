@@ -6,7 +6,6 @@ import Footer from '../Footer/Footer';
 
 const Donate = ({ userData }) => {
     const { t } = useLanguage();
-    const [showQR, setShowQR] = React.useState(false);
     const [showBackgroundModal, setShowBackgroundModal] = React.useState(false);
 
     return (
@@ -57,19 +56,6 @@ const Donate = ({ userData }) => {
 
                     <div className="donate-section">
                         <div className="donate-buttons-container">
-                            <div className="donate-btn-wrapper">
-                                <button
-                                    className="donate-action-btn paypay-btn"
-                                    onClick={() => setShowQR(!showQR)}
-                                >
-                                    {t('donate.payPayButton')}
-                                </button>
-                                {showQR && (
-                                    <div className="qr-code-container fade-in">
-                                        <img src="/images/donation-qr-code.png" alt="PayPay QR Code" className="paypay-qr-code" />
-                                    </div>
-                                )}
-                            </div>
 
                             <div className="donate-btn-wrapper">
                                 <button

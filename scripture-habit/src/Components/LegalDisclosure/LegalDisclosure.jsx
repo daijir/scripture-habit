@@ -43,7 +43,7 @@ const LegalDisclosure = () => {
 
                 <div className="legal-footer-note">
                     <p>
-                        ※個人開発のため、所在地および電話番号については、開示を希望される場合にメールにてご請求いただければ遅滞なく提供いたします。
+                        {t('legalDisclosure.personalDisclaimer')}
                     </p>
                 </div>
             </div>
