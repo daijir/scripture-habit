@@ -24,6 +24,8 @@ import { localizeLdsUrl } from '../../Utils/urlLocalizer';
 import { UilBookOpen } from '@iconscout/react-unicons';
 import { useGCMetadata } from '../../hooks/useGCMetadata';
 import confetti from 'canvas-confetti';
+import { getBookSuggestions } from '../../Utils/suggestionUtils';
+import { bookNameTranslations } from '../../Utils/bookNameTranslations';
 
 const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups = [], isGroupContext = false, currentGroupId = null, initialData = null }) => {
     const { t, language } = useLanguage();
@@ -58,6 +60,8 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
     const [showScriptureSelectionModal, setShowScriptureSelectionModal] = useState(false);
     const [showRandomMenu, setShowRandomMenu] = useState(false);
     const [availableReadingPlanScripts, setAvailableReadingPlanScripts] = useState([]);
+    const [suggestions, setSuggestions] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
 
     const getTranslatedScriptureLabel = (value) => {
         switch (value) {
@@ -160,7 +164,33 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             }
             setSelectedShareGroups([]);
         }
-    }, [isOpen, noteToEdit, userGroups.length, isGroupContext, initialData]); // Removed translatedScripturesOptions from dependency to avoid loop if not memoized, though t() change triggers re-render anyway.
+    }, [isOpen, noteToEdit, userGroups.length, isGroupContext, initialData]);
+
+    // Real-time validation for missing chapter/verse digits
+    useEffect(() => {
+        if (!isOpen) return;
+
+        const scriptureVolumes = [
+            "Old Testament",
+            "New Testament",
+            "Book of Mormon",
+            "Doctrine and Covenants",
+            "Pearl of Great Price"
+        ];
+
+        if (chapter && scripture && scriptureVolumes.includes(scripture)) {
+            // Check if there are NO digits in the chapter field
+            if (!/\d/.test(chapter)) {
+                setError(t('newNote.errorChapterRequired'));
+            } else if (error === t('newNote.errorChapterRequired')) {
+                // Clear ONLY this specific error if they add a digit
+                setError(null);
+            }
+        } else if (error === t('newNote.errorChapterRequired')) {
+            // Clear the error if scripture changes or chapter is cleared
+            setError(null);
+        }
+    }, [chapter, scripture, isOpen, t, error]);
 
     const handleGroupSelection = (groupId) => {
         setSelectedShareGroups(prev => {
@@ -338,6 +368,20 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
     const handleSubmit = async () => {
         if (!chapter || !scripture) {
             setError(t('newNote.errorMissingFields'));
+            return;
+        }
+
+        // Validation: For main scripture volumes, ensure at least one digit is present (chapter/verse)
+        const scriptureVolumes = [
+            "Old Testament",
+            "New Testament",
+            "Book of Mormon",
+            "Doctrine and Covenants",
+            "Pearl of Great Price"
+        ];
+
+        if (scriptureVolumes.includes(scripture) && !/\d/.test(chapter)) {
+            setError(t('newNote.errorChapterRequired'));
             return;
         }
 
@@ -913,7 +957,6 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                             </button>
                         )}
                     </div>
-                    {error && <p className="error-message">{error}</p>}
                     <div style={{ marginBottom: '1rem' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                             <label htmlFor="scripture-select" className="modal-label" style={{ marginBottom: 0 }}>{t('newNote.chooseScriptureLabel')}</label>
@@ -970,17 +1013,51 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         />
                     </div>
 
-                    <Input
-                        label={scripture === "General Conference" ? t('newNote.urlLabel') : (scripture === "BYU Speeches" ? t('newNote.byuUrlLabel') : (scripture === "Other" ? t('newNote.otherUrlLabel') : t('newNote.chapterLabel')))}
-                        type="text"
-                        value={chapter}
-                        onChange={(e) => {
-                            let val = e.target.value;
-                            setChapter(val);
-                        }}
-                        required
-                        placeholder={scripture === "General Conference" ? t('newNote.urlPlaceholder') : (scripture === "BYU Speeches" ? t('newNote.byuUrlPlaceholder') : (scripture === "Other" ? t('newNote.otherUrlPlaceholder') : currentChapterPlaceholder))}
-                    />
+                    {error && <p className="error-message">{error}</p>}
+                    <div className="suggestions-container">
+                        <Input
+                            label={scripture === "General Conference" ? t('newNote.urlLabel') : (scripture === "BYU Speeches" ? t('newNote.byuUrlLabel') : (scripture === "Other" ? t('newNote.otherUrlLabel') : t('newNote.chapterLabel')))}
+                            type="text"
+                            value={chapter}
+                            onChange={(e) => {
+                                let val = e.target.value;
+                                setChapter(val);
+
+                                if (val.length > 0 && scripture && scripture !== 'Other' && scripture !== 'General Conference' && scripture !== 'BYU Speeches') {
+                                    const matched = getBookSuggestions(scripture, val, language, bookNameTranslations);
+                                    setSuggestions(matched);
+                                    setShowSuggestions(matched.length > 0);
+                                } else {
+                                    setSuggestions([]);
+                                    setShowSuggestions(false);
+                                }
+                            }}
+                            onBlur={() => {
+                                // Delay hiding to allow click event to fire
+                                setTimeout(() => setShowSuggestions(false), 200);
+                            }}
+                            required
+                            placeholder={scripture === "General Conference" ? t('newNote.urlPlaceholder') : (scripture === "BYU Speeches" ? t('newNote.byuUrlPlaceholder') : (scripture === "Other" ? t('newNote.otherUrlPlaceholder') : currentChapterPlaceholder))}
+                        />
+                        {showSuggestions && suggestions.length > 0 && (
+                            <div className="suggestions-list">
+                                {suggestions.map((book, idx) => (
+                                    <div
+                                        key={idx}
+                                        className="suggestion-item"
+                                        onClick={() => {
+                                            setChapter(book.translated + ' ');
+                                            setSuggestions([]);
+                                            setShowSuggestions(false);
+                                        }}
+                                    >
+                                        <span className="suggestion-translated">{book.translated}</span>
+                                        {language !== 'en' && <span className="suggestion-english">{book.english}</span>}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </div>
 
                     {!noteToEdit && (
                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem', marginTop: '0.5rem', marginBottom: '0.5rem' }}>

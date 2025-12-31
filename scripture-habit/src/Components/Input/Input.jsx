@@ -11,6 +11,7 @@ const Input = ({
   as = 'input',
   placeholder = '',
   min,
+  ...rest
 }) => {
 
   const Component = as === 'textarea' ? 'textarea' : 'input';
@@ -30,6 +31,7 @@ const Input = ({
         className="GlassInput"
         placeholder={placeholder}
         min={min}
+        {...rest}
       />
     </div>
   );
