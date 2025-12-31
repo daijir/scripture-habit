@@ -51,13 +51,6 @@ const Donate = ({ userData }) => {
                         {t('donate.subHeader')}
                     </p>
 
-                    <div className="donate-suggestions">
-                        <h3>{t('donate.suggestionTitle')}</h3>
-                        <ul className="donate-suggestions-list">
-                            <li>{t('donate.suggestion1')}</li>
-                        </ul>
-                    </div>
-
                     <p className="donate-methods-header">
                         {t('donate.methodsHeader')}
                     </p>
@@ -87,62 +80,118 @@ const Donate = ({ userData }) => {
                                 </button>
                             </div>
 
-                            <div className="stripe-under-review-container" style={{
+                            <div className="stripe-buttons-section" style={{
                                 width: '100%',
                                 display: 'flex',
-                                justifyContent: 'center',
-                                gap: '2rem',
-                                flexWrap: 'wrap',
-                                position: 'relative',
-                                padding: '1rem',
-                                background: 'rgba(0,0,0,0.03)',
-                                borderRadius: '20px',
-                                border: '1px dashed #cbd5e0'
+                                flexDirection: 'column',
+                                alignItems: 'center',
+                                gap: '1.5rem',
+                                padding: '1rem'
                             }}>
-                                <span style={{
-                                    position: 'absolute',
-                                    top: '-12px',
-                                    left: '50%',
-                                    transform: 'translateX(-50%)',
-                                    background: '#718096',
-                                    color: 'white',
-                                    padding: '2px 12px',
-                                    borderRadius: '50px',
-                                    fontSize: '0.8rem',
-                                    fontWeight: '600',
-                                    whiteSpace: 'nowrap'
+                                {/* One-off Section */}
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    gap: '1rem',
+                                    width: '100%'
                                 }}>
-                                    {t('donate.stripeUnderReview')}
-                                </span>
-
-                                <div className="donate-btn-wrapper" style={{ opacity: 0.6, cursor: 'not-allowed' }}>
-                                    <button
-                                        className="donate-action-btn stripe-btn"
-                                        disabled
-                                        style={{
-                                            background: '#635bff',
-                                            color: '#fff',
-                                            boxShadow: 'none',
-                                            cursor: 'not-allowed'
-                                        }}
-                                    >
-                                        💳 {t('donate.stripeOneOffButton')}
-                                    </button>
+                                    <p style={{ fontWeight: '600', color: 'var(--gray)', margin: 0 }}>
+                                        {t('donate.stripeOneOffButton').split(' (')[0]}
+                                    </p>
+                                    <div style={{
+                                        display: 'flex',
+                                        gap: '1rem',
+                                        flexWrap: 'wrap',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <button
+                                            className="donate-action-btn stripe-btn"
+                                            onClick={() => window.open('https://buy.stripe.com/3cI6oJ0KO9Xd1aUcBjdby00', '_blank')}
+                                            style={{
+                                                background: '#635bff',
+                                                color: '#fff',
+                                                padding: '0.8rem 1.5rem'
+                                            }}
+                                        >
+                                            💳 $1
+                                        </button>
+                                        <button
+                                            className="donate-action-btn stripe-btn"
+                                            onClick={() => window.open('https://buy.stripe.com/00wfZjeBE7P53j2atbdby04', '_blank')}
+                                            style={{
+                                                background: '#635bff',
+                                                color: '#fff',
+                                                padding: '0.8rem 1.5rem'
+                                            }}
+                                        >
+                                            💳 $3
+                                        </button>
+                                        <button
+                                            className="donate-action-btn stripe-btn"
+                                            onClick={() => window.open('https://buy.stripe.com/dRmfZj8dg6L1f1KdFndby06', '_blank')}
+                                            style={{
+                                                background: '#635bff',
+                                                color: '#fff',
+                                                padding: '0.8rem 1.5rem'
+                                            }}
+                                        >
+                                            💳 $5
+                                        </button>
+                                    </div>
                                 </div>
 
-                                <div className="donate-btn-wrapper" style={{ opacity: 0.6, cursor: 'not-allowed' }}>
-                                    <button
-                                        className="donate-action-btn stripe-btn"
-                                        disabled
-                                        style={{
-                                            background: '#32325d',
-                                            color: '#fff',
-                                            boxShadow: 'none',
-                                            cursor: 'not-allowed'
-                                        }}
-                                    >
-                                        ✨ {t('donate.stripeMonthlyButton')}
-                                    </button>
+                                {/* Monthly Section */}
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    gap: '1rem',
+                                    width: '100%'
+                                }}>
+                                    <p style={{ fontWeight: '600', color: 'var(--gray)', margin: 0 }}>
+                                        {t('donate.stripeMonthlyButton').split(' (')[0]}
+                                    </p>
+                                    <div style={{
+                                        display: 'flex',
+                                        gap: '1rem',
+                                        flexWrap: 'wrap',
+                                        justifyContent: 'center'
+                                    }}>
+                                        <button
+                                            className="donate-action-btn stripe-btn"
+                                            onClick={() => window.open('https://buy.stripe.com/28E7sN2SWc5l8Dm7gZdby01', '_blank')}
+                                            style={{
+                                                background: '#32325d',
+                                                color: '#fff',
+                                                padding: '0.8rem 1.5rem'
+                                            }}
+                                        >
+                                            ✨ $1 / mo
+                                        </button>
+                                        <button
+                                            className="donate-action-btn stripe-btn"
+                                            onClick={() => window.open('https://buy.stripe.com/cNi9AV0KOc5l06Q1WFdby02', '_blank')}
+                                            style={{
+                                                background: '#32325d',
+                                                color: '#fff',
+                                                padding: '0.8rem 1.5rem'
+                                            }}
+                                        >
+                                            ✨ $3 / mo
+                                        </button>
+                                        <button
+                                            className="donate-action-btn stripe-btn"
+                                            onClick={() => window.open('https://buy.stripe.com/dRm14p9hk1qH8DmgRzdby03', '_blank')}
+                                            style={{
+                                                background: '#32325d',
+                                                color: '#fff',
+                                                padding: '0.8rem 1.5rem'
+                                            }}
+                                        >
+                                            ✨ $5 / mo
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
