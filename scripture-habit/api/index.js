@@ -43,6 +43,20 @@ const discussionTopicSchema = z.object({
     language: z.enum(supportedLanguages).optional()
 });
 
+const STREAK_ANNOUNCEMENT_TEMPLATES = {
+    en: "🎉🎉🎉 **{nickname} reached a {streak} day streak!!** 🎉🎉🎉\n\n**Let us edify one another in the group and share joy together!**",
+    ja: "🎉🎉🎉 **{nickname}さんが{streak}日連続達成しました！！** 🎉🎉🎉\n\n**グループ内で互いに教え合い、喜びを分かち合いましょう！**",
+    es: "🎉🎉🎉 **¡{nickname} alcanzó una racha de {streak} días!** 🎉🎉🎉\n\n**¡Edifiquémonos unos a otros en el grupo y compartamos la alegría juntos!**",
+    pt: "🎉🎉🎉 **{nickname} atingiu uma sequência de {streak} dias!!** 🎉🎉🎉\n\n**Vamos edificar uns aos outros no grupo e compartilhar alegria juntos!**",
+    zh: "🎉🎉🎉 **{nickname} 已連讀 {streak} 天！！** 🎉🎉🎉\n\n**讓我們在群組中互相啟發，共同分享喜悦！**",
+    zho: "🎉🎉🎉 **{nickname} 已連讀 {streak} 天！！** 🎉🎉🎉\n\n**讓我們在群組中互相啟發，共同分享喜悦！**",
+    vi: "🎉🎉🎉 **{nickname} đã đạt chuỗi {streak} ngày!!** 🎉🎉🎉\n\n**Hãy cùng nhau học hỏi trong nhóm và chia sẻ niềm vui nhé!**",
+    th: "🎉🎉🎉 **{nickname} บรรลุสถิติต่อเนื่อง {streak} วัน!!** 🎉🎉🎉\n\n**ขอให้เราจรรโลงใจซึ่งกันและกันในกลุ่มและแบ่งปันความสุขด้วยกัน!**",
+    ko: "🎉🎉🎉 **{nickname}님이 {streak}일 연속 달성했습니다!!** 🎉🎉🎉\n\n**그룹 내에서 서로를 고취하며 기쁨을 함께 나눕시다!**",
+    tl: "🎉🎉🎉 **Naabot ni {nickname} ang {streak} na araw na streak!!** 🎉🎉🎉\n\n**Magtulungan tayo sa pag-aaral sa grupo at magbahagi ng kagalakan!**",
+    sw: "🎉🎉🎉 **{nickname} amefikisha mfululizo wa siku {streak}!!** 🎉🎉🎉\n\n**Na tujengane mmoja kwa mwingine katika kikundi na tushiriki furaha pamoja!**"
+};
+
 const weeklyRecapSchema = z.object({
     groupId: z.string().min(1),
     language: z.enum(supportedLanguages).optional()
@@ -56,6 +70,17 @@ const personalRecapSchema = z.object({
 const translateSchema = z.object({
     text: z.string().min(1).max(5000),
     targetLanguage: z.enum(supportedLanguages)
+});
+
+const postNoteSchema = z.object({
+    chapter: z.string().min(1).max(500),
+    scripture: z.string().min(1).max(100),
+    comment: z.string().max(10000),
+    shareOption: z.enum(['all', 'current', 'specific', 'none']),
+    selectedShareGroups: z.array(z.string()).optional().nullable(),
+    isGroupContext: z.boolean().optional().nullable(),
+    currentGroupId: z.string().optional().nullable(),
+    language: z.enum(supportedLanguages).optional().nullable()
 });
 
 // Initialize Firebase Admin SDK
@@ -399,10 +424,11 @@ app.post('/api/delete-group', async (req, res) => {
         const uid = decodedToken.uid;
         const db = admin.firestore();
 
-        await db.runTransaction(async (t) => {
-            const groupRef = db.collection('groups').doc(groupId);
-            const groupDoc = await t.get(groupRef);
+        const groupRef = db.collection('groups').doc(groupId);
 
+        // 1. Optimized Transaction: verify ownership and delete group doc
+        const membersToClean = await db.runTransaction(async (t) => {
+            const groupDoc = await t.get(groupRef);
             if (!groupDoc.exists) {
                 const err = new Error('Group not found');
                 err.code = 'GROUP_NOT_FOUND';
@@ -414,47 +440,52 @@ app.post('/api/delete-group', async (req, res) => {
                 throw new Error('Permission denied: Only the owner can delete this group.');
             }
 
-            const members = groupData.members || [];
+            // Update owner doc specifically to set new primary group if needed
+            const ownerRef = db.collection('users').doc(uid);
+            const ownerDoc = await t.get(ownerRef);
+            if (ownerDoc.exists) {
+                const uData = ownerDoc.data();
+                const currentGroupIds = uData.groupIds || (uData.groupId ? [uData.groupId] : []);
+                const nextGroupIds = currentGroupIds.filter(id => id !== groupId);
 
-            // Transaction limit is 500 operations. 
-            // We read group (1) + delete group (1) = 2.
-            // For each member: read (1) + update (1) = 2.
-            // Max members supported in single transaction ~= (500 - 2) / 2 = 249.
-            // If group is bigger, we might need batched writes outside transaction or multiple chunks.
-            // For now, assuming < 250 members.
-            const membersToUpdate = members.slice(0, 240);
-
-            for (const memberId of membersToUpdate) {
-                const userRef = db.collection('users').doc(memberId);
-                const userDoc = await t.get(userRef);
-
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
-                    const currentGroupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
-
-                    if (currentGroupIds.includes(groupId)) {
-                        const newGroupIds = currentGroupIds.filter(id => id !== groupId);
-                        let newPrimaryId = userData.groupId;
-
-                        // If the deleted group was the active one, pick a new one or null
-                        if (userData.groupId === groupId) {
-                            newPrimaryId = newGroupIds.length > 0 ? newGroupIds[0] : null;
-                        }
-
-                        t.update(userRef, {
-                            groupIds: admin.firestore.FieldValue.arrayRemove(groupId),
-                            groupId: newPrimaryId
-                        });
-                    }
+                let upd = { groupIds: admin.firestore.FieldValue.arrayRemove(groupId) };
+                if (uData.groupId === groupId) {
+                    upd.groupId = nextGroupIds.length > 0 ? nextGroupIds[0] : null;
                 }
+                t.update(ownerRef, upd);
             }
 
-            // Delete group document
+            // Delete the main group document
             t.delete(groupRef);
+
+            return groupData.members || [];
         });
 
-        // Recursively delete all subcollections (like messages) to fully remove the group
-        const groupRef = db.collection('groups').doc(groupId);
+        // 2. Cleanup other members in background-safe batches
+        if (membersToClean.length > 0) {
+            const chunks = [];
+            for (let i = 0; i < membersToClean.length; i += 450) {
+                chunks.push(membersToClean.slice(i, i + 450));
+            }
+
+            for (const chunk of chunks) {
+                const batch = db.batch();
+                chunk.forEach(mid => {
+                    if (mid === uid) return; // Already handled in transaction
+                    const mRef = db.collection('users').doc(mid);
+                    batch.update(mRef, {
+                        groupIds: admin.firestore.FieldValue.arrayRemove(groupId)
+                    });
+                });
+                try {
+                    await batch.commit();
+                } catch (batchErr) {
+                    console.error('Member cleanup partial error:', batchErr);
+                }
+            }
+        }
+
+        // 3. Recursive delete subcollections (messages, etc.)
         await db.recursiveDelete(groupRef);
 
         res.status(200).send({ message: 'Group deleted successfully.' });
@@ -551,6 +582,196 @@ app.get('/api/groups', async (req, res) => {
 });
 
 // Scraping Endpoint for General Conference Metadata
+app.post('/api/post-note', async (req, res) => {
+    const validation = postNoteSchema.safeParse(req.body);
+    if (!validation.success) {
+        return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
+    }
+
+    const { chapter, scripture, comment, shareOption, selectedShareGroups, isGroupContext, currentGroupId, language } = validation.data;
+
+    const authHeader = req.headers.authorization;
+    let idToken;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        idToken = authHeader.split('Bearer ')[1];
+    } else {
+        return res.status(401).send('Unauthorized: No token provided.');
+    }
+
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        const uid = decodedToken.uid;
+        const db = admin.firestore();
+
+        let messageText;
+        if (scripture === "Other") {
+            messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n${comment}`;
+        } else {
+            let label = (scripture === "BYU Speeches") ? "Speech" : "Chapter";
+            messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**${label}:** ${chapter}\n\n${comment}`;
+        }
+
+        const result = await db.runTransaction(async (transaction) => {
+            const userRef = db.collection('users').doc(uid);
+            const userDoc = await transaction.get(userRef);
+            if (!userDoc.exists) throw new Error('User not found.');
+            const userData = userDoc.data();
+
+            // 1. Streak and Stats Logic
+            const timeZone = userData.timeZone || 'UTC';
+            const now = new Date();
+            const todayStr = now.toLocaleDateString('en-CA', { timeZone });
+            let lastPostDate = null;
+            if (userData.lastPostDate) {
+                lastPostDate = userData.lastPostDate.toDate ? userData.lastPostDate.toDate() : new Date(userData.lastPostDate);
+            }
+
+            let newStreak = userData.streakCount || 0;
+            let streakUpdated = false;
+
+            if (!lastPostDate) {
+                newStreak = 1;
+                streakUpdated = true;
+            } else {
+                const lastPostDateStr = lastPostDate.toLocaleDateString('en-CA', { timeZone });
+                if (todayStr !== lastPostDateStr) {
+                    const todayDate = new Date(todayStr);
+                    const lastPostDateObj = new Date(lastPostDateStr);
+                    const diffTime = todayDate - lastPostDateObj;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    if (diffDays === 1) {
+                        newStreak += 1;
+                    } else {
+                        newStreak = 1;
+                    }
+                    streakUpdated = true;
+                } else if (newStreak === 0) {
+                    newStreak = 1;
+                    streakUpdated = true;
+                }
+            }
+
+            const userUpdate = {
+                lastPostDate: admin.firestore.FieldValue.serverTimestamp(),
+                totalNotes: admin.firestore.FieldValue.increment(1)
+            };
+            if (streakUpdated) {
+                userUpdate.streakCount = newStreak;
+                userUpdate.daysStudiedCount = admin.firestore.FieldValue.increment(1);
+            }
+
+            // 2. Determine target groups
+            let groupsToPostTo = [];
+            if (shareOption === 'all') {
+                groupsToPostTo = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
+            } else if (shareOption === 'specific') {
+                groupsToPostTo = selectedShareGroups || [];
+            } else if (shareOption === 'current') {
+                const targetId = currentGroupId || userData.groupId;
+                if (targetId) groupsToPostTo = [targetId];
+            }
+
+            // 3. READ ALL NECESSARY DATA FIRST
+            const groupRefs = groupsToPostTo.map(gid => db.collection('groups').doc(gid));
+            const groupDocs = await Promise.all(groupRefs.map(ref => transaction.get(ref)));
+
+            // 4. NOW START WRITES
+            transaction.update(userRef, userUpdate);
+
+            // 3. Create Personal Note
+            const personalNoteRef = userRef.collection('notes').doc();
+            const noteTimestamp = admin.firestore.Timestamp.now();
+            const sharedMessageIds = {};
+
+            // 5. Post to groups and update metadata
+
+            groupDocs.forEach((groupDoc, idx) => {
+                if (!groupDoc.exists) return;
+                const gid = groupDoc.id;
+                const gData = groupDoc.data();
+                const msgRef = db.collection('groups').doc(gid).collection('messages').doc();
+                sharedMessageIds[gid] = msgRef.id;
+
+                transaction.set(msgRef, {
+                    text: messageText,
+                    senderId: uid,
+                    senderNickname: userData.nickname,
+                    createdAt: noteTimestamp,
+                    isNote: true,
+                    originalNoteId: personalNoteRef.id
+                });
+
+                const todayLabel = new Date().toDateString();
+                const updatePayload = {
+                    messageCount: admin.firestore.FieldValue.increment(1),
+                    noteCount: admin.firestore.FieldValue.increment(1),
+                    lastMessageAt: admin.firestore.FieldValue.serverTimestamp(),
+                    lastNoteAt: admin.firestore.FieldValue.serverTimestamp(),
+                    lastNoteByNickname: userData.nickname,
+                    lastNoteByUid: uid,
+                    lastMessageByNickname: userData.nickname,
+                    lastMessageByUid: uid,
+                    [`memberLastActive.${uid}`]: admin.firestore.FieldValue.serverTimestamp(),
+                    [`memberLastReadAt.${uid}`]: admin.firestore.FieldValue.serverTimestamp()
+                };
+
+                if (gData.dailyActivity?.date !== todayLabel) {
+                    updatePayload.dailyActivity = { date: todayLabel, activeMembers: [uid] };
+                } else {
+                    updatePayload['dailyActivity.activeMembers'] = admin.firestore.FieldValue.arrayUnion(uid);
+                }
+                transaction.update(groupRefs[idx], updatePayload);
+
+                const userGroupStateRef = userRef.collection('groupStates').doc(gid);
+                transaction.set(userGroupStateRef, {
+                    readMessageCount: admin.firestore.FieldValue.increment(1),
+                    lastReadAt: admin.firestore.FieldValue.serverTimestamp()
+                }, { merge: true });
+            });
+
+            transaction.set(personalNoteRef, {
+                text: messageText,
+                createdAt: noteTimestamp,
+                scripture: scripture,
+                chapter: chapter,
+                comment: comment,
+                shareOption: shareOption,
+                sharedWithGroups: groupsToPostTo,
+                sharedMessageIds: sharedMessageIds
+            });
+
+            // 5. Streak Announcements
+            if (streakUpdated && newStreak > 0) {
+                const announceMsg = (STREAK_ANNOUNCEMENT_TEMPLATES[language] || STREAK_ANNOUNCEMENT_TEMPLATES.en)
+                    .replace('{nickname}', userData.nickname)
+                    .replace('{streak}', newStreak);
+                const announceTime = admin.firestore.Timestamp.fromMillis(noteTimestamp.toMillis() + 2000);
+
+                const distinctGroupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
+                distinctGroupIds.forEach(gid => {
+                    const announceRef = db.collection('groups').doc(gid).collection('messages').doc();
+                    transaction.set(announceRef, {
+                        text: announceMsg,
+                        senderId: 'system',
+                        senderNickname: 'Scripture Habit Bot',
+                        createdAt: announceTime,
+                        isSystemMessage: true,
+                        messageType: 'streakAnnouncement',
+                        messageData: { nickname: userData.nickname, userId: uid, streak: newStreak }
+                    });
+                });
+            }
+
+            return { personalNoteId: personalNoteRef.id, newStreak, streakUpdated };
+        });
+
+        res.status(200).json({ message: 'Note posted successfully.', ...result });
+    } catch (error) {
+        console.error('Error posting note:', error);
+        res.status(500).send(error.message || 'Error saving note.');
+    }
+});
+
 app.get('/api/fetch-gc-metadata', async (req, res) => {
     const { url, lang } = req.query;
 

@@ -1,5 +1,6 @@
 const express = require('express');
 const path = require('path');
+const { z } = require('zod');
 const admin = require('firebase-admin');
 const cors = require('cors');
 const axios = require('axios'); // Add axios
@@ -37,6 +38,31 @@ const db = admin.firestore();
 
 
 const supportedLanguages = ['en', 'ja', 'es', 'pt', 'zh', 'zho', 'vi', 'th', 'ko', 'tl', 'sw'];
+
+const postNoteSchema = z.object({
+  chapter: z.string().min(1).max(500),
+  scripture: z.string().min(1).max(100),
+  comment: z.string().max(10000),
+  shareOption: z.enum(['all', 'current', 'specific', 'none']),
+  selectedShareGroups: z.array(z.string()).optional().nullable(),
+  isGroupContext: z.boolean().optional().nullable(),
+  currentGroupId: z.string().optional().nullable(),
+  language: z.enum(supportedLanguages).optional().nullable()
+});
+
+const STREAK_ANNOUNCEMENT_TEMPLATES = {
+  en: "🎉🎉🎉 **{nickname} reached a {streak} day streak!!** 🎉🎉🎉\n\n**Let us edify one another in the group and share joy together!**",
+  ja: "🎉🎉🎉 **{nickname}さんが{streak}日連続達成しました！！** 🎉🎉🎉\n\n**グループ内で互いに教え合い、喜びを分かち合いましょう！**",
+  es: "🎉🎉🎉 **¡{nickname} alcanzó una racha de {streak} días!** 🎉🎉🎉\n\n**¡Edifiquémonos unos a otros en el grupo y compartamos la alegría juntos!**",
+  pt: "🎉🎉🎉 **{nickname} atingiu uma sequência de {streak} dias!!** 🎉🎉🎉\n\n**Vamos edificar uns aos outros no grupo e compartilhar alegria juntos!**",
+  zh: "🎉🎉🎉 **{nickname} 已連讀 {streak} 天！！** 🎉🎉🎉\n\n**讓我們在群組中互相啟發，共同分享喜悦！**",
+  zho: "🎉🎉🎉 **{nickname} 已連讀 {streak} 天！！** 🎉🎉🎉\n\n**讓我們在群組中互相啟發，共同分享喜悦！**",
+  vi: "🎉🎉🎉 **{nickname} đã đạt chuỗi {streak} ngày!!** 🎉🎉🎉\n\n**Hãy cùng nhau học hỏi trong nhóm và chia sẻ niềm vui nhé!**",
+  th: "🎉🎉🎉 **{nickname} บรรลุสถิติต่อต่อเนื่อง {streak} วัน!!** 🎉🎉🎉\n\n**ขอให้เราจรรโลงใจซึ่งกันและกันในกลุ่มและแบ่งปันความสุขด้วยกัน!**",
+  ko: "🎉🎉🎉 **{nickname}님이 {streak}일 연속 달성했습니다!!** 🎉🎉🎉\n\n**그룹 내에서 서로를 고취하며 기쁨을 함께 나눕시다!**",
+  tl: "🎉🎉🎉 **Naabot ni {nickname} ang {streak} na araw na streak!!** 🎉🎉🎉\n\n**Magtulungan tayo sa pag-aaral sa grupo at magbahagi ng kagalakan!**",
+  sw: "🎉🎉🎉 **{nickname} amefikisha mfululizo wa siku {streak}!!** 🎉🎉🎉\n\n**Na tujengane mmoja kwa mwingine katika kikundi na tushiriki furaha pamoja!**"
+};
 
 // API Model Configuration
 // Using Gemma 3-12b - Higher rate limits (14.4K RPD)
@@ -514,6 +540,221 @@ app.post('/migrate-data', async (req, res) => {
     res.status(500).send('Migration failed: ' + error.message);
   }
 });
+
+app.post('/post-note', async (req, res) => {
+  console.log('--- POST NOTE REQUEST ---');
+  console.log('Body:', JSON.stringify(req.body, null, 2));
+
+  const validation = postNoteSchema.safeParse(req.body);
+  if (!validation.success) {
+    console.error('Validation failed:', validation.error.format());
+    return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
+  }
+
+  const { chapter, scripture, comment, shareOption, selectedShareGroups, isGroupContext, currentGroupId, language } = validation.data;
+
+  const authHeader = req.headers.authorization;
+  let idToken;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    idToken = authHeader.split('Bearer ')[1];
+  } else {
+    return res.status(401).send('Unauthorized: No token provided.');
+  }
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const uid = decodedToken.uid;
+    const db = admin.firestore();
+    console.log(`User ${uid} authenticated`);
+
+    let messageText;
+    if (scripture === "Other") {
+      messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n${comment || ''}`;
+    } else {
+      let label = (scripture === "BYU Speeches") ? "Speech" : "Chapter";
+      messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**${label}:** ${chapter}\n\n${comment || ''}`;
+    }
+
+    const result = await db.runTransaction(async (transaction) => {
+      console.log('Starting transaction...');
+      const userRef = db.collection('users').doc(uid);
+      const userDoc = await transaction.get(userRef);
+      if (!userDoc.exists) throw new Error('User not found.');
+      const userData = userDoc.data();
+
+      // 1. Streak and Stats Logic
+      let timeZone = 'UTC';
+      try {
+        if (userData.timeZone) {
+          // Verify if timezone is valid
+          Intl.DateTimeFormat(undefined, { timeZone: userData.timeZone });
+          timeZone = userData.timeZone;
+        }
+      } catch (tzError) {
+        console.warn(`Invalid timezone ${userData.timeZone}, falling back to UTC`);
+      }
+
+      const now = new Date();
+      const todayStr = now.toLocaleDateString('en-CA', { timeZone });
+      let lastPostDate = null;
+      if (userData.lastPostDate) {
+        lastPostDate = userData.lastPostDate.toDate ? userData.lastPostDate.toDate() : new Date(userData.lastPostDate);
+      }
+
+      let newStreak = userData.streakCount || 0;
+      let streakUpdated = false;
+
+      if (!lastPostDate) {
+        newStreak = 1;
+        streakUpdated = true;
+      } else {
+        const lastPostDateStr = lastPostDate.toLocaleDateString('en-CA', { timeZone });
+        if (todayStr !== lastPostDateStr) {
+          const todayDate = new Date(todayStr);
+          const lastPostDateObj = new Date(lastPostDateStr);
+          const diffTime = todayDate - lastPostDateObj;
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+          if (diffDays === 1) {
+            newStreak += 1;
+          } else {
+            newStreak = 1;
+          }
+          streakUpdated = true;
+        } else if (newStreak === 0) {
+          newStreak = 1;
+          streakUpdated = true;
+        }
+      }
+
+      const userUpdate = {
+        lastPostDate: admin.firestore.FieldValue.serverTimestamp(),
+        totalNotes: admin.firestore.FieldValue.increment(1)
+      };
+      if (streakUpdated) {
+        userUpdate.streakCount = newStreak;
+        userUpdate.daysStudiedCount = admin.firestore.FieldValue.increment(1);
+      }
+
+      // 2. Determine target groups
+      let groupsToPostTo = [];
+      if (shareOption === 'all') {
+        groupsToPostTo = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
+      } else if (shareOption === 'specific') {
+        groupsToPostTo = selectedShareGroups || [];
+      } else if (shareOption === 'current') {
+        const targetId = currentGroupId || userData.groupId;
+        if (targetId) groupsToPostTo = [targetId];
+      }
+
+      // 3. READ ALL NECESSARY DATA FIRST (Constraint: Reads before Writes)
+      console.log(`Fetching ${groupsToPostTo.length} groups before any writes...`);
+      const groupRefs = groupsToPostTo.map(gid => db.collection('groups').doc(gid));
+      const groupDocs = await Promise.all(groupRefs.map(ref => transaction.get(ref)));
+
+      // 4. NOW START WRITES
+      transaction.update(userRef, userUpdate);
+
+      // 3. Create Personal Note
+      const personalNoteRef = userRef.collection('notes').doc();
+      const noteTimestamp = admin.firestore.Timestamp.now();
+      const sharedMessageIds = {};
+
+      // 5. Post to groups and update metadata
+      console.log(`Processing ${groupsToPostTo.length} group posts`);
+
+      groupDocs.forEach((groupDoc, idx) => {
+        if (!groupDoc.exists) return;
+        const gid = groupDoc.id;
+        const gData = groupDoc.data();
+        const msgRef = db.collection('groups').doc(gid).collection('messages').doc();
+        sharedMessageIds[gid] = msgRef.id;
+
+        transaction.set(msgRef, {
+          text: messageText,
+          senderId: uid,
+          senderNickname: userData.nickname || 'Member',
+          createdAt: noteTimestamp,
+          isNote: true,
+          originalNoteId: personalNoteRef.id
+        });
+
+        const todayLabel = new Date().toDateString();
+        const updatePayload = {
+          messageCount: admin.firestore.FieldValue.increment(1),
+          noteCount: admin.firestore.FieldValue.increment(1),
+          lastMessageAt: admin.firestore.FieldValue.serverTimestamp(),
+          lastNoteAt: admin.firestore.FieldValue.serverTimestamp(),
+          lastNoteByNickname: userData.nickname || 'Member',
+          lastNoteByUid: uid,
+          lastMessageByNickname: userData.nickname || 'Member',
+          lastMessageByUid: uid,
+          [`memberLastActive.${uid}`]: admin.firestore.FieldValue.serverTimestamp(),
+          [`memberLastReadAt.${uid}`]: admin.firestore.FieldValue.serverTimestamp()
+        };
+
+        if (!gData.dailyActivity || gData.dailyActivity.date !== todayLabel) {
+          updatePayload.dailyActivity = { date: todayLabel, activeMembers: [uid] };
+        } else {
+          updatePayload['dailyActivity.activeMembers'] = admin.firestore.FieldValue.arrayUnion(uid);
+        }
+        transaction.update(groupRefs[idx], updatePayload);
+
+        const userGroupStateRef = userRef.collection('groupStates').doc(gid);
+        transaction.set(userGroupStateRef, {
+          readMessageCount: admin.firestore.FieldValue.increment(1),
+          lastReadAt: admin.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+      });
+
+      transaction.set(personalNoteRef, {
+        text: messageText,
+        createdAt: noteTimestamp,
+        scripture: scripture,
+        chapter: chapter,
+        comment: comment || '',
+        shareOption: shareOption,
+        sharedWithGroups: groupsToPostTo,
+        sharedMessageIds: sharedMessageIds
+      });
+
+      // 5. Streak Announcements
+      if (streakUpdated && newStreak > 0) {
+        console.log(`Streak updated to ${newStreak}, announcing...`);
+        const announceMsg = (STREAK_ANNOUNCEMENT_TEMPLATES[language] || STREAK_ANNOUNCEMENT_TEMPLATES.en)
+          .replace('{nickname}', userData.nickname || 'Member')
+          .replace('{streak}', newStreak);
+        const announceTime = admin.firestore.Timestamp.fromMillis(noteTimestamp.toMillis() + 2000);
+
+        const distinctGroupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
+        distinctGroupIds.forEach(gid => {
+          const announceRef = db.collection('groups').doc(gid).collection('messages').doc();
+          transaction.set(announceRef, {
+            text: announceMsg,
+            senderId: 'system',
+            senderNickname: 'Scripture Habit Bot',
+            createdAt: announceTime,
+            isSystemMessage: true,
+            messageType: 'streakAnnouncement',
+            messageData: { nickname: userData.nickname || 'Member', userId: uid, streak: newStreak }
+          });
+        });
+      }
+
+      return { personalNoteId: personalNoteRef.id, newStreak, streakUpdated };
+    });
+
+    console.log('Post note successful');
+    res.status(200).json({ message: 'Note posted successfully.', ...result });
+  } catch (error) {
+    console.error('CRITICAL ERROR in /post-note:', error);
+    res.status(500).json({
+      error: error.message || 'Error saving note.',
+      stack: error.stack,
+      details: error
+    });
+  }
+});
+
 
 // Scraping Endpoint for General Conference Metadata
 app.get('/fetch-gc-metadata', async (req, res) => {

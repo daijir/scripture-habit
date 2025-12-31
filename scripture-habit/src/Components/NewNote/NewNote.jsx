@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import * as Sentry from "@sentry/react";
 import axios from 'axios';
 import { Capacitor } from '@capacitor/core';
-import { db } from '../../firebase';
-import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment, query, where, getDocs, Timestamp, arrayUnion, setDoc } from 'firebase/firestore';
+import { db, auth } from '../../firebase';
+import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment, query, where, getDocs, Timestamp, arrayUnion, setDoc, writeBatch } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { UilTrashAlt, UilShuffle } from '@iconscout/react-unicons';
 import Select from 'react-select';
@@ -27,6 +27,7 @@ import confetti from 'canvas-confetti';
 
 const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups = [], isGroupContext = false, currentGroupId = null, initialData = null }) => {
     const { t, language } = useLanguage();
+    const API_BASE = Capacitor.isNativePlatform() ? 'https://scripture-habit.vercel.app' : '';
 
     const [chapter, setChapter] = useState('');
     const [scripture, setScripture] = useState('');
@@ -356,7 +357,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**${label}:** ${chapter}\n\n${comment}`;
             }
 
-
+            const batch = writeBatch(db);
 
             if (noteToEdit) {
                 if (noteToEdit.groupMessageId && noteToEdit.groupId) {
@@ -367,7 +368,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     const messageSnap = await getDoc(messageRef);
                     const messageData = messageSnap.exists() ? messageSnap.data() : null;
 
-                    await updateDoc(messageRef, {
+                    batch.update(messageRef, {
                         text: messageText,
                         scripture: scripture,
                         chapter: chapter,
@@ -379,7 +380,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     if (messageData?.originalNoteId) {
                         try {
                             const noteRef = doc(db, 'users', userData.uid, 'notes', messageData.originalNoteId);
-                            await updateDoc(noteRef, {
+                            batch.update(noteRef, {
                                 text: messageText,
                                 scripture: scripture,
                                 chapter: chapter,
@@ -393,7 +394,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     // Editing an existing note (which is a message in a specific group)
                     const targetGroupId = currentGroupId || userData.groupId;
                     const messageRef = doc(db, 'groups', targetGroupId, 'messages', noteToEdit.id);
-                    await updateDoc(messageRef, {
+                    batch.update(messageRef, {
                         text: messageText,
                     });
 
@@ -401,7 +402,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     if (noteToEdit.originalNoteId) {
                         try {
                             const noteRef = doc(db, 'users', userData.uid, 'notes', noteToEdit.originalNoteId);
-                            await updateDoc(noteRef, {
+                            batch.update(noteRef, {
                                 text: messageText,
                                 scripture: scripture,
                                 chapter: chapter,
@@ -414,7 +415,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 } else {
                     // Editing a personal note
                     const noteRef = doc(db, 'users', userData.uid, 'notes', noteToEdit.id);
-                    await updateDoc(noteRef, {
+                    batch.update(noteRef, {
                         text: messageText,
                         scripture: scripture,
                         chapter: chapter,
@@ -423,7 +424,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
                     // SYNC TO GROUPS
                     // 1. Get the list of groups this note was shared with
-                    let sharedMessageIds = noteToEdit.sharedMessageIds || {};
+                    let sharedMessageIds = { ...(noteToEdit.sharedMessageIds || {}) };
                     const groupsToCheck = noteToEdit.sharedWithGroups || [];
                     let idsUpdated = false;
 
@@ -443,7 +444,6 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                                     messageId = snapId.docs[0].id;
                                 } else {
                                     // Strategy B: Check by content match (for legacy notes)
-                                    // We look for a message by this user, that is a note, and has the OLD text
                                     const qText = query(messagesRef,
                                         where('senderId', '==', userData.uid),
                                         where('isNote', '==', true),
@@ -453,12 +453,11 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                                     if (!snapText.empty) {
                                         messageId = snapText.docs[0].id;
                                         // Also update the message with originalNoteId for future robustness
-                                        await updateDoc(doc(db, 'groups', groupId, 'messages', messageId), {
+                                        batch.update(doc(db, 'groups', groupId, 'messages', messageId), {
                                             originalNoteId: noteToEdit.id
                                         });
                                     } else {
                                         // Strategy C: Check by Timestamp (approximate match)
-                                        // Useful if text has been edited separately and they are out of sync
                                         if (noteToEdit.createdAt) {
                                             const noteTime = noteToEdit.createdAt.toDate ? noteToEdit.createdAt.toDate() : new Date(noteToEdit.createdAt.seconds * 1000);
                                             const startTime = new Date(noteTime.getTime() - 60000); // -1 minute
@@ -473,7 +472,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                                             const snapTime = await getDocs(qTime);
                                             if (!snapTime.empty) {
                                                 messageId = snapTime.docs[0].id;
-                                                await updateDoc(doc(db, 'groups', groupId, 'messages', messageId), {
+                                                batch.update(doc(db, 'groups', groupId, 'messages', messageId), {
                                                     originalNoteId: noteToEdit.id
                                                 });
                                             }
@@ -488,212 +487,48 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         if (messageId) {
                             try {
                                 const msgRef = doc(db, 'groups', groupId, 'messages', messageId);
-                                await updateDoc(msgRef, { text: messageText });
-                                sharedMessageIds[groupId] = messageId;
-                                idsUpdated = true;
+                                batch.update(msgRef, { text: messageText });
+                                if (sharedMessageIds[groupId] !== messageId) {
+                                    sharedMessageIds[groupId] = messageId;
+                                    idsUpdated = true;
+                                }
                             } catch (err) {
-                                console.error(`Error updating message ${messageId} in group ${groupId}:`, err);
+                                console.error(`Error adding update for message ${messageId} in group ${groupId} to batch:`, err);
                             }
                         }
                     }
 
                     // Save the discovered IDs back to the note so we don't have to search next time
                     if (idsUpdated) {
-                        await updateDoc(noteRef, { sharedMessageIds });
+                        batch.update(noteRef, { sharedMessageIds });
                     }
                 }
+                await batch.commit();
                 toast.success(t('newNote.successUpdate'));
             } else {
-                // Creating a new note
-                const userRef = doc(db, 'users', userData.uid);
-                const userSnap = await getDoc(userRef);
-                const currentUserData = userSnap.data();
-
-                // Streak logic (simplified for brevity, keeping existing logic)
-                const timeZone = currentUserData.timeZone || 'UTC';
-                const now = new Date();
-                const todayStr = now.toLocaleDateString('en-CA', { timeZone });
-                let lastPostDate = null;
-                if (currentUserData.lastPostDate) {
-                    if (typeof currentUserData.lastPostDate.toDate === 'function') {
-                        lastPostDate = currentUserData.lastPostDate.toDate();
-                    } else {
-                        lastPostDate = new Date(currentUserData.lastPostDate);
+                // Creating a new note via Backend (Cloud Function style)
+                const idToken = await auth.currentUser.getIdToken(true);
+                const response = await axios.post(`${API_BASE}/api/post-note`, {
+                    chapter,
+                    scripture,
+                    comment,
+                    shareOption,
+                    selectedShareGroups,
+                    isGroupContext,
+                    currentGroupId,
+                    language
+                }, {
+                    headers: {
+                        Authorization: `Bearer ${idToken}`
                     }
-                }
-                let newStreak = currentUserData.streakCount || 0;
-                let streakUpdated = false;
-
-                if (!lastPostDate) {
-                    newStreak = 1;
-                    streakUpdated = true;
-                } else {
-                    const lastPostDateStr = lastPostDate.toLocaleDateString('en-CA', { timeZone });
-                    if (todayStr !== lastPostDateStr) {
-                        const todayDate = new Date(todayStr);
-                        const lastPostDateObj = new Date(lastPostDateStr);
-                        const diffTime = todayDate - lastPostDateObj;
-                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                        if (diffDays === 1) {
-                            newStreak += 1;
-                            streakUpdated = true;
-                        } else {
-                            newStreak = 1;
-                            streakUpdated = true;
-                        }
-                    } else {
-                        if (newStreak === 0) {
-                            newStreak = 1;
-                            streakUpdated = true;
-                        }
-                    }
-                }
-
-                if (streakUpdated) {
-                    await updateDoc(userRef, {
-                        streakCount: newStreak,
-                        daysStudiedCount: increment(1),
-                        lastPostDate: serverTimestamp(),
-                        totalNotes: increment(1)
-                    });
-                } else {
-                    await updateDoc(userRef, {
-                        lastPostDate: serverTimestamp(),
-                        totalNotes: increment(1)
-                    });
-                }
-
-                // Determine target groups for the note
-                let groupsToPostTo = [];
-                if (shareOption === 'all') {
-                    groupsToPostTo = userGroups.map(g => g.id);
-                } else if (shareOption === 'specific') {
-                    groupsToPostTo = selectedShareGroups;
-                } else if (shareOption === 'current') {
-                    const targetId = currentGroupId || userData.groupId;
-                    if (targetId) {
-                        groupsToPostTo = [targetId];
-                    }
-                }
-
-                // 1. Create the Personal Note FIRST to get its ID
-                const personalNoteRef = await addDoc(collection(db, 'users', userData.uid, 'notes'), {
-                    text: messageText,
-                    createdAt: serverTimestamp(),
-                    scripture: scripture,
-                    chapter: chapter,
-                    comment: comment,
-                    shareOption: shareOption,
-                    sharedWithGroups: groupsToPostTo // Store the array of group IDs
                 });
 
-                // 2. Post to each target group, linking back to the personal note
-                const sharedMessageIds = {};
-
-                // Use explicit timestamp for notes to ensure consistent ordering
-                const noteTimestamp = Timestamp.now();
-
-                const postPromises = groupsToPostTo.map(async (gid) => {
-                    const messagesRef = collection(db, 'groups', gid, 'messages');
-                    const groupRef = doc(db, 'groups', gid);
-
-                    const msgRef = await addDoc(messagesRef, {
-                        text: messageText,
-                        senderId: userData.uid,
-                        senderNickname: userData.nickname,
-                        createdAt: noteTimestamp, // Use explicit timestamp
-                        isNote: true,
-                        originalNoteId: personalNoteRef.id // Link to personal note
-                    });
-
-                    // Update group metadata
-                    // Update group metadata
-                    // Read group first to update dailyActivity
-                    const groupSnap = await getDoc(groupRef);
-                    if (groupSnap.exists()) {
-                        const gData = groupSnap.data();
-                        const todayStr = new Date().toDateString();
-                        const currentActivity = gData.dailyActivity || {};
-                        const updatePayload = {
-                            messageCount: increment(1),
-                            noteCount: increment(1), // Increment note count
-                            lastMessageAt: serverTimestamp(),
-                            lastNoteAt: serverTimestamp(),
-                            lastNoteByNickname: userData.nickname,
-                            lastNoteByUid: userData.uid,
-                            lastMessageByNickname: userData.nickname,
-                            lastMessageByUid: userData.uid,
-                            [`memberLastActive.${userData.uid}`]: serverTimestamp(),
-                            [`memberLastReadAt.${userData.uid}`]: serverTimestamp()
-                        };
-
-                        if (currentActivity.date !== todayStr) {
-                            updatePayload.dailyActivity = {
-                                date: todayStr,
-                                activeMembers: [userData.uid]
-                            };
-                        } else {
-                            const newActiveMembers = [...(currentActivity.activeMembers || [])];
-                            if (!newActiveMembers.includes(userData.uid)) {
-                                newActiveMembers.push(userData.uid);
-                            }
-                            updatePayload.dailyActivity = {
-                                ...currentActivity,
-                                activeMembers: newActiveMembers
-                            };
-                        }
-
-                        await updateDoc(groupRef, updatePayload);
-
-                        // CRITICAL: Update user's own read count so they don't see a "1" notification for their own note
-                        const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', gid);
-                        // Using the new total count to ensure synchronization
-                        const newReadCount = (gData.messageCount || 0) + 1;
-                        await setDoc(userGroupStateRef, {
-                            readMessageCount: newReadCount,
-                            lastReadAt: serverTimestamp()
-                        }, { merge: true });
-                    }
-
-                    sharedMessageIds[gid] = msgRef.id;
-                });
-
-                await Promise.all(postPromises);
-
-                // 3. Update the Personal Note with the IDs of the shared messages
-                if (Object.keys(sharedMessageIds).length > 0) {
-                    await updateDoc(personalNoteRef, { sharedMessageIds });
-                }
-
-                // Send streak announcement AFTER note is posted
-                // Use explicit timestamp that is 2 seconds AFTER the note timestamp
-                if (streakUpdated && newStreak > 0) {
-                    // Create announcement timestamp 2 seconds after note
-                    const announcementTimestamp = Timestamp.fromMillis(noteTimestamp.toMillis() + 2000);
-
-                    const targetGroupIds = userGroups.map(g => g.id);
-                    for (const gid of targetGroupIds) {
-                        const messagesRef = collection(db, 'groups', gid, 'messages');
-                        await addDoc(messagesRef, {
-                            text: t('groupChat.streakAnnouncement', { nickname: userData.nickname, streak: newStreak }),
-                            senderId: 'system',
-                            senderNickname: 'Scripture Habit Bot',
-                            createdAt: announcementTimestamp, // Explicit timestamp 2 seconds after note
-                            isSystemMessage: true,
-                            messageType: 'streakAnnouncement',
-                            messageData: {
-                                nickname: userData.nickname,
-                                userId: userData.uid,
-                                streak: newStreak
-                            }
-                        });
-                    }
-                }
-
+                const { newStreak, streakUpdated } = response.data;
                 toast.success(t('newNote.successPost'));
 
-                // Handle Level Up Celebration
-                const currentDays = currentUserData.daysStudiedCount || 0;
+                // Handle Level Up Celebration (Simplified, using stats from when the modal opened + sync with what backend might have changed)
+                // Note: ideally we'd get daysStudiedCount back too, but we can approximate or just rely on streakUpdated
+                const currentDays = userData.daysStudiedCount || 0;
                 const willLevelUp = streakUpdated && (currentDays + 1) % 7 === 0;
 
                 if (willLevelUp) {
@@ -707,20 +542,15 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         draggable: true,
                     });
 
-                    // Level up confetti (bigger blast)
+                    // Level up confetti
                     const duration = 5 * 1000;
                     const animationEnd = Date.now() + duration;
                     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
                     const randomInRange = (min, max) => Math.random() * (max - min) + min;
 
                     const interval = setInterval(function () {
                         const timeLeft = animationEnd - Date.now();
-
-                        if (timeLeft <= 0) {
-                            return clearInterval(interval);
-                        }
-
+                        if (timeLeft <= 0) return clearInterval(interval);
                         const particleCount = 50 * (timeLeft / duration);
                         confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
                         confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
@@ -743,9 +573,15 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
         } catch (e) {
             console.error("Error saving note:", e);
+            if (e.response && e.response.data) {
+                console.error("Server Error Details:", e.response.data);
+                if (e.response.data.error) {
+                    setError(`Server error: ${e.response.data.error}`);
+                }
+            }
             if (e.code === 'resource-exhausted' || (e.message && e.message.toLowerCase().includes('quota exceeded'))) {
                 setError(t('systemErrors.quotaExceededMessage'));
-            } else {
+            } else if (!error) {
                 Sentry.captureException(e);
                 setError(t('newNote.errorSave'));
             }

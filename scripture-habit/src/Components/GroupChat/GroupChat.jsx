@@ -1967,6 +1967,8 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     }
   }, [unityPercentage, groupId, userData?.uid]);
 
+  if (!groupId) return null;
+
   return (
     <div className="GroupChat" >
       <NewNote
@@ -2341,9 +2343,11 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
               <h3 className="delete-modal-title">{t('groupChat.deleteGroup')}?</h3>
               <p>{t('groupChat.deleteConfirmMessage')}</p>
               <div style={{ marginBottom: '1rem' }}>
-                <ReactMarkdown components={{ p: 'span' }}>
-                  {t('groupChat.typeToConfirm').replace('{groupName}', groupData.name)}
-                </ReactMarkdown>
+                {groupData && (
+                  <ReactMarkdown components={{ p: 'span' }}>
+                    {t('groupChat.typeToConfirm').replace('{groupName}', groupData.name)}
+                  </ReactMarkdown>
+                )}
               </div>
               <input
                 type="text"
