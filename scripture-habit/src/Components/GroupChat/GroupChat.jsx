@@ -1445,7 +1445,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
           }
           return m;
         }));
-
       } else {
         // Add reaction
         await updateDoc(messageRef, {
@@ -1456,12 +1455,13 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
           })
         });
 
-        // Optimistic Add
+        // Optimistic Add (with duplicate prevention)
         setMessages(prev => prev.map(m => {
           if (m.id === msg.id) {
-            const newReactions = m.reactions ? [...m.reactions] : [];
-            newReactions.push({ odU: userData.uid, nickname: userData.nickname, emoji: '👍' });
-            return { ...m, reactions: newReactions };
+            const currentReactions = m.reactions || [];
+            // If already present (e.g. from onSnapshot), don't add again
+            if (currentReactions.some(r => r.odU === userData.uid)) return m;
+            return { ...m, reactions: [...currentReactions, { odU: userData.uid, nickname: userData.nickname, emoji: '👍' }] };
           }
           return m;
         }));
