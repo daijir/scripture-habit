@@ -118,7 +118,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
     toast.info(t('myNotes.generatingRecap'));
     try {
       const apiUrl = Capacitor.isNativePlatform()
-        ? 'https://scripture-habit.vercel.app/api/generate-personal-weekly-recap'
+        ? 'https://scripturehabit.app/api/generate-personal-weekly-recap'
         : '/api/generate-personal-weekly-recap';
 
       const response = await axios.post(apiUrl, {

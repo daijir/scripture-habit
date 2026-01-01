@@ -146,7 +146,7 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, t }) => {
 
 const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInputFocusChange, onBack, onGroupSelect }) => {
   const { language, t } = useLanguage();
-  const API_BASE = Capacitor.isNativePlatform() ? 'https://scripture-habit.vercel.app' : '';
+  const API_BASE = Capacitor.isNativePlatform() ? 'https://scripturehabit.app' : '';
   const navigate = useNavigate();
   const location = useLocation();
   const [messages, setMessages] = useState([]);

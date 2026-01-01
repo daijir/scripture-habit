@@ -146,7 +146,7 @@ app.use(
 
 // CORS Configuration
 const allowedOrigins = [
-    'https://scripture-habit.vercel.app',
+    'https://scripturehabit.app',
     'http://localhost:3000', // For local development
     'http://localhost:5173',  // Vite default port
     'https://localhost',      // Android Capacitor
@@ -165,7 +165,6 @@ app.use(cors({
             // If origin is not in allowed list, you can block it,
             // OR if you want to allow preview deployments (e.g. vercel preview urls), you might need regex.
             // For now, strict allow list for security.
-            // If you have preview URLs, consider allowing *.vercel.app check.
             if (process.env.NODE_ENV !== 'production') {
                 return callback(null, true); // Allow all in dev
             }

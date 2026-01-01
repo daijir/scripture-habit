@@ -29,7 +29,7 @@ import { bookNameTranslations } from '../../Utils/bookNameTranslations';
 
 const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups = [], isGroupContext = false, currentGroupId = null, initialData = null }) => {
     const { t, language } = useLanguage();
-    const API_BASE = Capacitor.isNativePlatform() ? 'https://scripture-habit.vercel.app' : '';
+    const API_BASE = Capacitor.isNativePlatform() ? 'https://scripturehabit.app' : '';
 
     const [chapter, setChapter] = useState('');
     const [scripture, setScripture] = useState('');

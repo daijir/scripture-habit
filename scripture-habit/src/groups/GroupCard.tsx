@@ -40,7 +40,7 @@ export default function GroupCard({ group, currentUser, onJoin, onOpen }: Props)
       try {
         const idToken = await auth.currentUser?.getIdToken();
         const backend = import.meta.env.VITE_BACKEND_URL ?? '';
-        const API_BASE = backend || (window.location.hostname === 'localhost' ? '' : 'https://scripture-habit.vercel.app');
+        const API_BASE = backend || (window.location.hostname === 'localhost' ? '' : 'https://scripturehabit.app');
 
         const res = await fetch(`${API_BASE}/api/translate`, {
           method: 'POST',
