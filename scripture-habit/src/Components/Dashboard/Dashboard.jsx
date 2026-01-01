@@ -482,7 +482,7 @@ const Dashboard = () => {
         }
 
         // 3. Join the group
-        const API_BASE = Capacitor.isNativePlatform() ? 'https://scripture-habit.vercel.app' : '';
+        const API_BASE = Capacitor.isNativePlatform() ? 'https://scripturehabit.app' : '';
         const idToken = await user.getIdToken();
         const resp = await fetch(`${API_BASE}/api/join-group`, {
           method: 'POST',

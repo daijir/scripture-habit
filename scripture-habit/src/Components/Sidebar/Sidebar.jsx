@@ -57,7 +57,7 @@ const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEm
 
       try {
         const idToken = await auth.currentUser?.getIdToken();
-        const API_BASE = window.location.hostname === 'localhost' ? '' : 'https://scripture-habit.vercel.app';
+        const API_BASE = window.location.hostname === 'localhost' ? '' : 'https://scripturehabit.app';
 
         const res = await fetch(`${API_BASE}/api/translate`, {
           method: 'POST',

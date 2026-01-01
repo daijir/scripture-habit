@@ -237,7 +237,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
 
             const apiUrl = Capacitor.isNativePlatform()
-                ? 'https://scripture-habit.vercel.app/api/generate-ponder-questions'
+                ? 'https://scripturehabit.app/api/generate-ponder-questions'
                 : '/api/generate-ponder-questions';
 
             const response = await axios.post(apiUrl, {

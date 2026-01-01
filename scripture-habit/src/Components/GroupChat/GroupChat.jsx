@@ -54,7 +54,8 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, t }) => {
 
       try {
         const idToken = await auth.currentUser?.getIdToken();
-        const API_BASE = window.location.hostname === 'localhost' ? '' : 'https://scripture-habit.vercel.app';
+        const API_BASE = window.location.hostname === 'localhost' ? '' : 'https://scripturehabit.app';
+        const inviteUrl = `https://scripturehabit.app/join/${groupId}`;
 
         const response = await fetch(`${API_BASE}/api/translate`, {
           method: 'POST',

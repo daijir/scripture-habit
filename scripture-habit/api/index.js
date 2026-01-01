@@ -133,7 +133,7 @@ app.use(
                     "https://firestore.googleapis.com",
                     "https://www.googleapis.com",
                     // Add your backend URL if it's different in production, but 'self' covers relative API calls
-                    "https://scripture-habit.vercel.app",
+                    "https://scripturehabit.app",
                     "http://localhost:3000"
                 ],
                 fontSrc: ["'self'", "https://fonts.gstatic.com"],

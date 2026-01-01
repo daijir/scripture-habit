@@ -9,7 +9,7 @@ const LinkPreview = ({ url, isSent }) => {
     const [error, setError] = useState(false);
 
     // TODO: Replace with your actual production URL
-    const API_BASE_URL = 'https://scripture-habit.vercel.app';
+    const API_BASE_URL = 'https://scripturehabit.app';
 
     useEffect(() => {
         const fetchPreview = async () => {

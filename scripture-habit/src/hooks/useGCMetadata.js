@@ -58,7 +58,7 @@ export const useGCMetadata = (urlOrSlug, language) => {
                     fetchUrl = `https://www.churchofjesuschrist.org${fetchUrl.startsWith('/') ? '' : '/'}${fetchUrl}`;
                 }
 
-                const API_BASE = Capacitor.isNativePlatform() ? 'https://scripture-habit.vercel.app' : '';
+                const API_BASE = window.location.hostname === 'localhost' ? '' : 'https://scripturehabit.app';
                 // Logic for mapping languages to Church website language codes
 
                 const langMap = {
@@ -66,7 +66,7 @@ export const useGCMetadata = (urlOrSlug, language) => {
                     'ja': 'jpn',
                     'pt': 'por',
                     'es': 'spa',
-                    'zho': 'zho', 
+                    'zho': 'zho',
                     'vi': 'vie',
                     'th': 'tha',
                     'ko': 'kor',

@@ -16,7 +16,7 @@ import { toast } from 'react-toastify';
 
 export default function JoinGroup() {
   const { t, language } = useLanguage();
-  const API_BASE = Capacitor.isNativePlatform() ? 'https://scripture-habit.vercel.app' : '';
+  const API_BASE = window.location.hostname === 'localhost' ? '' : 'https://scripturehabit.app';
   const [error, setError] = useState("");
   const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
