@@ -419,22 +419,16 @@ const Dashboard = () => {
       }
 
       if (currentTime > 0 && currentUid !== userData.uid) {
-        // Check against lastReadAt in user's state for this group
-        const state = groupStates[group.id];
-        let lastReadTime = 0;
-        if (state && state.lastReadAt) {
-          lastReadTime = state.lastReadAt.toMillis ? state.lastReadAt.toMillis() : (state.lastReadAt.seconds * 1000);
-        }
-
-        // Only show if newer than today AND newer than user's last read time
-        if (currentTime >= todayTime && currentTime > lastReadTime) {
+        // Only show if newer than today AND the group has unread messages
+        if (currentTime >= todayTime && (group.unreadCount || 0) > 0) {
           if (!mostRecent || currentTime > mostRecent.time) {
             mostRecent = {
               type: currentType,
               nickname: currentNickname || 'Someone',
               time: currentTime,
               groupId: group.id,
-              groupName: group.name
+              groupName: group.name,
+              totalMessages: group.messageCount || 0
             };
           }
         }
@@ -794,9 +788,35 @@ const Dashboard = () => {
               {latestNoteNotification && (
                 <div
                   className="note-notification"
-                  onClick={() => {
-                    setActiveGroupId(latestNoteNotification.groupId);
+                  onClick={async () => {
+                    const gid = latestNoteNotification.groupId;
+                    const totalMsgs = latestNoteNotification.totalMessages;
+
+                    // Immediately switch view and clear notification locally
+                    setActiveGroupId(gid);
                     setSelectedView(2);
+                    setLatestNoteNotification(null);
+
+                    // Update read status in background
+                    if (userData?.uid) {
+                      try {
+                        const { doc, setDoc, updateDoc, serverTimestamp } = await import('firebase/firestore');
+                        const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', gid);
+                        const groupRef = doc(db, 'groups', gid);
+
+                        await Promise.all([
+                          setDoc(userGroupStateRef, {
+                            readMessageCount: totalMsgs,
+                            lastReadAt: serverTimestamp()
+                          }, { merge: true }),
+                          updateDoc(groupRef, {
+                            [`memberLastReadAt.${userData.uid}`]: serverTimestamp()
+                          })
+                        ]);
+                      } catch (err) {
+                        console.error("Background read status update failed:", err);
+                      }
+                    }
                   }}
                 >
                   <span>{latestNoteNotification.type === 'note' ? '📖' : '💬'}</span>
