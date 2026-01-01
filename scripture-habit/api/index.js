@@ -945,7 +945,8 @@ Based on the principles and teachings found in "${scripture} ${chapter}", please
 Do NOT use bullet points or symbols (*, -). Output only the question text as plain text.
 However, please write questions that are easy to understand even for investigators or new members who are not comfortable reading scriptures.`;
 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const apiKey = (process.env.GEMINI_API_KEY || '').trim();
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${apiKey}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
@@ -965,10 +966,12 @@ However, please write questions that are easy to understand even for investigato
 
     } catch (error) {
         console.error('Error generating AI questions:', error.message);
-        if (error.response) {
+        let detail = error.message;
+        if (error.response && error.response.data) {
             console.error('Gemini API Error:', error.response.data);
+            detail = JSON.stringify(error.response.data);
         }
-        res.status(500).json({ error: 'Failed to generate questions. Please try again later.' });
+        res.status(500).json({ error: 'Failed to generate questions.', details: detail });
     }
 });
 
@@ -1135,7 +1138,8 @@ Keep it friendly and uplifting.
 Notes Content:
 ${notesText}`;
 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const apiKey = (process.env.GEMINI_API_KEY || '').trim();
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${apiKey}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
@@ -1176,7 +1180,11 @@ ${notesText}`;
 
     } catch (error) {
         console.error('Error generating weekly recap:', error.message);
-        res.status(500).json({ error: 'Failed to generate recap. Please try again later.' });
+        let detail = error.message;
+        if (error.response && error.response.data) {
+            detail = JSON.stringify(error.response.data);
+        }
+        res.status(500).json({ error: 'Failed to generate recap.', details: detail });
     }
 });
 
@@ -1362,7 +1370,8 @@ Requirements:
 User's Notes:
 ${notesText}`;
 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const apiKey = (process.env.GEMINI_API_KEY || '').trim();
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${apiKey}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
@@ -1382,7 +1391,11 @@ ${notesText}`;
 
     } catch (error) {
         console.error('Error generating personal weekly recap:', error.message);
-        res.status(500).json({ error: 'Failed to generate recap. Please try again later.' });
+        let detail = error.message;
+        if (error.response && error.response.data) {
+            detail = JSON.stringify(error.response.data);
+        }
+        res.status(500).json({ error: 'Failed to generate recap.', details: detail });
     }
 });
 
