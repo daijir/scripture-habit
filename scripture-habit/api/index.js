@@ -1018,7 +1018,7 @@ app.post('/api/post-message', async (req, res) => {
                 lastReadAt: admin.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
 
-            return { messageId: messageRef.id, nickname: userData.nickname || 'Member', members };
+            return { messageId: messageRef.id, nickname: userData.nickname || 'Member', members: groupData.members || [] };
         });
 
         // Send push notifications
