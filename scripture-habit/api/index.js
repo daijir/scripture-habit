@@ -171,14 +171,19 @@ async function sendPushNotification(tokens, payload) {
     };
 }
 
-async function notifyGroupMembers(groupId, senderUid, payload) {
+async function notifyGroupMembers(groupId, senderUid, payload, memberIdsOverride = null) {
     try {
-        const groupDoc = await db.collection('groups').doc(groupId).get();
-        if (!groupDoc.exists) return;
+        let membersToNotifyIds;
 
-        const groupData = groupDoc.data();
-        const members = groupData.members || [];
-        const membersToNotifyIds = members.filter(uid => uid !== senderUid);
+        if (memberIdsOverride) {
+            membersToNotifyIds = memberIdsOverride.filter(uid => uid !== senderUid);
+        } else {
+            const groupDoc = await db.collection('groups').doc(groupId).get();
+            if (!groupDoc.exists) return;
+            const groupData = groupDoc.data();
+            const members = groupData.members || [];
+            membersToNotifyIds = members.filter(uid => uid !== senderUid);
+        }
 
         if (membersToNotifyIds.length === 0) return;
 
@@ -1013,7 +1018,7 @@ app.post('/api/post-message', async (req, res) => {
                 lastReadAt: admin.firestore.FieldValue.serverTimestamp()
             }, { merge: true });
 
-            return { messageId: messageRef.id, nickname: userData.nickname || 'Member' };
+            return { messageId: messageRef.id, nickname: userData.nickname || 'Member', members };
         });
 
         // Send push notifications
@@ -1029,7 +1034,7 @@ app.post('/api/post-message', async (req, res) => {
                     type: 'chat',
                     groupId: groupId
                 }
-            });
+            }, result.members); // Pass members directly to skip group fetch
         } catch (notifyErr) {
             console.error('Error sending push notifications for chat:', notifyErr);
         }

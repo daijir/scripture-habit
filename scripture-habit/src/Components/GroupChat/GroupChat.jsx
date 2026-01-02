@@ -1024,26 +1024,37 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     if (e) e.preventDefault();
     if (newMessage.trim() === '' || !userData) return;
 
+    // Capture states before clearing for the API call
+    const messageToSend = newMessage;
+    const replyToData = replyTo;
+
+    // 1. Optimistic UI: Clear input immediately to eliminate lag
+    setNewMessage('');
+    setReplyTo(null);
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
+
     try {
       const idToken = await auth.currentUser.getIdToken();
 
       // Determine replyTo data if existing
       let replyData = null;
-      if (replyTo) {
+      if (replyToData) {
         let replyText;
-        if (replyTo.isNote || replyTo.isEntry) {
+        if (replyToData.isNote || replyToData.isEntry) {
           replyText = t('groupChat.studyNote');
-        } else if (replyTo.text) {
-          replyText = replyTo.text.substring(0, 50) + (replyTo.text.length > 50 ? '...' : '');
+        } else if (replyToData.text) {
+          replyText = replyToData.text.substring(0, 50) + (replyToData.text.length > 50 ? '...' : '');
         } else {
           replyText = 'Image/Note';
         }
 
         replyData = {
-          id: replyTo.id,
-          senderNickname: replyTo.senderNickname,
+          id: replyToData.id,
+          senderNickname: replyToData.senderNickname,
           text: replyText,
-          isNote: replyTo.isNote || replyTo.isEntry
+          isNote: replyToData.isNote || replyToData.isEntry
         };
       }
 
@@ -1055,7 +1066,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         },
         body: JSON.stringify({
           groupId,
-          text: newMessage,
+          text: messageToSend,
           replyTo: replyData
         })
       });
@@ -1064,18 +1075,14 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         throw new Error(await response.text());
       }
 
-      // Update local read count to prevent seeing unread count for our own message
+      // Update local read count in background
       const newReadCount = (groupData?.messageCount || messages.length) + 1;
       setUserReadCount(newReadCount);
 
-      setNewMessage('');
-      setReplyTo(null);
-
-      if (textareaRef.current) {
-        textareaRef.current.style.height = 'auto';
-      }
     } catch (e) {
       console.error("Error sending message:", e);
+      // Restore the message in input so user doesn't lose it if it fails
+      setNewMessage(messageToSend);
       toast.error(`${t('groupChat.errorSendMessage') || 'Failed to send message'}: ${e.message || e}`);
     }
   };
