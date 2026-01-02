@@ -3,7 +3,7 @@ import { getToken, onMessage } from 'firebase/messaging';
 import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
 
 // VAPID Key from Firebase Console (Messaging -> Web Push certificates)
-const VAPID_KEY = "BD7TWUVfuPC1A3RgUR8T8JQiQrbOCV-J9WPeCevFe3eNzJvOJRL6deOKpottaVbnmYKz4SgUnBEKLKX2Ji5PFCk";
+const VAPID_KEY = "BM2Y3WcLC7cH5CHND3nzDh2eoNvsIxc7X2aRTaQj0TXENvee9klPqLrJvb8x2DfQ-yMgMHlXMhkal0tt6czIaKM";
 
 export const requestNotificationPermission = async (userId) => {
     try {
