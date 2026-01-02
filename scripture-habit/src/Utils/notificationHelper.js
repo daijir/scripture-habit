@@ -11,40 +11,50 @@ export const requestNotificationPermission = async (userId) => {
         if (permission === 'granted') {
             console.log('Notification permission granted.');
 
-            // Wait for the service worker to be fully ready and active
-            const registration = await navigator.serviceWorker.ready;
-            console.log('SW Registration ready:', registration);
-            console.log('Active SW:', registration?.active);
-            console.log('Scope:', registration?.scope);
-
-            if (!registration || !registration.active) {
-                console.error('Service worker is not active or ready!');
-                return;
-            }
-
-            console.log('Using existing SW registration for Messaging:', registration);
-
-            // Get FCM token
-            const token = await getToken(messaging, {
-                vapidKey: VAPID_KEY,
-                serviceWorkerRegistration: registration
-            });
-
-            if (token) {
-                console.log('FCM Token:', token);
-                // Save token to user's profile in Firestore
-                if (userId) {
-                    const userRef = doc(db, 'users', userId);
-                    await updateDoc(userRef, {
-                        fcmTokens: arrayUnion(token)
-                    });
+            try {
+                // Force a fresh registration of the service worker to clear any broken states
+                const regs = await navigator.serviceWorker.getRegistrations();
+                for (const reg of regs) {
+                    if (reg.scope.includes(window.location.host)) {
+                        console.log('Unregistering existing SW to reset state:', reg.scope);
+                        await reg.unregister();
+                    }
                 }
-                import('react-toastify').then(({ toast }) => {
-                    toast.success('Push notifications enabled! 🎉');
+
+                const registration = await navigator.serviceWorker.register('/sw.js');
+                await navigator.serviceWorker.ready;
+
+                console.log('Fresh SW Registration ready:', registration);
+
+                if (!registration.active) {
+                    console.error('Service worker registration failed or not active.');
+                    return;
+                }
+
+                // Get FCM token
+                const token = await getToken(messaging, {
+                    vapidKey: VAPID_KEY,
+                    serviceWorkerRegistration: registration
                 });
-                return token;
-            } else {
-                console.log('No registration token available. Request permission to generate one.');
+
+                if (token) {
+                    console.log('FCM Token:', token);
+                    if (userId) {
+                        const userRef = doc(db, 'users', userId);
+                        await updateDoc(userRef, {
+                            fcmTokens: arrayUnion(token)
+                        });
+                    }
+                    import('react-toastify').then(({ toast }) => {
+                        toast.success('Push notifications enabled! 🎉');
+                    });
+                    return token;
+                } else {
+                    console.log('No registration token available.');
+                }
+            } catch (innerError) {
+                console.error('Error during SW registration/token process:', innerError);
+                throw innerError;
             }
         } else {
             console.warn('Notification permission NOT granted. Status:', permission);
@@ -59,7 +69,6 @@ export const requestNotificationPermission = async (userId) => {
         if (error.message) console.error('Error message:', error.message);
         if (error.code) console.error('Error code:', error.code);
 
-        // Show user-friendly message instead of technical error
         import('react-toastify').then(({ toast }) => {
             toast.error('通知の設定に失敗しました。後でもう一度お試しください。');
         });
