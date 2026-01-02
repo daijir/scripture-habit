@@ -16,13 +16,43 @@ const messaging = firebase.messaging();
 // Background message handler
 messaging.onBackgroundMessage((payload) => {
     console.log('[sw.js] Received background message ', payload);
-    const notificationTitle = payload.notification.title;
+
+    // Use data payload since we removed top-level notification to avoid double notifications
+    const notificationTitle = payload.data?.title || 'Scripture Habit';
     const notificationOptions = {
-        body: payload.notification.body,
+        body: payload.data?.body || '',
         icon: '/favicon-192.png',
-        data: payload.data
+        badge: '/favicon-192.png', // Android status bar badge
+        data: payload.data,
+        tag: 'scripture-habit-msg', // Consolidate multiple notifications
+        renotify: true
     };
+
     self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
+// Handle notification click
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+
+    const urlToOpen = new URL('/', self.location.origin).href;
+
+    event.waitUntil(
+        clients.matchAll({ type: 'window', includeUncontrolled: true })
+            .then((windowClients) => {
+                // If a window is already open, focus it
+                for (let i = 0; i < windowClients.length; i++) {
+                    const client = windowClients[i];
+                    if (client.url === urlToOpen && 'focus' in client) {
+                        return client.focus();
+                    }
+                }
+                // If no window is open, open a new one
+                if (clients.openWindow) {
+                    return clients.openWindow(urlToOpen);
+                }
+            })
+    );
 });
 
 const CACHE_NAME = 'scripture-habit-v1';

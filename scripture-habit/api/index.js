@@ -132,11 +132,11 @@ async function sendPushNotification(tokens, payload) {
     for (let i = 0; i < uniqueTokens.length; i += CHUNK_SIZE) {
         const chunk = uniqueTokens.slice(i, i + CHUNK_SIZE);
         const message = {
-            notification: {
+            data: {
                 title: payload.title,
                 body: payload.body,
+                ...(payload.data || {}),
             },
-            data: payload.data || {},
             tokens: chunk,
         };
 
