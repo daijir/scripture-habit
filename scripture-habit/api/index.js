@@ -83,6 +83,17 @@ const postNoteSchema = z.object({
     language: z.enum(supportedLanguages).optional().nullable()
 });
 
+const postMessageSchema = z.object({
+    groupId: z.string().min(1),
+    text: z.string().min(1).max(5000),
+    replyTo: z.object({
+        id: z.string(),
+        senderNickname: z.string(),
+        text: z.string(),
+        isNote: z.boolean().optional()
+    }).optional().nullable()
+});
+
 // Initialize Firebase Admin SDK
 // Check if already initialized to avoid "default app already exists" error in serverless environment
 if (!admin.apps.length) {
@@ -103,6 +114,122 @@ if (!admin.apps.length) {
     admin.initializeApp({
         credential: admin.credential.cert(serviceAccount)
     });
+}
+
+const db = admin.firestore();
+const messaging = admin.messaging();
+
+async function sendPushNotification(tokens, payload) {
+    if (!tokens || tokens.length === 0) return { successCount: 0, failureCount: 0, failedTokens: [] };
+
+    const uniqueTokens = [...new Set(tokens)];
+    const failedTokens = [];
+    let totalSuccess = 0;
+    let totalFailure = 0;
+
+    // FCM multicast limit is 500 tokens per request
+    const CHUNK_SIZE = 500;
+    for (let i = 0; i < uniqueTokens.length; i += CHUNK_SIZE) {
+        const chunk = uniqueTokens.slice(i, i + CHUNK_SIZE);
+        const message = {
+            notification: {
+                title: payload.title,
+                body: payload.body,
+            },
+            data: payload.data || {},
+            tokens: chunk,
+        };
+
+        try {
+            const response = await messaging.sendEachForMulticast(message);
+            totalSuccess += response.successCount;
+            totalFailure += response.failureCount;
+
+            if (response.failureCount > 0) {
+                response.responses.forEach((resp, idx) => {
+                    if (!resp.success) {
+                        const error = resp.error;
+                        // Track tokens that are definitely invalid/expired
+                        if (error && (
+                            error.code === 'messaging/invalid-registration-token' ||
+                            error.code === 'messaging/registration-token-not-registered'
+                        )) {
+                            failedTokens.push(chunk[idx]);
+                        }
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error sending push notification chunk:', error);
+        }
+    }
+
+    return {
+        successCount: totalSuccess,
+        failureCount: totalFailure,
+        failedTokens
+    };
+}
+
+async function notifyGroupMembers(groupId, senderUid, payload) {
+    try {
+        const groupDoc = await db.collection('groups').doc(groupId).get();
+        if (!groupDoc.exists) return;
+
+        const groupData = groupDoc.data();
+        const members = groupData.members || [];
+        const membersToNotifyIds = members.filter(uid => uid !== senderUid);
+
+        if (membersToNotifyIds.length === 0) return;
+
+        // Optimized Read: Get all member documents in one call
+        const memberRefs = membersToNotifyIds.map(uid => db.collection('users').doc(uid));
+        const memberDocs = await db.getAll(...memberRefs);
+
+        const tokens = [];
+        const tokenToUserMap = new Map(); // To track which token belongs to which user for cleanup
+
+        memberDocs.forEach((uDoc, idx) => {
+            if (uDoc.exists) {
+                const userData = uDoc.data();
+                const uid = membersToNotifyIds[idx];
+                if (userData.fcmTokens && Array.isArray(userData.fcmTokens)) {
+                    userData.fcmTokens.forEach(t => {
+                        tokens.push(t);
+                        tokenToUserMap.set(t, uid);
+                    });
+                }
+            }
+        });
+
+        if (tokens.length > 0) {
+            const result = await sendPushNotification(tokens, payload);
+
+            // Automatic Cleanup of Invalid Tokens
+            if (result.failedTokens && result.failedTokens.length > 0) {
+                console.log(`Cleaning up ${result.failedTokens.length} invalid tokens...`);
+                const batch = db.batch();
+                let opCount = 0;
+
+                result.failedTokens.forEach(t => {
+                    const uid = tokenToUserMap.get(t);
+                    if (uid) {
+                        const userRef = db.collection('users').doc(uid);
+                        batch.update(userRef, {
+                            fcmTokens: admin.firestore.FieldValue.arrayRemove(t)
+                        });
+                        opCount++;
+                    }
+                });
+
+                if (opCount > 0) {
+                    await batch.commit();
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error in notifyGroupMembers:', error);
+    }
 }
 
 const app = express();
@@ -764,10 +891,153 @@ app.post('/api/post-note', async (req, res) => {
             return { personalNoteId: personalNoteRef.id, newStreak, streakUpdated };
         });
 
+        // Send push notifications after successful transaction (non-blocking)
+        (async () => {
+            try {
+                const titleMap = {
+                    'ja': '📖 新しい勉強ノート',
+                    'es': '📖 Nueva nota de estudio',
+                    'pt': '📖 Nova nota de estudo',
+                    'ko': '📖 새로운 공부 노트',
+                    'zho': '📖 新的學習筆記',
+                    'vi': '📖 Ghi chú học tập mới',
+                    'th': '📖 บันทึกการศึกษาใหม่',
+                    'tl': '📖 Bagong Study Note',
+                    'sw': '📖 Kumbukumbu Mpya ya Mafunzo'
+                };
+                const bodyTemplateMap = {
+                    'ja': '{nickname}さんが新しいノートを投稿しました：{scripture} {chapter}',
+                    'es': '{nickname} publicó una nueva nota: {scripture} {chapter}',
+                    'pt': '{nickname} postou uma nova nota: {scripture} {chapter}',
+                    'ko': '{nickname}님이 새로운 노트를 게시했습니다: {scripture} {chapter}',
+                    'zho': '{nickname} 發布了新的筆記：{scripture} {chapter}',
+                    'vi': '{nickname} đã đăng một ghi chú mới: {scripture} {chapter}',
+                    'th': '{nickname} โพสต์บันทึกใหม่: {scripture} {chapter}',
+                    'tl': '{nickname} ay nag-post ng bagong note: {scripture} {chapter}',
+                    'sw': '{nickname} ameweka kumbukumbu mpya: {scripture} {chapter}'
+                };
+
+                const lang = language || 'en';
+                const title = titleMap[lang] || '📖 New Study Note';
+                const bodyTemplate = bodyTemplateMap[lang] || '{nickname} posted a new note: {scripture} {chapter}';
+
+                const nickname = (await db.collection('users').doc(uid).get()).data()?.nickname || 'Member';
+                const body = bodyTemplate
+                    .replace('{nickname}', nickname)
+                    .replace('{scripture}', scripture)
+                    .replace('{chapter}', chapter);
+
+                for (const gid of groupsToPostTo) {
+                    await notifyGroupMembers(gid, uid, {
+                        title,
+                        body,
+                        data: {
+                            type: 'note',
+                            groupId: gid
+                        }
+                    });
+                }
+            } catch (notifyErr) {
+                console.error('Error sending push notifications for note:', notifyErr);
+            }
+        })();
+
         res.status(200).json({ message: 'Note posted successfully.', ...result });
     } catch (error) {
         console.error('Error posting note:', error);
         res.status(500).send(error.message || 'Error saving note.');
+    }
+});
+
+app.post('/api/post-message', async (req, res) => {
+    const validation = postMessageSchema.safeParse(req.body);
+    if (!validation.success) {
+        return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
+    }
+
+    const { groupId, text, replyTo } = validation.data;
+
+    const authHeader = req.headers.authorization;
+    let idToken;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        idToken = authHeader.split('Bearer ')[1];
+    } else {
+        return res.status(401).send('Unauthorized: No token provided.');
+    }
+
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        const uid = decodedToken.uid;
+
+        const result = await db.runTransaction(async (transaction) => {
+            const userRef = db.collection('users').doc(uid);
+            const groupRef = db.collection('groups').doc(groupId);
+            const userDoc = await transaction.get(userRef);
+            const groupDoc = await transaction.get(groupRef);
+
+            if (!userDoc.exists) throw new Error('User not found.');
+            if (!groupDoc.exists) throw new Error('Group not found.');
+
+            const userData = userDoc.data();
+            const groupData = groupDoc.data();
+
+            const messageRef = groupRef.collection('messages').doc();
+            const messageData = {
+                text,
+                senderId: uid,
+                senderNickname: userData.nickname || 'Member',
+                createdAt: admin.firestore.FieldValue.serverTimestamp(),
+                isNote: false,
+                isEntry: false
+            };
+
+            if (replyTo) {
+                messageData.replyTo = replyTo;
+            }
+
+            transaction.set(messageRef, messageData);
+
+            transaction.update(groupRef, {
+                messageCount: admin.firestore.FieldValue.increment(1),
+                lastMessageAt: admin.firestore.FieldValue.serverTimestamp(),
+                lastMessageByNickname: userData.nickname || 'Member',
+                lastMessageByUid: uid,
+                [`memberLastReadAt.${uid}`]: admin.firestore.FieldValue.serverTimestamp()
+            });
+
+            // Update user's group state
+            const userGroupStateRef = userRef.collection('groupStates').doc(groupId);
+            transaction.set(userGroupStateRef, {
+                readMessageCount: admin.firestore.FieldValue.increment(1),
+                lastReadAt: admin.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+
+            return { messageId: messageRef.id, nickname: userData.nickname || 'Member' };
+        });
+
+        // Send push notifications (non-blocking)
+        (async () => {
+            try {
+                const title = result.nickname;
+                const body = text.length > 100 ? text.substring(0, 97) + '...' : text;
+
+                await notifyGroupMembers(groupId, uid, {
+                    title,
+                    body,
+                    data: {
+                        type: 'chat',
+                        groupId: groupId
+                    }
+                });
+            } catch (notifyErr) {
+                console.error('Error sending push notifications for chat:', notifyErr);
+            }
+        })();
+
+        res.status(200).json({ message: 'Message sent successfully.', messageId: result.messageId });
+    } catch (error) {
+        console.error('Error posting message:', error);
+        res.status(500).send(error.message || 'Error sending message.');
     }
 });
 

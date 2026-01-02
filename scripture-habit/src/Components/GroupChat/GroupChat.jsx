@@ -1024,19 +1024,12 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     if (e) e.preventDefault();
     if (newMessage.trim() === '' || !userData) return;
 
-    const messagesRef = collection(db, 'groups', groupId, 'messages');
     try {
-      const messageData = {
-        text: newMessage,
-        createdAt: serverTimestamp(),
-        senderId: userData.uid,
-        senderNickname: userData.nickname,
-        isNote: false,
-        isEntry: false,
-      };
+      const idToken = await auth.currentUser.getIdToken();
 
+      // Determine replyTo data if existing
+      let replyData = null;
       if (replyTo) {
-        // For notes/entries, show a clean label instead of raw markdown
         let replyText;
         if (replyTo.isNote || replyTo.isEntry) {
           replyText = t('groupChat.studyNote');
@@ -1046,7 +1039,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
           replyText = 'Image/Note';
         }
 
-        messageData.replyTo = {
+        replyData = {
           id: replyTo.id,
           senderNickname: replyTo.senderNickname,
           text: replyText,
@@ -1054,49 +1047,29 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         };
       }
 
-      await addDoc(messagesRef, messageData);
+      const response = await fetch(`${API_BASE}/api/post-message`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({
+          groupId,
+          text: newMessage,
+          replyTo: replyData
+        })
+      });
 
-      // Increment message count
-      // Increment message count and update unity score data
-      const groupRef = doc(db, 'groups', groupId);
-      const updatePayload = {
-        messageCount: increment(1),
-        lastMessageAt: serverTimestamp(),
-        lastMessageByNickname: userData.nickname,
-        lastMessageByUid: userData.uid
-      };
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
 
-      await updateDoc(groupRef, updatePayload);
-
-      // CRITICAL: Immediately update user's own readMessageCount and group-level read time
-      // This ensures the sender doesn't see a notification for their own message
-      // AND ensures others see that the sender is active/read up to this point.
-      const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', groupId);
+      // Update local read count to prevent seeing unread count for our own message
       const newReadCount = (groupData?.messageCount || messages.length) + 1;
-
-      const readUpdates = [];
-      readUpdates.push(setDoc(userGroupStateRef, {
-        readMessageCount: newReadCount,
-        lastReadAt: serverTimestamp()
-      }, { merge: true }));
-
-      // Also update group document with member's last read time
-      readUpdates.push(updateDoc(groupRef, {
-        [`memberLastReadAt.${userData.uid}`]: serverTimestamp()
-      }));
-
-      await Promise.all(readUpdates);
       setUserReadCount(newReadCount);
 
       setNewMessage('');
       setReplyTo(null);
-
-      // Clear saved scroll position so next load goes to bottom (since we just sent a message, we are 'current')
-      // OR keeps user preference. Usually standard chat apps jump to bottom on send.
-      // We will clear it to force "catch up" behavior if they reload? 
-      // Actually, if we send a message, we auto-scroll to bottom via useEffect.
-      // It might be nice to clear the "bookmark" so next visit starts fresh or at bottom?
-      // No, let the scroll listener update naturally.
 
       if (textareaRef.current) {
         textareaRef.current.style.height = 'auto';
