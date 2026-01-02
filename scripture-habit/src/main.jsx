@@ -49,7 +49,13 @@ if ('serviceWorker' in navigator) {
       .then(registration => {
         console.log('SW registered: ', registration);
 
-        // Check for updates
+        // 1. Check if there's already a waiting worker (e.g., from a previous session)
+        if (registration.waiting) {
+          console.log('New SW already waiting for activation.');
+          window.dispatchEvent(new CustomEvent('pwa-update-available', { detail: registration }));
+        }
+
+        // 2. Listen for future updates
         registration.onupdatefound = () => {
           const installingWorker = registration.installing;
           if (installingWorker) {

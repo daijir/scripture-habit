@@ -77,11 +77,24 @@ const PWAUpdateHandler = () => {
             <span style={{ fontSize: '0.9rem' }}>{updateMessage}</span>
             <button
               onClick={() => {
-                if (registration && registration.waiting) {
-                  registration.waiting.postMessage({ type: 'SKIP_WAITING' });
-                } else {
-                  window.location.reload();
+                console.log('Update button clicked. Registration:', registration);
+
+                // Track if we successfully sent a signal
+                let signaling = false;
+
+                if (registration) {
+                  const worker = registration.waiting || registration.installing;
+                  if (worker) {
+                    worker.postMessage({ type: 'SKIP_WAITING' });
+                    signaling = true;
+                  }
                 }
+
+                // If no worker found or signaling failed, or as a safety measure,
+                // give it a short moment to activate and then force reload
+                setTimeout(() => {
+                  window.location.reload();
+                }, 500);
               }}
               style={{
                 padding: '6px 12px',
