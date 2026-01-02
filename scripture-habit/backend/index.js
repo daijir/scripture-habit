@@ -35,6 +35,76 @@ if (!admin.apps.length) {
 }
 
 const db = admin.firestore();
+const messaging = admin.messaging(); // Initialize messaging
+
+/**
+ * Sends a push notification to multiple FCM tokens
+ */
+async function sendPushNotification(tokens, payload) {
+  if (!tokens || tokens.length === 0) return;
+
+  // Clean up duplicate tokens
+  const uniqueTokens = [...new Set(tokens)];
+
+  const message = {
+    notification: {
+      title: payload.title,
+      body: payload.body,
+    },
+    data: payload.data || {},
+    tokens: uniqueTokens,
+  };
+
+  try {
+    const response = await messaging.sendEachForMulticast(message);
+    console.log(`Successfully sent ${response.successCount} messages; ${response.failureCount} messages failed.`);
+
+    // Optional: Handle invalid tokens by removing them from the database
+    if (response.failureCount > 0) {
+      const failedTokens = [];
+      response.responses.forEach((resp, idx) => {
+        if (!resp.success) {
+          failedTokens.push(uniqueTokens[idx]);
+        }
+      });
+      // You could implement logic here to remove these tokens from user docs
+    }
+    return response;
+  } catch (error) {
+    console.error('Error sending push notification:', error);
+  }
+}
+
+/**
+ * Utility to notify all members of a group except the sender
+ */
+async function notifyGroupMembers(groupId, senderUid, payload) {
+  try {
+    const groupDoc = await db.collection('groups').doc(groupId).get();
+    if (!groupDoc.exists) return;
+
+    const groupData = groupDoc.data();
+    const members = groupData.members || [];
+    const membersToNotify = members.filter(uid => uid !== senderUid);
+
+    const tokens = [];
+    for (const memberUid of membersToNotify) {
+      const userDoc = await db.collection('users').doc(memberUid).get();
+      if (userDoc.exists) {
+        const userData = userDoc.data();
+        if (userData.fcmTokens && Array.isArray(userData.fcmTokens)) {
+          tokens.push(...userData.fcmTokens);
+        }
+      }
+    }
+
+    if (tokens.length > 0) {
+      await sendPushNotification(tokens, payload);
+    }
+  } catch (error) {
+    console.error('Error in notifyGroupMembers:', error);
+  }
+}
 
 
 const supportedLanguages = ['en', 'ja', 'es', 'pt', 'zh', 'zho', 'vi', 'th', 'ko', 'tl', 'sw'];
@@ -744,6 +814,31 @@ app.post('/post-note', async (req, res) => {
     });
 
     console.log('Post note successful');
+
+    // Send push notifications after successful transaction
+    // This is done asynchronously so we don't delay the response to the user
+    (async () => {
+      try {
+        const title = language === 'ja' ? '📖 新しい勉強ノート' : '📖 New Study Note';
+        const body = language === 'ja'
+          ? `${userData.nickname || 'メンバー'}さんが新しいノートを投稿しました：${scripture} ${chapter}`
+          : `${userData.nickname || 'Member'} posted a new note: ${scripture} ${chapter}`;
+
+        for (const gid of groupsToPostTo) {
+          await notifyGroupMembers(gid, uid, {
+            title,
+            body,
+            data: {
+              type: 'note',
+              groupId: gid
+            }
+          });
+        }
+      } catch (e) {
+        console.error('Error sending push notifications for note:', e);
+      }
+    })();
+
     res.status(200).json({ message: 'Note posted successfully.', ...result });
   } catch (error) {
     console.error('CRITICAL ERROR in /post-note:', error);
@@ -1431,6 +1526,34 @@ app.get('/test-inactive-check/:groupId', async (req, res) => {
   }
 });
 
+
+app.post('/test-push-notification', async (req, res) => {
+  const { userId, title, body } = req.body;
+  if (!userId) return res.status(400).send('userId is required');
+
+  try {
+    const userDoc = await db.collection('users').doc(userId).get();
+    if (!userDoc.exists) return res.status(404).send('User not found');
+
+    const userData = userDoc.data();
+    const tokens = userData.fcmTokens || [];
+
+    if (tokens.length === 0) {
+      return res.status(400).send('No FCM tokens found for this user');
+    }
+
+    const response = await sendPushNotification(tokens, {
+      title: title || 'Test Notification',
+      body: body || 'This is a test notification from Scripture Habit!',
+      data: { type: 'test' }
+    });
+
+    res.json({ message: 'Push notification sent', response });
+  } catch (error) {
+    console.error('Error in test push notification:', error);
+    res.status(500).send(error.message);
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

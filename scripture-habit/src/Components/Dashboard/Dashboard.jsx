@@ -27,6 +27,7 @@ import Donate from '../Donate/Donate';
 import Mascot from '../Mascot/Mascot';
 import Footer from '../Footer/Footer';
 import { DashboardSkeleton } from '../Skeleton/Skeleton';
+import { requestNotificationPermission } from '../../Utils/notificationHelper';
 
 
 
@@ -80,6 +81,7 @@ const Dashboard = () => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
+        // Notification permission is now requested manually via the bell icon
         try {
           const userDocRef = doc(db, 'users', currentUser.uid);
           // Use onSnapshot for real-time updates to user profile
@@ -731,6 +733,24 @@ const Dashboard = () => {
                     }}
                   >
                     <UilPen size="16" />
+                  </button>
+                  <button
+                    className="notification-setup-btn"
+                    onClick={() => requestNotificationPermission(userData.uid)}
+                    title="Enable Notifications"
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      marginLeft: '0.2rem',
+                      color: 'var(--gray)',
+                      verticalAlign: 'middle',
+                      padding: '4px',
+                      display: 'inline-flex',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <span style={{ fontSize: '16px' }}>🔔</span>
                   </button>
                 </p>
               </div>

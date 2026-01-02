@@ -1,3 +1,30 @@
+// Firebase Messaging Service Worker
+importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compat.js');
+
+firebase.initializeApp({
+    apiKey: "AIzaSyCBgfSff0SJ6Rg1tGmU2z4MBccGMrA2jbM",
+    authDomain: "scripture-habit-auth.firebaseapp.com",
+    projectId: "scripture-habit-auth",
+    storageBucket: "scripture-habit-auth.firebasestorage.app",
+    messagingSenderId: "346318604907",
+    appId: "1:346318604907:web:38afde63adfcdeaeb7bf2e"
+});
+
+const messaging = firebase.messaging();
+
+// Background message handler
+messaging.onBackgroundMessage((payload) => {
+    console.log('[sw.js] Received background message ', payload);
+    const notificationTitle = payload.notification.title;
+    const notificationOptions = {
+        body: payload.notification.body,
+        icon: '/favicon-192.png',
+        data: payload.data
+    };
+    self.registration.showNotification(notificationTitle, notificationOptions);
+});
+
 const CACHE_NAME = 'scripture-habit-v1';
 const OFFLINE_URL = '/offline.html';
 

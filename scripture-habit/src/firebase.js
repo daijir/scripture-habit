@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
+import { getMessaging } from "firebase/messaging"; // Add this
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -17,6 +18,7 @@ import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
+const messaging = getMessaging(app); // Initialize messaging
 
 // Initialize Firestore with persistent cache (modern way)
 const db = initializeFirestore(app, {
@@ -25,5 +27,5 @@ const db = initializeFirestore(app, {
   })
 });
 
-export { app, analytics, auth, db };
+export { app, analytics, auth, db, messaging }; // Export messaging
 
