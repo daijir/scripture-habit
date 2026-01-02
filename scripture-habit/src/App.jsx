@@ -82,6 +82,62 @@ const App = () => {
     }
   }, []);
 
+  useEffect(() => {
+    const handleUpdateAvailable = (event) => {
+      const registration = event.detail;
+      const updateMessage = t('installPrompt.updateAvailable');
+      const updateButtonText = t('installPrompt.updateButton');
+
+      import('react-toastify').then(({ toast }) => {
+        toast.info(
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '10px' }}>
+            <span style={{ fontSize: '0.9rem' }}>{updateMessage}</span>
+            <button
+              onClick={() => {
+                if (registration && registration.waiting) {
+                  registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+                } else {
+                  window.location.reload();
+                }
+              }}
+              style={{
+                padding: '6px 12px',
+                background: '#4a90e2',
+                color: 'white',
+                border: 'none',
+                borderRadius: '6px',
+                cursor: 'pointer',
+                fontWeight: 'bold',
+                fontSize: '0.8rem',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              {updateButtonText}
+            </button>
+          </div>,
+          {
+            toastId: 'pwa-update',
+            position: "bottom-center",
+            autoClose: false,
+            closeOnClick: false,
+            draggable: false,
+            closeButton: false,
+            style: {
+              background: '#fff',
+              color: '#1a202c',
+              boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+              borderRadius: '12px',
+              padding: '12px'
+            }
+          }
+        );
+      });
+    };
+
+    window.addEventListener('pwa-update-available', handleUpdateAvailable);
+    return () => window.removeEventListener('pwa-update-available', handleUpdateAvailable);
+  }, [t]);
+
   const [systemStatus, setSystemStatus] = useEffectSpecialState(() => {
     // Probe Firestore for status/quota
     const statusRef = doc(db, 'system', 'status');

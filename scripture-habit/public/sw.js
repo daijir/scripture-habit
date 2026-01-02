@@ -24,8 +24,7 @@ messaging.onBackgroundMessage((payload) => {
         icon: '/favicon-192.png',
         badge: '/favicon-192.png', // Android status bar badge
         data: payload.data,
-        tag: 'scripture-habit-msg', // Consolidate multiple notifications
-        renotify: true
+        // Removed fixed tag to ensure every message shows up, avoiding potential order issues with "renotify"
     };
 
     self.registration.showNotification(notificationTitle, notificationOptions);
@@ -35,19 +34,27 @@ messaging.onBackgroundMessage((payload) => {
 self.addEventListener('notificationclick', (event) => {
     event.notification.close();
 
-    const urlToOpen = new URL('/', self.location.origin).href;
+    const data = event.notification.data;
+    const groupId = data?.groupId;
+    const targetPath = groupId ? `/group/${groupId}` : '/dashboard';
+    const urlToOpen = new URL(targetPath, self.location.origin).href;
 
     event.waitUntil(
         clients.matchAll({ type: 'window', includeUncontrolled: true })
             .then((windowClients) => {
-                // If a window is already open, focus it
+                // Try to find a window that is already open on our site
                 for (let i = 0; i < windowClients.length; i++) {
                     const client = windowClients[i];
-                    if (client.url === urlToOpen && 'focus' in client) {
-                        return client.focus();
+                    // Check if the client is part of our app (sharing the same origin)
+                    if (client.url.startsWith(self.location.origin)) {
+                        // Focus the existing window and navigate to the target path
+                        if ('focus' in client) {
+                            client.navigate(urlToOpen);
+                            return client.focus();
+                        }
                     }
                 }
-                // If no window is open, open a new one
+                // If no window is open, open a new one (ideally in the PWA scope)
                 if (clients.openWindow) {
                     return clients.openWindow(urlToOpen);
                 }
@@ -74,7 +81,13 @@ self.addEventListener('install', (event) => {
             return cache.addAll(ASSETS_TO_CACHE);
         })
     );
-    self.skipWaiting();
+});
+
+// Handle messages from the main thread
+self.addEventListener('message', (event) => {
+    if (event.data && event.data.type === 'SKIP_WAITING') {
+        self.skipWaiting();
+    }
 });
 
 // Activate Event
