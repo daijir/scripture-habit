@@ -17,7 +17,7 @@ const detectVolume = (volume, chapterInput) => {
         volumeUrlPart = "general-conference";
     } else if (lowerVolume === "byu speeches" || volume === "BYU Speeches") {
         volumeUrlPart = "byu-speeches";
-    } else if (lowerVolume === "ordinances and proclamations" || volume === "儀式と宣言" || volume === "Ordenanças e Declarações" || lowerVolume === "proclamations") {
+    } else if (lowerVolume === "ordinances and proclamations" || volume === "儀式と宣言" || volume === "神権の儀式と宣言" || volume === "Ordenanças e Declarações" || volume === "聖職教儀和文告" || volume === "Ordenanzas del sacerdocio y proclamaciones" || lowerVolume === "proclamations") {
         volumeUrlPart = "ordinances-and-proclamations";
     }
 
@@ -1062,6 +1062,11 @@ export const getCategoryFromScripture = (scriptureText) => {
         'dc-testament': 'Doctrine and Covenants',
         'pgp': 'Pearl of Great Price',
         'ordinances-and-proclamations': 'Ordinances and Proclamations',
+        'sacrament': 'Ordinances and Proclamations',
+        'baptism': 'Ordinances and Proclamations',
+        'the-family-a-proclamation-to-the-world': 'Ordinances and Proclamations',
+        'the-living-christ-the-testimony-of-the-apostles': 'Ordinances and Proclamations',
+        'the-restoration-of-the-fulness-of-the-gospel-of-jesus-christ': 'Ordinances and Proclamations',
         'general-conference': 'General Conference',
         'byu-speeches': 'BYU Speeches'
     };
