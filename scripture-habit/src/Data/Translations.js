@@ -601,6 +601,17 @@ export const translations = {
             updateAvailable: "A new version is available.",
             updateButton: "Refresh to Update"
         },
+        notificationSetup: {
+            notSupported: "Your browser does not support notification features. Please try with the latest Chrome or Safari.",
+            inAppBrowserWarning: "Notifications may not work in app-specific browsers. Please reopen in a standard browser (Chrome or Safari) using the button at the bottom right.",
+            success: "Notification settings complete! 🎉",
+            generalError: "An error occurred while setting up notifications.",
+            permissionDenied: "Notifications are blocked. Please enable them in your browser settings (icon to the left of the URL).",
+            swRegistrationDenied: "Service worker registration was denied by browser settings. Please disable Incognito/Private mode or check your settings.",
+            permissionBlocked: "Notification permission is blocked. Please allow it in your browser settings.",
+            setupFailed: "Notification setup failed. Please try again later.",
+            notAllowedError: "Notification settings are restricted in your browser (possibly due to Incognito mode or settings)."
+        },
         privacy: {
             title: "Privacy Policy",
             lastUpdated: "Last updated: December 28, 2025",
@@ -1283,6 +1294,17 @@ export const translations = {
             close: "閉じる",
             updateAvailable: "新しいバージョンが利用可能です。",
             updateButton: "更新する"
+        },
+        notificationSetup: {
+            notSupported: "お使いのブラウザは通知機能をサポートしていません。最新のChromeやSafariでお試しください。",
+            inAppBrowserWarning: "アプリ内ブラウザでは通知が届かない場合があります。右下のボタンからブラウザ（ChromeやSafari）で開き直してください。",
+            success: "通知設定が完了しました！ 🎉",
+            generalError: "通知の設定中にエラーが発生しました。",
+            permissionDenied: "通知がブロックされています。ブラウザの設定（URLの左のアイコンなど）から許可をオンにしてください。",
+            swRegistrationDenied: "ブラウザの設定により、サービスワーカーの登録が拒否されました。シークレットモードを解除するか、設定を確認してください。",
+            permissionBlocked: "通知の権限がブロックされています。ブラウザの設定から許可してください。",
+            setupFailed: "通知の設定に失敗しました。後でもう一度お試しください。",
+            notAllowedError: "ブラウザで通知設定が制限されています（シークレットモードや、設定による制限の可能性があります）。"
         },
         privacy: {
             title: "プライバシーポリシー",
@@ -1998,7 +2020,20 @@ export const translations = {
             description: "Para uma melhor experiência, instale este app na sua tela inicial.",
             instruction1: "Toque no menu e selecione 'Adicionar à Tela Inicial'.",
             instruction2: "Siga as instruções.",
-            close: "Fechar"
+            close: "Fechar",
+            updateAvailable: "Uma nova versão está disponível.",
+            updateButton: "Atualizar agora"
+        },
+        notificationSetup: {
+            notSupported: "Seu navegador não suporta recursos de notificação. Por favor, tente com o Chrome ou Safari mais recente.",
+            inAppBrowserWarning: "As notificações podem não funcionar em navegadores internos de aplicativos. Por favor, abra novamente em um navegador padrão (Chrome ou Safari) usando o botão no canto inferior direito.",
+            success: "Configurações de notificação concluídas! 🎉",
+            generalError: "Ocorreu um erro ao configurar as notificações.",
+            permissionDenied: "As notificações estão bloqueadas. Por favor, ative-as nas configurações do seu navegador (ícone à esquerda da URL).",
+            swRegistrationDenied: "O registro do service worker foi negado pelas configurações do navegador. Por favor, desative o modo Incógnito/Privado ou verifique suas configurações.",
+            permissionBlocked: "A permissão de notificação está bloqueada. Por favor, permita-a nas configurações do seu navegador.",
+            setupFailed: "A configuração da notificação falhou. Por favor, tente novamente mais tarde.",
+            notAllowedError: "As configurações de notificação estão restritas no seu navegador (possivelmente devido ao modo Incógnito ou configurações)."
         },
         privacy: {
             title: "Política de Privacidade",
@@ -2646,7 +2681,20 @@ export const translations = {
             description: "為了獲得更好的體驗，請將此應用程式安裝到您的主畫面。",
             instruction1: "點擊選單並選擇「加入主畫面」。",
             instruction2: "按照說明操作。",
-            close: "關閉"
+            close: "關閉",
+            updateAvailable: "有新版本可用。",
+            updateButton: "立即更新"
+        },
+        notificationSetup: {
+            notSupported: "您的瀏覽器不支持通知功能。請嘗試使用最新版本的 Chrome 或 Safari。",
+            inAppBrowserWarning: "通知可能無法在應用程序內瀏覽器中正常工作。請使用右下角的按鈕在標準瀏覽器（Chrome 或 Safari）中重新打開。",
+            success: "通知設置已完成！ 🎉",
+            generalError: "設置通知時出錯。",
+            permissionDenied: "通知已被阻止。請在瀏覽器設置中啟用它們（URL 左側的圖標）。",
+            swRegistrationDenied: "服務工作者註冊被瀏覽器設置拒絕。請禁用無痕/隱私模式或檢查您的設置。",
+            permissionBlocked: "通知權限已被阻止。請在瀏覽器設置中允許它。",
+            setupFailed: "通知設置失敗。請稍後再試。",
+            notAllowedError: "您的瀏覽器限制了通知設置（可能是由於無痕模式或設置）。"
         },
         privacy: {
             title: "隱私權政策",
@@ -3295,7 +3343,20 @@ export const translations = {
             description: "Para una mejor experiencia, instala esta aplicación en tu pantalla de inicio.",
             instruction1: "Toca el menu y selecciona 'Añadir a pantalla de inicio'.",
             instruction2: "Sigue las instrucciones.",
-            close: "Cerrar"
+            close: "Cerrar",
+            updateAvailable: "Hay una nueva versión disponible.",
+            updateButton: "Actualizar ahora"
+        },
+        notificationSetup: {
+            notSupported: "Tu navegador no admite funciones de notificación. Inténtalo con la versión más reciente de Chrome o Safari.",
+            inAppBrowserWarning: "Es posible que las notificaciones no funcionen en navegadores específicos de aplicaciones. Ábrelo de nuevo en un navegador estándar (Chrome o Safari) usando el botón de la parte inferior derecha.",
+            success: "¡Configuración de notificaciones completada! 🎉",
+            generalError: "Ocurrió un error al configurar las notificaciones.",
+            permissionDenied: "Las notificaciones están bloqueadas. Actívalas en la configuración de tu navegador (icono a la izquierda de la URL).",
+            swRegistrationDenied: "El registro del service worker fue denegado por la configuración del navegador. Desactiva el modo incógnito/privado o comprueba tu configuración.",
+            permissionBlocked: "El permiso de notificación está bloqueado. Por favor, permítelo en la configuración de tu navegador.",
+            setupFailed: "Error al configurar las notificaciones. Inténtalo de nuevo más tarde.",
+            notAllowedError: "La configuración de notificaciones está restringida en tu navegador (posiblemente debido al modo incógnito o a la configuración)."
         },
         privacy: {
             title: "Política de Privacidad",
@@ -3942,7 +4003,20 @@ export const translations = {
             description: "Để có trải nghiệm tốt hơn, hãy cài đặt ứng dụng này vào màn hình chính của bạn.",
             instruction1: "Nhấn vào menu và chọn 'Thêm vào màn hình chính'.",
             instruction2: "Làm theo hướng dẫn.",
-            close: "Đóng"
+            close: "Đóng",
+            updateAvailable: "Có phiên bản mới.",
+            updateButton: "Cập nhật ngay"
+        },
+        notificationSetup: {
+            notSupported: "Trình duyệt của bạn không hỗ trợ tính năng thông báo. Vui lòng thử với Chrome hoặc Safari mới nhất.",
+            inAppBrowserWarning: "Thông báo có thể không hoạt động trong các trình duyệt dành riêng cho ứng dụng. Vui lòng mở lại trong trình duyệt tiêu chuẩn (Chrome hoặc Safari) bằng nút ở dưới cùng bên phải.",
+            success: "Cài đặt thông báo đã hoàn tất! 🎉",
+            generalError: "Đã xảy ra lỗi khi thiết lập thông báo.",
+            permissionDenied: "Thông báo đã bị chặn. Vui lòng bật chúng trong cài đặt trình duyệt của bạn (biểu tượng bên trái URL).",
+            swRegistrationDenied: "Đăng ký service worker đã bị từ chối bởi cài đặt trình duyệt. Vui lòng tắt chế độ Ẩn danh/Riêng tư hoặc kiểm tra cài đặt của bạn.",
+            permissionBlocked: "Quyền thông báo đã bị chặn. Vui lòng cho phép trong cài đặt trình duyệt của bạn.",
+            setupFailed: "Thiết lập thông báo không thành công. Vui lòng thử lại sau.",
+            notAllowedError: "Cài đặt thông báo bị hạn chế trong trình duyệt của bạn (có thể do chế độ Ẩn danh hoặc cài đặt)."
         },
         privacy: {
             title: "Chính sách quyền riêng tư",
@@ -4615,7 +4689,20 @@ export const translations = {
             description: "เพื่อประสบการณ์ที่ดียิ่งขึ้น ติดตั้งแอปนี้ไว้บนหน้าจอหลักของคุณ",
             instruction1: "แตะที่เมนูและเลือก 'เพิ่มไปยังหน้าจอหลัก'",
             instruction2: "ทำตามคำแนะนำ",
-            close: "ปิด"
+            close: "ปิด",
+            updateAvailable: "มีเวอร์ชันใหม่พร้อมใช้งาน",
+            updateButton: "อัปเดตตอนนี้"
+        },
+        notificationSetup: {
+            notSupported: "เบราว์เซอร์ของคุณไม่รองรับคุณสมบัติการแจ้งเตือน โปรดลองใช้ Chrome หรือ Safari เวอร์ชั่นล่าสุด",
+            inAppBrowserWarning: "การแจ้งเตือนอาจไม่ทำงานในเบราว์เซอร์ภายในแอป โปรดเปิดใหม่ในเบราว์เซอร์มาตรฐาน (Chrome หรือ Safari) โดยใช้ปุ่มที่มุมขวาล่าง",
+            success: "ตั้งค่าการแจ้งเตือนเสร็จสมบูรณ์! 🎉",
+            generalError: "เกิดข้อผิดพลาดขณะตั้งค่าการแจ้งเตือน",
+            permissionDenied: "การแจ้งเตือนถูกบล็อก โปรดเปิดใช้งานในการตั้งค่าเบราว์เซอร์ของคุณ (ไอคอนทางด้านซ้ายของ URL)",
+            swRegistrationDenied: "การลงทะเบียน Service worker ถูกปฏิเสธโดยการตั้งค่าเบราว์เซอร์ โปรดปิดโหมดไม่ระบุตัวตน/ส่วนตัว หรือตรวจสอบการตั้งค่าของคุณ",
+            permissionBlocked: "สิทธิ์การแจ้งเตือนถูกบล็อก โปรดอนุญาตในการตั้งค่าเบราว์เซอร์ของคุณ",
+            setupFailed: "การตั้งค่าการแจ้งเตือนล้มเหลว โปรดลองอีกครั้งในภายหลัง",
+            notAllowedError: "การตั้งค่าการแจ้งเตือนถูกจำกัดในเบราว์เซอร์ของคุณ (อาจเป็นเพราะโหมดไม่ระบุตัวตนหรือการตั้งค่า)"
         },
         privacy: {
             title: "นโยบายความเป็นส่วนตัว",
@@ -5288,7 +5375,20 @@ export const translations = {
             description: "더 나은 경험을 위해, 홈 화면에 이 앱을 설치하세요.",
             instruction1: "메뉴를 탭하고 '홈 화면에 추가'를 선택하세요.",
             instruction2: "안내를 따르세요.",
-            close: "닫기"
+            close: "닫기",
+            updateAvailable: "새 버전이 있습니다.",
+            updateButton: "지금 업데이트"
+        },
+        notificationSetup: {
+            notSupported: "브라우저가 알림 기능을 지원하지 않습니다. 최신 Chrome 또는 Safari에서 시도해 보세요.",
+            inAppBrowserWarning: "앱 전용 브라우저에서는 알림이 작동하지 않을 수 있습니다. 오른쪽 하단 버튼을 사용해 표준 브라우저(Chrome 또는 Safari)에서 다시 열어 주세요.",
+            success: "알림 설정이 완료되었습니다! 🎉",
+            generalError: "알림 설정 중 오류가 발생했습니다.",
+            permissionDenied: "알림이 차단되었습니다. 브라우저 설정(URL 왼쪽 아이콘)에서 알림을 허용해 주세요.",
+            swRegistrationDenied: "브라우저 설정에 의해 서비스 워커 등록이 거부되었습니다. 시크릿 모드를 해제하거나 설정을 확인해 주세요.",
+            permissionBlocked: "알림 권한이 차단되었습니다. 브라우저 설정에서 허용해 주세요.",
+            setupFailed: "알림 설정에 실패했습니다. 나중에 다시 시도해 주세요.",
+            notAllowedError: "브라우저에서 알림 설정이 제한되었습니다(시크릿 모드 또는 설정 때문일 수 있습니다)."
         },
         privacy: {
             title: "개인정보처리방침",
@@ -5960,7 +6060,20 @@ export const translations = {
             description: "Para sa mas magandang karanasan, i-install ang app na ito sa iyong home screen.",
             instruction1: "I-tap ang menu at piliin ang 'Add to Home screen'.",
             instruction2: "Sundin ang mga tagubilin.",
-            close: "Isara"
+            close: "Isara",
+            updateAvailable: "May bagong bersyon na magagamit.",
+            updateButton: "I-update Ngayon"
+        },
+        notificationSetup: {
+            notSupported: "Hindi sinusuportahan ng iyong browser ang mga feature ng notification. Mangyaring subukan gamit ang pinakabagong Chrome o Safari.",
+            inAppBrowserWarning: "Maaaring hindi gumana ang mga notification sa mga app-specific browser. Mangyaring muling buksan sa isang standard browser (Chrome o Safari) gamit ang button sa kanang ibaba.",
+            success: "Kumpleto na ang mga setting ng notification! 🎉",
+            generalError: "Nagkaroon ng error habang sine-set up ang mga notification.",
+            permissionDenied: "Naka-block ang mga notification. Mangyaring i-enable ang mga ito sa mga setting ng iyong browser (icon sa kaliwa ng URL).",
+            swRegistrationDenied: "Tinanggihan ang pagpaparehistro ng service worker ng mga setting ng browser. Mangyaring i-disable ang Incognito/Private mode o suriin ang iyong mga setting.",
+            permissionBlocked: "Naka-block ang pahintulot sa notification. Mangyaring payagan ito sa mga setting ng iyong browser.",
+            setupFailed: "Nabigo ang pag-set up ng notification. Mangyaring subukan muli mamaya.",
+            notAllowedError: "Restricted ang mga setting ng notification sa iyong browser (marahil dahil sa Incognito mode o mga setting)."
         },
         privacy: {
             title: "Patakaran sa Privacy",
@@ -6632,7 +6745,20 @@ export const translations = {
             description: "Ili kupata matumizi bora, sakinisha programu hii kwenye skrini yako ya nyumbani.",
             instruction1: "Gonga menyu na uchague 'Ongeza kwenye Skrini ya Nyumbani'.",
             instruction2: "Fuata maelekezo.",
-            close: "Funga"
+            close: "Funga",
+            updateAvailable: "Toleo jipya linapatikana.",
+            updateButton: "Sasisha Sasa"
+        },
+        notificationSetup: {
+            notSupported: "Kivinjari chako hakiauni vipengele vya arifa. Tafadhali jaribu ukitumia Chrome au Safari ya hivi punde.",
+            inAppBrowserWarning: "Arifa zinaweza zisifanye kazi katika vivinjari vya ndani ya programu. Tafadhali fungua tena katika kivinjari cha kawaida (Chrome au Safari) ukitumia kitufe kilicho upande wa chini kulia.",
+            success: "Mipangilio ya arifa imekamilika! 🎉",
+            generalError: "Hitilafu imetokea wakati wa kusanidi arifa.",
+            permissionDenied: "Arifa zimezuiwa. Tafadhali ziwashe katika mipangilio ya kivinjari chako (ikoni iliyo upande wa kushoto wa URL).",
+            swRegistrationDenied: "Usajili wa service worker ulikataliwa na mipangilio ya kivinjari. Tafadhali zima hali ya Incognito/Private au angalia mipangilio yako.",
+            permissionBlocked: "Ruhusa ya arifa imezuiwa. Tafadhali iruhusu katika mipangilio ya kivinjari chako.",
+            setupFailed: "Usanidi wa arifa umeshindwa. Tafadhali jaribu tena baadaye.",
+            notAllowedError: "Mipangilio ya arifa imezuiliwa katika kivinjari chako (huenda ni kwa sababu ya hali ya Incognito au mipangilio)."
         },
         privacy: {
             title: "Sera ya Faragha",

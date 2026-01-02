@@ -14,12 +14,15 @@ const isInAppBrowser = () => {
         (ua.indexOf('Telegram') > -1); // Telegram
 };
 
-export const requestNotificationPermission = async (userId) => {
+export const requestNotificationPermission = async (userId, t) => {
+    // Fallback helper if t is not provided (though it should be)
+    const translate = (key, defaultText) => (t ? t(key) : defaultText);
+
     // 1. Check basic support
     if (!('serviceWorker' in navigator) || !('Notification' in window) || !('PushManager' in window)) {
         console.warn('Push notifications are not supported in this browser.');
         import('react-toastify').then(({ toast }) => {
-            toast.warn('お使いのブラウザは通知機能をサポートしていません。最新のChromeやSafariでお試しください。');
+            toast.warn(translate('notificationSetup.notSupported', 'Your browser does not support notification features. Please try with the latest Chrome or Safari.'));
         });
         return;
     }
@@ -28,7 +31,7 @@ export const requestNotificationPermission = async (userId) => {
     if (isInAppBrowser()) {
         console.warn('Push notifications often fail in In-App Browsers.');
         import('react-toastify').then(({ toast }) => {
-            toast.info('アプリ内ブラウザでは通知が届かない場合があります。右下のボタンからブラウザ（ChromeやSafari）で開き直してください。');
+            toast.info(translate('notificationSetup.inAppBrowserWarning', 'Notifications may not work in app-specific browsers. Please reopen in a standard browser (Chrome or Safari) using the button at the bottom right.'));
         });
     }
 
@@ -44,14 +47,12 @@ export const requestNotificationPermission = async (userId) => {
                 // 4. Register or Get Service Worker
                 let registration;
 
-                // Instead of aggressive unregistration, let's try to get existing or register fresh
                 const existingRegs = await navigator.serviceWorker.getRegistrations();
                 const ourReg = existingRegs.find(r => r.scope.includes(window.location.host));
 
                 if (ourReg) {
                     console.log('Using existing SW registration:', ourReg.scope);
                     registration = ourReg;
-                    // Optionally update it
                     await registration.update();
                 } else {
                     console.log('Registering new Service Worker...');
@@ -64,14 +65,13 @@ export const requestNotificationPermission = async (userId) => {
                 await navigator.serviceWorker.ready;
                 console.log('SW Registration ready:', registration);
 
-                // 5. Check if active - if not, wait a bit
+                // 5. Check if active
                 if (!registration.active && !registration.installing && !registration.waiting) {
                     console.error('Service worker registration failed to find an active worker.');
                     throw new Error('Service Worker not active after registration');
                 }
 
                 // 6. Get FCM token
-                // Note: getToken can still throw if the browser is in Incognito or has storage blocked
                 const token = await getToken(messaging, {
                     vapidKey: VAPID_KEY,
                     serviceWorkerRegistration: registration
@@ -86,7 +86,7 @@ export const requestNotificationPermission = async (userId) => {
                         });
                     }
                     import('react-toastify').then(({ toast }) => {
-                        toast.success('通知設定が完了しました！ 🎉');
+                        toast.success(translate('notificationSetup.success', 'Notification settings complete! 🎉'));
                     });
                     return token;
                 } else {
@@ -97,11 +97,11 @@ export const requestNotificationPermission = async (userId) => {
                 console.error('Detailed error during SW/Token process:', innerError);
 
                 // Specific messaging for known errors
-                let userFriendlyMsg = '通知の設定中にエラーが発生しました。';
+                let userFriendlyMsg = translate('notificationSetup.generalError', 'An error occurred while setting up notifications.');
                 if (innerError.name === 'NotAllowedError') {
-                    userFriendlyMsg = 'ブラウザの設定により、サービスワーカーの登録が拒否されました。シークレットモードを解除するか、設定を確認してください。';
+                    userFriendlyMsg = translate('notificationSetup.swRegistrationDenied', 'Service worker registration was denied by browser settings. Please disable Incognito/Private mode or check your settings.');
                 } else if (innerError.code === 'messaging/permission-blocked') {
-                    userFriendlyMsg = '通知の権限がブロックされています。ブラウザの設定から許可してください。';
+                    userFriendlyMsg = translate('notificationSetup.permissionBlocked', 'Notification permission is blocked. Please allow it in your browser settings.');
                 }
 
                 import('react-toastify').then(({ toast }) => {
@@ -112,18 +112,18 @@ export const requestNotificationPermission = async (userId) => {
         } else if (permission === 'denied') {
             console.warn('Notification permission denied by user.');
             import('react-toastify').then(({ toast }) => {
-                toast.info('通知がブロックされています。ブラウザの設定（URLの左のアイコンなど）から許可をオンにしてください。');
+                toast.info(translate('notificationSetup.permissionDenied', 'Notifications are blocked. Please enable them in your browser settings (icon to the left of the URL).'));
             });
         }
     } catch (error) {
         console.error('An error occurred during notification setup flow:', error);
         if (error.name === 'NotAllowedError') {
             import('react-toastify').then(({ toast }) => {
-                toast.error('ブラウザで通知設定が制限されています（シークレットモードや、設定による制限の可能性があります）。');
+                toast.error(translate('notificationSetup.notAllowedError', 'Notification settings are restricted in your browser (possibly due to Incognito mode or settings).'));
             });
         } else {
             import('react-toastify').then(({ toast }) => {
-                toast.error('通知の設定に失敗しました。後でもう一度お試しください。');
+                toast.error(translate('notificationSetup.setupFailed', 'Notification setup failed. Please try again later.'));
             });
         }
     }

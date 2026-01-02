@@ -748,7 +748,7 @@ const Dashboard = () => {
                   </button>
                   <button
                     className="notification-setup-btn"
-                    onClick={() => requestNotificationPermission(userData.uid)}
+                    onClick={() => requestNotificationPermission(userData.uid, t)}
                     title="Enable Notifications"
                     style={{
                       background: 'none',
