@@ -93,6 +93,15 @@ export const bookNameTranslations = {
         "Joseph Smith-Matthew": "Joseph Smith-Matthew",
         "Joseph Smith-History": "Joseph Smith-History",
         "Articles of Faith": "Articles of Faith",
+        // Doctrine and Covenants
+        "Doctrine and Covenants": "Doctrine and Covenants",
+        "D&C": "D&C",
+        // Ordinances and Proclamations
+        "Sacrament Prayers": "Sacrament Prayers",
+        "Baptism Ordinance": "Baptism Ordinance",
+        "The Living Christ": "The Living Christ",
+        "The Family Proclamation": "The Family Proclamation",
+        "Restoration Proclamation": "Restoration Proclamation",
     },
     ja: {
         // Book of Mormon
@@ -186,6 +195,15 @@ export const bookNameTranslations = {
         "Joseph Smith-Matthew": "ジョセフ・スミス—マタイ",
         "Joseph Smith-History": "ジョセフ・スミス—歴史",
         "Articles of Faith": "信仰箇条",
+        // Doctrine and Covenants
+        "Doctrine and Covenants": "教義と聖約",
+        "D&C": "教義と聖約",
+        // Ordinances and Proclamations
+        "Sacrament Prayers": "聖餐の祈り",
+        "Baptism Ordinance": "バプテスマの儀式",
+        "The Living Christ": "生けるキリスト",
+        "The Family Proclamation": "家族の宣言",
+        "Restoration Proclamation": "回復の宣言",
     },
     pt: {
         // Book of Mormon
@@ -278,6 +296,15 @@ export const bookNameTranslations = {
         "Joseph Smith-Matthew": "Joseph Smith—Mateus",
         "Joseph Smith-History": "Joseph Smith—História",
         "Articles of Faith": "Regras de Fé",
+        // Doctrine and Covenants
+        "Doctrine and Covenants": "Doutrina e Convênios",
+        "D&C": "D&C",
+        // Ordinances and Proclamations
+        "Sacrament Prayers": "Orações Sacramentais",
+        "Baptism Ordinance": "Ordenança do Batismo",
+        "The Living Christ": "O Cristo Vivo",
+        "The Family Proclamation": "A Família: Proclamação ao Mundo",
+        "Restoration Proclamation": "Proclamação da Restauração",
     },
     zho: {
         // Book of Mormon
@@ -370,6 +397,15 @@ export const bookNameTranslations = {
         "Joseph Smith-Matthew": "約瑟·斯密——馬太",
         "Joseph Smith-History": "約瑟·斯密——歷史",
         "Articles of Faith": "信條",
+        // Doctrine and Covenants
+        "Doctrine and Covenants": "教義和聖約",
+        "D&C": "教義和聖約",
+        // Ordinances and Proclamations
+        "Sacrament Prayers": "聖餐祈禱文",
+        "Baptism Ordinance": "洗禮教儀",
+        "The Living Christ": "活著的基督",
+        "The Family Proclamation": "家庭：致全世界文告",
+        "Restoration Proclamation": "復興文告",
     },
     es: {
         // Book of Mormon
@@ -462,6 +498,15 @@ export const bookNameTranslations = {
         "Joseph Smith-Matthew": "José Smith—Mateo",
         "Joseph Smith-History": "José Smith—Historia",
         "Articles of Faith": "Artículos de Fe",
+        // Doctrine and Covenants
+        "Doctrine and Covenants": "Doctrina y Convenios",
+        "D&C": "D&C",
+        // Ordinances and Proclamations
+        "Sacrament Prayers": "Oraciones sacramentales",
+        "Baptism Ordinance": "Ordenanza del bautismo",
+        "The Living Christ": "El Cristo Viviente",
+        "The Family Proclamation": "La proclamación sobre la familia",
+        "Restoration Proclamation": "Proclamación sobre la Restauración",
     },
     vi: {
         // Book of Mormon
@@ -486,6 +531,15 @@ export const bookNameTranslations = {
         "Joseph Smith-Matthew": "Giô Sép Smith—Ma Thi Ơ",
         "Joseph Smith-History": "Giô Sép Smith—Lịch Sử",
         "Articles of Faith": "Những Tín Điều",
+        // Doctrine and Covenants
+        "Doctrine and Covenants": "Giáo Lý và Giao Ước",
+        "D&C": "D&C",
+        // Ordinances and Proclamations
+        "Sacrament Prayers": "Những Lời Cầu Nguyện Tiệc Thánh",
+        "Baptism Ordinance": "Giáo Lễ Báp Têm",
+        "The Living Christ": "Đấng Ky Tô Hằng Sống",
+        "The Family Proclamation": "Bản Tuyên Ngôn về Gia Đình",
+        "Restoration Proclamation": "Bản Tuyên Ngôn về Sự Phục Hồi",
     },
     th: {
         // Book of Mormon
@@ -578,6 +632,14 @@ export const bookNameTranslations = {
         "Joseph Smith-Matthew": "โจเซฟ สมิธ—มัทธิว",
         "Joseph Smith-History": "โจเซฟ สมิธ—ประวัติ",
         "Articles of Faith": "หลักแห่งความเชื่อ",
+        // Doctrine and Covenants
+        "Doctrine and Covenants": "หลักคำสอนและพันธสัญญา",
+        "D&C": "D&C",
+        // Ordinances and Proclamations
+        "Sacrament Prayers": "คำสวดอ้อนวอนศีลระลึก",
+        "The Living Christ": "พระคริสต์ผู้ทรงพระชนม์",
+        "The Family Proclamation": "ถ้อยแถลงเรื่องครอบครัว",
+        "Restoration Proclamation": "ถ้อยแถลงเรื่องการฟื้นฟู",
     },
     ko: {
         // Book of Mormon
@@ -670,6 +732,14 @@ export const bookNameTranslations = {
         "Joseph Smith-Matthew": "조셉 스미스—마태",
         "Joseph Smith-History": "조셉 스미스—역사",
         "Articles of Faith": "신앙개조",
+        // Doctrine and Covenants
+        "Doctrine and Covenants": "교리와 성약",
+        "D&C": "교리와 성약",
+        // Ordinances and Proclamations
+        "Sacrament Prayers": "성찬 기도",
+        "The Living Christ": "살า 계신 그리스도",
+        "The Family Proclamation": "가족 선언문",
+        "Restoration Proclamation": "회복 선언문",
     },
     tl: {
         // Book of Mormon
@@ -762,6 +832,14 @@ export const bookNameTranslations = {
         "Joseph Smith-Matthew": "Joseph Smith—Mateo",
         "Joseph Smith-History": "Joseph Smith—Kasaysayan",
         "Articles of Faith": "Mga Saligan ng Pananampalataya",
+        // Doctrine and Covenants
+        "Doctrine and Covenants": "Doktrina at mga Tipan",
+        "D&C": "D&C",
+        // Ordinances and Proclamations
+        "Sacrament Prayers": "Mga Panalangin sa Sakramento",
+        "The Living Christ": "Ang Buhay na Cristo",
+        "The Family Proclamation": "Ang Pagpapahayag sa Mag-anak",
+        "Restoration Proclamation": "Ang Proklamasyon ng Pagpapanumbalik",
     },
     sw: {
         // Book of Mormon
@@ -854,6 +932,15 @@ export const bookNameTranslations = {
         "Joseph Smith-Matthew": "Joseph Smith—Mathayo",
         "Joseph Smith-History": "Joseph Smith—Historia",
         "Articles of Faith": "Makala ya Imani",
+        // Doctrine and Covenants
+        "Doctrine and Covenants": "Mafundisho na Maagano",
+        "D&C": "D&C",
+        // Ordinances and Proclamations
+        "Sacrament Prayers": "Maombi ya Sakramenti",
+        "Baptism Ordinance": "Ibada ya Ubatizo",
+        "The Living Christ": "Kristo Aliye Hai",
+        "The Family Proclamation": "Familia: Tangazo kwa Ulimwengu",
+        "Restoration Proclamation": "Tangazo la Urejesho",
     }
 };
 

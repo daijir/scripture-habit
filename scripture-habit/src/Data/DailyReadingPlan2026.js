@@ -3,7 +3,7 @@ export const DailyReadingPlan2026 = [
     { day: 2, scripts: ["Exodus 12:3-5", "John 1:29"], date: "2025-12-30" },
     { day: 3, scripts: ["Numbers 21:4-10", "John 3:14"], date: "2025-12-31" },
     { day: 4, scripts: ["John 1:4-17", "Matthew 12:38-41"], date: "2026-01-01" },
-    { day: 5, scripts: ["The Living Christ: The Testimony of the Apostles 1:1-2", "Exodus 6:3-5", "Exodus 3:13-15", "John 8:58"], date: "2026-01-02" },
+    { day: 5, scripts: ["The Living Christ", "Exodus 6:3-5", "Exodus 3:13-15", "John 8:58"], date: "2026-01-02" },
     { day: 6, scripts: ["Moses 1:1-11"], date: "2026-01-03" },
     { day: 7, scripts: ["Moses 1:12-23"], date: "2026-01-04" },
     { day: 8, scripts: ["Moses 1:24-35"], date: "2026-01-05" },

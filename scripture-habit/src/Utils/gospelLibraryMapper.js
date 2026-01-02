@@ -23,9 +23,11 @@ const detectVolume = (volume, chapterInput) => {
 
     if (!volumeUrlPart && chapterInput) {
         const lowerChap = chapterInput.toLowerCase();
-        if (lowerChap.includes("family") || lowerChap.includes("家族") ||
-            lowerChap.includes("living christ") || lowerChap.includes("生けるキリスト") ||
-            lowerChap.includes("restoration") || lowerChap.includes("回復")) {
+        if (lowerChap.includes("family") || lowerChap.includes("家族") || lowerChap.includes("família") || lowerChap.includes("proclamación sobre la familia") ||
+            lowerChap.includes("living christ") || lowerChap.includes("生けるキリスト") || lowerChap.includes("cristo vivo") || lowerChap.includes("cristo viviente") ||
+            lowerChap.includes("restoration") || lowerChap.includes("回復") || lowerChap.includes("restauração") || lowerChap.includes("restauración") ||
+            lowerChap.includes("sacrament") || lowerChap.includes("聖餐") || lowerChap.includes("sacramental") || lowerChap.includes("tiệc thánh") ||
+            lowerChap.includes("baptism") || lowerChap.includes("バプテスマ") || lowerChap.includes("batismo") || lowerChap.includes("bautismo") || lowerChap.includes("báp têm")) {
             volumeUrlPart = "ordinances-and-proclamations";
         } else if (lowerChap.includes("doctrine and covenants") || lowerChap.includes("d&c") || lowerChap.includes("教義と聖約") || lowerChap.includes("official declarations")) {
             volumeUrlPart = "dc-testament";
@@ -99,17 +101,25 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
     if (volumeUrlPart === "ordinances-and-proclamations") {
         const lowerChap = chapterInput.toLowerCase();
 
+        // Sacrament Prayers
+        if (lowerChap.includes("sacrament") || lowerChap.includes("聖餐") || lowerChap.includes("sacramental") || lowerChap.includes("tiệc thánh")) {
+            return `${baseUrl}/sacrament${langParam}`;
+        }
+        // Baptism Ordinance
+        if (lowerChap.includes("baptism") || lowerChap.includes("バプテスマ") || lowerChap.includes("batismo") || lowerChap.includes("bautismo") || lowerChap.includes("báp têm")) {
+            return `${baseUrl}/baptism${langParam}`;
+        }
         // Family Proclamation
-        if (lowerChap.includes("family") || lowerChap.includes("家族")) {
-            return `${baseUrl}/the-family-a-proclamation-to-the-world/the-family-a-proclamation-to-the-world${langParam}`;
+        if (lowerChap.includes("family") || lowerChap.includes("家族") || lowerChap.includes("família") || lowerChap.includes("proclamación sobre la familia")) {
+            return `${baseUrl}/the-family-a-proclamation-to-the-world${langParam}`;
         }
         // Living Christ
-        if (lowerChap.includes("living christ") || lowerChap.includes("生けるキリスト")) {
-            return `${baseUrl}/the-living-christ/the-living-christ${langParam}`;
+        if (lowerChap.includes("living christ") || lowerChap.includes("生けるキリスト") || lowerChap.includes("cristo vivo") || lowerChap.includes("cristo viviente")) {
+            return `${baseUrl}/the-living-christ-the-testimony-of-the-apostles${langParam}`;
         }
         // Restoration
-        if (lowerChap.includes("restoration") || lowerChap.includes("回復")) {
-            return `${baseUrl}/the-restoration/the-restoration${langParam}`;
+        if (lowerChap.includes("restoration") || lowerChap.includes("回復") || lowerChap.includes("restauração") || lowerChap.includes("restauración")) {
+            return `${baseUrl}/the-restoration-of-the-fulness-of-the-gospel-of-jesus-christ${langParam}`;
         }
 
         // Fallback to index
