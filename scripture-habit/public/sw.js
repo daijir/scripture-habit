@@ -36,7 +36,7 @@ self.addEventListener('notificationclick', (event) => {
 
     const data = event.notification.data;
     const groupId = data?.groupId;
-    const targetPath = groupId ? `/group/${groupId}` : '/dashboard';
+    const targetPath = groupId ? `/dashboard?groupId=${groupId}` : '/dashboard';
     const urlToOpen = new URL(targetPath, self.location.origin).href;
 
     event.waitUntil(

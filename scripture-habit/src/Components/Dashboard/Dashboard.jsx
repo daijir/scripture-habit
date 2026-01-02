@@ -75,7 +75,19 @@ const Dashboard = () => {
     if (location.state?.initialGroupId) {
       setActiveGroupId(location.state.initialGroupId);
     }
-  }, [location.state]);
+
+    // Handle deep-linking from URL query parameters (e.g., from notifications)
+    const searchParams = new URLSearchParams(location.search);
+    const gid = searchParams.get('groupId');
+    if (gid) {
+      setActiveGroupId(gid);
+      setSelectedView(2); // Switch to GroupChat view
+
+      // Clean up the URL to prevent re-triggering on refresh
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+    }
+  }, [location.search, location.state]);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
