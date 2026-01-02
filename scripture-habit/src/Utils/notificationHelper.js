@@ -11,15 +11,14 @@ export const requestNotificationPermission = async (userId) => {
         if (permission === 'granted') {
             console.log('Notification permission granted.');
 
-            // Use the existing Service Worker registration (from sw.js)
-            // This avoids conflicts and "Registration failed" errors
-            const registration = await navigator.serviceWorker.getRegistration('/');
-            console.log('SW Registration:', registration);
+            // Wait for the service worker to be fully ready and active
+            const registration = await navigator.serviceWorker.ready;
+            console.log('SW Registration ready:', registration);
             console.log('Active SW:', registration?.active);
             console.log('Scope:', registration?.scope);
 
-            if (!registration) {
-                console.error('No service worker registration found! SW may not be running.');
+            if (!registration || !registration.active) {
+                console.error('Service worker is not active or ready!');
                 return;
             }
 
@@ -57,6 +56,9 @@ export const requestNotificationPermission = async (userId) => {
         }
     } catch (error) {
         console.error('An error occurred during notification setup:', error);
+        if (error.message) console.error('Error message:', error.message);
+        if (error.code) console.error('Error code:', error.code);
+
         // Show user-friendly message instead of technical error
         import('react-toastify').then(({ toast }) => {
             toast.error('通知の設定に失敗しました。後でもう一度お試しください。');
