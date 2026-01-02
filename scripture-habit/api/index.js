@@ -891,56 +891,57 @@ app.post('/api/post-note', async (req, res) => {
             return { personalNoteId: personalNoteRef.id, newStreak, streakUpdated };
         });
 
-        // Send push notifications after successful transaction (non-blocking)
-        (async () => {
-            try {
-                const titleMap = {
-                    'ja': '📖 新しい勉強ノート',
-                    'es': '📖 Nueva nota de estudio',
-                    'pt': '📖 Nova nota de estudo',
-                    'ko': '📖 새로운 공부 노트',
-                    'zho': '📖 新的學習筆記',
-                    'vi': '📖 Ghi chú học tập mới',
-                    'th': '📖 บันทึกการศึกษาใหม่',
-                    'tl': '📖 Bagong Study Note',
-                    'sw': '📖 Kumbukumbu Mpya ya Mafunzo'
-                };
-                const bodyTemplateMap = {
-                    'ja': '{nickname}さんが新しいノートを投稿しました：{scripture} {chapter}',
-                    'es': '{nickname} publicó una nueva nota: {scripture} {chapter}',
-                    'pt': '{nickname} postou uma nova nota: {scripture} {chapter}',
-                    'ko': '{nickname}님이 새로운 노트를 게시했습니다: {scripture} {chapter}',
-                    'zho': '{nickname} 發布了新的筆記：{scripture} {chapter}',
-                    'vi': '{nickname} đã đăng một ghi chú mới: {scripture} {chapter}',
-                    'th': '{nickname} โพสต์บันทึกใหม่: {scripture} {chapter}',
-                    'tl': '{nickname} ay nag-post ng bagong note: {scripture} {chapter}',
-                    'sw': '{nickname} ameweka kumbukumbu mpya: {scripture} {chapter}'
-                };
+        // Send push notifications after successful transaction
+        // Await before response to ensure completion in Vercel/Serverless environment
+        try {
+            const titleMap = {
+                'ja': '📖 新しい勉強ノート',
+                'es': '📖 Nueva nota de estudio',
+                'pt': '📖 Nova nota de estudo',
+                'ko': '📖 새로운 공부 노트',
+                'zho': '📖 新的學習筆記',
+                'vi': '📖 Ghi chú học tập mới',
+                'th': '📖 บันทึกการศึกษาใหม่',
+                'tl': '📖 Bagong Study Note',
+                'sw': '📖 Kumbukumbu Mpya ya Mafunzo'
+            };
+            const bodyTemplateMap = {
+                'ja': '{nickname}さんが新しいノートを投稿しました：{scripture} {chapter}',
+                'es': '{nickname} publicó una nueva nota: {scripture} {chapter}',
+                'pt': '{nickname} postou uma nova nota: {scripture} {chapter}',
+                'ko': '{nickname}님이 새로운 노트를 게시했습니다: {scripture} {chapter}',
+                'zho': '{nickname} 發布了新的筆記：{scripture} {chapter}',
+                'vi': '{nickname} đã đăng một ghi chú mới: {scripture} {chapter}',
+                'th': '{nickname} โพสต์บันทึกใหม่: {scripture} {chapter}',
+                'tl': '{nickname} ay nag-post ng bagong note: {scripture} {chapter}',
+                'sw': '{nickname} ameweka kumbukumbu mpya: {scripture} {chapter}'
+            };
 
-                const lang = language || 'en';
-                const title = titleMap[lang] || '📖 New Study Note';
-                const bodyTemplate = bodyTemplateMap[lang] || '{nickname} posted a new note: {scripture} {chapter}';
+            const lang = language || 'en';
+            const title = titleMap[lang] || '📖 New Study Note';
+            const bodyTemplate = bodyTemplateMap[lang] || '{nickname} posted a new note: {scripture} {chapter}';
 
-                const nickname = (await db.collection('users').doc(uid).get()).data()?.nickname || 'Member';
-                const body = bodyTemplate
-                    .replace('{nickname}', nickname)
-                    .replace('{scripture}', scripture)
-                    .replace('{chapter}', chapter);
+            const userSnap = await db.collection('users').doc(uid).get();
+            const nickname = userSnap.data()?.nickname || 'Member';
+            const body = bodyTemplate
+                .replace('{nickname}', nickname)
+                .replace('{scripture}', scripture)
+                .replace('{chapter}', chapter);
 
-                for (const gid of groupsToPostTo) {
-                    await notifyGroupMembers(gid, uid, {
-                        title,
-                        body,
-                        data: {
-                            type: 'note',
-                            groupId: gid
-                        }
-                    });
-                }
-            } catch (notifyErr) {
-                console.error('Error sending push notifications for note:', notifyErr);
-            }
-        })();
+            // Send to all relevant groups in parallel
+            await Promise.all(groupsToPostTo.map(gid =>
+                notifyGroupMembers(gid, uid, {
+                    title,
+                    body,
+                    data: {
+                        type: 'note',
+                        groupId: gid
+                    }
+                })
+            ));
+        } catch (notifyErr) {
+            console.error('Error sending push notifications for note:', notifyErr);
+        }
 
         res.status(200).json({ message: 'Note posted successfully.', ...result });
     } catch (error) {
@@ -1015,24 +1016,23 @@ app.post('/api/post-message', async (req, res) => {
             return { messageId: messageRef.id, nickname: userData.nickname || 'Member' };
         });
 
-        // Send push notifications (non-blocking)
-        (async () => {
-            try {
-                const title = result.nickname;
-                const body = text.length > 100 ? text.substring(0, 97) + '...' : text;
+        // Send push notifications
+        // Await before response to ensure completion in Vercel/Serverless environment
+        try {
+            const title = result.nickname;
+            const body = text.length > 100 ? text.substring(0, 97) + '...' : text;
 
-                await notifyGroupMembers(groupId, uid, {
-                    title,
-                    body,
-                    data: {
-                        type: 'chat',
-                        groupId: groupId
-                    }
-                });
-            } catch (notifyErr) {
-                console.error('Error sending push notifications for chat:', notifyErr);
-            }
-        })();
+            await notifyGroupMembers(groupId, uid, {
+                title,
+                body,
+                data: {
+                    type: 'chat',
+                    groupId: groupId
+                }
+            });
+        } catch (notifyErr) {
+            console.error('Error sending push notifications for chat:', notifyErr);
+        }
 
         res.status(200).json({ message: 'Message sent successfully.', messageId: result.messageId });
     } catch (error) {
