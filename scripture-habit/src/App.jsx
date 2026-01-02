@@ -62,25 +62,8 @@ const SEOManager = () => {
   return null;
 };
 
-const App = () => {
-  const [user, setUser] = useState(null);
-  const [authLoading, setAuthLoading] = useState(true);
-  const [showBrowserWarning, setShowBrowserWarning] = useState(false);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-      setAuthLoading(false);
-    });
-    return unsubscribe;
-  }, []);
-
-  useEffect(() => {
-    const isRedirecting = handleInAppBrowserRedirect();
-    if (!isRedirecting && isInAppBrowser()) {
-      setShowBrowserWarning(true);
-    }
-  }, []);
+const PWAUpdateHandler = () => {
+  const { t } = useLanguage();
 
   useEffect(() => {
     const handleUpdateAvailable = (event) => {
@@ -137,6 +120,29 @@ const App = () => {
     window.addEventListener('pwa-update-available', handleUpdateAvailable);
     return () => window.removeEventListener('pwa-update-available', handleUpdateAvailable);
   }, [t]);
+
+  return null;
+};
+
+const App = () => {
+  const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [showBrowserWarning, setShowBrowserWarning] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setAuthLoading(false);
+    });
+    return unsubscribe;
+  }, []);
+
+  useEffect(() => {
+    const isRedirecting = handleInAppBrowserRedirect();
+    if (!isRedirecting && isInAppBrowser()) {
+      setShowBrowserWarning(true);
+    }
+  }, []);
 
   const [systemStatus, setSystemStatus] = useEffectSpecialState(() => {
     // Probe Firestore for status/quota
@@ -200,6 +206,7 @@ const App = () => {
     <SettingsProvider>
       <LanguageProvider>
         <SEOManager />
+        <PWAUpdateHandler />
         <div className={getAppClass()}>
           <Routes>
             <Route
