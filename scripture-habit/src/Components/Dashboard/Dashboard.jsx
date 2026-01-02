@@ -89,6 +89,14 @@ const Dashboard = () => {
       const newUrl = window.location.pathname;
       window.history.replaceState({}, '', newUrl);
     }
+
+    const openNewNote = searchParams.get('openNewNote');
+    if (openNewNote === 'true') {
+      setIsModalOpen(true);
+      // Clean URL for this too
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+    }
   }, [location.search, location.state]);
 
   useEffect(() => {

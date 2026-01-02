@@ -82,10 +82,12 @@ export const translations = {
             swahili: "Swahili (Swahili)"
         },
         profile: {
+            you: "You",
             title: "Profile",
             description: "Manage your profile settings.",
             nickname: "Nickname",
             save: "Save",
+            cancel: "Cancel",
             language: "Language",
             stake: "Stake/District",
             enterStake: "Enter Stake/District",
@@ -334,6 +336,12 @@ export const translations = {
             reportHarassment: "Harassment",
             reportInappropriate: "Inappropriate Content",
             reportOther: "Other",
+            unityModalCheerOption: "Send Cheer",
+            cheerConfirmTitle: "Send a Cheer",
+            cheerConfirmMessage: "Would you like to send a cheer to {nickname}?",
+            cheerConfirmButton: "Send Cheer",
+            cheerSent: "Cheer sent!",
+            cheerAlreadySent: "You've already sent a cheer to this member today.",
         },
         newNote: {
             editTitle: "Edit Note",
@@ -786,10 +794,12 @@ export const translations = {
             swahili: "スワヒリ語 (Swahili)"
         },
         profile: {
+            you: "あなた",
             title: "プロフィール",
             description: "プロフィール設定を管理します。",
             nickname: "ニックネーム",
             save: "保存",
+            cancel: "キャンセル",
             language: "言語",
             stake: "ステーク/地方部",
             enterStake: "ステーク/地方部を入力",
@@ -976,6 +986,12 @@ export const translations = {
             reportHarassment: "嫌がらせ・ハラスメント",
             reportInappropriate: "不適切なコンテンツ",
             reportOther: "その他",
+            unityModalCheerOption: "エールを送る",
+            cheerConfirmTitle: "エールを送る",
+            cheerConfirmMessage: "{nickname}さんにエールを送りますか？",
+            cheerConfirmButton: "エールを送る",
+            cheerSent: "エールを送りました！",
+            cheerAlreadySent: "このメンバーには今日すでにエールを送っています。",
         },
         myNotes: {
             description: "ノートコレクション",
@@ -1535,10 +1551,12 @@ export const translations = {
             swahili: "Suaíli (Swahili)"
         },
         profile: {
+            you: "Você",
             title: "Perfil",
             description: "Gerencie as configurações do seu perfil.",
             nickname: "Apelido",
             save: "Salvar",
+            cancel: "Cancelar",
             language: "Idioma",
             stake: "Estaca/Distrito",
             enterStake: "Insira Estaca/Distrito",
@@ -1724,7 +1742,13 @@ export const translations = {
             reportSpam: "Spam",
             reportHarassment: "Assédio",
             reportInappropriate: "Conteúdo Inapropriado",
-            reportOther: "Outro"
+            reportOther: "Outro",
+            unityModalCheerOption: "Enviar incentivo",
+            cheerConfirmTitle: "Enviar um incentivo",
+            cheerConfirmMessage: "Gostaria de enviar um incentivo para {nickname}?",
+            cheerConfirmButton: "Enviar incentivo",
+            cheerSent: "Incentivo enviado!",
+            cheerAlreadySent: "Você já enviou um incentivo para este membro hoje."
         },
         myNotes: {
             description: "Coleção de Notas",
@@ -2243,10 +2267,12 @@ export const translations = {
             swahili: "斯瓦希里文 (Swahili)"
         },
         profile: {
+            you: "您",
             title: "個人檔案",
             description: "管理您的個人檔案設定。",
             nickname: "暱稱",
             save: "儲存",
+            cancel: "取消",
             language: "語言",
             stake: "支聯會/區會",
             enterStake: "輸入支聯會/區會",
@@ -2406,7 +2432,13 @@ export const translations = {
             reportSpam: "垃圾信息",
             reportHarassment: "騷擾",
             reportInappropriate: "不當內容",
-            reportOther: "其他"
+            reportOther: "其他",
+            unityModalCheerOption: "發送鼓勵",
+            cheerConfirmTitle: "發送鼓勵",
+            cheerConfirmMessage: "您要向 {nickname} 發送鼓勵嗎？",
+            cheerConfirmButton: "發送鼓勵",
+            cheerSent: "鼓勵已發送！",
+            cheerAlreadySent: "您今天已經向該成員發送過鼓勵了。"
         },
         myNotes: {
             description: "筆記收藏",
@@ -2921,10 +2953,12 @@ export const translations = {
             swahili: "Suajili (Swahili)"
         },
         profile: {
+            you: "Tú",
             title: "Perfil",
             description: "Administra la configuración de tu perfil.",
             nickname: "Apodo",
             save: "Guardar",
+            cancel: "Cancelar",
             language: "Idioma",
             stake: "Estaca/Distrito",
             enterStake: "Ingresar Estaca/Distrito",
@@ -3110,7 +3144,13 @@ export const translations = {
             reportSpam: "Spam",
             reportHarassment: "Acoso",
             reportInappropriate: "Contenido inapropiado",
-            reportOther: "Otro"
+            reportOther: "Otro",
+            unityModalCheerOption: "Enviar apoyo",
+            cheerConfirmTitle: "Enviar un apoyo",
+            cheerConfirmMessage: "¿Te gustaría enviar un apoyo a {nickname}?",
+            cheerConfirmButton: "Enviar apoyo",
+            cheerSent: "¡Apoyo enviado!",
+            cheerAlreadySent: "Ya has enviado un apoyo a este miembro hoy."
         },
         myNotes: {
             description: "Colección de Notas",
@@ -3600,10 +3640,12 @@ export const translations = {
             swahili: "Tiếng Swahili (Swahili)"
         },
         profile: {
+            you: "Bạn",
             title: "Hồ sơ",
             description: "Quản lý cài đặt hồ sơ của bạn.",
             nickname: "Biệt danh",
             save: "Lưu",
+            cancel: "Hủy",
             language: "Ngôn ngữ",
             stake: "Giáo khu/Giáo hạt",
             enterStake: "Nhập Giáo khu/Giáo hạt",
@@ -3763,7 +3805,13 @@ export const translations = {
             reportSpam: "Spam",
             reportHarassment: "Quấy rối",
             reportInappropriate: "Nội dung không phù hợp",
-            reportOther: "Khác"
+            reportOther: "Khác",
+            unityModalCheerOption: "Gửi lời khích lệ",
+            cheerConfirmTitle: "Gửi lời khích lệ",
+            cheerConfirmMessage: "Bạn có muốn gửi lời khích lệ cho {nickname} không?",
+            cheerConfirmButton: "Gửi lời khích lệ",
+            cheerSent: "Đã gửi lời khích lệ!",
+            cheerAlreadySent: "Bạn đã gửi lời khích lệ cho thành viên này hôm nay rồi."
         },
         myNotes: {
             description: "Bộ Sưu Tập Ghi Chép",
@@ -4277,10 +4325,12 @@ export const translations = {
             swahili: "สวาฮีลี (Swahili)"
         },
         profile: {
+            you: "คุณ",
             title: "โปรไฟล์",
             description: "จัดการการตั้งค่าโปรไฟล์ของคุณ",
             nickname: "ชื่อเล่น",
             save: "บันทึก",
+            cancel: "ยกเลิก",
             language: "ภาษา",
             stake: "สเตค/ท้องถิ่น",
             enterStake: "ป้อนสเตค/ท้องถิ่น",
@@ -4466,7 +4516,13 @@ export const translations = {
             reportSpam: "สแปม",
             reportHarassment: "การคุกคาม",
             reportInappropriate: "เนื้อหาไม่เหมาะสม",
-            reportOther: "อื่นๆ"
+            reportOther: "อื่นๆ",
+            unityModalCheerOption: "ส่งกำลังใจ",
+            cheerConfirmTitle: "ส่งกำลังใจ",
+            cheerConfirmMessage: "คุณต้องการส่งกำลังใจให้ {nickname} หรือไม่?",
+            cheerConfirmButton: "ส่งกำลังใจ",
+            cheerSent: "ส่งกำลังใจเรียบร้อยแล้ว!",
+            cheerAlreadySent: "คุณได้ส่งกำลังใจให้สมาชิกคนนี้ไปแล้วในวันนี้"
         },
         myNotes: {
             description: "คลังบันทึก",
@@ -4980,10 +5036,12 @@ export const translations = {
             swahili: "스와힐리어 (Swahili)"
         },
         profile: {
+            you: "나",
             title: "프로필",
             description: "프로필 설정을 관리합니다.",
             nickname: "닉네임",
             save: "저장",
+            cancel: "취소",
             language: "언어",
             stake: "스테이크/지방부",
             enterStake: "스테이크/지방부 입력",
@@ -5169,7 +5227,13 @@ export const translations = {
             reportSpam: "스팸",
             reportHarassment: "괴롭힘",
             reportInappropriate: "부적절한 콘텐츠",
-            reportOther: "기타"
+            reportOther: "기타",
+            unityModalCheerOption: "응원 보내기",
+            cheerConfirmTitle: "응원 보내기",
+            cheerConfirmMessage: "{nickname}님에게 응원을 보내시겠습니까?",
+            cheerConfirmButton: "응원 보내기",
+            cheerSent: "응원을 보냈습니다!",
+            cheerAlreadySent: "오늘은 이미 이 회원에게 응원을 보냈습니다."
         },
         myNotes: {
             description: "노트 컬렉션",
@@ -5683,10 +5747,12 @@ export const translations = {
             swahili: "Swahili (Swahili)"
         },
         profile: {
+            you: "Ikaw",
             title: "Profile",
             description: "Pamahalaan ang mga setting ng iyong profile.",
             nickname: "Palayaw",
             save: "I-save",
+            cancel: "Kanselahin",
             language: "Wika",
             stake: "Stake/Distrito",
             enterStake: "Ilagay ang Stake/Distrito",
@@ -5871,7 +5937,13 @@ export const translations = {
             reportSpam: "Spam",
             reportHarassment: "Pang-aabuso",
             reportInappropriate: "Hindi naaangkop na nilalaman",
-            reportOther: "Iba pa"
+            reportOther: "Iba pa",
+            unityModalCheerOption: "Magpadala ng Cheer",
+            cheerConfirmTitle: "Magpadala ng Cheer",
+            cheerConfirmMessage: "Gusto mo bang magpadala ng cheer kay {nickname}?",
+            cheerConfirmButton: "Magpadala ng Cheer",
+            cheerSent: "Naipadala na ang cheer!",
+            cheerAlreadySent: "Nakapagpadala ka na ng cheer sa miyembrong ito ngayong araw."
         },
         myNotes: {
             description: "Koleksyon ng mga Tala",
@@ -6385,10 +6457,12 @@ export const translations = {
             swahili: "Kiswahili (Swahili)"
         },
         profile: {
+            you: "Wewe",
             title: "Wasifu",
             description: "Dhibiti mipangilio ya wasifu wako.",
             nickname: "Jina la Utani",
             save: "Hifadhi",
+            cancel: "Ghairi",
             language: "Lugha",
             stake: "Bunge/Wilaya",
             enterStake: "Ingiza Bunge/Wilaya",
@@ -6573,7 +6647,13 @@ export const translations = {
             reportSpam: "Barua taka",
             reportHarassment: "Unyanyasaji",
             reportInappropriate: "Maudhui yasiyofaa",
-            reportOther: "Nyingine"
+            reportOther: "Nyingine",
+            unityModalCheerOption: "Tuma Ushangiliaji",
+            cheerConfirmTitle: "Tuma Ushangiliaji",
+            cheerConfirmMessage: "Je, ungependa kumtumia ushangiliaji {nickname}?",
+            cheerConfirmButton: "Tuma Ushangiliaji",
+            cheerSent: "Ushangiliaji umetumwa!",
+            cheerAlreadySent: "Tayari umeshamtumia ushangiliaji mwanachama huyu leo."
         },
         myNotes: {
             description: "Mkusanyiko wa Maelezo",

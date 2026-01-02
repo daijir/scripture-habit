@@ -120,6 +120,71 @@ const postNoteSchema = z.object({
   language: z.enum(supportedLanguages).optional().nullable()
 });
 
+const sendCheerSchema = z.object({
+  targetUid: z.string().min(1),
+  groupId: z.string().min(1),
+  senderNickname: z.string().min(1),
+  language: z.enum(supportedLanguages).optional()
+});
+
+const CHEER_NOTIFICATION_TEMPLATES = {
+  en: [
+    "{nickname} is waiting for your post! ✨",
+    "{nickname} is looking forward to your study note! 📖",
+    "Let's aim for 100% unity! {nickname} sent you an energy boost! 💪"
+  ],
+  ja: [
+    "{nickname}さんがあなたの投稿を楽しみに待っています！✨",
+    "{nickname}さんがあなたの学習ノートを心待ちにしています！📖",
+    "全員投稿まであと少し！{nickname}さんからエールが届きました！💪"
+  ],
+  es: [
+    "¡{nickname} está esperando tu nota! ✨",
+    "¡{nickname} espera con ansias tu nota de estudio! 📖",
+    "¡Busquemos el 100% de unidad! ¡{nickname} te envió un impulso de energía! 💪"
+  ],
+  pt: [
+    "{nickname} está esperando sua postagem! ✨",
+    "{nickname} está ansioso pela sua nota de estudo! 📖",
+    "Vamos buscar 100% de união! {nickname} te enviou um impulso de energia! 💪"
+  ],
+  zh: [
+    "{nickname} 正在等待您的發文！✨",
+    "{nickname} 期待著您的學習筆記！📖",
+    "目標 100% 合一！{nickname} 給您送來了力量！💪"
+  ],
+  zho: [
+    "{nickname} 正在等待您的發文！✨",
+    "{nickname} 期待著您的學習筆記！📖",
+    "目標 100% 合一！{nickname} 給您送來了力量！💪"
+  ],
+  vi: [
+    "{nickname} đang chờ bài đăng của bạn! ✨",
+    "{nickname} đang mong chờ ghi chú học tập của bạn! 📖",
+    "Hãy cùng hướng tới sự đoàn kết 100%! {nickname} đã gửi cho bạn thêm năng lượng! 💪"
+  ],
+  th: [
+    "{nickname} กำลังรอโพสต์ของคุณอยู่! ✨",
+    "{nickname} กำลังตั้งตารอบันทึกการศึกษาของคุณ! 📖",
+    "มาตั้งเป้าความเป็นน้ำหนึ่งใจเดียวกัน 100% กันเถอะ! {nickname} ส่งพลังให้คุณ! 💪"
+  ],
+  ko: [
+    "{nickname}님이 당신의 게시물을 기다리고 있습니다! ✨",
+    "{nickname}님이 당신의 학습 노트를 고대하고 있습니다! 📖",
+    "100% 일치를 목표로 합시다! {nickname}님이 응원을 보냈습니다! 💪"
+  ],
+  tl: [
+    "Naghihintay si {nickname} para sa iyong post! ✨",
+    "Inaasahan ni {nickname} ang iyong study note! 📖",
+    "Layunin natin ang 100% unity! Nagpadala si {nickname} ng energy boost sa iyo! 💪"
+  ],
+  sw: [
+    "{nickname} anasubiri chapisho lako! ✨",
+    "{nickname} anatarajia dokezo lako la funzo! 📖",
+    "Tulenge umoja wa 100%! {nickname} amekutumia nguvu! 💪"
+  ]
+};
+
 const STREAK_ANNOUNCEMENT_TEMPLATES = {
   en: "🎉🎉🎉 **{nickname} reached a {streak} day streak!!** 🎉🎉🎉\n\n**Let us edify one another in the group and share joy together!**",
   ja: "🎉🎉🎉 **{nickname}さんが{streak}日連続達成しました！！** 🎉🎉🎉\n\n**グループ内で互いに教え合い、喜びを分かち合いましょう！**",
@@ -610,6 +675,7 @@ app.post('/migrate-data', async (req, res) => {
     res.status(500).send('Migration failed: ' + error.message);
   }
 });
+
 
 app.post('/post-note', async (req, res) => {
   console.log('--- POST NOTE REQUEST ---');
@@ -1552,6 +1618,115 @@ app.post('/test-push-notification', async (req, res) => {
   } catch (error) {
     console.error('Error in test push notification:', error);
     res.status(500).send(error.message);
+  }
+});
+
+app.post('/send-cheer', async (req, res) => {
+  console.log('--- POST SEND-CHEER REQUEST RECEIVED ---');
+  console.log('Request Body:', JSON.stringify(req.body, null, 2));
+
+  const validation = sendCheerSchema.safeParse(req.body);
+  if (!validation.success) {
+    console.error('Validation failed:', JSON.stringify(validation.error.format(), null, 2));
+    return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
+  }
+
+  const { targetUid, groupId, senderNickname, language } = validation.data;
+
+  const authHeader = req.headers.authorization;
+  let idToken;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    idToken = authHeader.split('Bearer ')[1];
+  } else {
+    return res.status(401).send('Unauthorized: No token provided.');
+  }
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const senderUid = decodedToken.uid;
+
+    if (senderUid === targetUid) {
+      console.warn(`User ${senderUid} tried to cheer themselves.`);
+      return res.status(400).json({ error: 'You cannot cheer yourself.' });
+    }
+
+    const senderDoc = await db.collection('users').doc(senderUid).get();
+    const senderData = senderDoc.data() || {};
+
+    let timeZone = 'UTC';
+    try {
+      if (senderData.timeZone) {
+        Intl.DateTimeFormat(undefined, { timeZone: senderData.timeZone });
+        timeZone = senderData.timeZone;
+      }
+    } catch (tzError) {
+      console.warn(`Invalid timezone ${senderData.timeZone}, falling back to UTC`);
+    }
+
+    const today = new Date().toLocaleDateString('en-CA', { timeZone });
+    const cheerDocId = `cheer_${senderUid}_${targetUid}_${today}`;
+    const cheerRef = db.collection('cheers').doc(cheerDocId);
+
+    const existingCheer = await cheerRef.get();
+    if (existingCheer.exists) {
+      return res.status(429).json({ error: 'alreadySent' });
+    }
+
+    const targetUserDoc = await db.collection('users').doc(targetUid).get();
+    if (!targetUserDoc.exists) {
+      return res.status(404).json({ error: 'Target user not found.' });
+    }
+
+    const targetData = targetUserDoc.data();
+    const tokens = targetData.fcmTokens || [];
+
+    // Random message templates
+    const lang = language || targetData.language || 'en';
+    const templates = CHEER_NOTIFICATION_TEMPLATES[lang] || CHEER_NOTIFICATION_TEMPLATES['en'];
+    const randomTemplate = templates[Math.floor(Math.random() * templates.length)];
+    const body = randomTemplate.replace('{nickname}', senderNickname);
+
+    const titleMap = {
+      ja: '💪 エールが届きました！',
+      en: '💪 You received a cheer!',
+      es: '💪 ¡Recibiste un apoyo!',
+      pt: '💪 Você recebeu um incentivo!',
+      ko: '💪 응원이 도착했습니다!',
+      zho: '💪 您收到了一份鼓勵！',
+      vi: '💪 Bạn đã nhận được lời khích lệ!',
+      th: '💪 คุณได้รับกำลังใจ!',
+      tl: '💪 Nakatanggap ka ng cheer!',
+      sw: '💪 Umepokea ushangiliaji!'
+    };
+    const title = titleMap[lang] || titleMap['en'];
+
+    if (tokens.length > 0) {
+      const payload = {
+        title,
+        body,
+        data: {
+          type: 'cheer',
+          senderUid,
+          senderNickname,
+          groupId,
+          openNewNote: 'true'
+        }
+      };
+      await sendPushNotification(tokens, payload);
+    }
+
+    await cheerRef.set({
+      senderUid,
+      targetUid,
+      groupId,
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      date: today
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error('Error in send-cheer:', error);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 

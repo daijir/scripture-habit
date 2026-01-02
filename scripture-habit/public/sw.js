@@ -36,7 +36,11 @@ self.addEventListener('notificationclick', (event) => {
 
     const data = event.notification.data;
     const groupId = data?.groupId;
-    const targetPath = groupId ? `/dashboard?groupId=${groupId}` : '/dashboard';
+    const openNewNote = data?.openNewNote;
+    let targetPath = groupId ? `/dashboard?groupId=${groupId}` : '/dashboard';
+    if (openNewNote === 'true') {
+        targetPath += (targetPath.includes('?') ? '&' : '?') + 'openNewNote=true';
+    }
     const urlToOpen = new URL(targetPath, self.location.origin).href;
 
     event.waitUntil(

@@ -186,6 +186,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportedMessage, setReportedMessage] = useState(null);
   const [reportReason, setReportReason] = useState('inappropriate');
+  const [cheerTarget, setCheerTarget] = useState(null);
+  const [isSendingCheer, setIsSendingCheer] = useState(false);
+  const [cheeredTodayUids, setCheeredTodayUids] = useState(new Set());
   const longPressTimer = useRef(null);
   const containerRef = useRef(null);
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
@@ -203,6 +206,30 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
    */
   const groupNameTranslateRef = useRef({ id: null, lang: null });
   const groupDescTranslateRef = useRef({ id: null, lang: null });
+
+  useEffect(() => {
+    const fetchCheers = async () => {
+      if (!userData?.uid) return;
+      try {
+        const timeZone = userData.timeZone || 'UTC';
+        const todayStr = new Date().toLocaleDateString('en-CA', { timeZone });
+        const q = query(
+          collection(db, 'cheers'),
+          where('senderUid', '==', userData.uid),
+          where('date', '==', todayStr)
+        );
+        const snapshot = await getDocs(q);
+        const uids = new Set();
+        snapshot.forEach(doc => {
+          uids.add(doc.data().targetUid);
+        });
+        setCheeredTodayUids(uids);
+      } catch (err) {
+        console.error("Error fetching cheers:", err);
+      }
+    };
+    fetchCheers();
+  }, [userData?.uid, userData?.timeZone]);
 
   useEffect(() => {
     // Reset on group switch
@@ -906,6 +933,51 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       console.error("Error fetching unity modal data:", error);
     } finally {
       setMembersLoading(false);
+    }
+  };
+
+  const handleCheerClick = (member) => {
+    if (member.id === userData?.uid) return;
+    setCheerTarget(member);
+  };
+
+  const handleSendCheer = async () => {
+    if (!cheerTarget) return;
+    setIsSendingCheer(true);
+    try {
+      const idToken = await auth.currentUser.getIdToken();
+      const apiBase = import.meta.env.VITE_API_BASE_URL || '';
+      const response = await fetch(`${API_BASE}/api/send-cheer`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({
+          targetUid: cheerTarget.id,
+          groupId: groupId,
+          senderNickname: userData?.nickname || 'Someone',
+          language: language
+        })
+      });
+
+      if (response.ok) {
+        toast.success(t('groupChat.cheerSent') || "Cheer sent!");
+        setCheeredTodayUids(prev => new Set([...prev, cheerTarget.id]));
+      } else {
+        const data = await response.json();
+        if (data.error === 'alreadySent') {
+          toast.info(t('groupChat.cheerAlreadySent') || "You've already sent a cheer to this member today.");
+        } else {
+          toast.error(t('groupChat.errorSendMessage') || "Failed to send cheer.");
+        }
+      }
+    } catch (error) {
+      console.error('Error sending cheer:', error);
+      toast.error(t('groupChat.errorSendMessage') || "Failed to send cheer.");
+    } finally {
+      setIsSendingCheer(false);
+      setCheerTarget(null);
     }
   };
 
@@ -3075,20 +3147,29 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                         unityModalData.notPosted.map((member, i) => (
                           <span
                             key={i}
-                            className="unity-nickname-chip"
-                            onClick={() => handleUserProfileClick(member.id)}
+                            className={`unity-nickname-chip ${cheeredTodayUids.has(member.id) ? 'cheered' : ''}`}
+                            onClick={() => {
+                              if (member.id === userData?.uid) return;
+                              if (cheeredTodayUids.has(member.id)) {
+                                toast.info(t('groupChat.cheerAlreadySent') || "Already sent a cheer today");
+                                return;
+                              }
+                              handleCheerClick(member);
+                            }}
                             style={{
-                              background: '#fff0f3',
-                              color: 'var(--pink)',
+                              background: member.id === userData?.uid ? '#f0f0f0' : (cheeredTodayUids.has(member.id) ? '#f5f5f5' : '#fff0f3'),
+                              color: member.id === userData?.uid ? 'var(--gray)' : (cheeredTodayUids.has(member.id) ? '#bdc3c7' : 'var(--pink)'),
                               padding: '6px 12px',
                               borderRadius: '20px',
                               fontSize: '0.9rem',
                               fontWeight: '500',
-                              boxShadow: '0 2px 4px rgba(255, 145, 157, 0.1)',
-                              cursor: 'pointer'
+                              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+                              cursor: (member.id === userData?.uid || cheeredTodayUids.has(member.id)) ? 'default' : 'pointer',
+                              border: member.id === userData?.uid ? '1px dashed #ccc' : (cheeredTodayUids.has(member.id) ? '1px solid #eee' : 'none'),
+                              opacity: cheeredTodayUids.has(member.id) ? 0.8 : 1
                             }}
                           >
-                            {member.nickname}
+                            {member.id === userData?.uid ? `${member.nickname} (${t('profile.you') || 'You'})` : (cheeredTodayUids.has(member.id) ? `✅ ${member.nickname}` : member.nickname)}
                           </span>
                         ))
                       ) : (
@@ -3105,6 +3186,58 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
             <div className="leave-modal-actions" style={{ marginTop: '1.5rem' }}>
               <button className="modal-btn primary" onClick={() => setShowUnityModal(false)} style={{ width: '100%', maxWidth: 'none' }}>
                 {t('groupChat.welcomeGuideButton') || t('welcomeGuideButton') || "Got it!"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Cheer Confirmation Modal */}
+      {cheerTarget && (
+        <div className="leave-modal-overlay cheer-modal-overlay" onClick={() => setCheerTarget(null)}>
+          <div className="leave-modal-content cheer-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '360px', padding: '2rem' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '1rem', textAlign: 'center' }}>💪</div>
+            <h3 style={{ textAlign: 'center', marginBottom: '1rem', color: 'var(--black)' }}>{t('groupChat.cheerConfirmTitle') || "Send a Cheer"}</h3>
+            <p style={{ textAlign: 'center', color: 'var(--gray)', marginBottom: '2rem', lineHeight: '1.4', fontSize: '1rem' }}>
+              {t('groupChat.cheerConfirmMessage')?.replace('{nickname}', cheerTarget.nickname) || `Would you like to send a cheer to ${cheerTarget.nickname}?`}
+            </p>
+            <div className="leave-modal-actions" style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+              <button
+                className="modal-btn delete"
+                onClick={handleSendCheer}
+                disabled={isSendingCheer}
+                style={{
+                  background: 'var(--pink)',
+                  color: 'white',
+                  width: '100%',
+                  padding: '14px',
+                  borderRadius: '12px',
+                  fontWeight: '600',
+                  fontSize: '1.05rem',
+                  border: 'none',
+                  cursor: isSendingCheer ? 'not-allowed' : 'pointer',
+                  boxShadow: '0 4px 12px rgba(255, 145, 157, 0.3)'
+                }}
+              >
+                {isSendingCheer ? (
+                  <div className="spinner-mini" style={{ width: '20px', height: '20px', margin: '0 auto', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white' }}></div>
+                ) : (t('groupChat.cheerConfirmButton') || "Send Cheer")}
+              </button>
+              <button
+                className="modal-btn cancel"
+                onClick={() => setCheerTarget(null)}
+                style={{
+                  width: '100%',
+                  padding: '14px',
+                  borderRadius: '12px',
+                  border: '1px solid #ddd',
+                  background: 'white',
+                  color: 'var(--gray)',
+                  fontWeight: '500',
+                  cursor: 'pointer'
+                }}
+              >
+                {t('profile.cancel') || "Cancel"}
               </button>
             </div>
           </div>

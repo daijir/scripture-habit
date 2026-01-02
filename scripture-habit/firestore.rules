@@ -80,5 +80,15 @@ service cloud.firestore {
       // No one can write via client
       allow write: if false;
     }
+    // Rules for the 'cheers' collection
+    match /cheers/{cheerId} {
+      // Users can read cheers where they are the sender
+      allow read: if request.auth != null && (
+        resource.data.senderUid == request.auth.uid || 
+        resource.data.targetUid == request.auth.uid
+      );
+      // Writes are exclusively handled by the backend API
+      allow write: if false;
+    }
   }
 }
