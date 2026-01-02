@@ -59,7 +59,13 @@ export const translations = {
             postedANote: "{nickname} posted a note! ✨",
             sentAMessage: "{nickname} sent a message! ✨",
             joinGroupStudy: "Would you like to study scriptures with everyone?",
-            joinCreateGroup: "Join/Create a Group"
+            joinCreateGroup: "Join/Create a Group",
+            notificationPrompt: {
+                title: "Stay Connected! 🔔",
+                description: "Get notified when group members share notes or when you have study reminders.",
+                enable: "Enable Notifications",
+                later: "Maybe Later"
+            }
         },
         languages: {
             title: "Languages",
@@ -92,6 +98,17 @@ export const translations = {
             daysStudied: "Days Studied",
             successUpdate: "Profile updated successfully!",
             errorUpdate: "Failed to update profile. Please try again.",
+            notifications: "Notifications",
+            notificationToggle: {
+                title: "Push Notifications",
+                description: "Receive updates about group activity and study reminders.",
+                statusEnabled: "Enabled",
+                statusDisabled: "Disabled",
+                statusBlocked: "Blocked (Check Settings)",
+                enable: "Enable",
+                disable: "Disable",
+                disabledSuccess: "Notifications disabled"
+            },
             deleteAccount: "Delete Account",
             deleteAccountWarning: "Warning: This action is permanent. All your data, including your notes and profile, will be permanently deleted.",
             confirmDeleteAccount: "Delete My Account",
@@ -746,7 +763,13 @@ export const translations = {
             postedANote: "{nickname}さんがノートを投稿しました！✨",
             sentAMessage: "{nickname}さんがメッセージを送信しました！✨",
             joinGroupStudy: "みんなと聖典学習しませんか？",
-            joinCreateGroup: "グループに参加・作成する"
+            joinCreateGroup: "グループに参加・作成する",
+            notificationPrompt: {
+                title: "学びを逃さないために 🔔",
+                description: "グループメンバーの投稿や学習のリマインダーを受け取ることができます。",
+                enable: "通知をオンにする",
+                later: "また今度"
+            }
         },
         languages: {
             title: "言語設定",
@@ -779,6 +802,17 @@ export const translations = {
             daysStudied: "合計学習日数",
             successUpdate: "プロフィールを更新しました！",
             errorUpdate: "プロフィールの更新に失敗しました。もう一度試してください。",
+            notifications: "通知",
+            notificationToggle: {
+                title: "プッシュ通知",
+                description: "グループの活動状況や学習のリマインダーを受け取ります。",
+                statusEnabled: "有効",
+                statusDisabled: "無効",
+                statusBlocked: "ブロック中（設定を確認してください）",
+                enable: "有効にする",
+                disable: "無効にする",
+                disabledSuccess: "通知を無効にしました"
+            },
             deleteAccount: "アカウントを削除",
             deleteAccountWarning: "アカウントを削除すると、これまでに作成したすべての学習ノート、学習履歴、およびプロフィール設定が完全に消去されます。この操作は取り消すことができず、データの復元もできません。本当によろしいですか？",
             confirmDeleteAccount: "アカウントを削除する",
@@ -1478,7 +1512,13 @@ export const translations = {
             postedANote: "{nickname} postou uma nota! ✨",
             sentAMessage: "{nickname} enviou uma mensagem! ✨",
             joinGroupStudy: "Gostaria de estudar as escrituras com todos?",
-            joinCreateGroup: "Entrar/Criar um Grupo"
+            joinCreateGroup: "Entrar/Criar um Grupo",
+            notificationPrompt: {
+                title: "Fique Conectado! 🔔",
+                description: "Receba notificações quando membros do grupo compartilharem notas ou lembretes de estudo.",
+                enable: "Ativar Notificações",
+                later: "Talvez Depois"
+            }
         },
         languages: {
             title: "Idiomas",
@@ -1511,6 +1551,17 @@ export const translations = {
             daysStudied: "Dias Estudados",
             successUpdate: "Perfil atualizado com sucesso!",
             errorUpdate: "Falha ao atualizar o perfil. Tente novamente.",
+            notifications: "Notificações",
+            notificationToggle: {
+                title: "Notificações Push",
+                description: "Receba atualizações sobre atividades de grupo e lembretes de estudo.",
+                statusEnabled: "Ativado",
+                statusDisabled: "Desativado",
+                statusBlocked: "Bloqueado (Verifique as Configurações)",
+                enable: "Ativar",
+                disable: "Desativar",
+                disabledSuccess: "Notificações desativadas"
+            },
             deleteAccount: "Excluir Conta",
             deleteAccountWarning: "Ao excluir sua conta, todas as suas notas de estudo, histórico e configurações de perfil serão apagados permanentemente. Esta ação não pode ser desfeita e os dados não podem ser restaurados. Você tem certeza?",
             confirmDeleteAccount: "Excluir Minha Conta",
@@ -2169,7 +2220,13 @@ export const translations = {
             postedANote: "{nickname} 發布了一則筆記！✨",
             sentAMessage: "{nickname} 發送了一則訊息！✨",
             joinGroupStudy: "想和大家一起學習聖經嗎？",
-            joinCreateGroup: "加入/創建群組"
+            joinCreateGroup: "加入/創建群組",
+            notificationPrompt: {
+                title: "保持聯繫！🔔",
+                description: "當群組成員分享筆記或有研讀提醒時接收通知。",
+                enable: "啟用通知轉到",
+                later: "稍後再說"
+            }
         },
         languages: {
             title: "語言",
@@ -2202,6 +2259,17 @@ export const translations = {
             daysStudied: "已學習天數",
             successUpdate: "個人檔案已成功更新！",
             errorUpdate: "更新個人檔案失敗。請再試一次。",
+            notifications: "通知",
+            notificationToggle: {
+                title: "推送通知",
+                description: "接收有關群組活動和研讀提醒的更新。",
+                statusEnabled: "已啟用",
+                statusDisabled: "已禁用",
+                statusBlocked: "已阻止（請檢查設置）",
+                enable: "啟用",
+                disable: "禁用",
+                disabledSuccess: "通知已禁用"
+            },
             deleteAccount: "刪除帳號",
             deleteAccountWarning: "刪除帳號將永久抹除您所有的學習筆記、歷史記錄和個人資料設定。此操作無法撤銷，數據也無法恢復。您確定要繼續嗎？",
             confirmDeleteAccount: "刪除我的帳號",
@@ -2830,7 +2898,13 @@ export const translations = {
             postedANote: "¡{nickname} publicó una nota! ✨",
             sentAMessage: "¡{nickname} envió un mensaje! ✨",
             joinGroupStudy: "¿Te gustaría estudiar las escrituras con todos?",
-            joinCreateGroup: "Unirse/Crear un Grupo"
+            joinCreateGroup: "Unirse/Crear un Grupo",
+            notificationPrompt: {
+                title: "¡Mantente Conectado! 🔔",
+                description: "Recibe notificaciones cuando los miembros del grupo compartan notas o tengas recordatorios de estudio.",
+                enable: "Activar Notificaciones",
+                later: "Más Tarde"
+            }
         },
         languages: {
             title: "Idiomas",
@@ -2863,6 +2937,17 @@ export const translations = {
             daysStudied: "Días estudiados",
             successUpdate: "¡Perfil actualizado con éxito!",
             errorUpdate: "Error al actualizar el perfil. Por favor, inténtelo de nuevo.",
+            notifications: "Notificaciones",
+            notificationToggle: {
+                title: "Notificaciones Push",
+                description: "Recibe actualizaciones sobre la actividad del grupo y recordatorios de estudio.",
+                statusEnabled: "Activado",
+                statusDisabled: "Desactivado",
+                statusBlocked: "Bloqueado (Comprueba los Ajustes)",
+                enable: "Activar",
+                disable: "Desactivar",
+                disabledSuccess: "Notificaciones desactivadas"
+            },
             deleteAccount: "Eliminar Cuenta",
             deleteAccountWarning: "Al eliminar su cuenta se borrarán permanentemente todas sus notas de estudio, historial y configuración de perfil. Esta acción no se puede deshacer y los datos no se pueden restaurar. ¿Está seguro?",
             confirmDeleteAccount: "Eliminar Mi Cuenta",
@@ -3492,7 +3577,13 @@ export const translations = {
             postedANote: "{nickname} đã đăng một ghi chú! ✨",
             sentAMessage: "{nickname} đã gửi một tin nhắn! ✨",
             joinGroupStudy: "Bạn có muốn học thánh thư cùng mọi người không?",
-            joinCreateGroup: "Tham gia/Tạo một nhóm"
+            joinCreateGroup: "Tham gia/Tạo một nhóm",
+            notificationPrompt: {
+                title: "Luôn Kết Nối! 🔔",
+                description: "Nhận thông báo khi các thành viên trong nhóm chia sẻ ghi chú hoặc lời nhắc học tập.",
+                enable: "Bật Thông báo",
+                later: "Để Sau"
+            }
         },
         languages: {
             title: "Ngôn ngữ",
@@ -3525,6 +3616,17 @@ export const translations = {
             daysStudied: "Số ngày đã học",
             successUpdate: "Cập nhật hồ sơ thành công!",
             errorUpdate: "Cập nhật hồ sơ thất bại. Vui lòng thử lại.",
+            notifications: "Thông báo",
+            notificationToggle: {
+                title: "Thông báo Đẩy",
+                description: "Nhận cập nhật về hoạt động của nhóm và lời nhắc học tập.",
+                statusEnabled: "Đã bật",
+                statusDisabled: "Đã tắt",
+                statusBlocked: "Đã chặn (Kiểm tra Cài đặt)",
+                enable: "Bật",
+                disable: "Tắt",
+                disabledSuccess: "Đã tắt thông báo"
+            },
             deleteAccount: "Xóa tài khoản",
             deleteAccountWarning: "Xóa tài khoản sẽ xóa vĩnh viễn tất cả ghi chú học tập, lịch sử và cài đặt hồ sơ của bạn. Hành động này không thể hoàn tác và dữ liệu không thể khôi phục. Bạn có chắc chắn không?",
             confirmDeleteAccount: "Xóa tài khoản của tôi",
@@ -4152,7 +4254,13 @@ export const translations = {
             postedANote: "{nickname} โพสต์บันทึกแล้ว! ✨",
             sentAMessage: "{nickname} ส่งข้อความแล้ว! ✨",
             joinGroupStudy: "อยากศึกษาสถาบันกับทุกคนไหม?",
-            joinCreateGroup: "เข้าร่วม/สร้างกลุ่ม"
+            joinCreateGroup: "เข้าร่วม/สร้างกลุ่ม",
+            notificationPrompt: {
+                title: "เชื่อมต่ออยู่เสมอ! 🔔",
+                description: "รับการแจ้งเตือนเมื่อสมาชิกในกลุ่มแบ่งปันบันทึกหรือเมื่อคุณมีการแจ้งเตือนการศึกษา",
+                enable: "เปิดใช้งานการแจ้งเตือน",
+                later: "ไว้ทีหลัง"
+            }
         },
         languages: {
             title: "ภาษา",
@@ -4185,6 +4293,17 @@ export const translations = {
             daysStudied: "จำนวนวันที่ศึกษา",
             successUpdate: "อัปเดตโปรไฟล์สำเร็จแล้ว!",
             errorUpdate: "อัปเดตโปรไฟล์ไม่สำเร็จ กรุณาลองใหม่อีกครั้ง",
+            notifications: "การแจ้งเตือน",
+            notificationToggle: {
+                title: "การแจ้งเตือนแบบพุช",
+                description: "รับข้อมูลอัปเดตเกี่ยวกับกิจกรรมของกลุ่มและการแจ้งเตือนการศึกษา",
+                statusEnabled: "เปิดใช้งานแล้ว",
+                statusDisabled: "ปิดใช้งานแล้ว",
+                statusBlocked: "ถูกบล็อก (ตรวจสอบการตั้งค่า)",
+                enable: "เปิดใช้งาน",
+                disable: "ปิดใช้งาน",
+                disabledSuccess: "ปิดการแจ้งเตือนแล้ว"
+            },
             deleteAccount: "ลบบัญชี",
             deleteAccountWarning: "การลบบัญชีของคุณจะลบโน้ตการศึกษา ประวัติ และการตั้งค่าโปรไฟล์ทั้งหมดของคุณอย่างถาวร การดำเนินการนี้ไม่สามารถย้อนกลับได้และไม่สามารถกู้คืนข้อมูลได้ คุณแน่ใจหรือไม่?",
             confirmDeleteAccount: "ลบบัญชีของฉัน",
@@ -4838,7 +4957,13 @@ export const translations = {
             postedANote: "{nickname}님이 노트를 게시했습니다! ✨",
             sentAMessage: "{nickname}님이 메시지를 보냈습니다! ✨",
             joinGroupStudy: "모두와 함께 경전 공부를 하시겠습니까?",
-            joinCreateGroup: "그룹 가입/생성"
+            joinCreateGroup: "그룹 가입/생성",
+            notificationPrompt: {
+                title: "소식을 받아보세요! 🔔",
+                description: "그룹 멤버가 노트를 공유하거나 학습 리마인더가 있을 때 알림을 받습니다.",
+                enable: "알림 켜기",
+                later: "나중에"
+            }
         },
         languages: {
             title: "언어",
@@ -4871,6 +4996,17 @@ export const translations = {
             daysStudied: "학습한 일수",
             successUpdate: "프로필이 성공적으로 업데이트되었습니다!",
             errorUpdate: "프로필 업데이트에 실패했습니다. 다시 시도해 주세요.",
+            notifications: "알림",
+            notificationToggle: {
+                title: "푸시 알림",
+                description: "그룹 활동 소식 및 학습 리마인더를 받습니다.",
+                statusEnabled: "활성화됨",
+                statusDisabled: "비활성화됨",
+                statusBlocked: "차단됨 (설정 확인)",
+                enable: "활성화",
+                disable: "비활성화",
+                disabledSuccess: "알림이 비활성화되었습니다"
+            },
             deleteAccount: "계정 삭제",
             deleteAccountWarning: "계정을 삭제하면 모든 학습 노트, 학습 기록 및 프로필 설정이 영구적으로 삭제됩니다. 이 작업은 취소할 수 없으며 데이터를 복구할 수 없습니다. 정말로 삭제하시겠습니까?",
             confirmDeleteAccount: "내 계정 삭제",
@@ -5524,7 +5660,13 @@ export const translations = {
             postedANote: "Nag-post si {nickname} ng isang tala! ✨",
             sentAMessage: "Nagpadala si {nickname} ng isang mensahe! ✨",
             joinGroupStudy: "Gusto mo bang mag-aral ng mga banal na kasulatan kasama ang lahat?",
-            joinCreateGroup: "Sumali/Gumawa ng Grupo"
+            joinCreateGroup: "Sumali/Gumawa ng Grupo",
+            notificationPrompt: {
+                title: "Manatiling Connected! 🔔",
+                description: "Makatanggap ng notification kapag nag-share ng notes ang members o kapag may study reminders ka.",
+                enable: "I-enable ang Notifications",
+                later: "Mamaya na"
+            }
         },
         languages: {
             title: "Mga Wika",
@@ -5557,6 +5699,17 @@ export const translations = {
             daysStudied: "Mga Araw na Nag-aral",
             successUpdate: "Matagumpay na na-update ang profile!",
             errorUpdate: "Bigo ang pag-update ng profile. Mangyaring subukan muli.",
+            notifications: "Mga Notification",
+            notificationToggle: {
+                title: "Push Notifications",
+                description: "Makatanggap ng mga update tungkol sa aktibidad ng grupo at mga paalala sa pag-aaral.",
+                statusEnabled: "Enabled",
+                statusDisabled: "Disabled",
+                statusBlocked: "Blocked (I-check ang Settings)",
+                enable: "I-enable",
+                disable: "I-disable",
+                disabledSuccess: "Na-disable ang mga notification"
+            },
             deleteAccount: "I-delete ang Account",
             deleteAccountWarning: "Ang pag-delete ng iyong account ay permanenteng magbubura sa lahat ng iyong mga study notes, history, at profile settings. Ang aksyong ito ay hindi na maaaring bawiin at ang data ay hindi na maibabalik. Sigurado ka ba?",
             confirmDeleteAccount: "I-delete ang Aking Account",
@@ -6209,7 +6362,13 @@ export const translations = {
             postedANote: "{nickname} amechapisha dokezo! ✨",
             sentAMessage: "{nickname} ametuma ujumbe! ✨",
             joinGroupStudy: "Je, ungependa kujifunza maandiko na kila mtu?",
-            joinCreateGroup: "Jiunge/Unda Kikundi"
+            joinCreateGroup: "Jiunge/Unda Kikundi",
+            notificationPrompt: {
+                title: "Endelea Kuunganishwa! 🔔",
+                description: "Pata arifa wakati washiriki wa kikundi wanaposhiriki maelezo au unapokuwa na vikumbusho vya funzo.",
+                enable: "Wezesha Arifa",
+                later: "Baadaye"
+            }
         },
         languages: {
             title: "Lugha",
@@ -6242,6 +6401,17 @@ export const translations = {
             daysStudied: "Siku Ulizosoma",
             successUpdate: "Wasifu umesasishwa kikamilifu!",
             errorUpdate: "Imeshindikana kusasisha wasifu. Tafadhali jaribu tena.",
+            notifications: "Arifa",
+            notificationToggle: {
+                title: "Arifa za Push",
+                description: "Pokea habari kuhusu shughuli za kikundi na vikumbusho vya funzo.",
+                statusEnabled: "Imewezeshwa",
+                statusDisabled: "Imezimwa",
+                statusBlocked: "Imezuiwa (Angalia Mipangilio)",
+                enable: "Wezesha",
+                disable: "Zima",
+                disabledSuccess: "Arifa zimezimwa"
+            },
             deleteAccount: "Futa Akaunti",
             deleteAccountWarning: "Kufuta akaunti yako kutafuta kabisa maelezo yako yote ya funzo, historia, na mipangilio ya wasifu. Kitendo hiki hakiwezi kubatilishwa na data haiwezi kurejeshwa. Una uhakika?",
             confirmDeleteAccount: "Futa Akaunti Yangu",

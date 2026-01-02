@@ -1,0 +1,90 @@
+.notif-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+.notif-modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 24px;
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    animation: slideUpNotif 0.3s ease-out;
+}
+
+@keyframes slideUpNotif {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.notif-modal-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.notif-modal-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+    color: var(--black);
+}
+
+.notif-modal-description {
+    font-size: 1rem;
+    color: var(--gray);
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+}
+
+.notif-modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.notif-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+}
+
+.notif-btn.primary {
+    background: var(--pink);
+    color: white;
+}
+
+.notif-btn.primary:hover {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+}
+
+.notif-btn.secondary {
+    background: none;
+    color: var(--gray);
+}
+
+.notif-btn.secondary:hover {
+    color: var(--black);
+    text-decoration: underline;
+}

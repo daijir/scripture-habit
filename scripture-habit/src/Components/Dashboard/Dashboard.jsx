@@ -28,6 +28,7 @@ import Mascot from '../Mascot/Mascot';
 import Footer from '../Footer/Footer';
 import { DashboardSkeleton } from '../Skeleton/Skeleton';
 import { requestNotificationPermission } from '../../Utils/notificationHelper';
+import NotificationPromptModal from './NotificationPromptModal';
 
 
 
@@ -58,6 +59,7 @@ const Dashboard = () => {
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
   const [newNickname, setNewNickname] = useState('');
   const [isJoiningInvite, setIsJoiningInvite] = useState(false);
+  const [showNotifPrompt, setShowNotifPrompt] = useState(false);
   const { t, language } = useLanguage();
 
   const todayPlan = getTodayReadingPlan();
@@ -88,6 +90,36 @@ const Dashboard = () => {
       window.history.replaceState({}, '', newUrl);
     }
   }, [location.search, location.state]);
+
+  useEffect(() => {
+    // Show notification prompt after 3 seconds on dashboard
+    if (selectedView === 0 && !loading && userData) {
+      const timer = setTimeout(() => {
+        const isPermissionDefault = window.Notification && window.Notification.permission === 'default';
+        const lastPrompt = localStorage.getItem('lastNotifPrompt');
+        const now = Date.now();
+        const oneWeek = 7 * 24 * 60 * 60 * 1000;
+
+        if (isPermissionDefault && (!lastPrompt || now - parseInt(lastPrompt) > oneWeek)) {
+          setShowNotifPrompt(true);
+        }
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [selectedView, loading, userData]);
+
+  const handleEnableNotifications = async () => {
+    setShowNotifPrompt(false);
+    localStorage.setItem('lastNotifPrompt', Date.now().toString());
+    if (userData?.uid) {
+      await requestNotificationPermission(userData.uid, t);
+    }
+  };
+
+  const handleCloseNotifPrompt = () => {
+    setShowNotifPrompt(false);
+    localStorage.setItem('lastNotifPrompt', Date.now().toString());
+  };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -746,24 +778,6 @@ const Dashboard = () => {
                   >
                     <UilPen size="16" />
                   </button>
-                  <button
-                    className="notification-setup-btn"
-                    onClick={() => requestNotificationPermission(userData.uid, t)}
-                    title="Enable Notifications"
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      cursor: 'pointer',
-                      marginLeft: '0.2rem',
-                      color: 'var(--gray)',
-                      verticalAlign: 'middle',
-                      padding: '4px',
-                      display: 'inline-flex',
-                      alignItems: 'center'
-                    }}
-                  >
-                    <span style={{ fontSize: '16px' }}>🔔</span>
-                  </button>
                 </p>
               </div>
             </div>
@@ -1024,8 +1038,15 @@ const Dashboard = () => {
             </div>
           </div>
         )}
+
+        <NotificationPromptModal
+          isOpen={showNotifPrompt}
+          onClose={handleCloseNotifPrompt}
+          onConfirm={handleEnableNotifications}
+          t={t}
+        />
       </div>
-    </div>
+    </div >
   );
 };
 export default Dashboard;

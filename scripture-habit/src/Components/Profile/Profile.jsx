@@ -10,6 +10,7 @@ import { deleteUser } from 'firebase/auth';
 import Button from '../Button/Button';
 import { toast } from 'react-toastify';
 import Footer from '../Footer/Footer';
+import { requestNotificationPermission, disableNotifications } from '../../Utils/notificationHelper';
 
 const Profile = ({ userData, stats }) => {
     const { language, setLanguage, t } = useLanguage();
@@ -25,6 +26,35 @@ const Profile = ({ userData, stats }) => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [confirmNickname, setConfirmNickname] = useState('');
+    const [notifPermission, setNotifPermission] = useState(window.Notification ? window.Notification.permission : 'default');
+    const [isNotifLoading, setIsNotifLoading] = useState(false);
+
+    useEffect(() => {
+        if (window.Notification) {
+            setNotifPermission(window.Notification.permission);
+        }
+    }, []);
+
+    const handleToggleNotifications = async () => {
+        if (!window.Notification || !userData?.uid) return;
+
+        setIsNotifLoading(true);
+        if (window.Notification.permission === 'granted' && notifPermission === 'granted') {
+            const success = await disableNotifications(userData.uid);
+            if (success) {
+                setNotifPermission('default');
+                toast.success(t('profile.notificationToggle.disabledSuccess'));
+            }
+        } else {
+            try {
+                await requestNotificationPermission(userData.uid, t);
+                setNotifPermission(window.Notification.permission);
+            } catch (err) {
+                console.error("Toggle error:", err);
+            }
+        }
+        setIsNotifLoading(false);
+    };
 
     useEffect(() => {
         if (userData?.nickname) {
@@ -183,6 +213,27 @@ const Profile = ({ userData, stats }) => {
             <div className="dashboard-header">
                 <h1>{t('profile.title')}</h1>
                 <p className="welcome-text">{t('profile.description')}</p>
+            </div>
+
+            <div className="profile-section notification-toggle-section">
+                <div style={{ flex: 1 }}>
+                    <h2 style={{ margin: 0, fontSize: '1.1rem' }}>{t('profile.notificationToggle.title')}</h2>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--gray)', margin: '4px 0 0' }}>{t('profile.notificationToggle.description')}</p>
+                </div>
+                <div className="switch-wrapper">
+                    <label className="switch">
+                        <input
+                            type="checkbox"
+                            checked={notifPermission === 'granted'}
+                            onChange={handleToggleNotifications}
+                            disabled={isNotifLoading || notifPermission === 'denied'}
+                        />
+                        <span className="slider round"></span>
+                    </label>
+                    {notifPermission === 'denied' && (
+                        <span className="status-blocked">{t('profile.notificationToggle.statusBlocked')}</span>
+                    )}
+                </div>
             </div>
 
             <div className="profile-section">

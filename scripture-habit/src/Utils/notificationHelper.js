@@ -1,6 +1,6 @@
 import { messaging, db } from '../firebase';
-import { getToken, onMessage } from 'firebase/messaging';
-import { doc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { getToken, onMessage, deleteToken } from 'firebase/messaging';
+import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
 
 // VAPID Key from Firebase Console (Messaging -> Web Push certificates)
 const VAPID_KEY = "BM2Y3WcLC7cH5CHND3nzDh2eoNvsIxc7X2aRTaQj0TXENvee9klPqLrJvb8x2DfQ-yMgMHlXMhkal0tt6czIaKM";
@@ -137,3 +137,27 @@ export const onMessageListener = () =>
             resolve(payload);
         });
     });
+
+export const disableNotifications = async (userId) => {
+    try {
+        const registration = await navigator.serviceWorker.getRegistration();
+        if (registration) {
+            const token = await getToken(messaging, {
+                vapidKey: VAPID_KEY,
+                serviceWorkerRegistration: registration
+            });
+            if (token && userId) {
+                const userRef = doc(db, 'users', userId);
+                await updateDoc(userRef, {
+                    fcmTokens: arrayRemove(token)
+                });
+            }
+        }
+        // Also try to delete the token from local storage/FCM
+        await deleteToken(messaging);
+        return true;
+    } catch (error) {
+        console.error('Error disabling notifications:', error);
+        return false;
+    }
+};
