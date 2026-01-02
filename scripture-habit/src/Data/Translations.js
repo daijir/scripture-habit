@@ -61,7 +61,7 @@ export const translations = {
             joinGroupStudy: "Would you like to study scriptures with everyone?",
             joinCreateGroup: "Join/Create a Group",
             notificationPrompt: {
-                title: "Stay Connected! 🔔",
+                title: "Stay Connected!",
                 description: "Get notified when group members share notes or when you have study reminders.",
                 enable: "Enable Notifications",
                 later: "Maybe Later"
@@ -773,7 +773,7 @@ export const translations = {
             joinGroupStudy: "みんなと聖典学習しませんか？",
             joinCreateGroup: "グループに参加・作成する",
             notificationPrompt: {
-                title: "学びを逃さないために 🔔",
+                title: "学びを逃さないために",
                 description: "グループメンバーの投稿や学習のリマインダーを受け取ることができます。",
                 enable: "通知をオンにする",
                 later: "また今度"
@@ -1530,7 +1530,7 @@ export const translations = {
             joinGroupStudy: "Gostaria de estudar as escrituras com todos?",
             joinCreateGroup: "Entrar/Criar um Grupo",
             notificationPrompt: {
-                title: "Fique Conectado! 🔔",
+                title: "Fique Conectado!",
                 description: "Receba notificações quando membros do grupo compartilharem notas ou lembretes de estudo.",
                 enable: "Ativar Notificações",
                 later: "Talvez Depois"
@@ -2246,7 +2246,7 @@ export const translations = {
             joinGroupStudy: "想和大家一起學習聖經嗎？",
             joinCreateGroup: "加入/創建群組",
             notificationPrompt: {
-                title: "保持聯繫！🔔",
+                title: "保持聯繫！",
                 description: "當群組成員分享筆記或有研讀提醒時接收通知。",
                 enable: "啟用通知轉到",
                 later: "稍後再說"
@@ -2932,7 +2932,7 @@ export const translations = {
             joinGroupStudy: "¿Te gustaría estudiar las escrituras con todos?",
             joinCreateGroup: "Unirse/Crear un Grupo",
             notificationPrompt: {
-                title: "¡Mantente Conectado! 🔔",
+                title: "¡Mantente Conectado!",
                 description: "Recibe notificaciones cuando los miembros del grupo compartan notas o tengas recordatorios de estudio.",
                 enable: "Activar Notificaciones",
                 later: "Más Tarde"
@@ -3619,7 +3619,7 @@ export const translations = {
             joinGroupStudy: "Bạn có muốn học thánh thư cùng mọi người không?",
             joinCreateGroup: "Tham gia/Tạo một nhóm",
             notificationPrompt: {
-                title: "Luôn Kết Nối! 🔔",
+                title: "Luôn Kết Nối!",
                 description: "Nhận thông báo khi các thành viên trong nhóm chia sẻ ghi chú hoặc lời nhắc học tập.",
                 enable: "Bật Thông báo",
                 later: "Để Sau"
@@ -4304,7 +4304,7 @@ export const translations = {
             joinGroupStudy: "อยากศึกษาสถาบันกับทุกคนไหม?",
             joinCreateGroup: "เข้าร่วม/สร้างกลุ่ม",
             notificationPrompt: {
-                title: "เชื่อมต่ออยู่เสมอ! 🔔",
+                title: "เชื่อมต่ออยู่เสมอ!",
                 description: "รับการแจ้งเตือนเมื่อสมาชิกในกลุ่มแบ่งปันบันทึกหรือเมื่อคุณมีการแจ้งเตือนการศึกษา",
                 enable: "เปิดใช้งานการแจ้งเตือน",
                 later: "ไว้ทีหลัง"
@@ -5015,7 +5015,7 @@ export const translations = {
             joinGroupStudy: "모두와 함께 경전 공부를 하시겠습니까?",
             joinCreateGroup: "그룹 가입/생성",
             notificationPrompt: {
-                title: "소식을 받아보세요! 🔔",
+                title: "소식을 받아보세요!",
                 description: "그룹 멤버가 노트를 공유하거나 학습 리마인더가 있을 때 알림을 받습니다.",
                 enable: "알림 켜기",
                 later: "나중에"
@@ -5726,7 +5726,7 @@ export const translations = {
             joinGroupStudy: "Gusto mo bang mag-aral ng mga banal na kasulatan kasama ang lahat?",
             joinCreateGroup: "Sumali/Gumawa ng Grupo",
             notificationPrompt: {
-                title: "Manatiling Connected! 🔔",
+                title: "Manatiling Connected!",
                 description: "Makatanggap ng notification kapag nag-share ng notes ang members o kapag may study reminders ka.",
                 enable: "I-enable ang Notifications",
                 later: "Mamaya na"
@@ -6436,7 +6436,7 @@ export const translations = {
             joinGroupStudy: "Je, ungependa kujifunza maandiko na kila mtu?",
             joinCreateGroup: "Jiunge/Unda Kikundi",
             notificationPrompt: {
-                title: "Endelea Kuunganishwa! 🔔",
+                title: "Endelea Kuunganishwa!",
                 description: "Pata arifa wakati washiriki wa kikundi wanaposhiriki maelezo au unapokuwa na vikumbusho vya funzo.",
                 enable: "Wezesha Arifa",
                 later: "Baadaye"
