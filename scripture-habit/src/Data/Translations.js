@@ -1315,7 +1315,7 @@ export const translations = {
             promptToday: "今日はもう読みましたか？\n一緒に学習しましょう！",
             weeklyRecapPrompt: "今週の学習を\n振り返りましょう！",
             groupOptionsPrompt: "一緒に切磋琢磨する\n仲間を見つけましょう！",
-            createGroupPrompt: "新しいグループを作成して\n友達を招待しましょう！",
+            createGroupPrompt: "新しいグループを作って\n友達を招待しましょう！",
             joinGroupPrompt: "いろんな人と勉強したい",
             createGroupPrompt2: "友達を誘って勉強したい",
             welcomeMessage: "Scripture Habitへ\nようこそ！"

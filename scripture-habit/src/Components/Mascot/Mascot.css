@@ -71,6 +71,7 @@
     color: #4A5568;
     line-height: 1.4;
     font-weight: 500;
+    text-align: center;
     white-space: pre-line;
 }
 
@@ -169,7 +170,7 @@
     }
 
     .mascot-bubble {
-        max-width: 180px;
+        max-width: 200px;
         padding: 0.5rem 0.8rem;
     }
 
