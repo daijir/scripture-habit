@@ -95,14 +95,31 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, t, timeZone 
   }, [group.id, group.name, group.translations, language]);
 
   const getEmoji = (g) => {
-    let percentage = 0;
-    if (g && g.members && g.members.length > 0) {
-      const todayStr = new Date().toLocaleDateString('en-CA', { timeZone });
-      if (g.dailyActivity && g.dailyActivity.date === todayStr && g.dailyActivity.activeMembers) {
-        const uniqueCount = new Set(g.dailyActivity.activeMembers).size;
-        percentage = Math.round((uniqueCount / g.members.length) * 100);
-      }
+    if (!g || !g.members || g.members.length === 0) return '🌑';
+
+    const todayStr = new Date().toLocaleDateString('en-CA', { timeZone });
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayTime = today.getTime();
+
+    const uniquePosters = new Set();
+
+    // SOURCE 1: dailyActivity
+    if (g.dailyActivity?.activeMembers && (g.dailyActivity.date === todayStr || g.dailyActivity.date === new Date().toDateString())) {
+      g.dailyActivity.activeMembers.forEach(uid => uniquePosters.add(uid));
     }
+
+    // SOURCE 2: memberLastActive
+    if (g.memberLastActive) {
+      Object.entries(g.memberLastActive).forEach(([uid, ts]) => {
+        let activeTime = 0;
+        if (ts?.toDate) activeTime = ts.toDate().getTime();
+        else if (ts?.seconds) activeTime = ts.seconds * 1000;
+        if (activeTime >= todayTime) uniquePosters.add(uid);
+      });
+    }
+
+    const percentage = Math.round((uniquePosters.size / g.members.length) * 100);
 
     if (percentage === 100) return '☀️';
     if (percentage >= 66) return '🌕';
