@@ -155,30 +155,34 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
     return '🌑';
   };
 
-  const timeZone = userData?.timeZone || 'UTC';
-  const todayStr = new Date().toLocaleDateString('en-CA', { timeZone });
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const todayTime = today.getTime();
+  const getUnityPercentage = (group) => {
+    if (!group || !group.members || group.members.length === 0) return 0;
 
-  const uniquePosters = new Set();
+    const timeZone = userData?.timeZone || 'UTC';
+    const todayStr = new Date().toLocaleDateString('en-CA', { timeZone });
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayTime = today.getTime();
 
-  // SOURCE 1: dailyActivity
-  if (group.dailyActivity?.activeMembers && (group.dailyActivity.date === todayStr || group.dailyActivity.date === new Date().toDateString())) {
-    group.dailyActivity.activeMembers.forEach(uid => uniquePosters.add(uid));
-  }
+    const uniquePosters = new Set();
 
-  // SOURCE 2: memberLastActive (Most reliable for notes)
-  if (group.memberLastActive) {
-    Object.entries(group.memberLastActive).forEach(([uid, ts]) => {
-      let activeTime = 0;
-      if (ts?.toDate) activeTime = ts.toDate().getTime();
-      else if (ts?.seconds) activeTime = ts.seconds * 1000;
-      if (activeTime >= todayTime) uniquePosters.add(uid);
-    });
-  }
+    // SOURCE 1: dailyActivity
+    if (group.dailyActivity?.activeMembers && (group.dailyActivity.date === todayStr || group.dailyActivity.date === new Date().toDateString())) {
+      group.dailyActivity.activeMembers.forEach(uid => uniquePosters.add(uid));
+    }
 
-  return Math.round((uniquePosters.size / group.members.length) * 100);
+    // SOURCE 2: memberLastActive (Most reliable for notes)
+    if (group.memberLastActive) {
+      Object.entries(group.memberLastActive).forEach(([uid, ts]) => {
+        let activeTime = 0;
+        if (ts?.toDate) activeTime = ts.toDate().getTime();
+        else if (ts?.seconds) activeTime = ts.seconds * 1000;
+        if (activeTime >= todayTime) uniquePosters.add(uid);
+      });
+    }
+
+    return Math.round((uniquePosters.size / group.members.length) * 100);
+  };
 
 
 
