@@ -3140,7 +3140,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
                   <div className="unity-list-section">
                     <h4 style={{ color: 'var(--pink)', display: 'flex', alignItems: 'center', gap: '6px', margin: '0 0 10px 0', fontSize: '1rem' }}>
-                      <span style={{ fontSize: '1.2rem' }}>💪</span> {t('groupChat.unityModalNotPosted') || "Let's encourage those who haven't posted yet!"}
+                      {t('groupChat.unityModalNotPosted') || "Let's encourage those who haven't posted yet!"}
                     </h4>
                     <div className="unity-nicknames" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                       {unityModalData.notPosted.length > 0 ? (
@@ -3196,7 +3196,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       {cheerTarget && (
         <div className="leave-modal-overlay cheer-modal-overlay" onClick={() => setCheerTarget(null)}>
           <div className="leave-modal-content cheer-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '360px', padding: '2rem' }}>
-            <div style={{ fontSize: '3rem', marginBottom: '1rem', textAlign: 'center' }}>💪</div>
+            <div style={{ marginBottom: '1rem', textAlign: 'center' }}></div>
             <h3 style={{ textAlign: 'center', marginBottom: '1rem', color: 'var(--black)' }}>{t('groupChat.cheerConfirmTitle') || "Send a Cheer"}</h3>
             <p style={{ textAlign: 'center', color: 'var(--gray)', marginBottom: '2rem', lineHeight: '1.4', fontSize: '1rem' }}>
               {t('groupChat.cheerConfirmMessage')?.replace('{nickname}', cheerTarget.nickname) || `Would you like to send a cheer to ${cheerTarget.nickname}?`}
