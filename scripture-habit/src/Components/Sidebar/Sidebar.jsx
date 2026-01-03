@@ -131,7 +131,7 @@ const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEm
   );
 };
 
-const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setActiveGroupId, hideMobile = false }) => {
+const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setActiveGroupId, hideMobile = false, userData }) => {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
   const [showGroupModal, setShowGroupModal] = useState(false);
@@ -155,19 +155,31 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
     return '🌑';
   };
 
-  const getUnityPercentage = (group) => {
-    if (!group || !group.members || group.members.length === 0) return 0;
+  const timeZone = userData?.timeZone || 'UTC';
+  const todayStr = new Date().toLocaleDateString('en-CA', { timeZone });
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const todayTime = today.getTime();
 
-    // Check if we have activity data for today
-    const todayStr = new Date().toDateString();
+  const uniquePosters = new Set();
 
-    if (group.dailyActivity && group.dailyActivity.date === todayStr && group.dailyActivity.activeMembers) {
-      const uniqueCount = new Set(group.dailyActivity.activeMembers).size;
-      return Math.round((uniqueCount / group.members.length) * 100);
-    }
+  // SOURCE 1: dailyActivity
+  if (group.dailyActivity?.activeMembers && (group.dailyActivity.date === todayStr || group.dailyActivity.date === new Date().toDateString())) {
+    group.dailyActivity.activeMembers.forEach(uid => uniquePosters.add(uid));
+  }
 
-    return 0;
-  };
+  // SOURCE 2: memberLastActive (Most reliable for notes)
+  if (group.memberLastActive) {
+    Object.entries(group.memberLastActive).forEach(([uid, ts]) => {
+      let activeTime = 0;
+      if (ts?.toDate) activeTime = ts.toDate().getTime();
+      else if (ts?.seconds) activeTime = ts.seconds * 1000;
+      if (activeTime >= todayTime) uniquePosters.add(uid);
+    });
+  }
+
+  return Math.round((uniquePosters.size / group.members.length) * 100);
+
 
 
 

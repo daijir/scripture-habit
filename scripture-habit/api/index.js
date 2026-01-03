@@ -897,7 +897,8 @@ app.post('/api/post-note', async (req, res) => {
                     originalNoteId: personalNoteRef.id
                 });
 
-                const todayLabel = new Date().toDateString();
+                const timeZone = userData.timeZone || 'UTC';
+                const todayLabel = new Date().toLocaleDateString('en-CA', { timeZone });
                 const updatePayload = {
                     messageCount: admin.firestore.FieldValue.increment(1),
                     noteCount: admin.firestore.FieldValue.increment(1),

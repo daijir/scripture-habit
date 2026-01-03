@@ -739,6 +739,7 @@ const Dashboard = () => {
           activeGroupId={activeGroupId}
           setActiveGroupId={setActiveGroupId}
           hideMobile={isInputFocused || isJoiningInvite}
+          userData={userData}
         />
         {selectedView === 0 && (
           <div className="DashboardContent">

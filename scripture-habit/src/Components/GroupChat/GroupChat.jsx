@@ -21,7 +21,7 @@ import UserProfileModal from '../UserProfileModal/UserProfileModal';
 import Mascot from '../Mascot/Mascot';
 import { UilExclamationTriangle } from '@iconscout/react-unicons';
 
-const GroupMenuItem = ({ group, currentGroupId, language, onSelect, t }) => {
+const GroupMenuItem = ({ group, currentGroupId, language, onSelect, t, timeZone = 'UTC' }) => {
   const [translatedName, setTranslatedName] = useState('');
   const translationAttemptedRef = useRef(false);
 
@@ -97,7 +97,7 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, t }) => {
   const getEmoji = (g) => {
     let percentage = 0;
     if (g && g.members && g.members.length > 0) {
-      const todayStr = new Date().toDateString();
+      const todayStr = new Date().toLocaleDateString('en-CA', { timeZone });
       if (g.dailyActivity && g.dailyActivity.date === todayStr && g.dailyActivity.activeMembers) {
         const uniqueCount = new Set(g.dailyActivity.activeMembers).size;
         percentage = Math.round((uniqueCount / g.members.length) * 100);
@@ -889,25 +889,41 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
     setShowUnityModal(true);
 
-    const todayStr = new Date().toDateString();
-    let postedUids = [];
-    if (groupData.dailyActivity && groupData.dailyActivity.date === todayStr && groupData.dailyActivity.activeMembers) {
-      postedUids = groupData.dailyActivity.activeMembers;
-    } else {
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const todayTime = today.getTime();
-      const uniquePosters = new Set();
-      messages.forEach(msg => {
-        let msgTime = 0;
-        if (msg.createdAt?.toDate) msgTime = msg.createdAt.toDate().getTime();
-        else if (msg.createdAt?.seconds) msgTime = msg.createdAt.seconds * 1000;
-        if (msgTime >= todayTime && msg.senderId !== 'system' && !msg.isSystemMessage && msg.isNote) {
-          uniquePosters.add(msg.senderId);
-        }
-      });
-      postedUids = Array.from(uniquePosters);
+    const timeZone = userData?.timeZone || 'UTC';
+    const todayStr = new Date().toLocaleDateString('en-CA', { timeZone });
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayTime = today.getTime();
+
+    const uniquePosters = new Set();
+
+    // SOURCE 1: dailyActivity
+    if (groupData.dailyActivity?.activeMembers && (groupData.dailyActivity.date === todayStr || groupData.dailyActivity.date === new Date().toDateString())) {
+      groupData.dailyActivity.activeMembers.forEach(uid => uniquePosters.add(uid));
     }
+
+    // SOURCE 2: memberLastActive
+    if (groupData.memberLastActive) {
+      Object.entries(groupData.memberLastActive).forEach(([uid, ts]) => {
+        let activeTime = 0;
+        if (ts?.toDate) activeTime = ts.toDate().getTime();
+        else if (ts?.seconds) activeTime = ts.seconds * 1000;
+        if (activeTime >= todayTime) uniquePosters.add(uid);
+      });
+    }
+
+    // SOURCE 3: Messages
+    messages.forEach(msg => {
+      let msgTime = 0;
+      if (msg.createdAt?.toDate) msgTime = msg.createdAt.toDate().getTime();
+      else if (msg.createdAt?.seconds) msgTime = msg.createdAt.seconds * 1000;
+      if (msgTime >= todayTime && msg.senderId !== 'system' && !msg.isSystemMessage && msg.isNote) {
+        uniquePosters.add(msg.senderId);
+      }
+    });
+
+    const postedUids = Array.from(uniquePosters);
 
     const notPostedUids = groupData.members.filter(uid => !postedUids.includes(uid));
 
@@ -1910,43 +1926,50 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
   // Calculate Unity Score (Percentage of members who posted today)
   const unityPercentage = useMemo(() => {
-    // Safety check: Ensure the groupData belongs to the current groupId to prevent stale data usage on switch
     if (!groupData?.members || groupData.members.length === 0 || groupData?._groupId !== groupId) return 0;
 
-    const todayStr = new Date().toDateString();
-    let uniquePostersCount = 0;
+    const timeZone = userData?.timeZone || 'UTC';
+    const todayStr = new Date().toLocaleDateString('en-CA', { timeZone });
 
-    // PRIMARY SOURCE: dailyActivity from Firestore (This matches Sidebar)
-    if (groupData.dailyActivity && groupData.dailyActivity.date === todayStr && groupData.dailyActivity.activeMembers) {
-      uniquePostersCount = groupData.dailyActivity.activeMembers.length;
-    } else {
-      // FALLBACK: Calculate locally (only if no server data for today)
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const todayTime = today.getTime();
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayTime = today.getTime();
 
-      const uniquePosters = new Set();
+    const uniquePosters = new Set();
 
-      messages.forEach(msg => {
-        // Check if message is from today
-        let msgTime = 0;
-        if (msg.createdAt?.toDate) {
-          msgTime = msg.createdAt.toDate().getTime();
-        } else if (msg.createdAt?.seconds) {
-          msgTime = msg.createdAt.seconds * 1000;
-        }
-
-        // Filter out system messages and ensure it is a NOTE
-        if (msgTime >= todayTime && msg.senderId !== 'system' && !msg.isSystemMessage && msg.isNote) {
-          uniquePosters.add(msg.senderId);
-        }
-      });
-      uniquePostersCount = uniquePosters.size;
+    // SOURCE 1: dailyActivity (Current day metadata)
+    if (groupData.dailyActivity?.activeMembers && (groupData.dailyActivity.date === todayStr || groupData.dailyActivity.date === new Date().toDateString())) {
+      groupData.dailyActivity.activeMembers.forEach(uid => uniquePosters.add(uid));
     }
 
+    // SOURCE 2: memberLastActive (Per-member note tracking)
+    if (groupData.memberLastActive) {
+      Object.entries(groupData.memberLastActive).forEach(([uid, ts]) => {
+        let activeTime = 0;
+        if (ts?.toDate) activeTime = ts.toDate().getTime();
+        else if (ts?.seconds) activeTime = ts.seconds * 1000;
+
+        if (activeTime >= todayTime) {
+          uniquePosters.add(uid);
+        }
+      });
+    }
+
+    // SOURCE 3: Recent messages (Fallback for safety)
+    messages.forEach(msg => {
+      let msgTime = 0;
+      if (msg.createdAt?.toDate) msgTime = msg.createdAt.toDate().getTime();
+      else if (msg.createdAt?.seconds) msgTime = msg.createdAt.seconds * 1000;
+
+      if (msgTime >= todayTime && msg.senderId !== 'system' && !msg.isSystemMessage && msg.isNote) {
+        uniquePosters.add(msg.senderId);
+      }
+    });
+
+    const uniquePostersCount = uniquePosters.size;
     const score = Math.round((uniquePostersCount / groupData.members.length) * 100);
     return Math.min(100, Math.max(0, score));
-  }, [messages, groupData, groupId]);
+  }, [messages, groupData, groupId, userData?.timeZone]);
 
   // Synchronize Daily Activity Data removed because it caused infinite loops and quota issues.
   // Daily activity is now updated explicitly when sending messages/notes.
@@ -2320,6 +2343,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                       setShowMobileMenu(false);
                     }}
                     t={t}
+                    timeZone={userData?.timeZone}
                   />
                 ))}
               </div>
