@@ -5,7 +5,7 @@ import { collection, addDoc, doc, updateDoc, arrayUnion } from 'firebase/firesto
 import { useNavigate, Link } from 'react-router-dom';
 import Input from '../Input/Input';
 import Button from '../Button/Button';
-import Checkbox from '../Input/Checkbox';
+import Toggle from '../Input/Toggle';
 import { toast } from "react-toastify";
 import { useLanguage } from '../../Context/LanguageContext';
 import Mascot from '../Mascot/Mascot';
@@ -96,12 +96,19 @@ export default function GroupForm() {
 
           {/* Max members input removed for unlimited members */}
 
-          <Checkbox
-            label={t('groupForm.publicGroupLabel')}
-            id="isPublic"
-            checked={isPublic}
-            onChange={(e) => setIsPublic(e.target.checked)}
-          />
+          <div className="group-settings-section">
+            <Toggle
+              label={isPublic ? t('groupForm.publicLabel') : t('groupForm.privateLabel')}
+              id="isPublic"
+              checked={isPublic}
+              onChange={(e) => setIsPublic(e.target.checked)}
+            />
+            <div className="setting-description">
+              <p className="description-text">
+                {isPublic ? t('groupForm.publicDescription') : t('groupForm.privateDescription')}
+              </p>
+            </div>
+          </div>
 
           <Button type="submit" className="create-group-submit-btn">
             {t('groupForm.createButton')}

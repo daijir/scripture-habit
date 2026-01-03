@@ -101,6 +101,49 @@
   background: rgba(255, 255, 255, 0.5);
 }
 
+.group-settings-section {
+  width: 100%;
+  max-width: 300px;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1rem 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.group-settings-section:hover {
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.setting-description {
+  margin-top: 0.5rem;
+  text-align: left;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.description-text {
+  color: #64748b;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media screen and (max-width: 768px) {
   .GroupForm .AppGlass {
     background-color: transparent !important;
