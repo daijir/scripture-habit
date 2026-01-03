@@ -991,6 +991,7 @@ const Dashboard = () => {
             onInputFocusChange={setIsInputFocused}
             onBack={() => setSelectedView(0)}
             onGroupSelect={setActiveGroupId}
+            isExternalModalOpen={isModalOpen || showEditProfileModal || showWelcomeStory || showNotifPrompt || isJoiningInvite}
           />
         )}
         {selectedView === 3 && (

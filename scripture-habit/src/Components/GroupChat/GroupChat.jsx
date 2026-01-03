@@ -144,7 +144,7 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, t }) => {
   );
 };
 
-const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInputFocusChange, onBack, onGroupSelect }) => {
+const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInputFocusChange, onBack, onGroupSelect, isExternalModalOpen = false }) => {
   const { language, t } = useLanguage();
   const API_BASE = Capacitor.isNativePlatform() ? 'https://scripturehabit.app' : '';
   const navigate = useNavigate();
@@ -1906,7 +1906,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     handleGenerateWeeklyRecap();
   };
 
-  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit || showEditNameModal || showMembersModal || showUnityModal || showInviteModal || showReportModal;
+  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit || showEditNameModal || showMembersModal || showUnityModal || showInviteModal || showReportModal || cheerTarget || isExternalModalOpen;
 
   // Calculate Unity Score (Percentage of members who posted today)
   const unityPercentage = useMemo(() => {
