@@ -138,179 +138,61 @@
     margin-right: auto;
 }
 
-.donate-methods-header {
-    font-size: 1.1rem;
-    color: #2D3748;
-    margin-bottom: 2.5rem;
-    margin-top: 2.5rem;
-    font-weight: 500;
+/* Story Content Styles */
+.story-card {
+    text-align: left !important;
+    padding: 3rem !important;
 }
 
-.donate-section {
+.story-content {
+    margin-top: 2rem;
+}
+
+.story-title {
+    font-size: 1.8rem;
+    color: #2D3748;
     margin-bottom: 2rem;
+    font-weight: 700;
+    text-align: center;
+    position: relative;
+    padding-bottom: 0.5rem;
 }
 
-.donate-section h3 {
-    font-size: 1.4rem;
+.story-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: var(--pink);
+    border-radius: 2px;
+}
+
+.story-text {
+    white-space: pre-wrap;
+    line-height: 2;
     color: #2D3748;
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+    font-size: 1.1rem;
+    text-align: justify;
 }
 
-.qr-code-container {
-    display: flex;
-    justify-content: center;
-    margin: 0;
-    width: 100%;
-}
-
-.paypay-qr-code {
-    max-width: 100%;
-    /* Fill container width */
-    width: 100%;
-    height: auto;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid #E2E8F0;
-}
-
-.donate-section p {
-    color: #4A5568;
+.story-text p {
     margin-bottom: 1.5rem;
 }
 
-.donate-buttons-container {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 2rem;
-    margin-bottom: 2rem;
-    flex-wrap: wrap;
-}
-
-.donate-btn-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1rem;
-    width: 250px;
-}
-
-.donate-action-btn {
-    color: white;
-    border: none;
-    padding: 15px 30px;
-    font-size: 1rem;
-    font-weight: 600;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    min-width: 200px;
-    white-space: pre-line;
-    line-height: 1.4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5rem;
-}
-
-.paypay-btn {
-    background-color: #EB333F;
-}
-
-.paypay-btn:hover {
-    background-color: #C91E29;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(235, 51, 63, 0.3);
-}
-
-.stripe-btn:hover {
-    background-color: #554cef !important;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(99, 91, 255, 0.4) !important;
-}
-
-.paypal-btn {
-    background-color: #0070BA;
-}
-
-.paypal-btn:hover {
-    background-color: #005EA6;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 112, 186, 0.3);
-}
-
-.fade-in {
-    animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.donate-contact-text {
-    font-size: 0.95rem;
-    color: #718096;
-}
-
 @media (max-width: 768px) {
-    .donate-card {
-        padding: 2rem 1rem;
+    .story-card {
+        padding: 2rem 1.2rem !important;
     }
 
-    .donate-main-header {
+    .story-title {
         font-size: 1.5rem;
     }
-}
 
-.donate-suggestions {
-    margin: 2rem auto;
-    max-width: 600px;
-    background: #F7FAFC;
-    padding: 1.5rem;
-    border-radius: 12px;
-    text-align: center;
-    border: 1px solid #E2E8F0;
-}
-
-.donate-suggestions h3 {
-    font-size: 1.1rem;
-    color: #2D3748;
-    margin-bottom: 1rem;
-    text-align: center;
-    font-weight: 600;
-}
-
-.donate-suggestions ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.donate-suggestions li {
-    margin-bottom: 0.8rem;
-    color: #4A5568;
-    font-size: 1rem;
-    line-height: 1.5;
-    padding: 0.6rem 1rem;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    white-space: pre-line;
-    /* Handle \n from translations */
-    text-align: center;
-}
-
-.donate-suggestions li:last-child {
-    margin-bottom: 0;
+    .story-text {
+        font-size: 1rem;
+        line-height: 1.8;
+    }
 }

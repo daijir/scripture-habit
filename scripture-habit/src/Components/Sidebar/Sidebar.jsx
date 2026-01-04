@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 import { SidebarData } from '../../Data/Data';
-import { UilSignOutAlt, UilPlusCircle, UilUsersAlt, UilHeart } from '@iconscout/react-unicons';
+import {
+  UilEstate,
+  UilClipboardNotes,
+  UilUser,
+  UilUsersAlt,
+  UilBookOpen,
+  UilSignOutAlt,
+  UilGlobe,
+  UilPlusCircle,
+} from "@iconscout/react-unicons";
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../../firebase';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
@@ -254,8 +263,8 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
           </div>
 
           <div className={selected === 4 ? 'menuItem active' : 'menuItem'} onClick={() => setSelected(4)}>
-            <UilHeart />
-            <span>{t('sidebar.donate')}</span>
+            <UilBookOpen />
+            <span>{t('sidebar.story')}</span>
           </div>
         </div>
       </div>

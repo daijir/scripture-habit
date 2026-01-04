@@ -19,9 +19,6 @@ const Footer = () => {
                         {t('terms.title')}
                     </span>
                     <span className="footer-separator">•</span>
-                    <span className="footer-link" onClick={() => navigate('/legal')}>
-                        {t('legalDisclosure.title')}
-                    </span>
                 </div>
                 <div className="footer-copyright">
                     © {new Date().getFullYear()} Scripture Habit
