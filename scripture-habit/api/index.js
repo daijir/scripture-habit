@@ -807,6 +807,7 @@ app.post('/api/post-note', async (req, res) => {
             messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**${label}:** ${chapter}\n\n${comment}`;
         }
 
+        let groupsToPostTo = [];
         const result = await db.runTransaction(async (transaction) => {
             const userRef = db.collection('users').doc(uid);
             const userDoc = await transaction.get(userRef);
@@ -857,7 +858,6 @@ app.post('/api/post-note', async (req, res) => {
             }
 
             // 2. Determine target groups
-            let groupsToPostTo = [];
             if (shareOption === 'all') {
                 groupsToPostTo = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
             } else if (shareOption === 'specific') {
@@ -965,32 +965,34 @@ app.post('/api/post-note', async (req, res) => {
         // Send push notifications after successful transaction
         // Await before response to ensure completion in Vercel/Serverless environment
         try {
+            const lang = language || 'ja'; // Default to ja as per user's likely preference
             const titleMap = {
-                'ja': '📖 新しい勉強ノート',
-                'es': '📖 Nueva nota de estudio',
-                'pt': '📖 Nova nota de estudo',
-                'ko': '📖 새로운 공부 노트',
-                'zho': '📖 新的學習筆記',
-                'vi': '📖 Ghi chú học tập mới',
-                'th': '📖 บันทึกการศึกษาใหม่',
-                'tl': '📖 Bagong Study Note',
-                'sw': '📖 Kumbukumbu Mpya ya Mafunzo'
+                'ja': '📖 聖典学習',
+                'en': '📖 Scripture Study',
+                'es': '📖 Estudio de las escrituras',
+                'pt': '📖 Estudo das escrituras',
+                'ko': '📖 성경 공부',
+                'zho': '📖 聖經學習',
+                'vi': '📖 Học thánh thư',
+                'th': '📖 การศึกษาพระคัมภีร์',
+                'tl': '📖 Pag-aaral ng Banal na Kasulatan',
+                'sw': '📖 Funzo la Maandiko'
             };
             const bodyTemplateMap = {
-                'ja': '{nickname}さんが新しいノートを投稿しました：{scripture} {chapter}',
-                'es': '{nickname} publicó una nueva nota: {scripture} {chapter}',
-                'pt': '{nickname} postou uma nova nota: {scripture} {chapter}',
-                'ko': '{nickname}님이 새로운 노트를 게시했습니다: {scripture} {chapter}',
-                'zho': '{nickname} 發布了新的筆記：{scripture} {chapter}',
-                'vi': '{nickname} đã đăng một ghi chú mới: {scripture} {chapter}',
-                'th': '{nickname} โพสต์บันทึกใหม่: {scripture} {chapter}',
-                'tl': '{nickname} ay nag-post ng bagong note: {scripture} {chapter}',
-                'sw': '{nickname} ameweka kumbukumbu mpya: {scripture} {chapter}'
+                'ja': '{nickname}さんがノートを投稿しました！✨',
+                'en': '{nickname} posted a note! ✨',
+                'es': '¡{nickname} publicó una nota! ✨',
+                'pt': '{nickname} postou uma nota! ✨',
+                'ko': '{nickname}님이 노트를 게시했습니다! ✨',
+                'zho': '{nickname} 發布了筆記！✨',
+                'vi': '{nickname} đã đăng một ghi chú! ✨',
+                'th': '{nickname} โพสต์บันทึกแล้ว! ✨',
+                'tl': '{nickname} ay nag-post ng note! ✨',
+                'sw': '{nickname} ameweka kumbukumbu! ✨'
             };
 
-            const lang = language || 'en';
-            const title = titleMap[lang] || '📖 New Study Note';
-            const bodyTemplate = bodyTemplateMap[lang] || '{nickname} posted a new note: {scripture} {chapter}';
+            const title = titleMap[lang] || titleMap['en'];
+            const bodyTemplate = bodyTemplateMap[lang] || bodyTemplateMap['en'];
 
             const userSnap = await db.collection('users').doc(uid).get();
             const nickname = userSnap.data()?.nickname || 'Member';

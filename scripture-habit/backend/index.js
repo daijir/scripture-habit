@@ -711,12 +711,14 @@ app.post('/post-note', async (req, res) => {
       messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**${label}:** ${chapter}\n\n${comment || ''}`;
     }
 
+    let groupsToPostTo = [];
+    let userData = {};
     const result = await db.runTransaction(async (transaction) => {
       console.log('Starting transaction...');
       const userRef = db.collection('users').doc(uid);
       const userDoc = await transaction.get(userRef);
       if (!userDoc.exists) throw new Error('User not found.');
-      const userData = userDoc.data();
+      userData = userDoc.data();
 
       // 1. Streak and Stats Logic
       let timeZone = 'UTC';
@@ -772,7 +774,6 @@ app.post('/post-note', async (req, res) => {
       }
 
       // 2. Determine target groups
-      let groupsToPostTo = [];
       if (shareOption === 'all') {
         groupsToPostTo = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
       } else if (shareOption === 'specific') {
@@ -886,10 +887,36 @@ app.post('/post-note', async (req, res) => {
     // This is done asynchronously so we don't delay the response to the user
     (async () => {
       try {
-        const title = language === 'ja' ? '📖 新しい勉強ノート' : '📖 New Study Note';
-        const body = language === 'ja'
-          ? `${userData.nickname || 'メンバー'}さんが新しいノートを投稿しました：${scripture} ${chapter}`
-          : `${userData.nickname || 'Member'} posted a new note: ${scripture} ${chapter}`;
+        const lang = language || 'ja';
+        const titleMap = {
+          'ja': '📖 聖典学習',
+          'en': '📖 Scripture Study',
+          'es': '📖 Estudio de las escrituras',
+          'pt': '📖 Estudo das escrituras',
+          'ko': '📖 성경 공부',
+          'zho': '📖 聖經學習',
+          'vi': '📖 Học thánh thư',
+          'th': '📖 การศึกษาพระคัมภีร์',
+          'tl': '📖 Pag-aaral ng Banal na Kasulatan',
+          'sw': '📖 Funzo la Maandiko'
+        };
+        const bodyTemplateMap = {
+          'ja': '{nickname}さんがノートを投稿しました！✨',
+          'en': '{nickname} posted a note! ✨',
+          'es': '¡{nickname} publicó una nota! ✨',
+          'pt': '{nickname} postou uma nota! ✨',
+          'ko': '{nickname}님이 노트를 게시했습니다! ✨',
+          'zho': '{nickname} 發布了筆記！✨',
+          'vi': '{nickname} đã đăng một ghi chú! ✨',
+          'th': '{nickname} โพสต์บันทึกแล้ว! ✨',
+          'tl': '{nickname} ay nag-post ng note! ✨',
+          'sw': '{nickname} ameweka kumbukumbu! ✨'
+        };
+
+        const title = titleMap[lang] || titleMap['en'];
+        const bodyTemplate = bodyTemplateMap[lang] || bodyTemplateMap['en'];
+        const nickname = userData.nickname || (lang === 'ja' ? 'メンバー' : 'Member');
+        const body = bodyTemplate.replace('{nickname}', nickname);
 
         for (const gid of groupsToPostTo) {
           await notifyGroupMembers(gid, uid, {
