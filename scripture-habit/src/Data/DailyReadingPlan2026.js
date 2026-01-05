@@ -11,6 +11,13 @@ export const DailyReadingPlan2026 = [
     { day: 10, scripts: ["Abraham 3:1-11"], date: "2026-01-07" },
     { day: 11, scripts: ["Abraham 3:12-20"], date: "2026-01-08" },
     { day: 12, scripts: ["Abraham 3:21-28"], date: "2026-01-09" },
+    { day: 13, scripts: ["Genesis 1:1-25", "Moses 2:1-25", "Abraham 4:1-25","Doctrine and Covenants 101:32-34"], date: "2026-01-10" },
+    { day: 14, scripts: ["Genesis 1:26-27", "Moses 2:26-27", "Abraham 4:26-27"], date: "2026-01-11" },
+    { day: 15, scripts: ["Mosiah 3:19", "Ether 12:27"], date: "2026-01-12" },
+    { day: 16, scripts: ["Genesis 1:27-28", "Genesis 2:18-25"], date: "2026-01-13" },
+    { day: 17, scripts: ["Genesis 2:26-28", "Genesis 3:1-15", "1 Corinthians 11:11"], date: "2026-01-14" },
+    { day: 18, scripts: ["Moses 3:18, 21-24", "Abraham 5:14-18", "The Family: A Proclamation to the World"], date: "2026-01-15" },
+    { day: 19, scripts: ["Genesis 2:2-3", "Moses 3:2-3", "Abraham 5:2-3", "Doctrine and Covenants 59:9-13"], date: "2026-01-16" },
 ];
 
 // Function to retrieve today's reading plan
