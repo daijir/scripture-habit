@@ -35,10 +35,12 @@ import LegalDisclosure from './Components/LegalDisclosure/LegalDisclosure';
 
 const SEOManager = () => {
   const { t, language } = useLanguage();
+  const location = useLocation();
 
   useEffect(() => {
     // Update Document Title
-    document.title = t('seo.title') || "Scripture Habit";
+    const title = t('seo.title') || "Scripture Habit";
+    document.title = title;
 
     // Update Meta Description
     const description = t('seo.description');
@@ -49,15 +51,32 @@ const SEOManager = () => {
     }
 
     // Update OG/Twitter Titles
-    const title = t('seo.title');
     if (title) {
       document.querySelector('meta[property="og:title"]')?.setAttribute('content', title);
       document.querySelector('meta[property="twitter:title"]')?.setAttribute('content', title);
     }
 
+    // Update Canonical Tag
+    // Remove any trailing slashes and ensure it's the full URL
+    const canonicalUrl = `https://scripturehabit.app${location.pathname === '/' ? '' : location.pathname}`;
+    let canonicalTag = document.querySelector('link[rel="canonical"]');
+
+    if (canonicalTag) {
+      canonicalTag.setAttribute('href', canonicalUrl);
+    } else {
+      canonicalTag = document.createElement('link');
+      canonicalTag.setAttribute('rel', 'canonical');
+      canonicalTag.setAttribute('href', canonicalUrl);
+      document.head.appendChild(canonicalTag);
+    }
+
+    // Update OG URL
+    document.querySelector('meta[property="og:url"]')?.setAttribute('content', canonicalUrl);
+    document.querySelector('meta[property="twitter:url"]')?.setAttribute('content', canonicalUrl);
+
     // Update HTML lang attribute
-    document.documentElement.lang = language || 'en';
-  }, [language, t]);
+    document.documentElement.lang = language || 'ja';
+  }, [language, t, location.pathname]);
 
   return null;
 };
