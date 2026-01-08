@@ -5,6 +5,30 @@
             "schedule": "0 0 * * *"
         }
     ],
+    "redirects": [
+        {
+            "source": "/(.*)",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "scripture-habit.vercel.app"
+                }
+            ],
+            "destination": "https://scripturehabit.app/$1",
+            "permanent": true
+        },
+        {
+            "source": "/(.*)",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "www.scripturehabit.app"
+                }
+            ],
+            "destination": "https://scripturehabit.app/$1",
+            "permanent": true
+        }
+    ],
     "rewrites": [
         {
             "source": "/api/(.*)",
