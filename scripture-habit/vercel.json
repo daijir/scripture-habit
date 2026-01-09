@@ -5,6 +5,7 @@
             "schedule": "0 0 * * *"
         }
     ],
+    "trailingSlash": true,
     "redirects": [
         {
             "source": "/(.*)",
@@ -40,6 +41,21 @@
         }
     ],
     "headers": [
+        {
+            "source": "/(.*)",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "scripture-habit\\.vercel\\.app"
+                }
+            ],
+            "headers": [
+                {
+                    "key": "X-Robots-Tag",
+                    "value": "noindex"
+                }
+            ]
+        },
         {
             "source": "/(.*)",
             "headers": [
