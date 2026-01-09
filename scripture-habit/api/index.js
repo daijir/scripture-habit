@@ -75,8 +75,8 @@ const translateSchema = z.object({
 const postNoteSchema = z.object({
     chapter: z.string().min(1).max(500),
     scripture: z.string().min(1).max(100),
-    title: z.string().max(200).optional(),
-    speaker: z.string().max(100).optional(),
+    title: z.string().max(200).optional().nullable(),
+    speaker: z.string().max(100).optional().nullable(),
     comment: z.string().max(10000),
     shareOption: z.enum(['all', 'current', 'specific', 'none']),
     selectedShareGroups: z.array(z.string()).optional().nullable(),

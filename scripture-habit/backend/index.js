@@ -112,6 +112,8 @@ const supportedLanguages = ['en', 'ja', 'es', 'pt', 'zh', 'zho', 'vi', 'th', 'ko
 const postNoteSchema = z.object({
   chapter: z.string().min(1).max(500),
   scripture: z.string().min(1).max(100),
+  title: z.string().max(200).optional().nullable(),
+  speaker: z.string().max(100).optional().nullable(),
   comment: z.string().max(10000),
   shareOption: z.enum(['all', 'current', 'specific', 'none']),
   selectedShareGroups: z.array(z.string()).optional().nullable(),
@@ -687,7 +689,7 @@ app.post('/post-note', async (req, res) => {
     return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
   }
 
-  const { chapter, scripture, comment, shareOption, selectedShareGroups, isGroupContext, currentGroupId, language } = validation.data;
+  const { chapter, scripture, title, speaker, comment, shareOption, selectedShareGroups, isGroupContext, currentGroupId, language } = validation.data;
 
   const authHeader = req.headers.authorization;
   let idToken;
@@ -713,7 +715,8 @@ app.post('/post-note', async (req, res) => {
       // chapter holds the raw URL. ALWAYS save it to text body.
       messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Url:** ${chapter}\n\n${comment || ''}`;
     } else if (isGC) {
-      messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Talk:** ${chapter}\n\n${comment || ''}`;
+      const talkVal = title || chapter || "";
+      messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Talk:** ${talkVal}\n\n${comment || ''}`;
     } else {
       let label = isBYU ? "Speech" : "Chapter";
       messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**${label}:** ${chapter}\n\n${comment || ''}`;
@@ -857,6 +860,8 @@ app.post('/post-note', async (req, res) => {
         createdAt: noteTimestamp,
         scripture: scripture,
         chapter: chapter,
+        title: title || null,
+        speaker: speaker || null,
         comment: comment || '',
         shareOption: shareOption,
         sharedWithGroups: groupsToPostTo,
