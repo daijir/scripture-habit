@@ -16,9 +16,10 @@ export const useGCMetadata = (urlOrSlug, language) => {
         // It must look like a URL or a specific slug structure
         // If it's just "Alma 7", we don't fetch.
         // We look for "churchofjesuschrist.org" or "general-conference"
-        const isUrl = urlOrSlug.includes('churchofjesuschrist.org') || urlOrSlug.includes('general-conference');
+        const isUrlStr = urlOrSlug.startsWith('http');
+        const isChurchUrl = urlOrSlug.includes('churchofjesuschrist.org') || urlOrSlug.includes('general-conference');
 
-        if (!isUrl) {
+        if (!isUrlStr) {
             return;
         }
 
@@ -78,7 +79,8 @@ export const useGCMetadata = (urlOrSlug, language) => {
                 let apiLang = langMap[language] || 'eng';
                 // For Chinese, Church often uses ?lang=zho for Traditional.
 
-                const finalApiUrl = `${API_BASE}/api/fetch-gc-metadata?url=${encodeURIComponent(fetchUrl)}&lang=${apiLang}`;
+                const endpoint = isChurchUrl ? '/api/fetch-gc-metadata' : '/api/url-preview';
+                const finalApiUrl = `${API_BASE}${endpoint}?url=${encodeURIComponent(fetchUrl)}&lang=${apiLang}`;
 
                 const response = await fetch(finalApiUrl);
                 if (!response.ok) {
@@ -88,13 +90,17 @@ export const useGCMetadata = (urlOrSlug, language) => {
                 const result = await response.json();
 
                 // Update Cache
-                const meta = { title: result.title, speaker: result.speaker };
+                const meta = {
+                    title: result.title || '',
+                    speaker: result.speaker || ''
+                };
+
                 localStorage.setItem(cacheKey, JSON.stringify(meta));
                 memoryCache[cacheKey] = meta;
 
                 setData(meta);
             } catch (err) {
-                console.error("Error fetching GC metadata:", err);
+                console.error("Error fetching metadata:", err);
                 setError(err);
             } finally {
                 setLoading(false);

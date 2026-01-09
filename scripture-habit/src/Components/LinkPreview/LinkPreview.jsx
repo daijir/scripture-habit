@@ -3,7 +3,7 @@ import './LinkPreview.css';
 
 import { Capacitor } from '@capacitor/core';
 
-const LinkPreview = ({ url, isSent }) => {
+const LinkPreview = ({ url, isSent, language, t }) => {
     const [preview, setPreview] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -18,10 +18,13 @@ const LinkPreview = ({ url, isSent }) => {
                 setError(false);
 
                 const baseUrl = Capacitor.isNativePlatform() ? API_BASE_URL : '';
-                const response = await fetch(`${baseUrl}/api/url-preview?url=${encodeURIComponent(url)}`);
+                const langParam = language ? `&lang=${language}` : '';
+                const response = await fetch(`${baseUrl}/api/url-preview?url=${encodeURIComponent(url)}${langParam}`, {
+                    cache: 'no-store'
+                });
 
                 if (!response.ok) {
-                    throw new Error('Failed to fetch preview');
+                    throw new Error(`Failed to fetch preview: ${response.status}`);
                 }
 
                 const data = await response.json();
@@ -88,7 +91,7 @@ const LinkPreview = ({ url, isSent }) => {
                     <span>{preview.siteName || new URL(url).hostname}</span>
                 </div>
                 <div className="link-preview-title">
-                    {preview.title || url}
+                    {preview.title && preview.title !== url ? preview.title : preview.siteName || url}
                 </div>
                 {preview.description && (
                     <div className="link-preview-description">

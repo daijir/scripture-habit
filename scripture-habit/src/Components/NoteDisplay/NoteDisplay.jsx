@@ -6,308 +6,225 @@ import { translateChapterField } from '../../Utils/bookNameTranslations';
 import { NOTE_HEADER_REGEX, removeNoteHeader } from '../../Utils/noteUtils';
 import LinkPreview from '../LinkPreview/LinkPreview';
 
-
-// Helper to check if a string is likely a GC URL or Shortcode
+/**
+ * Checks if a string is a URL or a GC-style shortcode.
+ */
 const isGCUrl = (str) => {
     if (!str) return false;
-    // URL check: Any churchofjesuschrist.org study URL might have metadata
-    if (str.includes('churchofjesuschrist.org') && (str.includes('/study/') || str.includes('general-conference'))) return true;
-    // Shortcode check: "2023/04/nelson" or "2023/10/peacemakers-needed"
-    // Regex: 4 digits / 2 digits / chars
-    return /^\d{4}\/\d{2}\/.+$/.test(str);
+    const clean = str.trim();
+    if (clean.toLowerCase().startsWith('http')) return true;
+    return /^\d{4}\/\d{2}\/.+$/.test(clean);
 };
 
-const GCNoteRenderer = ({ parts, url, language, t, isSent, linkColor, translatedText }) => {
+const extractUrls = (text) => {
+    if (!text) return [];
+    const urlPattern = /https?:\/\/[^\s"']+/gi;
+    const matches = text.match(urlPattern);
+    if (!matches) return [];
+
+    const seen = new Set();
+    return matches.map(url => url.replace(/[.,:;"')\]]+$/, '')).filter(url => {
+        if (seen.has(url)) return false;
+        seen.add(url);
+        return true;
+    });
+};
+
+// Map scripture names to translation keys
+const translateScriptureName = (name, t) => {
+    if (!name) return '';
+    const map = {
+        'Old Testament': 'scriptures.oldTestament',
+        'New Testament': 'scriptures.newTestament',
+        'Book of Mormon': 'scriptures.bookOfMormon',
+        'Doctrine and Covenants': 'scriptures.doctrineAndCovenants',
+        'Pearl of Great Price': 'scriptures.pearlOfGreatPrice',
+        'Ordinances and Proclamations': 'scriptures.ordinancesAndProclamations',
+        'General Conference': 'scriptures.generalConference',
+        'BYU Speeches': 'scriptures.byuSpeeches',
+        'Other': 'scriptures.other',
+        'その他': 'scriptures.other'
+    };
+    const key = map[name];
+    return key ? t(key) : name;
+};
+
+/**
+ * Renders rich content (Titles, Labels)
+ */
+const GCNoteRenderer = ({ header, scriptureValue, chapterValue, comment, url, language, t, isSent, linkColor, translatedText }) => {
     const { data, loading } = useGCMetadata(url, language);
 
-    const content = useMemo(() => {
-        let displayContent = url;
+    const scripLower = (scriptureValue || '').toLowerCase();
+    const isOther = scripLower.includes('other') || scripLower.includes('その他') || scriptureValue === '';
+    const isBYU = scripLower.includes('byu');
 
-        if (data && data.title) {
-            let label = data.title;
-            // Add speaker if available
-            if (data.speaker) {
-                // Formatting: "Title (Speaker)"
-                // Note: Title often contains quote marks, we might want to ensure they are handled
-                label = `"${data.title}" (${data.speaker})`;
-            }
-            // Just show the text, not a link
-            displayContent = label;
-        } else if (loading) {
-            displayContent = `_Loading info..._`;
+    const constructedMd = useMemo(() => {
+        let headerLabel = t('noteLabels.newStudyNote');
+        if (header && (header.includes('Entry') || header.includes('エントリ'))) {
+            headerLabel = t('noteLabels.newStudyEntry');
         }
-
-        // Reconstruct message
-        // header is like "📖 **Header**"
-        // scripture is "**Scripture:** Value"
-        // chapter line is "**Talk:** Value"
-        // comment line is "**Comment:**"
-        // comment body
-
-        let headerTrans = parts.header;
-        if (headerTrans.includes('New Study Note')) headerTrans = `📖 **${t('noteLabels.newStudyNote')}**`;
-        if (headerTrans.includes('New Study Entry')) headerTrans = `📖 **${t('noteLabels.newStudyEntry')}**`;
+        const headerLine = `📖 **${headerLabel}**`;
 
         const scriptureLabel = t('noteLabels.scripture');
-        const scriptureValue = t('scriptures.generalConference');
-        const talkLabel = t('noteLabels.talk'); // "Talk" or "話"
+        const scriptName = translateScriptureName(scriptureValue, t);
+
+        let fieldLabel = t('noteLabels.talk');
+        if (isOther) fieldLabel = t('noteLabels.title');
+        else if (isBYU) fieldLabel = t('noteLabels.speech');
+
+        let fieldValue = url;
+        if (loading) {
+            fieldValue = `_${t('noteLabels.fetchingInfo') || 'Loading info...'}_`;
+        } else if (data && data.title) {
+            fieldValue = (data.speaker && !isOther) ? `${data.title} (${data.speaker})` : data.title;
+        }
+
         const commentLabel = t('noteLabels.comment');
+        const commentWithLinks = (comment || '').replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)');
 
-        // Allow URLs in comments to be clickable
-        const commentWithLinks = parts.comment.replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)');
+        // First 3 lines use single newline to remove gaps. Comment uses double newline.
+        return [
+            headerLine,
+            `**${scriptureLabel}:** ${scriptName}`,
+            `**${fieldLabel}:** ${fieldValue}`,
+            `\n**${commentLabel}:**\n${commentWithLinks}`
+        ].join('\n').trim();
 
-        return `
-${headerTrans}
-
-**${scriptureLabel}:** ${scriptureValue}
-
-**${talkLabel}:** ${displayContent}
-
-**${commentLabel}:**
-${commentWithLinks}${translatedText ? `\n\n---\n✨ **AI ${t('groupChat.translated')}:**\n${translatedText}` : ''}
-        `.trim();
-
-    }, [data, loading, parts, url, language, t]);
-
-    // Extract URLs from comments
-    const commentUrls = extractUrls(parts.comment);
+    }, [data, loading, header, scriptureValue, comment, t, url, isOther, isBYU]);
 
     return (
         <div style={{ textAlign: 'left' }}>
-            <ReactMarkdown
-                components={{
-                    a: ({ node, ...props }) => (
-                        <a
-                            {...props}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                                color: linkColor || 'black', // GC Renderer uses black usually, or use linkColor
-                                textDecoration: 'none'
-                            }}
-                            onClick={(e) => e.stopPropagation()}
-                        />
-                    ),
-                    strong: ({ node, ...props }) => (
-                        <strong {...props} style={{ color: 'inherit' }} />
-                    ),
-                    p: ({ node, ...props }) => (
-                        <p {...props} style={{ margin: '0.4rem 0', lineHeight: '1.4' }} />
-                    )
-                }}
-            >
-                {content}
+            <ReactMarkdown components={{
+                a: p => <a {...p} target="_blank" rel="noopener noreferrer" style={{ color: linkColor || (isSent ? 'white' : 'var(--purple)'), textDecoration: 'underline' }} onClick={(e) => e.stopPropagation()} />,
+                p: p => <p {...p} style={{ margin: '0.6rem 0', lineHeight: '1.5' }} />
+            }}>
+                {constructedMd}
             </ReactMarkdown>
-            {commentUrls.length > 0 && (
-                <div className="note-link-previews" style={{ marginTop: '0.5rem' }}>
-                    {commentUrls.map((u, idx) => (
-                        <LinkPreview key={idx} url={u} isSent={isSent} />
-                    ))}
+            {translatedText && (
+                <div style={{ marginTop: '0.8rem', borderTop: '1px dashed #ccc', paddingTop: '0.6rem' }}>
+                    <div style={{ fontSize: '0.75rem', opacity: 0.8, fontWeight: 'bold' }}>✨ AI {t('groupChat.translated')}</div>
+                    <ReactMarkdown components={{ p: p => <p {...p} style={{ margin: '0.3rem 0' }} /> }}>{translatedText}</ReactMarkdown>
                 </div>
             )}
         </div>
     );
 };
 
-// ... imports ...
-
-// Helper to extract URLs
-const extractUrls = (text) => {
-    if (!text) return [];
-    const urlPattern = /(https?:\/\/[^\s]+)/g;
-    const matches = text.match(urlPattern);
-    if (!matches) return [];
-
-    return matches.map(url => {
-        return url.replace(/[.,:;"')\]]+$/, '');
-    });
-};
-
+/**
+ * Main Entry for Note Display
+ */
 const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
     const { language, t } = useLanguage();
 
-    // 1. Parse content to see if it matches the structure
-    // Regex based on "src/Components/GroupChat/GroupChat.jsx" formatNoteForDisplay
-
-    // Header
+    // 1. Structure Check
     const headerMatch = text.match(NOTE_HEADER_REGEX);
+    const hasCategoryLabel = text.includes('カテゴリ:') || text.includes('カテゴリ：') || text.includes('Scripture:') || text.includes('Category:');
 
-    // If not a note, return standard markdown (or null if we only use this for notes)
-    // But GroupChat uses this for ALL messages if we replace the renderer.
-    // So we need to handle non-notes too.
-    if (!headerMatch) {
-        // Extract URLs for plain messages
+    if (!headerMatch && !hasCategoryLabel) {
         const simpleUrls = extractUrls(text);
-
-        // Auto-linkify plain text for valid markdown rendering
-        // Careful not to break existing markdown links
-        const processedText = text.replace(/(?<!\]\()https?:\/\/[^\s]+/g, '[$&]($&)');
-
+        const processedText = (text || '').replace(/(?<!\]\()https?:\/\/[^\s]+/g, '[$&]($&)');
         return (
             <div style={{ textAlign: 'left' }}>
-                <ReactMarkdown
-                    components={{
-                        a: ({ node, ...props }) => (
-                            <a
-                                {...props}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                    color: linkColor || (isSent ? 'white' : 'var(--purple)'),
-                                    textDecoration: 'underline'
-                                }}
-                                onClick={(e) => e.stopPropagation()}
-                            />
-                        )
-                    }}
-                >
+                <ReactMarkdown components={{
+                    a: p => <a {...p} target="_blank" rel="noopener noreferrer" style={{ color: linkColor || (isSent ? 'white' : 'var(--purple)'), textDecoration: 'underline' }} onClick={e => e.stopPropagation()} />,
+                    p: p => <p {...p} style={{ margin: '0.4rem 0', whiteSpace: 'pre-wrap' }} />
+                }}>
                     {processedText}
                 </ReactMarkdown>
                 {translatedText && (
                     <div style={{ marginTop: '0.5rem', borderTop: '1px dashed #ccc', paddingTop: '0.5rem' }}>
-                        <div style={{ fontSize: '0.75rem', opacity: 0.8, marginBottom: '0.3rem' }}>
-                            <span>✨ AI {t('groupChat.translated')}</span>
-                        </div>
-                        <ReactMarkdown>{translatedText}</ReactMarkdown>
+                        <div style={{ fontSize: '0.75rem', opacity: 0.8, fontWeight: 'bold' }}>✨ AI {t('groupChat.translated')}</div>
+                        <ReactMarkdown components={{ p: p => <p {...p} style={{ margin: '0.3rem 0', whiteSpace: 'pre-wrap' }} /> }}>{translatedText}</ReactMarkdown>
                     </div>
                 )}
                 {simpleUrls.length > 0 && (
-                    <div className="note-link-previews" style={{ marginTop: '0.5rem' }}>
-                        {simpleUrls.map((u, idx) => (
-                            <LinkPreview key={idx} url={u} isSent={isSent} />
-                        ))}
-                    </div>
+                    <div style={{ marginTop: '0.5rem' }}>{simpleUrls.map((u, i) => <LinkPreview key={i} url={u} isSent={isSent} language={language} t={t} />)}</div>
                 )}
             </div>
         );
     }
 
-    const body = removeNoteHeader(text);
+    // 2. Parse Structured Note
+    const contentBody = headerMatch ? removeNoteHeader(text) : text;
+    const lines = contentBody.split('\n');
 
-    // ... extraction logic ...
+    let scriptureValue = '';
+    let chapterValue = '';
+    let commentLines = [];
 
-    const scriptureMatch = body.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
-    const chapterMatch = body.match(/\*\*(?:Chapter|Title|Speech|Talk):\*\* (.*?)(?:\n|$)/);
+    lines.forEach(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return;
 
-    const scriptureName = scriptureMatch ? scriptureMatch[1].trim() : '';
-    const chapterValue = chapterMatch ? chapterMatch[1].trim() : '';
+        const dividerIndex = trimmed.indexOf(':') !== -1 ? trimmed.indexOf(':') : trimmed.indexOf('：');
 
-    // Check if it's GC
-    const gcVariants = [
-        'General Conference', '総大会', 'Conferência Geral', '總會大會',
-        'Conferencia General', 'Đại Hội Trung Ương', 'การประชุมใหญ่สามัญ',
-        '연차 대회', 'Pangkalahatang Kumperensya', 'Mkutano Mkuu'
-    ];
+        if (dividerIndex !== -1 && dividerIndex < 40) {
+            const labelRaw = trimmed.substring(0, dividerIndex).replace(/\*/g, '').trim().toLowerCase();
+            const value = trimmed.substring(dividerIndex + 1).replace(/\*\*/g, '').trim();
 
-    if (gcVariants.includes(scriptureName)) {
-        // If chapterValue is a clean URL, use the GC Renderer
-        if (isGCUrl(chapterValue)) {
-            const parts = {
-                header: headerMatch[0].trim(),
-                scriptureValue: scriptureName,
-                chapterValueOriginal: chapterValue,
-                comment: body.substring(chapterMatch.index + chapterMatch[0].length).trim()
-            };
-            return <GCNoteRenderer parts={parts} url={chapterValue} language={language} t={t} isSent={isSent} linkColor={linkColor} translatedText={translatedText} />;
+            if (labelRaw.includes('scripture') || labelRaw.includes('カテゴリ')) {
+                scriptureValue = value;
+            } else if (
+                labelRaw.includes('chapter') || labelRaw.includes('url') || labelRaw.includes('title') ||
+                labelRaw.includes('章') || labelRaw.includes('リンク') || labelRaw.includes('speech') ||
+                labelRaw.includes('talk') || labelRaw.includes('スピーチ') || labelRaw.includes('お話')
+            ) {
+                chapterValue = value;
+            } else if (labelRaw.includes('comment') || labelRaw.includes('コメント')) {
+                if (value) commentLines.push(value);
+            } else {
+                commentLines.push(trimmed);
+            }
+        } else {
+            commentLines.push(trimmed);
         }
+    });
+
+    const comment = commentLines.join('\n').trim();
+    const allUrls = extractUrls(text);
+    const primaryUrl = isGCUrl(chapterValue) ? chapterValue : (allUrls[0] || null);
+
+    const scripLower = (scriptureValue || '').toLowerCase();
+    const isOther = scripLower.includes('other') || scripLower.includes('その他') || scriptureValue === '';
+    const isGC = scripLower.includes('general') || scripLower.includes('総大会');
+    const isBYU = scripLower.includes('byu');
+
+    if (primaryUrl && (isGC || isOther || isBYU)) {
+        return (
+            <GCNoteRenderer
+                header={headerMatch ? headerMatch[0].trim() : ''}
+                scriptureValue={scriptureValue}
+                chapterValue={chapterValue}
+                comment={comment}
+                url={primaryUrl}
+                language={language} t={t} isSent={isSent} linkColor={linkColor} translatedText={translatedText}
+            />
+        );
     }
 
-    // Default formatting for non-GC or non-URL-GC notes
-    // We can reconstruct the string here using translations and render MD
+    const headerLabel = (headerMatch && (headerMatch[0].includes('Entry') || headerMatch[0].includes('エントリ'))) ? t('noteLabels.newStudyEntry') : t('noteLabels.newStudyNote');
+    const scriptureNameTrans = translateScriptureName(scriptureValue, t);
+    let chapLabel = isOther ? t('noteLabels.title') : (isBYU ? t('noteLabels.speech') : t('noteLabels.chapter'));
 
-    let headerTrans = headerMatch[0].trim();
-    if (headerTrans.includes('New Study Note')) headerTrans = `📖 **${t('noteLabels.newStudyNote')}**`;
-    if (headerTrans.includes('New Study Entry')) headerTrans = `📖 **${t('noteLabels.newStudyEntry')}**`;
-
-    // Translate scripture name
-    const translateScripture = (name) => {
-        // Simple mapping based on your app's standard keys
-        const map = {
-            'Old Testament': 'scriptures.oldTestament',
-            'New Testament': 'scriptures.newTestament',
-            'Book of Mormon': 'scriptures.bookOfMormon',
-            'Doctrine and Covenants': 'scriptures.doctrineAndCovenants',
-            'Pearl of Great Price': 'scriptures.pearlOfGreatPrice',
-            'Ordinances and Proclamations': 'scriptures.ordinancesAndProclamations',
-            'General Conference': 'scriptures.generalConference',
-            // Add legacy/other variants if needed
-        };
-        const key = map[name];
-        return key ? t(key) : name;
-    };
-
-    const scripValTrans = translateScripture(scriptureName);
-
-    // Translate Chapter/Label
-    let chapLabel = t('noteLabels.chapter');
-    if (body.includes('**Title:**')) chapLabel = t('noteLabels.title');
-    if (body.includes('**Speech:**')) chapLabel = t('noteLabels.speech');
-    if (scriptureName === 'General Conference' || scriptureName === '総大会') chapLabel = t('noteLabels.talk');
-
-    // Translate Chapter Value (e.g. "Alma 7")
-    const chapValTrans = translateChapterField(chapterValue, language);
-
-    // Comment
-    const commentLabel = t('noteLabels.comment');
-    let comment = '';
-    if (chapterMatch) {
-        comment = body.substring(chapterMatch.index + chapterMatch[0].length).trim();
-    } else if (scriptureMatch) {
-        comment = body.substring(scriptureMatch.index + scriptureMatch[0].length).trim();
-    } else {
-        comment = body;
-    }
-
-    // Extract URLs from comment for preview
-    const commentUrls = extractUrls(comment);
-
-    // Linkify URLs in comments
-    const commentWithLinks = comment.replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)');
-
-    const constructedMd = `
-${headerTrans}
-
-**${t('noteLabels.scripture')}:** ${scripValTrans}
-
-**${chapLabel}:** ${chapValTrans}
-
-**${commentLabel}:**
-${commentWithLinks}${translatedText ? `\n\n---\n✨ **AI ${t('groupChat.translated')}:**\n${translatedText}` : ''}
-    `.trim();
+    // Re-arranged for single newline for first 3 items
+    const finalMd = [
+        `📖 **${headerLabel}**`,
+        `**${t('noteLabels.scripture')}:** ${scriptureNameTrans}`,
+        (translateChapterField(chapterValue, language) || chapterValue) ? `**${chapLabel}:** ${translateChapterField(chapterValue, language) || chapterValue}` : null,
+        `\n**${t('noteLabels.comment')}:**\n${comment.replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)')}`
+    ].filter(Boolean).join('\n').trim();
 
     return (
         <div style={{ textAlign: 'left' }}>
-            <ReactMarkdown
-                components={{
-                    a: ({ node, ...props }) => (
-                        <a
-                            {...props}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                                color: linkColor || (isSent ? 'white' : 'var(--purple)'),
-                                textDecoration: 'underline'
-                            }}
-                            onClick={(e) => e.stopPropagation()}
-                        />
-                    ),
-                    p: ({ node, ...props }) => (
-                        <p {...props} style={{ margin: '0.4rem 0', lineHeight: '1.4' }} />
-                    )
-                }}
-            >
-                {constructedMd}
+            <ReactMarkdown components={{
+                p: p => <p {...p} style={{ margin: '0.6rem 0', lineHeight: '1.5' }} />,
+                a: p => <a {...p} target="_blank" rel="noopener noreferrer" style={{ color: linkColor || (isSent ? 'white' : 'var(--purple)'), textDecoration: 'underline' }} onClick={e => e.stopPropagation()} />
+            }}>
+                {finalMd}
             </ReactMarkdown>
-            {commentUrls.length > 0 && (
-                <div className="note-link-previews" style={{ marginTop: '0.5rem' }}>
-                    {commentUrls.map((url, idx) => (
-                        <LinkPreview key={idx} url={url} isSent={isSent} />
-                    ))}
-                </div>
-            )}
         </div>
     );
-
 };
 
 export default NoteDisplay;

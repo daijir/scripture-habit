@@ -75,6 +75,8 @@ const translateSchema = z.object({
 const postNoteSchema = z.object({
     chapter: z.string().min(1).max(500),
     scripture: z.string().min(1).max(100),
+    title: z.string().max(200).optional(),
+    speaker: z.string().max(100).optional(),
     comment: z.string().max(10000),
     shareOption: z.enum(['all', 'current', 'specific', 'none']),
     selectedShareGroups: z.array(z.string()).optional().nullable(),
@@ -784,7 +786,7 @@ app.post('/api/post-note', async (req, res) => {
         return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
     }
 
-    const { chapter, scripture, comment, shareOption, selectedShareGroups, isGroupContext, currentGroupId, language } = validation.data;
+    const { chapter, scripture, title, speaker, comment, shareOption, selectedShareGroups, isGroupContext, currentGroupId, language } = validation.data;
 
     const authHeader = req.headers.authorization;
     let idToken;
@@ -799,11 +801,20 @@ app.post('/api/post-note', async (req, res) => {
         const uid = decodedToken.uid;
         const db = admin.firestore();
 
+        const sLower = (scripture || "").toLowerCase();
+        const isOther = sLower.includes("other") || sLower.includes("その他") || scripture === "";
+        const isGC = sLower.includes("general") || sLower.includes("総大会");
+        const isBYU = sLower.includes("byu");
+
         let messageText;
-        if (scripture === "Other") {
-            messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n${comment}`;
+        if (isOther) {
+            // ALWAYS save the raw URL to the text body
+            messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Url:** ${chapter}\n\n${comment}`;
+        } else if (isGC) {
+            const talkVal = title || chapter || "";
+            messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Talk:** ${talkVal}\n\n${comment}`;
         } else {
-            let label = (scripture === "BYU Speeches") ? "Speech" : "Chapter";
+            let label = isBYU ? "Speech" : "Chapter";
             messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**${label}:** ${chapter}\n\n${comment}`;
         }
 
@@ -931,6 +942,8 @@ app.post('/api/post-note', async (req, res) => {
                 createdAt: noteTimestamp,
                 scripture: scripture,
                 chapter: chapter,
+                title: title || null,
+                speaker: speaker || null,
                 comment: comment,
                 shareOption: shareOption,
                 sharedWithGroups: groupsToPostTo,
@@ -1321,6 +1334,91 @@ app.get('/api/fetch-gc-metadata', async (req, res) => {
     } catch (error) {
         console.error('Error scraping GC:', error.message);
         res.json({ title: '', speaker: '' });
+    }
+});
+
+app.get('/api/url-preview', async (req, res) => {
+    const { url, lang } = req.query;
+
+    if (!url) {
+        return res.status(400).json({ error: 'URL parameter is required' });
+    }
+
+    try {
+        const parsedUrl = new URL(url);
+
+        // If it's a Church of Jesus Christ URL, append the lang parameter for localized metadata
+        if (lang && (parsedUrl.hostname.includes('churchofjesuschrist.org') || parsedUrl.hostname.includes('general-conference'))) {
+            parsedUrl.searchParams.set('lang', lang);
+        }
+
+        const fetchUrl = parsedUrl.toString();
+
+        const response = await axios.get(fetchUrl, {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                'Accept-Language': 'en-US,en;q=0.5',
+            },
+            timeout: 5000
+        });
+
+        const $ = cheerio.load(response.data);
+
+        const title = $('meta[property="og:title"]').attr('content') ||
+            $('meta[name="twitter:title"]').attr('content') ||
+            $('title').text().trim() ||
+            parsedUrl.hostname;
+
+        const description = $('meta[property="og:description"]').attr('content') ||
+            $('meta[name="description"]').attr('content') ||
+            $('meta[name="twitter:description"]').attr('content') ||
+            null;
+
+        const image = $('meta[property="og:image"]').attr('content') ||
+            $('meta[name="twitter:image"]').attr('content') ||
+            null;
+
+        const siteName = $('meta[property="og:site_name"]').attr('content') || parsedUrl.hostname;
+
+        let favicon = $('link[rel="shortcut icon"]').attr('href') ||
+            $('link[rel="icon"]').attr('href') ||
+            $('link[rel*="icon"]').attr('href');
+
+        if (favicon && !favicon.startsWith('http')) {
+            favicon = new URL(favicon, url).href;
+        } else if (!favicon) {
+            favicon = `https://www.google.com/s2/favicons?domain=${parsedUrl.hostname}&sz=64`;
+        }
+
+        let displayTitle = title;
+        if (displayTitle.includes(' | ')) displayTitle = displayTitle.split(' | ')[0];
+        if (displayTitle.includes(' - ')) displayTitle = displayTitle.split(' - ')[0];
+
+        res.json({
+            url,
+            title: displayTitle.trim(),
+            description: description ? description.trim() : null,
+            image,
+            favicon,
+            siteName: siteName
+        });
+
+    } catch (error) {
+        console.error('Error fetching URL preview:', error.message);
+        try {
+            const parsedUrl = new URL(url);
+            res.json({
+                url,
+                title: parsedUrl.hostname,
+                description: null,
+                image: null,
+                favicon: `https://www.google.com/s2/favicons?domain=${parsedUrl.hostname}&sz=64`,
+                siteName: parsedUrl.hostname
+            });
+        } catch {
+            res.status(400).json({ error: 'Invalid URL' });
+        }
     }
 });
 

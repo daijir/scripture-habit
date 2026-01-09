@@ -390,14 +390,20 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
         try {
             let messageText;
-            if (scripture === "Other") {
-                // For "Other" category, don't include Chapter/URL in the display text
-                messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n${comment}`;
+            // Improved detection for Other/GC/BYU to ensure URL inclusion
+            const sLower = (scripture || "").toLowerCase();
+            const isOther = sLower.includes("other") || sLower.includes("その他") || scripture === "";
+            const isGC = sLower.includes("general") || sLower.includes("総大会");
+            const isBYU = sLower.includes("byu");
+
+            if (isOther) {
+                // chapter holds the raw URL. ALWAYS save it as a visible line.
+                messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Url:** ${chapter}\n\n${comment}`;
+            } else if (isGC) {
+                const talkVal = gcMeta?.title || chapter || "";
+                messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Talk:** ${talkVal}\n\n${comment}`;
             } else {
-                let label = "Chapter";
-                if (scripture === "BYU Speeches") {
-                    label = "Speech";
-                }
+                let label = isBYU ? "Speech" : "Chapter";
                 messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**${label}:** ${chapter}\n\n${comment}`;
             }
 
@@ -463,7 +469,9 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         text: messageText,
                         scripture: scripture,
                         chapter: chapter,
-                        comment: comment
+                        comment: comment,
+                        title: gcMeta?.title || null,
+                        speaker: gcMeta?.speaker || null
                     });
 
                     // SYNC TO GROUPS
@@ -555,6 +563,8 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 const response = await axios.post(`${API_BASE}/api/post-note`, {
                     chapter,
                     scripture,
+                    title: gcMeta?.title || null,
+                    speaker: gcMeta?.speaker || null,
                     comment,
                     shareOption,
                     selectedShareGroups,

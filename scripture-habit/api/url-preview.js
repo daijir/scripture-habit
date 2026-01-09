@@ -1,136 +1,107 @@
-// Vercel Serverless Function to fetch URL metadata for previews
+const axios = require('axios');
+const cheerio = require('cheerio');
+
 export default async function handler(req, res) {
-    // Set CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
+    if (req.method === 'OPTIONS') return res.status(200).end();
+    if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
 
-    if (req.method !== 'GET') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
-
-    const { url } = req.query;
-
-    if (!url) {
-        return res.status(400).json({ error: 'URL parameter is required' });
-    }
+    const { url, lang } = req.query;
+    if (!url) return res.status(400).json({ error: 'URL is required' });
 
     try {
-        // Validate URL
         const parsedUrl = new URL(url);
+        const isChurchUrl = parsedUrl.hostname.includes('churchofjesuschrist.org') || parsedUrl.hostname.includes('general-conference');
 
-        // Fetch the page
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+        if (lang && isChurchUrl) {
+            parsedUrl.searchParams.set('lang', lang);
+        }
 
-        const response = await fetch(url, {
+        const fetchUrl = parsedUrl.toString();
+
+        const response = await axios.get(fetchUrl, {
             headers: {
-                'User-Agent': 'Mozilla/5.0 (compatible; ScriptureHabitBot/1.0)',
-                'Accept': 'text/html,application/xhtml+xml',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                'Accept-Language': lang === 'ja' ? 'ja,en-US;q=0.7,en;q=0.3' : 'en-US,en;q=0.5',
             },
-            signal: controller.signal,
+            timeout: 8000
         });
 
-        clearTimeout(timeoutId);
+        const $ = cheerio.load(response.data);
 
-        if (!response.ok) {
-            return res.status(200).json({
-                url,
-                title: parsedUrl.hostname,
-                description: null,
-                image: null,
-                favicon: `https://www.google.com/s2/favicons?domain=${parsedUrl.hostname}&sz=64`
-            });
+        // 1. Specialized Title Extraction for Church URLs
+        let title = '';
+        if (isChurchUrl) {
+            title = $('meta[property="og:title"]').attr('content') ||
+                $('h1').first().text().trim() ||
+                $('title').text().trim();
+
+            // Further clean Church titles
+            if (title.includes(' | ')) title = title.split(' | ')[0];
+        } else {
+            title = $('meta[property="og:title"]').attr('content') ||
+                $('meta[name="twitter:title"]').attr('content') ||
+                $('title').text().trim() ||
+                $('h1').first().text().trim();
         }
 
-        const html = await response.text();
+        // 2. Specialized Speaker Extraction for Church URLs
+        let speaker = '';
+        if (isChurchUrl) {
+            speaker = $('div.byline p.author-name').first().text().trim() ||
+                $('p.author-name').first().text().trim() ||
+                $('a.author-name').first().text().trim();
 
-        // Parse metadata
-        const getMetaContent = (html, property) => {
-            // Try Open Graph first
-            const ogMatch = html.match(new RegExp(`<meta[^>]*property=["']og:${property}["'][^>]*content=["']([^"']+)["']`, 'i')) ||
-                html.match(new RegExp(`<meta[^>]*content=["']([^"']+)["'][^>]*property=["']og:${property}["']`, 'i'));
-            if (ogMatch) return ogMatch[1];
-
-            // Try Twitter cards
-            const twitterMatch = html.match(new RegExp(`<meta[^>]*name=["']twitter:${property}["'][^>]*content=["']([^"']+)["']`, 'i')) ||
-                html.match(new RegExp(`<meta[^>]*content=["']([^"']+)["'][^>]*name=["']twitter:${property}["']`, 'i'));
-            if (twitterMatch) return twitterMatch[1];
-
-            // Try standard meta tags
-            if (property === 'description') {
-                const descMatch = html.match(/<meta[^>]*name=["']description["'][^>]*content=["']([^"']+)["']/i) ||
-                    html.match(/<meta[^>]*content=["']([^"']+)["'][^>]*name=["']description["']/i);
-                if (descMatch) return descMatch[1];
+            if (speaker) {
+                speaker = speaker.replace(/^(By|Par|De|Por)\s+/i, '').trim();
             }
-
-            return null;
-        };
-
-        // Get title
-        let title = getMetaContent(html, 'title');
-        if (!title) {
-            const titleMatch = html.match(/<title[^>]*>([^<]+)<\/title>/i);
-            title = titleMatch ? titleMatch[1].trim() : parsedUrl.hostname;
         }
 
-        // Get description
-        const description = getMetaContent(html, 'description');
+        // Combine title and speaker if available
+        let displayTitle = title;
+        if (speaker && displayTitle && !displayTitle.includes(speaker)) {
+            displayTitle = `${title} (${speaker})`;
+        }
 
-        // Get image
-        let image = getMetaContent(html, 'image');
+        const description = $('meta[property="og:description"]').attr('content') ||
+            $('meta[name="description"]').attr('content') ||
+            null;
+
+        let image = $('meta[property="og:image"]').attr('content') ||
+            $('meta[name="twitter:image"]').attr('content');
         if (image && !image.startsWith('http')) {
-            // Handle relative URLs
             image = new URL(image, url).href;
         }
 
-        // Get favicon
-        let favicon = null;
-        const faviconMatch = html.match(/<link[^>]*rel=["'](?:shortcut )?icon["'][^>]*href=["']([^"']+)["']/i) ||
-            html.match(/<link[^>]*href=["']([^"']+)["'][^>]*rel=["'](?:shortcut )?icon["']/i);
-        if (faviconMatch) {
-            favicon = faviconMatch[1];
-            if (!favicon.startsWith('http')) {
-                favicon = new URL(favicon, url).href;
-            }
-        } else {
-            favicon = `https://www.google.com/s2/favicons?domain=${parsedUrl.hostname}&sz=64`;
-        }
+        const siteName = $('meta[property="og:site_name"]').attr('content') ||
+            (isChurchUrl ? 'Church of Jesus Christ' : parsedUrl.hostname);
 
-        // Decode HTML entities
-        const decodeHtml = (text) => {
-            if (!text) return text;
-            return text
-                .replace(/&amp;/g, '&')
-                .replace(/&lt;/g, '<')
-                .replace(/&gt;/g, '>')
-                .replace(/&quot;/g, '"')
-                .replace(/&#39;/g, "'")
-                .replace(/&#x27;/g, "'")
-                .replace(/&#x2F;/g, '/')
-                .replace(/&nbsp;/g, ' ');
-        };
+        let favicon = $('link[rel="shortcut icon"]').attr('href') ||
+            $('link[rel="icon"]').attr('href') ||
+            `https://www.google.com/s2/favicons?domain=${parsedUrl.hostname}&sz=64`;
+
+        if (favicon && !favicon.startsWith('http')) {
+            favicon = new URL(favicon, url).href;
+        }
 
         return res.status(200).json({
             url,
-            title: decodeHtml(title) || parsedUrl.hostname,
-            description: decodeHtml(description),
+            title: displayTitle ? displayTitle.trim() : parsedUrl.hostname,
+            description: description ? description.trim() : null,
             image,
             favicon,
-            siteName: parsedUrl.hostname
+            siteName: siteName
         });
 
     } catch (error) {
         console.error('Error fetching URL preview:', error.message);
-
-        // Return basic info even on error
         try {
             const parsedUrl = new URL(url);
-            return res.status(200).json({
+            return res.json({
                 url,
                 title: parsedUrl.hostname,
                 description: null,

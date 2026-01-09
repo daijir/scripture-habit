@@ -193,8 +193,8 @@ const STREAK_ANNOUNCEMENT_TEMPLATES = {
   zh: "🎉🎉🎉 **{nickname} 已連讀 {streak} 天！！** 🎉🎉🎉\n\n**讓我們在群組中互相啟發，共同分享喜悦！**",
   zho: "🎉🎉🎉 **{nickname} 已連讀 {streak} 天！！** 🎉🎉🎉\n\n**讓我們在群組中互相啟發，共同分享喜悦！**",
   vi: "🎉🎉🎉 **{nickname} đã đạt chuỗi {streak} ngày!!** 🎉🎉🎉\n\n**Hãy cùng nhau học hỏi trong nhóm và chia sẻ niềm vui nhé!**",
-  th: "🎉🎉🎉 **{nickname} บรรลุสถิติต่อต่อเนื่อง {streak} วัน!!** 🎉🎉🎉\n\n**ขอให้เราจรรโลงใจซึ่งกันและกันในกลุ่มและแบ่งปันความสุขด้วยกัน!**",
-  ko: "🎉🎉🎉 **{nickname}님이 {streak}일 연속 달성했습니다!!** 🎉🎉🎉\n\n**그룹 내에서 서로를 고취하며 기쁨을 함께 나눕시다!**",
+  th: "🎉🎉🎉 **{nickname} บรรลุสถิติต่อเนื่อง {streak} วัน!!** 🎉🎉🎉\n\n**ขอให้เราจรรโลงใจซึ่งกันและกันในกลุ่มและแบ่งปันความสุขด้วยกัน!**",
+  ko: "🎉🎉🎉 **{nickname}님이 {streak}일 연속 달성했습니다！！** 🎉🎉🎉\n\n**그룹 내에서 서로를 고취하며 기쁨을 함께 나눕시다！**",
   tl: "🎉🎉🎉 **Naabot ni {nickname} ang {streak} na araw na streak!!** 🎉🎉🎉\n\n**Magtulungan tayo sa pag-aaral sa grupo at magbahagi ng kagalakan!**",
   sw: "🎉🎉🎉 **{nickname} amefikisha mfululizo wa siku {streak}!!** 🎉🎉🎉\n\n**Na tujengane mmoja kwa mwingine katika kikundi na tushiriki furaha pamoja!**"
 };
@@ -570,7 +570,7 @@ app.post('/delete-group', async (req, res) => {
       let messageBatch = db.batch();
       let count = 0;
 
-      messagesSnapshot.docs.forEach(doc => {
+      messagesSnapshot.forEach(doc => {
         messageBatch.delete(doc.ref);
         count++;
 
@@ -703,11 +703,19 @@ app.post('/post-note', async (req, res) => {
     const db = admin.firestore();
     console.log(`User ${uid} authenticated`);
 
+    const sLower = (scripture || "").toLowerCase();
+    const isOther = sLower.includes("other") || sLower.includes("その他") || scripture === "";
+    const isGC = sLower.includes("general") || sLower.includes("総大会");
+    const isBYU = sLower.includes("byu");
+
     let messageText;
-    if (scripture === "Other") {
-      messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n${comment || ''}`;
+    if (isOther) {
+      // chapter holds the raw URL. ALWAYS save it to text body.
+      messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Url:** ${chapter}\n\n${comment || ''}`;
+    } else if (isGC) {
+      messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Talk:** ${chapter}\n\n${comment || ''}`;
     } else {
-      let label = (scripture === "BYU Speeches") ? "Speech" : "Chapter";
+      let label = isBYU ? "Speech" : "Chapter";
       messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**${label}:** ${chapter}\n\n${comment || ''}`;
     }
 
@@ -960,8 +968,11 @@ app.get('/fetch-gc-metadata', async (req, res) => {
       return res.status(400).json({ error: 'Invalid URL format' });
     }
 
-    if (lang) {
-      targetUrl.searchParams.set('lang', lang);
+    // Improve lang parameter handling: only set if provided and not empty
+    if (lang && lang.trim() !== '') {
+      targetUrl.searchParams.set('lang', lang.trim());
+    } else {
+      targetUrl.searchParams.delete('lang'); // Ensure no old lang param is present if not provided
     }
 
     let response;
@@ -1755,6 +1766,219 @@ app.post('/send-cheer', async (req, res) => {
   } catch (error) {
     console.error('Error in send-cheer:', error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/fetch-gc-metadata', async (req, res) => {
+  const { url, lang } = req.query;
+
+  if (!url) return res.status(400).send({ error: 'URL is required' });
+
+  try {
+    let targetUrl;
+    try {
+      targetUrl = new URL(url);
+    } catch (e) {
+      return res.status(400).json({ error: 'Invalid URL format' });
+    }
+
+    if (targetUrl.hostname !== 'www.churchofjesuschrist.org' && targetUrl.hostname !== 'churchofjesuschrist.org') {
+      return res.status(400).json({ error: 'Invalid URL domain.' });
+    }
+
+    if (lang) {
+      targetUrl.searchParams.set('lang', lang);
+    }
+
+    let response;
+    try {
+      response = await axios.get(targetUrl.toString(), {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        },
+        timeout: 10000
+      });
+    } catch (axiosError) {
+      if (lang) {
+        try {
+          targetUrl.searchParams.delete('lang');
+          response = await axios.get(targetUrl.toString(), {
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            },
+            timeout: 10000
+          });
+        } catch (fallbackError) {
+          return res.json({ title: '', speaker: '' });
+        }
+      } else {
+        return res.json({ title: '', speaker: '' });
+      }
+    }
+
+    if (!response || !response.data) {
+      return res.json({ title: '', speaker: '' });
+    }
+
+    const $ = cheerio.load(response.data);
+    let title = $('meta[property="og:title"]').attr('content');
+    if (!title) {
+      const h1Text = $('h1').first().text().trim();
+      if (h1Text && h1Text.length < 200) title = h1Text;
+    }
+    if (!title) {
+      title = $('title').text().trim();
+      if (title.includes('|')) title = title.split('|')[0].trim();
+    }
+
+    let speaker = '';
+    if ($('div.byline p.author-name').length) {
+      speaker = $('div.byline p.author-name').first().text().trim();
+    } else if ($('p.author-name').length) {
+      speaker = $('p.author-name').first().text().trim();
+    }
+
+    if (speaker) {
+      speaker = speaker.replace(/^(By|Par|De|Por)\s+/i, '').trim();
+    }
+
+    res.json({ title: title || '', speaker });
+  } catch (error) {
+    console.error('Error scraping GC:', error.message);
+    res.json({ title: '', speaker: '' });
+  }
+});
+
+app.get('/url-preview', async (req, res) => {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
+  const { url, lang } = req.query;
+
+  if (!url) return res.status(400).json({ error: 'URL parameter is required' });
+
+  try {
+    const parsedUrl = new URL(url);
+    const isChurchUrl = parsedUrl.hostname.includes('churchofjesuschrist.org') || parsedUrl.hostname.includes('general-conference');
+
+    if (lang && isChurchUrl) {
+      const currentLang = parsedUrl.searchParams.get('lang');
+      if (!currentLang ||
+        (lang === 'ja' && currentLang === 'jpn') ||
+        (lang === 'jpn' && currentLang === 'ja')) {
+        parsedUrl.searchParams.set('lang', lang);
+      }
+    }
+
+    const fetchWithLang = async (targetUrl, targetLang) => {
+      const u = new URL(targetUrl);
+      if (targetLang) u.searchParams.set('lang', targetLang);
+      return axios.get(u.toString(), {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0',
+          'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+        },
+        timeout: 10000
+      });
+    };
+
+    let response;
+    try {
+      response = await fetchWithLang(parsedUrl.toString());
+    } catch (err) {
+      if (err.response?.status === 404 && isChurchUrl) {
+        try {
+          const altLang = (parsedUrl.searchParams.get('lang') === 'jpn' ? 'ja' : 'jpn');
+          response = await fetchWithLang(parsedUrl.toString(), altLang);
+        } catch (err2) {
+          if (err2.response?.status === 404) {
+            const noLangUrl = new URL(parsedUrl.toString());
+            noLangUrl.searchParams.delete('lang');
+            response = await fetchWithLang(noLangUrl.toString());
+          } else throw err2;
+        }
+      } else throw err;
+    }
+
+    const $ = cheerio.load(response.data);
+
+    // 1. Specialized Title Extraction
+    let title = '';
+    if (isChurchUrl) {
+      title = $('meta[property="og:title"]').attr('content') ||
+        $('h1').first().text().trim() ||
+        $('title').text().trim();
+      if (title.includes(' | ')) title = title.split(' | ')[0];
+    } else {
+      title = $('meta[property="og:title"]').attr('content') ||
+        $('meta[name="twitter:title"]').attr('content') ||
+        $('title').text().trim() ||
+        $('h1').first().text().trim();
+    }
+
+    // 2. Specialized Speaker Extraction
+    let speaker = '';
+    if (isChurchUrl) {
+      speaker = $('div.byline p.author-name').first().text().trim() ||
+        $('p.author-name').first().text().trim() ||
+        $('a.author-name').first().text().trim();
+      if (speaker) {
+        speaker = speaker.replace(/^(By|Par|De|Por)\s+/i, '').trim();
+      }
+    }
+
+    let displayTitle = title;
+    if (speaker && displayTitle && !displayTitle.includes(speaker)) {
+      displayTitle = `${title} (${speaker})`;
+    }
+
+    const description = $('meta[property="og:description"]').attr('content') ||
+      $('meta[name="description"]').attr('content') ||
+      null;
+
+    let image = $('meta[property="og:image"]').attr('content') ||
+      $('meta[name="twitter:image"]').attr('content');
+    if (image && !image.startsWith('http')) {
+      image = new URL(image, url).href;
+    }
+
+    const siteName = $('meta[property="og:site_name"]').attr('content') ||
+      (isChurchUrl ? 'Church of Jesus Christ' : parsedUrl.hostname);
+
+    let favicon = $('link[rel="shortcut icon"]').attr('href') ||
+      $('link[rel="icon"]').attr('href') ||
+      `https://www.google.com/s2/favicons?domain=${parsedUrl.hostname}&sz=64`;
+
+    if (favicon && !favicon.startsWith('http')) {
+      favicon = new URL(favicon, url).href;
+    }
+
+
+
+    res.json({
+      url,
+      title: (displayTitle ? displayTitle.trim() : parsedUrl.hostname),
+      description: description ? description.trim() : null,
+      image,
+      favicon,
+      siteName: siteName
+    });
+  } catch (error) {
+    console.error('Error fetching URL preview:', error.message);
+    try {
+      const parsedUrl = new URL(url);
+      res.json({
+        url,
+        title: parsedUrl.hostname,
+        description: null,
+        image: null,
+        favicon: `https://www.google.com/s2/favicons?domain=${parsedUrl.hostname}&sz=64`,
+        siteName: parsedUrl.hostname
+      });
+    } catch {
+      res.status(400).json({ error: 'Invalid URL' });
+    }
   }
 });
 
