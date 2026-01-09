@@ -57,8 +57,12 @@ const SEOManager = () => {
     }
 
     // Update Canonical Tag
-    // Remove any trailing slashes and ensure it's the full URL
-    const canonicalUrl = `https://scripturehabit.app${location.pathname}`;
+    // Enforce trailing slash to match vercel.json configuration
+    let path = location.pathname;
+    if (path !== '/' && !path.endsWith('/')) {
+      path += '/';
+    }
+    const canonicalUrl = `https://scripturehabit.app${path}`;
     let canonicalTag = document.querySelector('link[rel="canonical"]');
 
     if (canonicalTag) {

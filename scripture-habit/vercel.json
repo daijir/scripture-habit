@@ -46,7 +46,7 @@
             "has": [
                 {
                     "type": "host",
-                    "value": "scripture-habit\\.vercel\\.app"
+                    "value": "scripture-habit.vercel.app"
                 }
             ],
             "headers": [
@@ -59,6 +59,10 @@
         {
             "source": "/(.*)",
             "headers": [
+                {
+                    "key": "Link",
+                    "value": "<https://scripturehabit.app/$1>; rel=\"canonical\""
+                },
                 {
                     "key": "Cross-Origin-Opener-Policy",
                     "value": "unsafe-none"
