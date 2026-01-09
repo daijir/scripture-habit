@@ -58,7 +58,7 @@ const SEOManager = () => {
 
     // Update Canonical Tag
     // Remove any trailing slashes and ensure it's the full URL
-    const canonicalUrl = `https://scripturehabit.app${location.pathname === '/' ? '' : location.pathname}`;
+    const canonicalUrl = `https://scripturehabit.app${location.pathname}`;
     let canonicalTag = document.querySelector('link[rel="canonical"]');
 
     if (canonicalTag) {
