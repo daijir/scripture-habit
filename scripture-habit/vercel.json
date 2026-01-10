@@ -12,17 +12,6 @@
             "has": [
                 {
                     "type": "host",
-                    "value": "scripture-habit.vercel.app"
-                }
-            ],
-            "destination": "https://scripturehabit.app/$1",
-            "permanent": true
-        },
-        {
-            "source": "/(.*)",
-            "has": [
-                {
-                    "type": "host",
                     "value": "www.scripturehabit.app"
                 }
             ],
