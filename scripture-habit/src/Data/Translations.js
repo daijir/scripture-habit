@@ -518,7 +518,6 @@ export const translations = {
             title: "Title",
             comment: "Comment",
             newStudyNote: "New Study Note",
-            newStudyEntry: "New Study Entry",
             talk: "Talk",
             speech: "Speech"
         },
@@ -1205,7 +1204,6 @@ export const translations = {
             title: "タイトル",
             comment: "コメント",
             newStudyNote: "新しい学習ノート",
-            newStudyEntry: "新しい学習記録",
             talk: "お話",
             speech: "スピーチ"
         },
@@ -1927,7 +1925,6 @@ export const translations = {
             title: "Título",
             comment: "Comentário",
             newStudyNote: "Nova Nota de Estudo",
-            newStudyEntry: "Nova Entrada de Estudo",
             talk: "Discurso",
             speech: "Discurso"
         },
@@ -2581,7 +2578,6 @@ export const translations = {
             title: "標題",
             comment: "心得",
             newStudyNote: "新研讀筆記",
-            newStudyEntry: "新研讀條目",
             talk: "演講",
             speech: "演講"
         },
@@ -3236,7 +3232,6 @@ export const translations = {
             title: "Título",
             comment: "Comentario",
             newStudyNote: "Nueva Nota de Estudio",
-            newStudyEntry: "Nueva Entrada de Estudio",
             talk: "Discurso",
             speech: "Discurso"
         },
@@ -3925,7 +3920,6 @@ export const translations = {
             title: "Tiêu đề",
             comment: "Bình luận",
             newStudyNote: "Ghi Chú Nghiên Cứu Mới",
-            newStudyEntry: "Mục Nghiên Cứu Mới",
             talk: "Bài nói chuyện",
             speech: "Bài phát biểu"
         },
@@ -4640,7 +4634,6 @@ export const translations = {
             title: "หัวข้อ",
             comment: "ความคิดเห็น",
             newStudyNote: "โน้ตการศึกษาใหม่",
-            newStudyEntry: "รายการการศึกษาใหม่",
             talk: "คำปราศรัย",
             speech: "สุนทรพจน์"
         },
@@ -5355,7 +5348,6 @@ export const translations = {
             title: "제목",
             comment: "코멘트",
             newStudyNote: "새 학습 노트",
-            newStudyEntry: "새 학습 항목",
             talk: "말씀",
             speech: "연설"
         },
@@ -6055,7 +6047,6 @@ export const translations = {
             title: "Pamagat",
             comment: "Komento",
             newStudyNote: "Bagong Tala sa Pag-aaral",
-            newStudyEntry: "Bagong Entry sa Pag-aaral",
             talk: "Mensahe",
             speech: "Talumpati"
         },
@@ -6769,7 +6760,6 @@ export const translations = {
             title: "Kichwa",
             comment: "Maoni",
             newStudyNote: "Dokezo Jipya la Kujifunza",
-            newStudyEntry: "Dokezo Jipya la Kujifunza",
             talk: "Hotuba",
             speech: "Hotuba"
         },

@@ -116,9 +116,6 @@ const GCNoteRenderer = ({ header, scriptureValue, chapterValue, comment, url, la
     );
 };
 
-/**
- * Main Entry for Note Display
- */
 const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
     const { language, t } = useLanguage();
 
