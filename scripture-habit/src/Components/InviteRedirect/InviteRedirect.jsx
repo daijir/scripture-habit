@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { safeStorage } from '../../Utils/storage';
 import { auth, db } from '../../firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { useLanguage } from '../../Context/LanguageContext';
@@ -15,7 +16,7 @@ export default function InviteRedirect() {
 
     useEffect(() => {
         if (inviteCode) {
-            localStorage.setItem('pendingInviteCode', inviteCode.trim().toUpperCase());
+            safeStorage.set('pendingInviteCode', inviteCode.trim().toUpperCase());
 
             // Fetch group info to show the user where they are going
             const fetchGroupInfo = async () => {

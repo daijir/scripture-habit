@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
+import { safeStorage } from '../../Utils/storage';
 import { auth, db } from '../../firebase';
 import { doc, onSnapshot, collection, query, where, orderBy, limit, updateDoc, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -104,7 +105,7 @@ const Dashboard = () => {
     if (selectedView === 0 && !loading && userData) {
       const timer = setTimeout(() => {
         const isPermissionDefault = window.Notification && window.Notification.permission === 'default';
-        const lastPrompt = localStorage.getItem('lastNotifPrompt');
+        const lastPrompt = safeStorage.get('lastNotifPrompt');
         const now = Date.now();
         const oneWeek = 7 * 24 * 60 * 60 * 1000;
 
@@ -118,7 +119,7 @@ const Dashboard = () => {
 
   const handleEnableNotifications = async () => {
     setShowNotifPrompt(false);
-    localStorage.setItem('lastNotifPrompt', Date.now().toString());
+    safeStorage.set('lastNotifPrompt', Date.now().toString());
     if (userData?.uid) {
       await requestNotificationPermission(userData.uid, t);
     }
@@ -126,7 +127,7 @@ const Dashboard = () => {
 
   const handleCloseNotifPrompt = () => {
     setShowNotifPrompt(false);
-    localStorage.setItem('lastNotifPrompt', Date.now().toString());
+    safeStorage.set('lastNotifPrompt', Date.now().toString());
   };
 
   useEffect(() => {
@@ -495,7 +496,7 @@ const Dashboard = () => {
   // --- Invitation Handling ---
   useEffect(() => {
     const processPendingInvite = async () => {
-      const inviteCode = localStorage.getItem('pendingInviteCode');
+      const inviteCode = safeStorage.get('pendingInviteCode');
       if (!inviteCode || !user || !userData || showWelcomeStory || isJoiningInvite) return;
 
       setIsJoiningInvite(true);
@@ -508,7 +509,7 @@ const Dashboard = () => {
 
         if (querySnapshot.empty) {
           console.warn("Invite code invalid or group not found");
-          localStorage.removeItem('pendingInviteCode');
+          safeStorage.remove('pendingInviteCode');
           setIsJoiningInvite(false);
           return;
         }
@@ -521,7 +522,7 @@ const Dashboard = () => {
         const currentGroupIds = userData?.groupIds || (userData?.groupId ? [userData.groupId] : []);
         if (currentGroupIds.includes(groupId)) {
           console.log("User already in this group");
-          localStorage.removeItem('pendingInviteCode');
+          safeStorage.remove('pendingInviteCode');
           setIsJoiningInvite(false);
           // Just switch to this group
           setActiveGroupId(groupId);
@@ -543,7 +544,7 @@ const Dashboard = () => {
 
         if (resp.ok) {
           // Success!
-          localStorage.removeItem('pendingInviteCode');
+          safeStorage.remove('pendingInviteCode');
           // Allow some time for Firestore listeners to catch up
           setTimeout(() => {
             setActiveGroupId(groupId);
@@ -554,13 +555,13 @@ const Dashboard = () => {
         } else {
           const errText = await resp.text();
           console.error("Failed to join via invite link:", errText);
-          localStorage.removeItem('pendingInviteCode');
+          safeStorage.remove('pendingInviteCode');
           setIsJoiningInvite(false);
         }
 
       } catch (error) {
         console.error("Error processing pending invite:", error);
-        localStorage.removeItem('pendingInviteCode');
+        safeStorage.remove('pendingInviteCode');
         setIsJoiningInvite(false);
       }
     };
@@ -666,7 +667,7 @@ const Dashboard = () => {
 
   // Allow access if user has groups, even if groupId is not set (migration case)
   const hasGroups = (userData.groupIds && userData.groupIds.length > 0) || userData.groupId;
-  const pendingInviteCode = localStorage.getItem('pendingInviteCode');
+  const pendingInviteCode = safeStorage.get('pendingInviteCode');
 
   const getDisplayStreak = () => {
     try {

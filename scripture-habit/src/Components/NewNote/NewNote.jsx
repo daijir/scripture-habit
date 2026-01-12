@@ -401,10 +401,14 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Url:** ${chapter}\n\n${comment}`;
             } else if (isGC) {
                 const talkVal = gcMeta?.title || chapter || "";
-                messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Talk:** ${talkVal}\n\n${comment}`;
+                // If chapter is a URL or shortcode, we should save it separately to ensure NoteDisplay can find it
+                const isUrl = chapter && (chapter.toLowerCase().startsWith('http') || /^\d{4}\/\d{2}\/.+/.test(chapter));
+                messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Talk:** ${talkVal}\n${isUrl ? `**Url:** ${chapter}\n` : ''}\n${comment}`;
+            } else if (isBYU) {
+                // For BYU, chapter is the URL
+                messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Speech:** ${gcMeta?.title || "Speech"}\n**Url:** ${chapter}\n\n${comment}`;
             } else {
-                let label = isBYU ? "Speech" : "Chapter";
-                messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**${label}:** ${chapter}\n\n${comment}`;
+                messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Chapter:** ${chapter}\n\n${comment}`;
             }
 
             const batch = writeBatch(db);

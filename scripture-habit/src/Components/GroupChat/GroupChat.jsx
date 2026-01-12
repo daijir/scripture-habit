@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useLayoutEffect, useMemo } from 'react';
 import * as Sentry from "@sentry/react";
+import { safeStorage } from '../../Utils/storage';
 import { Capacitor } from '@capacitor/core';
 import { db, auth } from '../../firebase';
 import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle, UilUsersAlt, UilPen, UilWhatsapp, UilCommentAlt, UilFacebookMessenger, UilInstagram } from '@iconscout/react-unicons';
@@ -358,7 +359,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   }, [groupId, groupData?.name, groupData?.description, groupData?.translations, language]);
 
   useEffect(() => {
-    const hasDismissed = localStorage.getItem('hasDismissedInactivityPolicy');
+    const hasDismissed = safeStorage.get('hasDismissedInactivityPolicy');
     if (!hasDismissed) {
     }
 
@@ -377,18 +378,18 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     if (!groupId) return;
 
     // Clean up old localStorage key (migration)
-    const oldKey = localStorage.getItem('hasSeenAddNoteTooltip');
+    const oldKey = safeStorage.get('hasSeenAddNoteTooltip');
     if (oldKey) {
-      localStorage.removeItem('hasSeenAddNoteTooltip');
+      safeStorage.remove('hasSeenAddNoteTooltip');
     }
 
     // Get current visit count
-    const visitCountStr = localStorage.getItem('groupChatVisitCount');
+    const visitCountStr = safeStorage.get('groupChatVisitCount');
     const visitCount = visitCountStr ? parseInt(visitCountStr, 10) : 0;
 
     // Increment visit count
     const newVisitCount = visitCount + 1;
-    localStorage.setItem('groupChatVisitCount', newVisitCount.toString());
+    safeStorage.set('groupChatVisitCount', newVisitCount.toString());
 
     // Show tooltip every 2th visit (1, 7, 13, 19, ...)
     if (newVisitCount % 2 === 1) {
@@ -408,7 +409,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
   const handleDismissInactivityBanner = () => {
     setShowInactivityPolicyBanner(false);
-    localStorage.setItem('hasDismissedInactivityPolicy', 'true');
+    safeStorage.set('hasDismissedInactivityPolicy', 'true');
   };
 
   // Robust ownership check
@@ -472,7 +473,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     const initMessages = async () => {
       try {
         const messagesRef = collection(db, 'groups', groupId, 'messages');
-        const lastViewedMsgId = userData?.uid ? localStorage.getItem(`last_viewed_msg_${groupId}_${userData.uid}`) : null;
+        const lastViewedMsgId = userData?.uid ? safeStorage.get(`last_viewed_msg_${groupId}_${userData.uid}`) : null;
 
         let initialMsgs = [];
         let anchorSnapshot = null;
@@ -815,7 +816,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
       // 1. Try to restore last viewed position from LocalStorage
       if (userData?.uid) {
-        const lastViewedMsgId = localStorage.getItem(`last_viewed_msg_${groupId}_${userData.uid}`);
+        const lastViewedMsgId = safeStorage.get(`last_viewed_msg_${groupId}_${userData.uid}`);
         if (lastViewedMsgId) {
           const targetEl = containerRef.current?.querySelector(`#message-${lastViewedMsgId}`);
           if (targetEl) {
@@ -1070,7 +1071,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       }
 
       if (topMessageId) {
-        localStorage.setItem(`last_viewed_msg_${groupId}_${userData.uid}`, topMessageId);
+        safeStorage.set(`last_viewed_msg_${groupId}_${userData.uid}`, topMessageId);
       }
     }, 200); // 200ms debounce
   };
@@ -1998,7 +1999,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     if (unityPercentage === 100) {
       const todayStr = new Date().toDateString();
       const storageKey = `unity_firework_${groupId}_${userData.uid}`;
-      const lastSeen = localStorage.getItem(storageKey);
+      const lastSeen = safeStorage.get(storageKey);
 
       if (lastSeen !== todayStr) {
         // Fire confetti!
@@ -2022,7 +2023,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         }, 250);
 
         // Mark as seen for today
-        localStorage.setItem(storageKey, todayStr);
+        safeStorage.set(storageKey, todayStr);
 
         // EXTRA: Send a system message to the chat if not already sent today
         // Use group-level tracking to prevent duplicates from multiple users
@@ -2812,14 +2813,17 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                                 />
                                 <div style={{ marginTop: '0.2rem' }}></div>
                                 {(() => {
-                                  // Update regex to find chapter OR title OR speech
-                                  const chapterMatch = msg.text.match(/\*\*(?:Chapter|Title|Speech):\*\* (.*?)(?:\n|$)/);
-                                  const scriptureMatch = msg.text.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
+                                  // Update regex to find chapter OR title OR speech OR talk OR url
+                                  const chapterMatch = msg.text.match(/\*\*(?:Chapter|Title|Speech|Talk|Url|章|お話|スピーチ|リンク):\*\* (.*?)(?:\n|$)/);
+                                  const scriptureMatch = msg.text.match(/\*\*(?:Scripture|Category|カテゴリ):\*\* (.*?)(?:\n|$)/);
 
-                                  // Handle "Other" category - use stored chapter as URL
+                                  // Handle "Other" category or raw URL in msg.chapter
                                   if (scriptureMatch) {
                                     const scripture = scriptureMatch[1].trim();
-                                    if (scripture === 'Other' && msg.chapter) {
+                                    const isOther = scripture === 'Other' || scripture === 'その他';
+                                    const isUrlInChapter = msg.chapter && msg.chapter.toLowerCase().startsWith('http');
+
+                                    if ((isOther || isUrlInChapter) && msg.chapter) {
                                       return (
                                         <a
                                           href={msg.chapter}

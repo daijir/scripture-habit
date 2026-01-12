@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { safeStorage } from '../../Utils/storage';
 import { useLanguage } from '../../Context/LanguageContext';
 import './CookieConsent.css';
 
@@ -8,7 +9,7 @@ const CookieConsent = () => {
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
-        const consent = localStorage.getItem('cookieConsent');
+        const consent = safeStorage.get('cookieConsent');
         if (!consent) {
             // Small delay to make it feel smooth
             const timer = setTimeout(() => setIsVisible(true), 1000);
@@ -17,7 +18,7 @@ const CookieConsent = () => {
     }, []);
 
     const handleAccept = () => {
-        localStorage.setItem('cookieConsent', 'true');
+        safeStorage.set('cookieConsent', 'true');
         setIsVisible(false);
     };
 

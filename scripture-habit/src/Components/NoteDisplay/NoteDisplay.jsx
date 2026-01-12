@@ -60,10 +60,7 @@ const GCNoteRenderer = ({ header, scriptureValue, chapterValue, comment, url, la
     const isBYU = scripLower.includes('byu');
 
     const constructedMd = useMemo(() => {
-        let headerLabel = t('noteLabels.newStudyNote');
-        if (header && (header.includes('Entry') || header.includes('エントリ'))) {
-            headerLabel = t('noteLabels.newStudyEntry');
-        }
+        const headerLabel = t('noteLabels.newStudyNote');
         const headerLine = `📖 **${headerLabel}**`;
 
         const scriptureLabel = t('noteLabels.scripture');
@@ -83,13 +80,13 @@ const GCNoteRenderer = ({ header, scriptureValue, chapterValue, comment, url, la
         const commentLabel = t('noteLabels.comment');
         const commentWithLinks = (comment || '').replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)');
 
-        // First 3 lines use single newline to remove gaps. Comment uses double newline.
+        // Use double newlines to ensure line breaks in all Markdown renderers
         return [
             headerLine,
             `**${scriptureLabel}:** ${scriptName}`,
             `**${fieldLabel}:** ${fieldValue}`,
-            `\n**${commentLabel}:**\n${commentWithLinks}`
-        ].join('\n').trim();
+            `**${commentLabel}:**\n${commentWithLinks}`
+        ].join('\n\n').trim();
 
     }, [data, loading, header, scriptureValue, comment, t, url, isOther, isBYU]);
 
@@ -147,7 +144,37 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
 
     // 2. Parse Structured Note
     const contentBody = headerMatch ? removeNoteHeader(text) : text;
-    const lines = contentBody.split('\n');
+    // Split by newlines initially
+    let initialLines = contentBody.split('\n');
+    let lines = [];
+
+    // Further split lines if they contain multiple labels on the same line
+    const labelMarkers = ['カテゴリ:', 'カテゴリ：', '章:', '章：', 'Title:', 'Title：', 'Url:', 'Url：', 'Comment:', 'Comment：', 'コメント:', 'コメント：'];
+
+    initialLines.forEach(line => {
+        let currentLine = line;
+        // Check for subsequent labels on the same line
+        let foundPos = [];
+        labelMarkers.forEach(marker => {
+            let pos = currentLine.indexOf(marker);
+            // Ignore if it's at the very beginning (already handled by split)
+            if (pos > 5) {
+                foundPos.push({ pos, marker });
+            }
+        });
+
+        if (foundPos.length > 0) {
+            foundPos.sort((a, b) => a.pos - b.pos);
+            let lastIdx = 0;
+            foundPos.forEach(fp => {
+                lines.push(currentLine.substring(lastIdx, fp.pos).trim());
+                lastIdx = fp.pos;
+            });
+            lines.push(currentLine.substring(lastIdx).trim());
+        } else {
+            lines.push(line);
+        }
+    });
 
     let scriptureValue = '';
     let chapterValue = '';
@@ -159,7 +186,7 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
 
         const dividerIndex = trimmed.indexOf(':') !== -1 ? trimmed.indexOf(':') : trimmed.indexOf('：');
 
-        if (dividerIndex !== -1 && dividerIndex < 40) {
+        if (dividerIndex !== -1 && dividerIndex < 60) {
             const labelRaw = trimmed.substring(0, dividerIndex).replace(/\*/g, '').trim().toLowerCase();
             const value = trimmed.substring(dividerIndex + 1).replace(/\*\*/g, '').trim();
 
@@ -203,17 +230,17 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
         );
     }
 
-    const headerLabel = (headerMatch && (headerMatch[0].includes('Entry') || headerMatch[0].includes('エントリ'))) ? t('noteLabels.newStudyEntry') : t('noteLabels.newStudyNote');
+    const headerLabel = t('noteLabels.newStudyNote');
     const scriptureNameTrans = translateScriptureName(scriptureValue, t);
     let chapLabel = isOther ? t('noteLabels.title') : (isBYU ? t('noteLabels.speech') : t('noteLabels.chapter'));
 
-    // Re-arranged for single newline for first 3 items
+    // Use double newlines for consistent spacing
     const finalMd = [
         `📖 **${headerLabel}**`,
         `**${t('noteLabels.scripture')}:** ${scriptureNameTrans}`,
         (translateChapterField(chapterValue, language) || chapterValue) ? `**${chapLabel}:** ${translateChapterField(chapterValue, language) || chapterValue}` : null,
-        `\n**${t('noteLabels.comment')}:**\n${comment.replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)')}`
-    ].filter(Boolean).join('\n').trim();
+        `**${t('noteLabels.comment')}:**\n${comment.replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)')}`
+    ].filter(Boolean).join('\n\n').trim();
 
     return (
         <div style={{ textAlign: 'left' }}>

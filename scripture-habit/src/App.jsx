@@ -236,44 +236,79 @@ const App = () => {
 
   const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
 
-  if (authLoading) return null; // Or a loading spinner
+  const renderContent = () => {
+    if (authLoading) {
+      return (
+        <div style={{
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: 'linear-gradient(135deg, #FF919D 0%, #FFD1FF 100%)',
+          color: 'white',
+          fontFamily: "'Outfit', sans-serif"
+        }}>
+          <div className="loading-spinner-container" style={{
+            width: '60px',
+            height: '60px',
+            border: '6px solid rgba(255,255,255,0.3)',
+            borderTop: '6px solid white',
+            borderRadius: '50%',
+            animation: 'spin 1s linear infinite',
+            marginBottom: '1rem'
+          }}></div>
+          <style>{`
+            @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+            @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+          `}</style>
+          <h2 style={{ fontSize: '1.2rem', fontWeight: '600', animation: 'fadeIn 0.5s ease-in' }}>
+            Scripture Habit
+          </h2>
+        </div>
+      );
+    }
+
+    return (
+      <div className={getAppClass()}>
+        <Routes>
+          <Route
+            path="/"
+            element={isStandalone ? <Navigate to="/dashboard" replace /> : <LandingPage />}
+          />
+          <Route path="/welcome" element={<Welcome />} />
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/signup" element={<SignupForm />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/group-form" element={<GroupForm />} />
+          <Route path="/join-group" element={<JoinGroup />} />
+
+          <Route path="/group-options" element={<GroupOptions />} />
+          <Route path="/group/:id" element={<GroupDetails />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/join/:inviteCode" element={<InviteRedirect />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfService />} />
+          <Route path="/legal" element={<LegalDisclosure />} />
+        </Routes>
+      </div>
+    );
+  };
 
   return (
     <SettingsProvider>
       <LanguageProvider>
         <SEOManager />
         <PWAUpdateHandler />
-        <div className={getAppClass()}>
-          <Routes>
-            <Route
-              path="/"
-              element={isStandalone ? <Navigate to="/dashboard" replace /> : <LandingPage />}
-            />
-            <Route path="/welcome" element={<Welcome />} />
-            <Route path="/login" element={<LoginForm />} />
-            <Route path="/signup" element={<SignupForm />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/group-form" element={<GroupForm />} />
-            <Route path="/join-group" element={<JoinGroup />} />
-
-            <Route path="/group-options" element={<GroupOptions />} />
-            <Route path="/group/:id" element={<GroupDetails />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/join/:inviteCode" element={<InviteRedirect />} />
-            <Route path="/privacy" element={<PrivacyPolicy />} />
-            <Route path="/terms" element={<TermsOfService />} />
-            <Route path="/legal" element={<LegalDisclosure />} />
-
-          </Routes>
-          <ToastContainer position="top-right" autoClose={3000} />
-          <Analytics />
-          <InstallPrompt />
-          <CookieConsent />
-          <BrowserWarningWrapper
-            isOpen={showBrowserWarning}
-            onClose={() => setShowBrowserWarning(false)}
-          />
-        </div>
+        {renderContent()}
+        <ToastContainer position="top-right" autoClose={3000} />
+        <Analytics />
+        <InstallPrompt />
+        <CookieConsent />
+        <BrowserWarningWrapper
+          isOpen={showBrowserWarning}
+          onClose={() => setShowBrowserWarning(false)}
+        />
       </LanguageProvider>
     </SettingsProvider>
   );

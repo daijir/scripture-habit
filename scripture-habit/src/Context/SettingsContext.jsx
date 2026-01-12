@@ -1,15 +1,16 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { safeStorage } from '../Utils/storage';
 
 const SettingsContext = createContext();
 
 export const SettingsProvider = ({ children }) => {
     const [fontSize, setFontSizeState] = useState(() => {
-        const saved = localStorage.getItem('fontSize');
+        const saved = safeStorage.get('fontSize');
         return saved || 'medium';
     });
 
     useEffect(() => {
-        localStorage.setItem('fontSize', fontSize);
+        safeStorage.set('fontSize', fontSize);
         // Apply font size to document root
         const fontSizeMap = {
             'small': '14px',

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Capacitor } from '@capacitor/core';
+import { safeStorage } from '../Utils/storage';
 
 // Cache in memory as well to avoid reading localStorage constantly for the same session
 const memoryCache = {};
@@ -33,7 +34,7 @@ export const useGCMetadata = (urlOrSlug, language) => {
         }
 
         // 2. Check LocalStorage
-        const localCached = localStorage.getItem(cacheKey);
+        const localCached = safeStorage.get(cacheKey);
         if (localCached) {
             try {
                 const parsed = JSON.parse(localCached);
@@ -95,7 +96,7 @@ export const useGCMetadata = (urlOrSlug, language) => {
                     speaker: result.speaker || ''
                 };
 
-                localStorage.setItem(cacheKey, JSON.stringify(meta));
+                safeStorage.set(cacheKey, JSON.stringify(meta));
                 memoryCache[cacheKey] = meta;
 
                 setData(meta);

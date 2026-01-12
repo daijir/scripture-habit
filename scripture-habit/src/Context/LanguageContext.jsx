@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext } from 'react';
 import { translations } from '../Data/Translations.js';
+import { safeStorage } from '../Utils/storage';
 
 const LanguageContext = createContext();
 
@@ -7,7 +8,7 @@ export const LanguageProvider = ({ children }) => {
     // Load language from localStorage, default to 'en'
     // Load language from localStorage, default to browser language or 'en'
     const [language, setLanguageState] = useState(() => {
-        const saved = localStorage.getItem('language');
+        const saved = safeStorage.get('language');
         if (saved) return saved;
 
         // Auto-detect browser language
@@ -25,7 +26,7 @@ export const LanguageProvider = ({ children }) => {
 
     // Wrapper to save to localStorage when language changes
     const setLanguage = (newLanguage) => {
-        localStorage.setItem('language', newLanguage);
+        safeStorage.set('language', newLanguage);
         setLanguageState(newLanguage);
     };
 
