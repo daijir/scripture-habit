@@ -13,22 +13,22 @@ export const DailyReadingPlan2026 = [
     { day: 12, scripts: ["Abraham 3:1-11"], date: "2026-01-09" },
     { day: 13, scripts: ["Abraham 3:12-20"], date: "2026-01-10" },
     { day: 14, scripts: ["Abraham 3:21-28"], date: "2026-01-11" },
-    { day: 15, scripts: ["Genesis 1:1-25", "Moses 2:1-25", "Abraham 4:1-25","Doctrine and Covenants 101:32-34"], date: "2026-01-12" },
-    { day: 16, scripts: ["Genesis 1:26-27", "Moses 2:26-27", "Abraham 4:26-27"], date: "2026-01-13" },
-    { day: 17, scripts: ["Mosiah 3:19", "Ether 12:27"], date: "2026-01-14" },
-    { day: 18, scripts: ["Genesis 1:27-28", "Genesis 2:18-25"], date: "2026-01-15" },
-    { day: 19, scripts: ["Genesis 2:26-28", "Genesis 3:1-15", "1 Corinthians 11:11"], date: "2026-01-16" },
-    { day: 20, scripts: ["Moses 3:18, 21-24", "Abraham 5:14-18", "The Family: A Proclamation to the World"], date: "2026-01-17" },
-    { day: 21, scripts: ["Genesis 2:2-3", "Moses 3:2-3", "Abraham 5:2-3", "Doctrine and Covenants 59:9-13"], date: "2026-01-18" }
+    { day: 15, scripts: ["Genesis 1:1-5", "Moses 2:1-5", "Abraham 4:1-5","Doctrine and Covenants 101:32-34"], date: "2026-01-12" },
+    { day: 16, scripts: ["Genesis 1:6-13", "Moses 2:6-13", "Abraham 4:6-13"], date: "2026-01-13" },
+    { day: 17, scripts: ["Genesis 1:14-23", "Moses 2:14-23", "Abraham 4:14-23"], date: "2026-01-14" },
+    { day: 18, scripts: ["Genesis 1:24-31", "Moses 2:24-31", "Abraham 4:24-31"], date: "2026-01-15" },
+    { day: 19, scripts: ["Genesis 2:1-7", "Moses 3:1-7", "Abraham 5:1-7"], date: "2026-01-16" },
+    { day: 20, scripts: ["Genesis 2:8-17", "Moses 3:8-17", "Abraham 5:8-13"], date: "2026-01-17" },
+    { day: 21, scripts: ["Genesis 2:18-25", "Moses 3:18-25", "Abraham 5:14-21"], date: "2026-01-18" },
+    { day: 22, scripts: ["Genesis 3:1-7", "Moses 4:1-11"], date: "2026-01-19" },
+    { day: 23, scripts: ["Genesis 3:8-19", "Moses 4:12-25"], date: "2026-01-20" },
+    { day: 24, scripts: ["Genesis 3:20-24", "Moses 4:26-32"], date: "2026-01-21" },
 ];
 
-// Function to retrieve today's reading plan
 export const getTodayReadingPlan = () => {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Tokyo';
     const now = new Date();
-    // Format to YYYY-MM-DD in local time
     const localDate = now.toLocaleDateString('en-CA', { timeZone });
 
-    // Find plan by matching date string
     return DailyReadingPlan2026.find(p => p.date === localDate);
 };
