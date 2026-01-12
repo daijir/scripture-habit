@@ -1491,7 +1491,7 @@ Do NOT use bullet points or symbols (*, -). Output only the question text as pla
 However, please write questions that are easy to understand even for investigators or new members who are not comfortable reading scriptures.`;
 
         const apiKey = (process.env.GEMINI_API_KEY || '').trim();
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-4b-it:generateContent?key=${apiKey}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
@@ -1544,10 +1544,10 @@ app.post('/api/generate-weekly-recap', aiLimiter, async (req, res) => {
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
         const timestamp7DaysAgo = admin.firestore.Timestamp.fromDate(sevenDaysAgo);
 
-        // Query notes from last 7 days
+        // Query notes from last 7 days - Limit to 60 to stay under Gemma's 15K TPM limit
         const snapshot = await messagesRef
             .where('createdAt', '>=', timestamp7DaysAgo)
-            .limit(200)
+            .limit(60)
             .get();
 
         const notes = [];
@@ -1684,7 +1684,7 @@ Notes Content:
 ${notesText}`;
 
         const apiKey = (process.env.GEMINI_API_KEY || '').trim();
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-4b-it:generateContent?key=${apiKey}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
@@ -1756,9 +1756,10 @@ app.post('/api/generate-personal-weekly-recap', aiLimiter, async (req, res) => {
         sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
         const timestamp7DaysAgo = admin.firestore.Timestamp.fromDate(sevenDaysAgo);
 
-        // Query notes from last 7 days
+        // Query notes from last 7 days - Limit to 60 for speed
         const snapshot = await notesRef
             .where('createdAt', '>=', timestamp7DaysAgo)
+            .limit(60)
             .get();
 
         const notes = [];
@@ -1916,7 +1917,7 @@ User's Notes:
 ${notesText}`;
 
         const apiKey = (process.env.GEMINI_API_KEY || '').trim();
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-4b-it:generateContent?key=${apiKey}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
@@ -2436,7 +2437,7 @@ app.get('/api/test-inactive-check/:groupId', async (req, res) => {
     }
 });
 
-app.post('/api/translate', aiLimiter, async (req, res) => {
+app.post('/translate', aiLimiter, async (req, res) => {
     const validation = translateSchema.safeParse(req.body);
     if (!validation.success) {
         return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
@@ -2461,32 +2462,60 @@ app.post('/api/translate', aiLimiter, async (req, res) => {
             return res.json({ translatedText: cachedData.translatedText });
         }
 
-        const prompt = `You are a professional translator for "Scripture Habit", a scripture study app. 
-Translate the following scripture study note or chat message into the target language: ${targetLanguage}.
-If the text is already in ${targetLanguage}, return it as is.
-Keep the original meaning and tone. If there are scripture references, try to use the official translation if possible.
-Output ONLY the translated text, no acknowledgments or explanations.
+        const languageNames = {
+            'ja': 'Japanese',
+            'en': 'English',
+            'es': 'Spanish',
+            'pt': 'Portuguese',
+            'ko': 'Intermediate',
+            'zho': 'Chinese (Traditional)',
+            'vi': 'Vietnamese',
+            'th': 'Thai',
+            'tl': 'Tagalog',
+            'sw': 'Swahili'
+        };
+
+        const targetLangName = languageNames[targetLanguage] || targetLanguage;
+        const prompt = `Task: Translate the following text into ${targetLangName}. 
+Output only the translated text. No explanations.
 
 Text:
 ${text}`;
 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-12b-it:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-4b-it:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
                 parts: [{
                     text: prompt
                 }]
-            }]
+            }],
+            safetySettings: [
+                { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+                { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+                { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+                { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+            ]
         });
 
-        const translatedText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const candidate = response.data?.candidates?.[0];
+        const rawText = candidate?.content?.parts?.[0]?.text || '';
 
-        if (!translatedText) {
-            throw new Error('No content generated from Gemini.');
+        let resultText = rawText
+            .replace(/<translation>|<\/translation>/gi, '')
+            .replace(/^.*?translation.*?:/i, '')
+            .replace(/^.*?translated text.*?:/i, '')
+            .replace(/---[\s\S]*$/g, '')
+            .replace(/\*\*Notes:[\s\S]*$/gi, '')
+            .replace(/\*\*Notes on[\s\S]*$/gi, '')
+            .replace(/^["'「](.*)["'」]$/g, '$1')
+            .trim();
+
+        if (!resultText) {
+            console.error('Gemini Safety/Error:', JSON.stringify(response.data, null, 2));
+            throw new Error(`AI blocked the response. Reason: ${candidate?.finishReason || 'Unknown'}`);
         }
 
-        const resultText = translatedText.trim();
 
         // 2. Save to Cache (asynchronously, don't block response)
         cacheRef.set({

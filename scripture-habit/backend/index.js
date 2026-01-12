@@ -201,10 +201,22 @@ const STREAK_ANNOUNCEMENT_TEMPLATES = {
   sw: "🎉🎉🎉 **{nickname} amefikisha mfululizo wa siku {streak}!!** 🎉🎉🎉\n\n**Na tujengane mmoja kwa mwingine katika kikundi na tushiriki furaha pamoja!**"
 };
 
-// API Model Configuration
-// Using Gemma 3-12b - Higher rate limits (14.4K RPD)
-const GEMINI_MODEL = 'gemma-3-12b-it';
+// API Model Configuration - Using exact name from your screenshot
+const GEMINI_MODEL = 'gemma-3-4b-it';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
+
+const languageNames = {
+  'ja': 'Japanese',
+  'en': 'English',
+  'es': 'Spanish',
+  'pt': 'Portuguese',
+  'ko': 'Korean',
+  'zho': 'Chinese (Traditional)',
+  'vi': 'Vietnamese',
+  'th': 'Thai',
+  'tl': 'Tagalog',
+  'sw': 'Swahili'
+};
 
 app.post('/translate', async (req, res) => {
   const { text, targetLanguage } = req.body;
@@ -234,11 +246,11 @@ app.post('/translate', async (req, res) => {
       return res.json({ translatedText: cachedData.translatedText });
     }
 
-    const prompt = `You are a professional translator for "Scripture Habit", a scripture study app. 
-Translate the following scripture study note or chat message into the target language: ${targetLanguage}.
-If the text is already in ${targetLanguage}, return it as is.
-Keep the original meaning and tone. If there are scripture references, try to use the official translation if possible.
-Output ONLY the translated text, no acknowledgments or explanations.
+    console.log(`Translating (Fresh): "${text.substring(0, 20)}..." to ${targetLanguage}`);
+
+    const targetLangName = languageNames[targetLanguage] || targetLanguage;
+    const prompt = `Task: Translate the following text into ${targetLangName}. 
+Output only the translated text. No explanations.
 
 Text:
 ${text}`;
@@ -250,16 +262,39 @@ ${text}`;
         parts: [{
           text: prompt
         }]
-      }]
+      }],
+      safetySettings: [
+        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+      ]
     });
 
-    const translatedText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    const candidate = response.data?.candidates?.[0];
+    const rawText = candidate?.content?.parts?.[0]?.text || '';
 
-    if (!translatedText) {
-      throw new Error('No content generated from Gemini.');
+    // Powerful Cleanup: Remove common AI preambles, notes, and quotes
+    let resultText = rawText
+      .replace(/<translation>|<\/translation>/gi, '') // Remove tags if present
+      .replace(/^.*?translation.*?:/i, '')           // Remove "Here is the translation:"
+      .replace(/^.*?translated text.*?:/i, '')       // Remove "The translated text is:"
+      .replace(/---[\s\S]*$/g, '')                   // Remove everything after horizontal rule
+      .replace(/\*\*Notes:[\s\S]*$/gi, '')            // Remove "Notes:" section
+      .replace(/\*\*Notes on[\s\S]*$/gi, '')          // Remove "Notes on translation"
+      .replace(/^["'「](.*)["'」]$/g, '$1')           // Remove surrounding quotes
+      .trim();
+
+    // Fallback: If cleanup returns empty, take the first non-empty line
+    if (!resultText && rawText) {
+      resultText = rawText.split('\n').find(line => line.trim().length > 0) || rawText;
     }
 
-    const resultText = translatedText.trim();
+    if (!resultText) {
+      console.error('Gemini Safety/Error or Empty:', JSON.stringify(response.data, null, 2));
+      throw new Error(`AI blocked the response or failed to format. Reason: ${candidate?.finishReason || 'Unknown'}`);
+    }
+
 
     // 2. Save to Cache (asynchronously)
     cacheRef.set({
@@ -271,8 +306,9 @@ ${text}`;
 
     res.json({ translatedText: resultText });
   } catch (error) {
-    console.error('Error in AI translation:', error.message);
-    res.status(500).json({ error: 'Failed to translate' });
+    console.error('CRITICAL Error in AI translation:', error.message);
+    if (error.response) console.error('Error Details:', JSON.stringify(error.response.data, null, 2));
+    res.status(500).json({ error: 'Failed to translate', details: error.message });
   }
 });
 
@@ -1190,9 +1226,10 @@ app.post('/generate-weekly-recap', async (req, res) => {
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const timestamp7DaysAgo = admin.firestore.Timestamp.fromDate(sevenDaysAgo);
 
-    // Query notes from last 7 days
+    // Query notes from last 7 days - Limit to 60 to stay under Gemma's 15K TPM limit
     const snapshot = await messagesRef
       .where('createdAt', '>=', timestamp7DaysAgo)
+      .limit(60)
       .get();
 
     const notes = [];
@@ -1320,9 +1357,10 @@ app.post('/generate-personal-weekly-recap', async (req, res) => {
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const timestamp7DaysAgo = admin.firestore.Timestamp.fromDate(sevenDaysAgo);
 
-    // Query notes from last 7 days
+    // Query notes from last 7 days - Limit to 60 for speed
     const snapshot = await notesRef
       .where('createdAt', '>=', timestamp7DaysAgo)
+      .limit(60)
       .get();
 
     const notes = [];

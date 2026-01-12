@@ -264,6 +264,12 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
             }}>
                 {finalMd}
             </ReactMarkdown>
+            {translatedText && (
+                <div style={{ marginTop: '0.8rem', borderTop: '1px dashed #ccc', paddingTop: '0.6rem' }}>
+                    <div style={{ fontSize: '0.75rem', opacity: 0.8, fontWeight: 'bold' }}>✨ AI {t('groupChat.translated')}</div>
+                    <ReactMarkdown components={{ p: p => <p {...p} style={{ margin: '0.3rem 0' }} /> }}>{translatedText}</ReactMarkdown>
+                </div>
+            )}
         </div>
     );
 };
