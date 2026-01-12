@@ -79,7 +79,43 @@ const SEOManager = () => {
     document.querySelector('meta[property="twitter:url"]')?.setAttribute('content', canonicalUrl);
 
     // Update HTML lang attribute
-    document.documentElement.lang = language || 'ja';
+    const langMap = {
+      'zho': 'zh-Hant',
+    };
+    const currentLang = langMap[language] || language || 'en';
+    document.documentElement.lang = currentLang;
+
+    // Update OG Locale
+    const localeMap = {
+      'en': 'en_US', 'ja': 'ja_JP', 'pt': 'pt_BR', 'zho': 'zh_TW',
+      'es': 'es_ES', 'vi': 'vi_VN', 'th': 'th_TH', 'ko': 'ko_KR',
+      'tl': 'tl_PH', 'sw': 'sw_KE'
+    };
+    document.querySelector('meta[property="og:locale"]')?.setAttribute('content', localeMap[language] || 'en_US');
+
+    // Manage Hreflang tags
+    const supportedLangs = ['en', 'ja', 'pt', 'zho', 'es', 'vi', 'th', 'ko', 'tl', 'sw'];
+    supportedLangs.forEach(lang => {
+      const hLang = lang === 'zho' ? 'zh-Hant' : lang;
+      let link = document.querySelector(`link[hreflang="${hLang}"]`);
+      if (!link) {
+        link = document.createElement('link');
+        link.setAttribute('rel', 'alternate');
+        link.setAttribute('hreflang', hLang);
+        document.head.appendChild(link);
+      }
+      link.setAttribute('href', canonicalUrl);
+    });
+
+    // x-default hreflang
+    let xDefault = document.querySelector('link[hreflang="x-default"]');
+    if (!xDefault) {
+      xDefault = document.createElement('link');
+      xDefault.setAttribute('rel', 'alternate');
+      xDefault.setAttribute('hreflang', 'x-default');
+      document.head.appendChild(xDefault);
+    }
+    xDefault.setAttribute('href', canonicalUrl);
   }, [language, t, location.pathname]);
 
   return null;

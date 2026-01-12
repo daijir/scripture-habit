@@ -98,6 +98,14 @@ const Dashboard = () => {
       const newUrl = window.location.pathname;
       window.history.replaceState({}, '', newUrl);
     }
+
+    const viewParam = searchParams.get('view');
+    if (viewParam) {
+      setSelectedView(parseInt(viewParam));
+      // Clean URL
+      const newUrl = window.location.pathname;
+      window.history.replaceState({}, '', newUrl);
+    }
   }, [location.search, location.state]);
 
   useEffect(() => {

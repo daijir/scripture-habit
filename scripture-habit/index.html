@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8" />
@@ -10,7 +10,7 @@
       window.location.replace("https://scripturehabit.app" + current + window.location.search + window.location.hash);
     }
   </script>
-  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/png" href="/favicon-192.png" sizes="192x192" />
   <link rel="icon" type="image/svg+xml" href="/logo.svg" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -22,13 +22,15 @@
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Scripture Habit">
-  <meta name="description" content="Scripture Habit（スクハビ）は、仲間と一緒に聖典を学び、証を分かち合うことで、日々の学習を楽しく継続できるコミュニティツールです。" />
+  <meta name="description"
+    content="Scripture Habit helps you build a daily scripture study habit by learning and edifying each other in a community." />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Scripture Habit" />
-  <meta property="og:title" content="Scripture Habit - 聖典学習を楽しく、習慣に" />
-  <meta property="og:description" content="仲間と一緒に聖典を学び、変化する。霊的な成長をサポートする聖典学習習慣化アプリ。" />
+  <meta property="og:title" content="Scripture Habit - Make scripture study a fun, daily habit" />
+  <meta property="og:description"
+    content="Study scriptures with friends, share your insights, and grow together. A community tool to support your spiritual growth." />
   <meta property="og:image" content="https://scripturehabit.app/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -36,8 +38,9 @@
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:title" content="Scripture Habit - 聖典学習を楽しく、習慣に" />
-  <meta property="twitter:description" content="仲間と一緒に聖典を学び、証を分かち合う。習慣化をサポートするコミュニティツール。" />
+  <meta property="twitter:title" content="Scripture Habit - Make scripture study a fun, daily habit" />
+  <meta property="twitter:description"
+    content="Study scriptures with friends, share your insights, and grow together. A community tool to support your spiritual growth." />
   <meta property="twitter:image" content="https://scripturehabit.app/og-image.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -45,15 +48,45 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,200..900;1,200..900&family=Inter:wght@400;500;600;700&family=Noto+Serif+JP:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
-  <title>Scripture Habit - 聖典学習を楽しく、習慣に</title>
+  <title>Scripture Habit - Make scripture study a fun, daily habit</title>
   <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Scripture Habit",
-      "alternateName": ["スクハビ", "ScriptureHabit"],
-      "url": "https://scripturehabit.app/"
-    }
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Scripture Habit",
+        "alternateName": ["スクハビ", "ScriptureHabit"],
+        "url": "https://scripturehabit.app/"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Scripture Habit",
+        "operatingSystem": "All",
+        "applicationCategory": "EducationApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "description": "Learn scriptures with friends and share your insights in a community."
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [{
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://scripturehabit.app/"
+        }, {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Dashboard",
+          "item": "https://scripturehabit.app/dashboard/"
+        }]
+      }
+    ]
   </script>
 </head>
 

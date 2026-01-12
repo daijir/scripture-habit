@@ -1,25 +1,45 @@
 {
     "short_name": "Scripture Habit",
-    "name": "Scripture Habit - 聖典学習を習慣に",
-    "description": "仲間と一緒に聖典を学び、証を分かち合うコミュニティアプリ。",
+    "name": "Scripture Habit - Build a Study Habit",
+    "description": "Learn scriptures with friends and share your insights in a community.",
     "icons": [
         {
             "src": "/favicon-192.png",
             "sizes": "192x192",
             "type": "image/png",
-            "purpose": "any"
+            "purpose": "any maskable"
         },
         {
             "src": "/apple-touch-icon.png",
             "sizes": "1024x1024",
             "type": "image/png",
             "purpose": "any"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "New Note",
+            "short_name": "New Note",
+            "description": "Create a new scripture study note",
+            "url": "/dashboard?openNewNote=true",
+            "icons": [
+                {
+                    "src": "/favicon-192.png",
+                    "sizes": "192x192"
+                }
+            ]
         },
         {
-            "src": "/favicon-192.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any"
+            "name": "My Notes",
+            "short_name": "My Notes",
+            "description": "View your saved study notes",
+            "url": "/dashboard?view=1",
+            "icons": [
+                {
+                    "src": "/favicon-192.png",
+                    "sizes": "192x192"
+                }
+            ]
         }
     ],
     "screenshots": [
