@@ -78,7 +78,15 @@ const GCNoteRenderer = ({ header, scriptureValue, chapterValue, comment, url, la
         }
 
         const commentLabel = t('noteLabels.comment');
-        const commentWithLinks = (comment || '').replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)');
+        // Clean comment: remove lines that are just '**' and strip leading/trailing '**'
+        const cleanComment = (comment || '')
+            .split('\n')
+            .filter(line => line.trim() !== '**')
+            .join('\n')
+            .replace(/^\s*\*\*\s*/, '')
+            .replace(/\s*\*\*\s*$/, '')
+            .trim();
+        const commentWithLinks = cleanComment.replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)');
 
         // Use double newlines to ensure line breaks in all Markdown renderers
         return [
@@ -208,7 +216,16 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
         }
     });
 
-    const comment = commentLines.join('\n').trim();
+    // Clean comment: remove lines that are just '**' and strip leading/trailing '**'
+    const commentRaw = commentLines.join('\n').trim();
+    const comment = commentRaw
+        .split('\n')
+        .filter(line => line.trim() !== '**')
+        .join('\n')
+        .replace(/^\s*\*\*\s*/, '')
+        .replace(/\s*\*\*\s*$/, '')
+        .trim();
+
     const allUrls = extractUrls(text);
     const primaryUrl = isGCUrl(chapterValue) ? chapterValue : (allUrls[0] || null);
 
