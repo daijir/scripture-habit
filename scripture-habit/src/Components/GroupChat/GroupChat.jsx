@@ -2813,28 +2813,28 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                                 />
                                 <div style={{ marginTop: '0.2rem' }}></div>
                                 {(() => {
-                                  // Update regex to find chapter OR title OR speech OR talk OR url
-                                  // Prioritize Url/Link labels to ensure correct link generation for GC/BYU/Other
-                                  const chapterMatch = msg.text.match(/\*\*(?:Url|リンク|Chapter|Talk|お話|Speech|スピーチ|Title|タイトル|章):\*\* (.*?)(?:\n|$)/);
-                                  const scriptureMatch = msg.text.match(/\*\*(?:Scripture|Category|カテゴリ):\*\* (.*?)(?:\n|$)/);
+                                  // Much more robust regex: handling optional bold and both colon types (: and ：)
+                                  const chapterMatch = msg.text.match(/(?:\*\*|)(?:Url|リンク|Chapter|Talk|お話|Speech|スピーチ|Title|タイトル|章)(?:\*\*|)(?::|：)\s*(.*?)(?:\n|$)/i);
+                                  const scriptureMatch = msg.text.match(/(?:\*\*|)(?:Scripture|Category|カテゴリ)(?:\*\*|)(?::|：)\s*(.*?)(?:\n|$)/i);
 
-                                  if (scriptureMatch) {
-                                    const scripture = scriptureMatch[1].trim();
-                                    const sLower = scripture.toLowerCase();
-                                    const isOther = sLower.includes('other') || sLower.includes('その他');
-                                    const isGC = sLower.includes('general') || sLower.includes('総大会');
-                                    const isBYU = sLower.includes('byu');
-                                    const isUrlInChapterField = msg.chapter && msg.chapter.toLowerCase().startsWith('http');
+                                  const scripture = msg.scripture || (scriptureMatch ? scriptureMatch[1].trim() : null);
+                                  const chapter = msg.chapter || (chapterMatch ? chapterMatch[1].trim() : null);
 
-                                    // If we have a direct URL field or it's a special category, prioritize the msg.chapter URL if available
-                                    if ((isOther || isUrlInChapterField || isGC || isBYU) && msg.chapter && msg.chapter.toLowerCase().startsWith('http')) {
+                                  if (scripture) {
+                                    const scripLower = (scripture || '').toLowerCase();
+                                    const isOther = scripLower.includes('other') || scripLower.includes('その他') || scripture === '';
+                                    const isGC = scripLower.includes('general') || scripLower.includes('総大会');
+                                    const isBYU = scripLower.includes('byu');
+
+                                    // If we have a direct URL field or it's a special category, prioritize the chapter URL if available
+                                    if ((isOther || isGC || isBYU) && chapter && chapter.toLowerCase().startsWith('http')) {
                                       let linkLabel = t('dashboard.readInGospelLibrary');
                                       if (isOther) linkLabel = t('dashboard.readStudyMaterial');
                                       else if (isBYU) linkLabel = t('dashboard.goToByuSpeech');
 
                                       return (
                                         <a
-                                          href={msg.chapter}
+                                          href={chapter}
                                           target="_blank"
                                           rel="noopener noreferrer"
                                           onClick={(e) => e.stopPropagation()}
@@ -2844,24 +2844,23 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                                         </a>
                                       );
                                     }
-                                  }
 
-                                  if (chapterMatch && scriptureMatch) {
-                                    const scripture = scriptureMatch[1].trim();
-                                    const chapter = chapterMatch[1].trim();
-                                    const url = getGospelLibraryUrl(scripture, chapter, language);
-                                    if (url) {
-                                      return (
-                                        <a
-                                          href={url}
-                                          target="_blank"
-                                          rel="noopener noreferrer"
-                                          onClick={(e) => e.stopPropagation()}
-                                          className={`gospel-link ${msg.senderId === userData?.uid ? 'sent' : ''}`}
-                                        >
-                                          {scripture === 'BYU Speeches' ? t('dashboard.goToByuSpeech') : t('dashboard.readInGospelLibrary')}
-                                        </a>
-                                      );
+                                    // If we don't have a direct URL, but we have both scripture and chapter, try to generate it
+                                    if (chapter && scripture) {
+                                      const url = getGospelLibraryUrl(scripture, chapter, language);
+                                      if (url) {
+                                        return (
+                                          <a
+                                            href={url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={(e) => e.stopPropagation()}
+                                            className={`gospel-link ${msg.senderId === userData?.uid ? 'sent' : ''}`}
+                                          >
+                                            {isBYU ? t('dashboard.goToByuSpeech') : t('dashboard.readInGospelLibrary')}
+                                          </a>
+                                        );
+                                      }
                                     }
                                   }
                                   return null;

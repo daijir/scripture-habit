@@ -252,7 +252,10 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
 
     const headerLabel = t('noteLabels.newStudyNote');
     const scriptureNameTrans = translateScriptureName(scriptureValue, t);
-    let chapLabel = isOther ? t('noteLabels.title') : (isBYU ? t('noteLabels.speech') : t('noteLabels.chapter'));
+    let chapLabel = t('noteLabels.chapter');
+    if (isOther) chapLabel = t('noteLabels.title');
+    else if (isBYU) chapLabel = t('noteLabels.speech');
+    else if (isGC) chapLabel = t('noteLabels.talk');
 
     // Use double newlines for consistent spacing
     const finalMd = [
