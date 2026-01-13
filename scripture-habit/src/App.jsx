@@ -351,7 +351,7 @@ const App = () => {
             <Route path="*" element={<Navigate to="" replace />} />
           </Route>
           {/* Support root path and any prefix-less path by redirecting to detected lang */}
-          <Route path="*" element={<LanguageRedirect language={language} location={location} />} />
+          <Route path="*" element={<LanguageRedirect location={location} />} />
         </Routes>
       </div>
     );
@@ -376,7 +376,8 @@ const App = () => {
   );
 };
 
-const LanguageRedirect = ({ language, location }) => {
+const LanguageRedirect = ({ location }) => {
+  const { language } = useLanguage();
   const path = location.pathname;
   const pathParts = path.split('/');
   const firstPart = pathParts[1];
