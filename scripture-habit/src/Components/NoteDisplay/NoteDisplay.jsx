@@ -169,6 +169,7 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
         });
 
         if (foundPos.length > 0) {
+            // Sort by position
             foundPos.sort((a, b) => a.pos - b.pos);
             let lastIdx = 0;
             foundPos.forEach(fp => {
@@ -202,7 +203,12 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
                 labelRaw.includes('章') || labelRaw.includes('リンク') || labelRaw.includes('speech') ||
                 labelRaw.includes('talk') || labelRaw.includes('スピーチ') || labelRaw.includes('お話')
             ) {
-                chapterValue = value;
+                // If chapterValue is already a URL, don't overwrite it with a Talk/Speech title
+                const valIsUrl = isGCUrl(value);
+                const currentIsUrl = isGCUrl(chapterValue);
+                if (!chapterValue || valIsUrl || !currentIsUrl) {
+                    chapterValue = value;
+                }
             } else if (labelRaw.includes('comment') || labelRaw.includes('コメント')) {
                 if (value) commentLines.push(value);
             } else {
@@ -259,15 +265,15 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
     return (
         <div style={{ textAlign: 'left' }}>
             <ReactMarkdown components={{
-                p: p => <p {...p} style={{ margin: '0.6rem 0', lineHeight: '1.5' }} />,
-                a: p => <a {...p} target="_blank" rel="noopener noreferrer" style={{ color: linkColor || (isSent ? 'white' : 'var(--purple)'), textDecoration: 'underline' }} onClick={e => e.stopPropagation()} />
+                a: p => <a {...p} target="_blank" rel="noopener noreferrer" style={{ color: linkColor || (isSent ? 'white' : 'var(--purple)'), textDecoration: 'underline' }} onClick={e => e.stopPropagation()} />,
+                p: p => <p {...p} style={{ margin: '0.4rem 0', whiteSpace: 'pre-wrap' }} />
             }}>
                 {finalMd}
             </ReactMarkdown>
             {translatedText && (
                 <div style={{ marginTop: '0.8rem', borderTop: '1px dashed #ccc', paddingTop: '0.6rem' }}>
                     <div style={{ fontSize: '0.75rem', opacity: 0.8, fontWeight: 'bold' }}>✨ AI {t('groupChat.translated')}</div>
-                    <ReactMarkdown components={{ p: p => <p {...p} style={{ margin: '0.3rem 0' }} /> }}>{translatedText}</ReactMarkdown>
+                    <ReactMarkdown components={{ p: p => <p {...p} style={{ margin: '0.3rem 0', whiteSpace: 'pre-wrap' }} /> }}>{translatedText}</ReactMarkdown>
                 </div>
             )}
         </div>

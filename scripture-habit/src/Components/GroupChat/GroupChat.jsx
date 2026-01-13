@@ -2814,16 +2814,24 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                                 <div style={{ marginTop: '0.2rem' }}></div>
                                 {(() => {
                                   // Update regex to find chapter OR title OR speech OR talk OR url
-                                  const chapterMatch = msg.text.match(/\*\*(?:Chapter|Title|Speech|Talk|Url|章|お話|スピーチ|リンク):\*\* (.*?)(?:\n|$)/);
+                                  // Prioritize Url/Link labels to ensure correct link generation for GC/BYU/Other
+                                  const chapterMatch = msg.text.match(/\*\*(?:Url|リンク|Chapter|Talk|お話|Speech|スピーチ|Title|タイトル|章):\*\* (.*?)(?:\n|$)/);
                                   const scriptureMatch = msg.text.match(/\*\*(?:Scripture|Category|カテゴリ):\*\* (.*?)(?:\n|$)/);
 
-                                  // Handle "Other" category or raw URL in msg.chapter
                                   if (scriptureMatch) {
                                     const scripture = scriptureMatch[1].trim();
-                                    const isOther = scripture === 'Other' || scripture === 'その他';
-                                    const isUrlInChapter = msg.chapter && msg.chapter.toLowerCase().startsWith('http');
+                                    const sLower = scripture.toLowerCase();
+                                    const isOther = sLower.includes('other') || sLower.includes('その他');
+                                    const isGC = sLower.includes('general') || sLower.includes('総大会');
+                                    const isBYU = sLower.includes('byu');
+                                    const isUrlInChapterField = msg.chapter && msg.chapter.toLowerCase().startsWith('http');
 
-                                    if ((isOther || isUrlInChapter) && msg.chapter) {
+                                    // If we have a direct URL field or it's a special category, prioritize the msg.chapter URL if available
+                                    if ((isOther || isUrlInChapterField || isGC || isBYU) && msg.chapter && msg.chapter.toLowerCase().startsWith('http')) {
+                                      let linkLabel = t('dashboard.readInGospelLibrary');
+                                      if (isOther) linkLabel = t('dashboard.readStudyMaterial');
+                                      else if (isBYU) linkLabel = t('dashboard.goToByuSpeech');
+
                                       return (
                                         <a
                                           href={msg.chapter}
@@ -2832,7 +2840,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                                           onClick={(e) => e.stopPropagation()}
                                           className={`gospel-link ${msg.senderId === userData?.uid ? 'sent' : ''}`}
                                         >
-                                          {t('dashboard.readStudyMaterial')}
+                                          {linkLabel}
                                         </a>
                                       );
                                     }

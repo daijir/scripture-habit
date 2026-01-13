@@ -752,10 +752,12 @@ app.post('/post-note', async (req, res) => {
       messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Url:** ${chapter}\n\n${comment || ''}`;
     } else if (isGC) {
       const talkVal = title || chapter || "";
-      messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Talk:** ${talkVal}\n\n${comment || ''}`;
+      const isUrl = chapter && (chapter.toLowerCase().startsWith('http') || /^\d{4}\/\d{2}\/.+/.test(chapter));
+      messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Talk:** ${talkVal}\n${isUrl ? `**Url:** ${chapter}\n` : ''}\n${comment || ''}`;
+    } else if (isBYU) {
+      messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Speech:** ${title || "Speech"}\n**Url:** ${chapter}\n\n${comment || ''}`;
     } else {
-      let label = isBYU ? "Speech" : "Chapter";
-      messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**${label}:** ${chapter}\n\n${comment || ''}`;
+      messageText = `📖 **New Study Note**\n\n**Scripture:** ${scripture}\n\n**Chapter:** ${chapter}\n\n${comment || ''}`;
     }
 
     let groupsToPostTo = [];
@@ -859,7 +861,9 @@ app.post('/post-note', async (req, res) => {
           senderNickname: userData.nickname || 'Member',
           createdAt: noteTimestamp,
           isNote: true,
-          originalNoteId: personalNoteRef.id
+          originalNoteId: personalNoteRef.id,
+          scripture: scripture,
+          chapter: chapter
         });
 
         const timeZone = userData.timeZone || 'UTC';
