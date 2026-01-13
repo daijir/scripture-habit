@@ -908,8 +908,8 @@ app.post('/api/post-note', async (req, res) => {
                     createdAt: noteTimestamp,
                     isNote: true,
                     originalNoteId: personalNoteRef.id,
-                    scripture: scripture,
-                    chapter: chapter
+                    scripture: scripture || "",
+                    chapter: chapter || ""
                 });
 
                 const timeZone = userData.timeZone || 'UTC';

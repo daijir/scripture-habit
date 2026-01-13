@@ -627,11 +627,34 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
     initMessages();
 
+    // --- Added Logs when opening Group Chat ---
+    console.log('--- Group Chat Opened ---');
+    console.log('Target Group ID:', groupId);
+    console.log('Current User UID:', userData?.uid);
+
     return () => {
+      console.log('--- Group Chat Closed/Unmounted ---');
       unsubscribeGroup();
       unsubscribeNewMessages();
     };
   }, [groupId]);
+
+  // Log whenever messages or groupData updates to see incoming data
+  useEffect(() => {
+    if (messages.length > 0) {
+      console.log(`--- [DEBUG] Messages Updated (Count: ${messages.length}) ---`);
+      // Log only the last 3 messages to avoid flooding, but show their structure
+      console.log('Latest Message Data Sample:', messages[messages.length - 1]);
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    if (groupData) {
+      console.log('--- [DEBUG] Group Data Loaded ---');
+      console.log('Group Name:', groupData.name);
+      console.log('Raw Group Object:', groupData);
+    }
+  }, [groupData]);
 
   const inputPlaceholder = useMemo(() => {
     const typeMessageRaw = t('groupChat.typeMessage');
@@ -2813,15 +2836,31 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                                 />
                                 <div style={{ marginTop: '0.2rem' }}></div>
                                 {(() => {
+                                  // --- Debug Logs ---
+                                  if (msg.isNote) {
+                                    console.log('--- Debugging Note Link Generation ---');
+                                    console.log('Message ID:', msg.id);
+                                    console.log('Raw Text:', msg.text);
+                                    console.log('Structured Scripture:', msg.scripture);
+                                    console.log('Structured Chapter:', msg.chapter);
+                                  }
+
                                   // 1. Better search for URL specifically (most important for GC/BYU/Other)
                                   const urlMatch = msg.text.match(/(?:\*\*|)(?:Url|リンク)(?:\*\*|)(?::|：)\s*(.*?)(?:\n|$)/i);
                                   // 2. Generic label search (for scriptures)
                                   const labelMatch = msg.text.match(/(?:\*\*|)(?:Chapter|Talk|お話|Speech|スピーチ|Title|タイトル|章)(?:\*\*|)(?::|：)\s*(.*?)(?:\n|$)/i);
                                   const scriptureMatch = msg.text.match(/(?:\*\*|)(?:Scripture|Category|カテゴリ)(?:\*\*|)(?::|：)\s*(.*?)(?:\n|$)/i);
 
-                                  const scripture = msg.scripture || (scriptureMatch ? scriptureMatch[1].trim() : null);
+                                  // Aggressively strip asterisks and trim
+                                  const scripture = (msg.scripture || (scriptureMatch ? scriptureMatch[1].trim() : null))?.replace(/\*/g, '').trim();
                                   // Prioritize urlMatch result over labelMatch
-                                  const chapterValue = msg.chapter || (urlMatch ? urlMatch[1].trim() : (labelMatch ? labelMatch[1].trim() : null));
+                                  const chapterValue = (msg.chapter || (urlMatch ? urlMatch[1].trim() : (labelMatch ? labelMatch[1].trim() : null)))?.replace(/\*/g, '').trim();
+
+                                  if (msg.isNote) {
+                                    console.log('Parsed Scripture (Clean):', scripture);
+                                    console.log('Final ChapterValue (Clean):', chapterValue);
+                                    console.log('--------------------------------------');
+                                  }
 
                                   if (scripture && chapterValue) {
                                     const scripLower = scripture.toLowerCase();
@@ -2831,9 +2870,12 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
                                     // CASE A: Direct URL (Other, GC, BYU with full URL)
                                     if (chapterValue.toLowerCase().startsWith('http')) {
+                                      if (msg.isNote) console.log('DEBUG: Link Branch - CASE A (Full URL)');
                                       let linkLabel = t('dashboard.readInGospelLibrary');
                                       if (isOther) linkLabel = t('dashboard.readStudyMaterial');
                                       else if (isBYU) linkLabel = t('dashboard.goToByuSpeech');
+
+                                      if (msg.isNote) console.log('DEBUG: Link Label used:', linkLabel);
 
                                       return (
                                         <a
@@ -2850,6 +2892,11 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
                                     // CASE B: Scripture reference or GC shortcode (handled by Mapper)
                                     const url = getGospelLibraryUrl(scripture, chapterValue, language);
+                                    if (msg.isNote) {
+                                      console.log('DEBUG: Link Branch - CASE B (Mapper)');
+                                      console.log('DEBUG: Mapper Result URL:', url);
+                                    }
+
                                     if (url) {
                                       return (
                                         <a
@@ -2859,9 +2906,11 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                                           onClick={(e) => e.stopPropagation()}
                                           className={`gospel-link ${msg.senderId === userData?.uid ? 'sent' : ''}`}
                                         >
-                                          {isBYU ? t('dashboard.goToByuSpeech') : t('dashboard.readInGospelLibrary')}
+                                          {isBYU ? t('dashboard.goToByuSpeech') : (isOther ? t('dashboard.readStudyMaterial') : t('dashboard.readInGospelLibrary'))}
                                         </a>
                                       );
+                                    } else if (msg.isNote) {
+                                      console.log('DEBUG: Mapper returned NULL. No link will be rendered.');
                                     }
                                   }
                                   return null;
