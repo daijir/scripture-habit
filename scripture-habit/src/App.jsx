@@ -17,8 +17,6 @@ import GroupDetails from "./Components/GroupDetails/GroupDetails";
 import GroupOptions from './Components/GroupOptions/GroupOptions';
 import LandingPage from './Components/LandingPage/LandingPage';
 import Welcome from './Components/Welcome/Welcome';
-import { LanguageProvider, useLanguage } from './Context/LanguageContext.jsx';
-import { SettingsProvider } from './Context/SettingsContext.jsx';
 import ForgotPassword from "./Components/ForgotPassword/ForgotPassword";
 import InviteRedirect from './Components/InviteRedirect/InviteRedirect';
 import Maintenance from './Components/Maintenance/Maintenance';
@@ -32,6 +30,8 @@ import BrowserWarningModal from './Components/BrowserWarningModal/BrowserWarning
 import PrivacyPolicy from './Components/PrivacyPolicy/PrivacyPolicy';
 import TermsOfService from './Components/TermsOfService/TermsOfService';
 import LegalDisclosure from './Components/LegalDisclosure/LegalDisclosure';
+import { LanguageProvider, useLanguage, SUPPORTED_LANGUAGES } from './Context/LanguageContext.jsx';
+import { SettingsProvider } from './Context/SettingsContext.jsx';
 
 const SEOManager = () => {
   const { t, language } = useLanguage();
@@ -57,14 +57,24 @@ const SEOManager = () => {
     }
 
     // Update Canonical Tag
-    // Enforce trailing slash to match vercel.json configuration
+    // Enforce trailing slash and language prefix
     let path = location.pathname;
-    if (path !== '/' && !path.endsWith('/')) {
-      path += '/';
-    }
-    const canonicalUrl = `https://scripturehabit.app${path}`;
-    let canonicalTag = document.querySelector('link[rel="canonical"]');
 
+    // Extract base path (without language prefix if present)
+    const pathParts = path.split('/');
+    const currentPrefix = pathParts[1];
+    const baseContentPath = SUPPORTED_LANGUAGES.includes(currentPrefix)
+      ? '/' + pathParts.slice(2).join('/')
+      : path;
+
+    // Canonical URL for the CURRENT language
+    let canonicalPath = `/${language}${baseContentPath === '/' ? '' : baseContentPath}`;
+    if (canonicalPath !== '/' && !canonicalPath.endsWith('/')) {
+      canonicalPath += '/';
+    }
+    const canonicalUrl = `https://scripturehabit.app${canonicalPath}`;
+
+    let canonicalTag = document.querySelector('link[rel="canonical"]');
     if (canonicalTag) {
       canonicalTag.setAttribute('href', canonicalUrl);
     } else {
@@ -93,9 +103,8 @@ const SEOManager = () => {
     };
     document.querySelector('meta[property="og:locale"]')?.setAttribute('content', localeMap[language] || 'en_US');
 
-    // Manage Hreflang tags
-    const supportedLangs = ['en', 'ja', 'pt', 'zho', 'es', 'vi', 'th', 'ko', 'tl', 'sw'];
-    supportedLangs.forEach(lang => {
+    // Manage Hreflang tags - pointing to each language version of the SAME content
+    SUPPORTED_LANGUAGES.forEach(lang => {
       const hLang = lang === 'zho' ? 'zh-Hant' : lang;
       let link = document.querySelector(`link[hreflang="${hLang}"]`);
       if (!link) {
@@ -104,10 +113,15 @@ const SEOManager = () => {
         link.setAttribute('hreflang', hLang);
         document.head.appendChild(link);
       }
-      link.setAttribute('href', canonicalUrl);
+
+      let langSpecificPath = `/${lang}${baseContentPath === '/' ? '' : baseContentPath}`;
+      if (langSpecificPath !== '/' && !langSpecificPath.endsWith('/')) {
+        langSpecificPath += '/';
+      }
+      link.setAttribute('href', `https://scripturehabit.app${langSpecificPath}`);
     });
 
-    // x-default hreflang
+    // x-default hreflang (usually English or a generic path)
     let xDefault = document.querySelector('link[hreflang="x-default"]');
     if (!xDefault) {
       xDefault = document.createElement('link');
@@ -115,7 +129,13 @@ const SEOManager = () => {
       xDefault.setAttribute('hreflang', 'x-default');
       document.head.appendChild(xDefault);
     }
-    xDefault.setAttribute('href', canonicalUrl);
+
+    // Point x-default to the English version
+    let xDefaultPath = `/en${baseContentPath === '/' ? '' : baseContentPath}`;
+    if (xDefaultPath !== '/' && !xDefaultPath.endsWith('/')) {
+      xDefaultPath += '/';
+    }
+    xDefault.setAttribute('href', `https://scripturehabit.app${xDefaultPath}`);
   }, [language, t, location.pathname]);
 
   return null;
@@ -308,24 +328,30 @@ const App = () => {
     return (
       <div className={getAppClass()}>
         <Routes>
-          <Route
-            path="/"
-            element={isStandalone ? <Navigate to="/dashboard" replace /> : <LandingPage />}
-          />
-          <Route path="/welcome" element={<Welcome />} />
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/signup" element={<SignupForm />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/group-form" element={<GroupForm />} />
-          <Route path="/join-group" element={<JoinGroup />} />
+          <Route path="/:lang">
+            <Route
+              index
+              element={isStandalone ? <Navigate to="dashboard" replace /> : <LandingPage />}
+            />
+            <Route path="welcome" element={<Welcome />} />
+            <Route path="login" element={<LoginForm />} />
+            <Route path="signup" element={<SignupForm />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="group-form" element={<GroupForm />} />
+            <Route path="join-group" element={<JoinGroup />} />
 
-          <Route path="/group-options" element={<GroupOptions />} />
-          <Route path="/group/:id" element={<GroupDetails />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/join/:inviteCode" element={<InviteRedirect />} />
-          <Route path="/privacy" element={<PrivacyPolicy />} />
-          <Route path="/terms" element={<TermsOfService />} />
-          <Route path="/legal" element={<LegalDisclosure />} />
+            <Route path="group-options" element={<GroupOptions />} />
+            <Route path="group/:id" element={<GroupDetails />} />
+            <Route path="forgot-password" element={<ForgotPassword />} />
+            <Route path="join/:inviteCode" element={<InviteRedirect />} />
+            <Route path="privacy" element={<PrivacyPolicy />} />
+            <Route path="terms" element={<TermsOfService />} />
+            <Route path="legal" element={<LegalDisclosure />} />
+            {/* Catch-all for invalid paths within a language prefix */}
+            <Route path="*" element={<Navigate to="" replace />} />
+          </Route>
+          {/* Support root path and any prefix-less path by redirecting to detected lang */}
+          <Route path="*" element={<LanguageRedirect language={language} location={location} />} />
         </Routes>
       </div>
     );
@@ -348,6 +374,21 @@ const App = () => {
       </LanguageProvider>
     </SettingsProvider>
   );
+};
+
+const LanguageRedirect = ({ language, location }) => {
+  const path = location.pathname;
+  const pathParts = path.split('/');
+  const firstPart = pathParts[1];
+
+  // If already prefixed with a supported language, don't redirect (let Routes handle it)
+  if (SUPPORTED_LANGUAGES.includes(firstPart)) {
+    return null;
+  }
+
+  // Otherwise, prefix with current detected language
+  const newPath = `/${language}${path === '/' ? '' : path}`;
+  return <Navigate to={newPath} replace />;
 };
 
 const BrowserWarningWrapper = ({ isOpen, onClose }) => {

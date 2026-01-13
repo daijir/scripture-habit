@@ -1,33 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <!-- Hompage -->
   <url>
-    <loc>https://scripturehabit.app/</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://scripturehabit.app/en/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://scripturehabit.app/en/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://scripturehabit.app/ja/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://scripturehabit.app/pt/"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://scripturehabit.app/zho/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://scripturehabit.app/es/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://scripturehabit.app/vi/"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://scripturehabit.app/th/"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://scripturehabit.app/ko/"/>
+    <xhtml:link rel="alternate" hreflang="tl" href="https://scripturehabit.app/tl/"/>
+    <xhtml:link rel="alternate" hreflang="sw" href="https://scripturehabit.app/sw/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://scripturehabit.app/en/"/>
+    <lastmod>2026-01-13</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://scripturehabit.app/login/</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://scripturehabit.app/ja/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://scripturehabit.app/en/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://scripturehabit.app/ja/"/>
+    <xhtml:link rel="alternate" hreflang="pt" href="https://scripturehabit.app/pt/"/>
+    <xhtml:link rel="alternate" hreflang="zh-Hant" href="https://scripturehabit.app/zho/"/>
+    <xhtml:link rel="alternate" hreflang="es" href="https://scripturehabit.app/es/"/>
+    <xhtml:link rel="alternate" hreflang="vi" href="https://scripturehabit.app/vi/"/>
+    <xhtml:link rel="alternate" hreflang="th" href="https://scripturehabit.app/th/"/>
+    <xhtml:link rel="alternate" hreflang="ko" href="https://scripturehabit.app/ko/"/>
+    <xhtml:link rel="alternate" hreflang="tl" href="https://scripturehabit.app/tl/"/>
+    <xhtml:link rel="alternate" hreflang="sw" href="https://scripturehabit.app/sw/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://scripturehabit.app/en/"/>
+    <lastmod>2026-01-13</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Login -->
+  <url>
+    <loc>https://scripturehabit.app/en/login/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://scripturehabit.app/en/login/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://scripturehabit.app/ja/login/"/>
+    <lastmod>2026-01-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://scripturehabit.app/signup/</loc>
-    <lastmod>2026-01-12</lastmod>
+    <loc>https://scripturehabit.app/ja/login/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://scripturehabit.app/en/login/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://scripturehabit.app/ja/login/"/>
+    <lastmod>2026-01-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Signup -->
+  <url>
+    <loc>https://scripturehabit.app/en/signup/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://scripturehabit.app/en/signup/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://scripturehabit.app/ja/signup/"/>
+    <lastmod>2026-01-13</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://scripturehabit.app/privacy/</loc>
-    <lastmod>2026-01-12</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
+    <loc>https://scripturehabit.app/ja/signup/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://scripturehabit.app/en/signup/"/>
+    <xhtml:link rel="alternate" hreflang="ja" href="https://scripturehabit.app/ja/signup/"/>
+    <lastmod>2026-01-13</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
   </url>
-  <url>
-    <loc>https://scripturehabit.app/terms/</loc>
-    <lastmod>2026-01-12</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.5</priority>
-  </url>
+
+  <!-- Add other languages for landing if needed, but for now focusing on en/ja for search -->
 </urlset>
