@@ -15,11 +15,12 @@ const Welcome = () => {
     const [pendingPath, setPendingPath] = useState(null);
 
     const handleAuthClick = (path) => {
+        const fullPath = `/${language}${path}`;
         if (isInAppBrowser()) {
-            setPendingPath(path);
+            setPendingPath(fullPath);
             setShowWarning(true);
         } else {
-            navigate(path);
+            navigate(fullPath);
         }
     };
 

@@ -245,7 +245,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
             ))}
 
             {userGroups.length < 12 && (
-              <div className="menuItem create-group-item" onClick={() => navigate('/group-options')}>
+              <div className="menuItem create-group-item" onClick={() => navigate(`/${language}/group-options`)}>
                 <UilPlusCircle />
                 <span>{t('sidebar.joinCreateGroup')}</span>
               </div>
@@ -290,7 +290,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
               ))}
             </div>
             {userGroups.length < 12 && (
-              <div className="modal-create-group" onClick={() => { navigate('/group-options'); setShowGroupModal(false); }}>
+              <div className="modal-create-group" onClick={() => { navigate(`/${language}/group-options`); setShowGroupModal(false); }}>
                 <UilPlusCircle />
                 <span>{t('sidebar.joinCreateGroup')}</span>
               </div>

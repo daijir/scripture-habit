@@ -328,28 +328,30 @@ const App = () => {
     return (
       <div className={getAppClass()}>
         <Routes>
-          <Route path="/:lang">
-            <Route
-              index
-              element={isStandalone ? <Navigate to="dashboard" replace /> : <LandingPage />}
-            />
-            <Route path="welcome" element={<Welcome />} />
-            <Route path="login" element={<LoginForm />} />
-            <Route path="signup" element={<SignupForm />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="group-form" element={<GroupForm />} />
-            <Route path="join-group" element={<JoinGroup />} />
+          {SUPPORTED_LANGUAGES.map(lang => (
+            <Route key={lang} path={lang}>
+              <Route
+                index
+                element={isStandalone ? <Navigate to="dashboard" replace /> : <LandingPage />}
+              />
+              <Route path="welcome" element={<Welcome />} />
+              <Route path="login" element={<LoginForm />} />
+              <Route path="signup" element={<SignupForm />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="group-form" element={<GroupForm />} />
+              <Route path="join-group" element={<JoinGroup />} />
 
-            <Route path="group-options" element={<GroupOptions />} />
-            <Route path="group/:id" element={<GroupDetails />} />
-            <Route path="forgot-password" element={<ForgotPassword />} />
-            <Route path="join/:inviteCode" element={<InviteRedirect />} />
-            <Route path="privacy" element={<PrivacyPolicy />} />
-            <Route path="terms" element={<TermsOfService />} />
-            <Route path="legal" element={<LegalDisclosure />} />
-            {/* Catch-all for invalid paths within a language prefix */}
-            <Route path="*" element={<Navigate to="" replace />} />
-          </Route>
+              <Route path="group-options" element={<GroupOptions />} />
+              <Route path="group/:id" element={<GroupDetails />} />
+              <Route path="forgot-password" element={<ForgotPassword />} />
+              <Route path="join/:inviteCode" element={<InviteRedirect />} />
+              <Route path="privacy" element={<PrivacyPolicy />} />
+              <Route path="terms" element={<TermsOfService />} />
+              <Route path="legal" element={<LegalDisclosure />} />
+              {/* Catch-all for invalid paths within a language prefix */}
+              <Route path="*" element={<Navigate to="" replace />} />
+            </Route>
+          ))}
           {/* Support root path and any prefix-less path by redirecting to detected lang */}
           <Route path="*" element={<LanguageRedirect location={location} />} />
         </Routes>

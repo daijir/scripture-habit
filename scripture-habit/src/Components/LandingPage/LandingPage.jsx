@@ -76,7 +76,7 @@ const LandingPage = () => {
                         <p className="hero-subtitle">{t('landing.hero.subtitle')}</p>
                         <Button
                             className="cta-button primary-cta"
-                            onClick={() => navigate('/welcome')}
+                            onClick={() => navigate(`/${language}/welcome`)}
                         >
                             {t('landing.hero.cta')}
                         </Button>
@@ -115,7 +115,7 @@ const LandingPage = () => {
                     <h2 className="section-title">{t('landing.finalCta.title')}</h2>
                     <Button
                         className="cta-button final-cta"
-                        onClick={() => navigate('/welcome')}
+                        onClick={() => navigate(`/${language}/welcome`)}
                     >
                         {t('landing.finalCta.button')}
                     </Button>
