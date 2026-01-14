@@ -282,11 +282,25 @@ const App = () => {
   const location = useLocation();
   const getAppClass = () => {
     const path = location.pathname;
-    if (path === '/') return 'App LandingPage';
-    if (path === '/welcome') return 'App Welcome';
-    if (path === '/login') return 'App LoginForm';
-    if (path === '/signup') return 'App SignupForm';
-    if (path === '/dashboard') return 'App Dashboard';
+    const pathParts = path.split('/');
+    const firstPart = pathParts[1];
+
+    // Determine the base path regardless of language prefix
+    let base = path;
+    if (SUPPORTED_LANGUAGES.includes(firstPart)) {
+      base = '/' + pathParts.slice(2).join('/');
+    }
+
+    // Normalize to handle trailing slashes
+    if (base !== '/' && base.endsWith('/')) {
+      base = base.slice(0, -1);
+    }
+
+    if (base === '' || base === '/') return 'App LandingPage';
+    if (base === '/welcome') return 'App Welcome';
+    if (base === '/login') return 'App LoginForm';
+    if (base === '/signup') return 'App SignupForm';
+    if (base === '/dashboard') return 'App Dashboard';
     return 'App';
   };
 

@@ -17,6 +17,17 @@
             ],
             "destination": "https://scripturehabit.app/$1",
             "permanent": true
+        },
+        {
+            "source": "/(.*)",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "scripture-habit.vercel.app"
+                }
+            ],
+            "destination": "https://scripturehabit.app/$1",
+            "permanent": true
         }
     ],
     "rewrites": [
@@ -32,21 +43,6 @@
     "headers": [
         {
             "source": "/(.*)",
-            "has": [
-                {
-                    "type": "host",
-                    "value": "scripture-habit.vercel.app"
-                }
-            ],
-            "headers": [
-                {
-                    "key": "X-Robots-Tag",
-                    "value": "noindex"
-                }
-            ]
-        },
-        {
-            "source": "/(.*)",
             "headers": [
                 {
                     "key": "Link",
@@ -59,6 +55,10 @@
                 {
                     "key": "Cross-Origin-Embedder-Policy",
                     "value": "unsafe-none"
+                },
+                {
+                    "key": "X-Robots-Tag",
+                    "value": "all"
                 }
             ]
         }
