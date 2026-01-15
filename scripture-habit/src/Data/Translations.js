@@ -1,8 +1,8 @@
 export const translations = {
     en: {
         seo: {
-            title: "Scripture Habit | Daily Scripture Study & Community Tool",
-            description: "Build a daily scripture habit with friends. Share insights from the Bible, Book of Mormon, and Come, Follow Me. The best tool to turn scripture study into a joyful daily routine."
+            title: "Scripture Habit | Daily LDS Scripture Study & Community Tool",
+            description: "Build a daily scripture habit with friends. Optimized for LDS members studying the Bible, Book of Mormon, and Come, Follow Me. The best tool to turn Gospel study into a joyful daily routine."
         },
         sidebar: {
             dashboard: "Dashboard",
@@ -641,8 +641,8 @@ export const translations = {
         },
         landing: {
             hero: {
-                title: "Where Scripture Study Becomes a Habit of Joy",
-                subtitle: "Study together, share your insights, and turn your daily routine into a source of joy.",
+                title: "Where LDS Scripture Study Becomes a Habit of Joy",
+                subtitle: "The community tool for LDS members to study together, share insights, and turn daily scripture study into a source of joy.",
                 cta: "Start Now"
             },
             features: {
@@ -699,8 +699,8 @@ export const translations = {
     },
     ja: {
         seo: {
-            title: "Scripture Habit | 聖典学習を楽しく、仲間と一緒に習慣化",
-            description: "仲間と一緒に聖典を学び、証を分かち合うコミュニティツールです。『わたしに従ってきなさい』や聖書、モルモン書の学習を楽しく継続し、日々の習慣に変えましょう。"
+            title: "Scripture Habit | 末日聖徒の聖典学習を楽しく、仲間と一緒に習慣化",
+            description: "末日聖徒イエス・キリスト教会の会員向け。仲間と一緒に聖典を学び、証を分かち合うコミュニティツールです。『わたしに従ってきなさい』や聖書、モルモン書の学習を楽しく継続し、日々の習慣に変えましょう。"
         },
         sidebar: {
             dashboard: "ダッシュボード",
@@ -1346,8 +1346,8 @@ export const translations = {
         },
         landing: {
             hero: {
-                title: "聖典学習を\n楽しく、習慣に",
-                subtitle: "仲間と共に学び、証を分かち合うことで、日々の習慣を大きな「喜び」へと変えましょう。",
+                title: "末日聖徒の聖典学習を\n楽しく、習慣に",
+                subtitle: "仲間と共に学び、証を分かち合うことで、日々の聖典学習を大きな「喜び」へと変えましょう。",
                 cta: "今すぐはじめる"
             },
             features: {
@@ -1404,13 +1404,13 @@ export const translations = {
     },
     pt: {
         seo: {
-            title: "Scripture Habit - Torne o estudo das escrituras um hábito diário",
-            description: "Scripture Habit é uma ferramenta comunitária para ajudá-lo a estudar as escrituras com amigos e compartilhar seus aprendizados diariamente."
+            title: "Scripture Habit | Estudo das Escrituras SUD e Ferramenta Comunitária",
+            description: "Crie um hábito diário de estudo das escrituras com amigos. Otimizado para membros SUD que estudam a Bíblia, o Livro de Mórmon e o Vem, e Segue-Me. A melhor ferramenta para transformar o estudo do Evangelho em uma rotina diária alegre."
         },
         landing: {
             hero: {
-                title: "Torne o Estudo das Escrituras uma Hábito Alegre",
-                subtitle: "Estude com amigos, compartilhe seus aprendizados e transforme sua rotina diária em uma fonte de alegria.",
+                title: "Onde o Estudo das Escrituras SUD se Torna um Hábito de Alegria",
+                subtitle: "A ferramenta comunitária para membros SUD estudarem juntos, compartilharem insights e transformarem o estudo diário das escrituras em uma fonte de alegria.",
                 cta: "Comece Agora"
             },
             features: {
@@ -2087,13 +2087,13 @@ export const translations = {
     },
     zho: {
         seo: {
-            title: "Scripture Habit - 讓經文研讀成為日常習慣",
-            description: "Scripture Habit 是一個社區工具，旨在幫助您與朋友一起研讀經文並每天分享您的心得。"
+            title: "Scripture Habit | 每日 LDS 經文研讀與社群工具",
+            description: "與朋友一起建立每日研讀經文的習慣。為研究聖經、摩爾門經和「來跟從我」的 LDS 成員優化。將福音學習轉化為愉快日常習慣的最佳工具。"
         },
         landing: {
             hero: {
-                title: "讓研讀經文成為快樂的習慣",
-                subtitle: "與朋友一起研讀、分享心得，將日常鎖事轉化為喜悅的泉源。",
+                title: "讓 LDS 經文研讀成為愉快的習慣",
+                subtitle: "末日聖徒成員一起研習、分享見解，讓日常經文研讀成爲快樂源泉的社群工具。",
                 cta: "立即開始"
             },
             features: {
@@ -2740,14 +2740,14 @@ export const translations = {
     },
     es: {
         seo: {
-            title: "Scripture Habit - Haz del estudio de las escrituras un hábito diario",
-            description: "Scripture Habit es una herramienta comunitaria para ayudarte a estudiar las escrituras con amigos y compartir lo aprendido diariamente."
+            title: "Scripture Habit | Herramienta de Comunidad y Estudio de las Escrituras SUD",
+            description: "Crea un hábito diario de estudio de las escrituras con amigos. Optimizado para miembros SUD que estudian la Biblia, el Libro de Mormón y Ven, sígueme. La mejor herramienta para convertir el estudio del Evangelio en una rutina diaria alegre."
         },
         landing: {
             hero: {
-                title: "Haz del estudio de las escrituras un hábito alegre",
-                subtitle: "Estudia junto a otros, comparte tus reflexiones y convierte tu rutina diaria en una fuente de gozo.",
-                cta: "Comienza ahora"
+                title: "Donde el Estudio de las Escrituras SUD se Convierte en un Hábito de Alegría",
+                subtitle: "La herramienta comunitaria para que los miembros SUD estudien juntos, compartan ideas y conviertan el estudio diario de las escrituras en una fuente de alegría.",
+                cta: "Comenzar ahora"
             },
             features: {
                 title: "Características de\nScripture Habit",
@@ -3394,13 +3394,13 @@ export const translations = {
     },
     vi: {
         seo: {
-            title: "Scripture Habit - Biến việc học thánh thư thành thói quen hàng ngày",
-            description: "Scripture Habit là một công cụ cộng đồng giúp bạn học thánh thư cùng bạn bè và chia sẻ những hiểu biết của mình hàng ngày."
+            title: "Scripture Habit | Công cụ Cộng đồng & Nghiên cứu Thánh thư LDS",
+            description: "Xây dựng thói quen học thánh thư hàng ngày cùng bạn bè. Được tối ưu hóa cho các thành viên LDS nghiên cứu Kinh Thánh, Sách Mặc Môn và Hãy Đi Theo Ta. Công cụ tốt nhất để biến việc học Phúc âm thành thói quen vui vẻ hàng ngày."
         },
         landing: {
             hero: {
-                title: "Biến việc học thánh thư thành thói quen vui vẻ",
-                subtitle: "Cùng nhau học tập, chia sẻ những hiểu biết của bạn và biến thói quen hàng ngày của bạn thành nguồn vui.",
+                title: "Nơi việc học Thánh thư LDS trở thành thói quen vui vẻ",
+                subtitle: "Công cụ cộng đồng dành cho các thành viên LDS để cùng nhau học tập, chia sẻ hiểu biết và biến việc học thánh thư hàng ngày thành nguồn vui.",
                 cta: "Bắt đầu ngay"
             },
             features: {
@@ -4082,13 +4082,13 @@ export const translations = {
     },
     th: {
         seo: {
-            title: "Scripture Habit - ทำให้การศึกษาพระคัมภีร์เป็นนิสัยประจำวัน",
-            description: "Scripture Habit เป็นเครื่องมือชุมชนที่จะช่วยให้คุณศึกษาพระคัมภีร์ไปพร้อมกับเพื่อนๆ และแบ่งปันสิ่งที่คุณเรียนรู้ได้ทุกวัน"
+            title: "Scripture Habit | เครื่องมือศึกษาพระคัมภีร์และชุมชน LDS",
+            description: "สร้างนิสัยการศึกษาพระคัมภีร์ทุกวันกับเพื่อนๆ เหมาะสำหรับสมาชิก LDS ที่ศึกษาพระคัมภีร์ไบเบิล พระคัมีร์มอรมอน และ จงตามเรามา เครื่องมือที่ดีที่สุดในการเปลี่ยนการศึกษาพระกิตติคุณให้เป็นกิจวัตรที่สนุกสนาน"
         },
         landing: {
             hero: {
-                title: "ทำให้การศึกษาพระคัมภีร์เป็นนิสัยที่สนุกสนาน",
-                subtitle: "ศึกษาร่วมกัน แบ่งปันข้อคิด และเปลี่ยนกิจวัตรประจำวันของคุณให้เป็นแหล่งแห่งความสุข",
+                title: "ทำให้การศึกษาพระคัมภีร์ LDS เป็นนิสัยที่สนุกสนาน",
+                subtitle: "เครื่องมือชุมชนสำหรับสมาชิก LDS เพื่อศึกษาร่วมกัน แบ่งปันข้อคิด และเปลี่ยนการศึกษาพระคัมภีร์ทุกวันให้เป็นแหล่งแห่งความสุข",
                 cta: "เริ่มตอนนี้"
             },
             features: {
@@ -4796,13 +4796,13 @@ export const translations = {
     },
     ko: {
         seo: {
-            title: "Scripture Habit - 경전 공부를 매일의 습관으로",
-            description: "Scripture Habit은 친구들과 함께 경전을 공부하고 매일 배운 내용을 나눌 수 있도록 돕는 커뮤니티 도구입니다."
+            title: "Scripture Habit | 일일 LDS 경전 공부 및 커뮤니티 도구",
+            description: "친구들과 함께 매일 경전 공부 습관을 만들어 보세요. 성경, 몰몬경, '와서 나를 따르라'를 공부하는 LDS 회원들을 위해 최적화되었습니다. 복음 공부를 즐거운 일과로 만들어주는 최고의 도구입니다."
         },
         landing: {
             hero: {
-                title: "경전 공부를 즐거운 습관으로 만드세요",
-                subtitle: "함께 공부하고, 통찰을 나누며, 일상을 기쁨의 원천으로 바꾸어 보세요.",
+                title: "LDS 경전 공부가 즐거운 습관이 되는 곳",
+                subtitle: "LDS 회원들이 함께 공부하고, 통찰을 나누며, 매일의 경전 공부를 기쁨의 원천으로 바꾸는 커뮤니티 도구입니다.",
                 cta: "지금 시작하기"
             },
             features: {
@@ -5510,13 +5510,13 @@ export const translations = {
     },
     tl: {
         seo: {
-            title: "Scripture Habit - Gawing pang-araw-araw na gawi ang pag-aaral ng banal na kasulatan",
-            description: "Ang Scripture Habit ay isang community tool upang matulungan kang mag-aral ng mga banal na kasulatan kasama ang mga kaibigan at ibahagi ang iyong mga natutunan araw-araw."
+            title: "Scripture Habit | Daily LDS Scripture Study at Tool sa Komunidad",
+            description: "Bumuo ng pang-araw-araw na gawi sa pag-aaral ng banal na kasulatan kasama ang mga kaibigan. Na-optimize para sa mga miyembro ng LDS na nag-aaral ng Biblia, Aklat ni Mormon, at Pumarito Ka, Sumunod Ka sa Akin. Ang pinakamahusay na tool upang gawing masayang daily routine ang pag-aaral ng Ebanghelyo."
         },
         landing: {
             hero: {
-                title: "Gawing Masaya at Ugali ang Pag-aaral ng Banal na Kasulatan",
-                subtitle: "Mag-aral nang sama-sama, ibahagi ang iyong mga insight, at gawing mapagkukunan ng kagalakan ang iyong pang-araw-araw na gawain.",
+                title: "Kung Saan ang Pag-aaral ng Banal na Kasulatan ng LDS ay Nagiging Ugali ng Kagalakan",
+                subtitle: "Ang tool sa komunidad para sa mga miyembro ng LDS upang mag-aral nang magkakasama, magbahagi ng mga insight, at gawing mapagkukunan ng kagalakan ang pang-araw-araw na pag-aaral ng banal na kasulatan.",
                 cta: "Simulan Na"
             },
             features: {
@@ -6209,13 +6209,13 @@ export const translations = {
     },
     sw: {
         seo: {
-            title: "Scripture Habit - Fanya mafunzo ya maandiko kuwa tabia ya kila siku",
-            description: "Scripture Habit ni chombo cha jumuiya cha kukusaidia kujifunza maandiko na marafiki na kushiriki mafunzo yako kila siku."
+            title: "Scripture Habit | Mafunzo ya Maandiko ya LDS ya Kila Siku na Zana ya Jumuiya",
+            description: "Jenga tabia ya kila siku ya kujifunza maandiko na marafiki. Imeboreshwa kwa washiriki wa LDS wanaojifunza Biblia, Kitabu cha Mormoni, na Njoo, Unifuate. Zana bora ya kugeuza mafunzo ya Injili kuwa utaratibu wa kufurahisha wa kila siku."
         },
         landing: {
             hero: {
-                title: "Jifunze Maandiko kwa Kufurahia na Kuifanya Tabia",
-                subtitle: "Jifunzeni pamoja, shiriki maarifa yako, na ugeuze utaratibu wako wa kila siku kuwa chanzo cha furaha.",
+                title: "Ambapo Mafunzo ya Maandiko ya LDS Yanakuwa Tabia ya Furaha",
+                subtitle: "Zana ya jumuiya kwa ajili ya washiriki wa LDS kujifunza pamoja, kushiriki maarifa, na kugeuza mafunzo ya kila siku ya maandiko kuwa chanzo cha furaha.",
                 cta: "Anza Sasa"
             },
             features: {
