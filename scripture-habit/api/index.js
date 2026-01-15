@@ -1093,6 +1093,7 @@ app.post('/api/post-message', async (req, res) => {
                 lastMessageAt: admin.firestore.FieldValue.serverTimestamp(),
                 lastMessageByNickname: userData.nickname || 'Member',
                 lastMessageByUid: uid,
+                [`memberLastActive.${uid}`]: admin.firestore.FieldValue.serverTimestamp(),
                 [`memberLastReadAt.${uid}`]: admin.firestore.FieldValue.serverTimestamp()
             });
 
@@ -2136,7 +2137,7 @@ app.get('/api/purge-initialized-users', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-app.get('/api/check-inactive-users', async (req, res) => {
+app.all('/api/check-inactive-users', async (req, res) => {
     // Use a simple CRON_SECRET if available for security
     const authHeader = req.headers.authorization;
     const cronSecret = process.env.CRON_SECRET;
@@ -2199,7 +2200,15 @@ app.get('/api/check-inactive-users', async (req, res) => {
                     membersToInitialize.push(memberId);
                     activeMembers.push(memberId); // Treat as active for ownership transfer purposes
                 } else {
-                    const lastActiveDate = lastActiveTimestamp.toDate();
+                    let lastActiveDate;
+                    if (lastActiveTimestamp.toDate) {
+                        lastActiveDate = lastActiveTimestamp.toDate();
+                    } else if (lastActiveTimestamp.seconds) {
+                        lastActiveDate = new Date(lastActiveTimestamp.seconds * 1000);
+                    } else {
+                        lastActiveDate = new Date(lastActiveTimestamp);
+                    }
+
                     const diff = now - lastActiveDate;
                     const daysDiff = Math.floor(diff / (24 * 60 * 60 * 1000));
 
