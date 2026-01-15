@@ -136,6 +136,36 @@ const SEOManager = () => {
       xDefaultPath += '/';
     }
     xDefault.setAttribute('href', `https://scripturehabit.app${xDefaultPath}`);
+
+    // Update JSON-LD Structured Data
+    let jsonLdScript = document.getElementById('json-ld-schema');
+    if (!jsonLdScript) {
+      jsonLdScript = document.createElement('script');
+      jsonLdScript.id = 'json-ld-schema';
+      jsonLdScript.type = 'application/ld+json';
+      document.head.appendChild(jsonLdScript);
+    }
+
+    const schemaData = {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Scripture Habit",
+      "operatingSystem": "Web",
+      "applicationCategory": "SocialNetworkingApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "description": t('seo.description'),
+      "url": `https://scripturehabit.app/${language}/`,
+      "softwareVersion": "1.0",
+      "author": {
+        "@type": "Person",
+        "name": "Dazhi"
+      }
+    };
+    jsonLdScript.text = JSON.stringify(schemaData);
   }, [language, t, location.pathname]);
 
   return null;

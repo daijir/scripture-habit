@@ -5,20 +5,23 @@ import './Footer.css';
 
 const Footer = () => {
     const navigate = useNavigate();
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
 
     return (
         <footer className="app-footer">
             <div className="footer-content">
                 <div className="footer-links">
-                    <span className="footer-link" onClick={() => navigate('/privacy')}>
+                    <span className="footer-link" onClick={() => navigate(`/${language}/privacy`)}>
                         {t('privacy.title')}
                     </span>
                     <span className="footer-separator">•</span>
-                    <span className="footer-link" onClick={() => navigate('/terms')}>
+                    <span className="footer-link" onClick={() => navigate(`/${language}/terms`)}>
                         {t('terms.title')}
                     </span>
                     <span className="footer-separator">•</span>
+                    <span className="footer-link" onClick={() => navigate(`/${language}/legal`)}>
+                        {t('terms.officialDisclaimer')}
+                    </span>
                 </div>
                 <div className="footer-copyright">
                     © {new Date().getFullYear()} Scripture Habit

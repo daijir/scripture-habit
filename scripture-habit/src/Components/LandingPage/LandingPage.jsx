@@ -110,6 +110,32 @@ const LandingPage = () => {
                     </div>
                 </section>
 
+                {/* SEO Content Section */}
+                <section className="seo-explanation-section">
+                    <div className="seo-grid">
+                        <div className="seo-item">
+                            <h2 className="seo-h2">{t('landing.seoContent.why.title')}</h2>
+                            <p className="seo-p">{t('landing.seoContent.why.text')}</p>
+                        </div>
+                        <div className="seo-item">
+                            <h2 className="seo-h2">{t('landing.seoContent.community.title')}</h2>
+                            <p className="seo-p">{t('landing.seoContent.community.text')}</p>
+                        </div>
+                    </div>
+
+                    <div className="faq-container">
+                        <h2 className="section-title">{t('landing.seoContent.faq.title')}</h2>
+                        <div className="faq-grid">
+                            {[1, 2, 3].map(id => (
+                                <div key={id} className="faq-item">
+                                    <h3 className="faq-q">{t(`landing.seoContent.faq.q${id}`)}</h3>
+                                    <p className="faq-a">{t(`landing.seoContent.faq.a${id}`)}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+
                 {/* Final CTA Section */}
                 <section className="final-cta-section">
                     <h2 className="section-title">{t('landing.finalCta.title')}</h2>

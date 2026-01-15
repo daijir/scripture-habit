@@ -1,8 +1,8 @@
 export const translations = {
     en: {
         seo: {
-            title: "Scripture Habit - Make Scripture Study a Daily Habit",
-            description: "Scripture Habit is a community tool to help you study scriptures with friends and share your insights daily."
+            title: "Scripture Habit | Daily Scripture Study & Community Tool",
+            description: "Build a daily scripture habit with friends. Share insights from the Bible, Book of Mormon, and Come, Follow Me. The best tool to turn scripture study into a joyful daily routine."
         },
         sidebar: {
             dashboard: "Dashboard",
@@ -675,13 +675,32 @@ export const translations = {
             finalCta: {
                 title: "Ready to start a new habit?",
                 button: "Start Fresh Today"
+            },
+            seoContent: {
+                why: {
+                    title: "Why build a Scripture Habit?",
+                    text: "Establishing a daily scripture habit is more than just reading; it's about creating a consistent space for personal revelation and spiritual growth. Scripture Habit provides the tools and community support to help you stay committed to your studies, whether you are following 'Come, Follow Me', studying the Bible, or diving deep into the Book of Mormon."
+                },
+                community: {
+                    title: "The Power of Community Study",
+                    text: "Research shows that building habits with friends increases your success rate significantly. Scripture Habit allows you to form small, intimate groups where you can share insights daily. This collaborative output (sharing what you learn) reinforces your own understanding and edifies others, fulfilling the principle of rejoicing together."
+                },
+                faq: {
+                    title: "Frequently Asked Questions",
+                    q1: "How do I start a scripture study habit?",
+                    a1: "The best way to start a scripture habit is to start small and be consistent. Scripture Habit's 3-day rule helps you maintain a steady rhythm without feeling overwhelmed.",
+                    q2: "Is Scripture Habit an official LDS app?",
+                    a2: "Scripture Habit is a personal project intended to support members of The Church of Jesus Christ of Latter-day Saints and all scripture students. It is not an official app of the Church, but it is designed to work seamlessly with the Gospel Library.",
+                    q3: "Can I use it for Bible study?",
+                    a3: "Absolutely! Scripture Habit is designed for any scripture study, including the Bible (Old and New Testament), Book of Mormon, and other sacred texts."
+                }
             }
         }
     },
     ja: {
         seo: {
-            title: "Scripture Habit - 聖典学習を楽しく、習慣に",
-            description: "Scripture Habit（スクハビ）は、仲間と一緒に聖典を学び、証を分かち合うことで、日々の学習を楽しく継続できるコミュニティツールです。"
+            title: "Scripture Habit | 聖典学習を楽しく、仲間と一緒に習慣化",
+            description: "仲間と一緒に聖典を学び、証を分かち合うコミュニティツールです。『わたしに従ってきなさい』や聖書、モルモン書の学習を楽しく継続し、日々の習慣に変えましょう。"
         },
         sidebar: {
             dashboard: "ダッシュボード",
@@ -1361,6 +1380,25 @@ export const translations = {
             finalCta: {
                 title: "あなたも、新しい習慣を始めませんか？",
                 button: "今すぐ新しく始める"
+            },
+            seoContent: {
+                why: {
+                    title: "なぜ聖典学習を習慣（Scripture Habit）にするのか？",
+                    text: "毎日聖典を読む習慣を身につけることは、単なる読書以上の意味があります。それは、個人の啓示を受け、霊的に成長するための継続的な時間を作ることです。Scripture Habit（スクハビ）は、あなたが『わたしに従ってきなさい』に従ったり、聖書を学んだり、モルモン書を深く読んだりする際に、学習を継続し、証を分かち合うためのツールとコミュニティを提供します。"
+                },
+                community: {
+                    title: "コミュニティで学ぶ力",
+                    text: "友人や家族と一緒に習慣を築くことで、一人で行うよりも成功率が大幅に上がることが研究で示されています。Scripture Habitでは、小さなグループを作り、日々の気づきを共有することができます。このアウトプット（学んだことを分かち合うこと）が自分自身の理解を深め、他の人々を教化し、共に喜ぶという原則を実現します。"
+                },
+                faq: {
+                    title: "よくある質問",
+                    q1: "どうすれば聖典学習を習慣化できますか？",
+                    a1: "聖典学習を習慣にする最善の方法は、小さく始めて継続することです。Scripture Habitの『3日ルール』は、負担を感じすぎることなく、一定のリズムを保つのに役立ちます。",
+                    q2: "末日聖徒イエス・キリスト教会の公式アプリですか？",
+                    a2: "Scripture Habitは、教会の会員や全ての聖典学習者をサポートするための個人プロジェクトです。教会の公式アプリではありませんが、福音ライブラリーとシームレスに連携するように設計されています。",
+                    q3: "聖書の学習にも使えますか？",
+                    a3: "もちろんです！ Scripture Habitは、聖書（旧約・新約）、モルモン書、その他の神聖な文書など、あらゆる聖典学習のために設計されています。"
+                }
             }
         }
     },
