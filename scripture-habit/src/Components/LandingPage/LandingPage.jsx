@@ -121,6 +121,10 @@ const LandingPage = () => {
                             <h2 className="seo-h2">{t('landing.seoContent.community.title')}</h2>
                             <p className="seo-p">{t('landing.seoContent.community.text')}</p>
                         </div>
+                        <div className="seo-item">
+                            <h2 className="seo-h2">{t('landing.seoContent.comparison.title')}</h2>
+                            <p className="seo-p">{t('landing.seoContent.comparison.text')}</p>
+                        </div>
                     </div>
 
                     <div className="faq-container">

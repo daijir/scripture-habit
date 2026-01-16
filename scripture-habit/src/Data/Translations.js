@@ -685,6 +685,10 @@ export const translations = {
                     title: "The Power of Community Study",
                     text: "Research shows that building habits with friends increases your success rate significantly. Scripture Habit allows you to form small, intimate groups where you can share insights daily. This collaborative output (sharing what you learn) reinforces your own understanding and edifies others, fulfilling the principle of rejoicing together."
                 },
+                comparison: {
+                    title: "The Best LDS App for Habit Consistency",
+                    text: "Compared to other study tools, Scripture Habit focuses specifically on daily accountability and community edification. Our unique 3-day rule ensures that groups remain active, while our AI-powered weekly letters help you visualize spiritual growth in a way that static reading plans cannot. It's more than a tracker; it's a tool for personal revelation."
+                },
                 faq: {
                     title: "Frequently Asked Questions",
                     q1: "How do I start a scripture study habit?",
@@ -1389,6 +1393,10 @@ export const translations = {
                 community: {
                     title: "コミュニティで学ぶ力",
                     text: "友人や家族と一緒に習慣を築くことで、一人で行うよりも成功率が大幅に上がることが研究で示されています。Scripture Habitでは、小さなグループを作り、日々の気づきを共有することができます。このアウトプット（学んだことを分かち合うこと）が自分自身の理解を深め、他の人々を教化し、共に喜ぶという原則を実現します。"
+                },
+                comparison: {
+                    title: "末日聖徒に最適な習慣化アプリ",
+                    text: "他の学習ツールと比較して、Scripture Habit（スクハビ）は『日々の継続』と『仲間との教化』に特化しています。独自の3日間ルールによりグループの活発さが維持され、AIによる週ごとの要約があなたの霊的な成長を実感させてくれます。単なる記録アプリではなく、個人の啓示を促すためのツールです。"
                 },
                 faq: {
                     title: "よくある質問",

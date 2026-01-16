@@ -38,9 +38,49 @@ const SEOManager = () => {
   const location = useLocation();
 
   useEffect(() => {
+    // Determine route type
+    const path = location.pathname;
+    const pathParts = path.split('/').filter(p => p !== '');
+    // If there's a language prefix, the actual path start at index 1
+    const baseIndex = SUPPORTED_LANGUAGES.includes(pathParts[0]) ? 1 : 0;
+    const route = pathParts[baseIndex] || '';
+
+    // Route-specific Title and Indexing
+    let title = t('seo.title') || "Scripture Habit";
+    let shouldIndex = true;
+
+    if (route === 'dashboard') {
+      title = `${t('sidebar.dashboard')} | Scripture Habit`;
+      shouldIndex = false;
+    } else if (route === 'welcome') {
+      title = `Welcome | Scripture Habit`;
+      shouldIndex = false;
+    } else if (route === 'login') {
+      title = `Login | Scripture Habit`;
+      shouldIndex = false;
+    } else if (route === 'signup') {
+      title = `Sign Up | Scripture Habit`;
+      shouldIndex = false;
+    } else if (route === 'group' || route === 'join' || route === 'profile' || route === 'my-notes' || route === 'settings') {
+      shouldIndex = false;
+    }
+
     // Update Document Title
-    const title = t('seo.title') || "Scripture Habit";
     document.title = title;
+
+    // Manage Robots Meta Tag
+    let robotsTag = document.querySelector('meta[name="robots"]');
+    if (!robotsTag) {
+      robotsTag = document.createElement('meta');
+      robotsTag.setAttribute('name', 'robots');
+      document.head.appendChild(robotsTag);
+    }
+    // Only index landing page (empty route)
+    if (shouldIndex && route === '') {
+      robotsTag.setAttribute('content', 'index, follow');
+    } else {
+      robotsTag.setAttribute('content', 'noindex, nofollow');
+    }
 
     // Update Meta Description
     const description = t('seo.description');
@@ -57,14 +97,9 @@ const SEOManager = () => {
     }
 
     // Update Canonical Tag
-    // Enforce trailing slash and language prefix
-    let path = location.pathname;
-
     // Extract base path (without language prefix if present)
-    const pathParts = path.split('/');
-    const currentPrefix = pathParts[1];
-    const baseContentPath = SUPPORTED_LANGUAGES.includes(currentPrefix)
-      ? '/' + pathParts.slice(2).join('/')
+    const baseContentPath = SUPPORTED_LANGUAGES.includes(pathParts[0])
+      ? '/' + pathParts.slice(1).join('/')
       : path;
 
     // Canonical URL for the CURRENT language
@@ -121,7 +156,7 @@ const SEOManager = () => {
       link.setAttribute('href', `https://scripturehabit.app${langSpecificPath}`);
     });
 
-    // x-default hreflang (usually English or a generic path)
+    // x-default hreflang
     let xDefault = document.querySelector('link[hreflang="x-default"]');
     if (!xDefault) {
       xDefault = document.createElement('link');
@@ -129,8 +164,6 @@ const SEOManager = () => {
       xDefault.setAttribute('hreflang', 'x-default');
       document.head.appendChild(xDefault);
     }
-
-    // Point x-default to the English version
     let xDefaultPath = `/en${baseContentPath === '/' ? '' : baseContentPath}`;
     if (xDefaultPath !== '/' && !xDefaultPath.endsWith('/')) {
       xDefaultPath += '/';
@@ -157,7 +190,7 @@ const SEOManager = () => {
         "price": "0",
         "priceCurrency": "USD"
       },
-      "description": t('seo.description'),
+      "description": description,
       "url": `https://scripturehabit.app/${language}/`,
       "softwareVersion": "1.0",
       "author": {
