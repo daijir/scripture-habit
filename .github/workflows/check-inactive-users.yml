@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Check Inactive Users
         run: |
-          curl -X POST "https://scripturehabit.app/api/check-inactive-users" \
+          curl -L -X POST "https://scripturehabit.app/api/check-inactive-users/" \
             -H "Authorization: Bearer ${{ secrets.CRON_SECRET }}" \
             -H "Content-Type: application/json" \
             -w "\nHTTP Status: %{http_code}\n" \

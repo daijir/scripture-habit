@@ -2107,18 +2107,20 @@ app.get('/api/purge-initialized-users', async (req, res) => {
                 batchOpCount++;
 
                 // Update Users
-                for (const uid of ghostsToRemove) {
-                    const userRef = db.collection('users').doc(uid);
-                    const userSnap = await userRef.get();
+                const userRefs = ghostsToRemove.map(uid => db.collection('users').doc(uid));
+                const userSnaps = userRefs.length > 0 ? await db.getAll(...userRefs) : [];
+
+                userSnaps.forEach((userSnap, idx) => {
                     if (userSnap.exists) {
-                        batch.update(userRef, {
+                        const uid = ghostsToRemove[idx];
+                        batch.update(userSnap.ref, {
                             groupIds: admin.firestore.FieldValue.arrayRemove(groupId)
                         });
-                        const gsRef = userRef.collection('groupStates').doc(groupId);
+                        const gsRef = userSnap.ref.collection('groupStates').doc(groupId);
                         batch.delete(gsRef);
                         batchOpCount += 2;
                     }
-                }
+                });
             }
 
             if (batchOpCount > 300) {
@@ -2166,9 +2168,9 @@ app.all('/api/check-inactive-users', async (req, res) => {
         const now = new Date();
         const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
 
-        for (const doc of snapshot.docs) {
-            const groupData = doc.data();
-            const groupId = doc.id;
+        for (const docSnapshot of snapshot.docs) {
+            const groupData = docSnapshot.data();
+            const groupId = docSnapshot.id;
             const members = groupData.members || [];
             const memberLastActive = groupData.memberLastActive || {};
             let ownerUserId = groupData.ownerUserId;
@@ -2229,7 +2231,6 @@ app.all('/api/check-inactive-users', async (req, res) => {
                 // Owner is inactive.
                 if (activeMembers.length > 0) {
                     // Transfer Ownership
-                    // activeMembers preserves order from 'members' array loop
                     const newOwnerId = activeMembers[0];
                     groupUpdates['ownerUserId'] = newOwnerId;
                     ownerUserId = newOwnerId; // Update local var so we don't remove the new owner
@@ -2240,7 +2241,7 @@ app.all('/api/check-inactive-users', async (req, res) => {
                     // System Message for Transfer
                     const transferMsgRef = groupsRef.doc(groupId).collection('messages').doc();
                     batch.set(transferMsgRef, {
-                        text: `� **Ownership Transferred**\nThe previous owner was inactive. Ownership has been transferred to a verified active member.`,
+                        text: `👑 **Ownership Transferred**\nThe previous owner was inactive. Ownership has been transferred to a verified active member.`,
                         createdAt: admin.firestore.FieldValue.serverTimestamp(),
                         senderId: 'system',
                         isSystemMessage: true,
@@ -2250,7 +2251,6 @@ app.all('/api/check-inactive-users', async (req, res) => {
                 } else {
                     // No active members to transfer to.
                     // DELETE GROUP
-                    // We must use recursiveDelete to remove subcollections like 'messages'
                     await db.recursiveDelete(groupsRef.doc(groupId));
                     deletedGroupCount++;
                     isGroupDeleted = true;
@@ -2273,7 +2273,7 @@ app.all('/api/check-inactive-users', async (req, res) => {
             // If group was deleted, skip standard removal logic
             if (isGroupDeleted) {
                 processedCount++;
-                if (batchOpCount > 300) {
+                if (batchOpCount > 400) {
                     await batch.commit();
                     batch = db.batch();
                     batchOpCount = 0;
@@ -2281,19 +2281,16 @@ app.all('/api/check-inactive-users', async (req, res) => {
                 continue;
             }
 
-            // Handle Initializations (only if group exists)
+            // Handle Initializations
             if (membersToInitialize.length > 0) {
-                const updateMap = {};
                 membersToInitialize.forEach(uid => {
-                    updateMap[`memberLastActive.${uid}`] = admin.firestore.FieldValue.serverTimestamp();
+                    groupUpdates[`memberLastActive.${uid}`] = admin.firestore.FieldValue.serverTimestamp();
                 });
-                Object.assign(groupUpdates, updateMap);
                 groupChanged = true;
                 initializedCount += membersToInitialize.length;
             }
 
             // Handle Inactive Removals
-            // Ensure we don't remove the CURRENT owner
             const finalMembersToRemove = inactiveMembers.filter(uid => uid !== ownerUserId);
 
             if (finalMembersToRemove.length > 0) {
@@ -2321,25 +2318,22 @@ app.all('/api/check-inactive-users', async (req, res) => {
                 });
                 batchOpCount++;
 
-                // Update Users
-                for (const uid of removeUidList) {
-                    const userRef = db.collection('users').doc(uid);
-                    // Check if user exists before updating to avoid NOT_FOUND error in batch
-                    const userSnap = await userRef.get();
+                // Update Users (Optimized)
+                const userRefs = removeUidList.map(uid => db.collection('users').doc(uid));
+                const userSnaps = await db.getAll(...userRefs);
 
+                userSnaps.forEach((userSnap, idx) => {
                     if (userSnap.exists) {
-                        batch.update(userRef, {
+                        batch.update(userSnap.ref, {
                             groupIds: admin.firestore.FieldValue.arrayRemove(groupId)
                         });
                         batchOpCount++;
 
-                        const groupStateRef = userRef.collection('groupStates').doc(groupId);
+                        const groupStateRef = userSnap.ref.collection('groupStates').doc(groupId);
                         batch.delete(groupStateRef);
                         batchOpCount++;
-                    } else {
-                        console.log(`Skipping inactivity cleanup for non-existent user: ${uid}`);
                     }
-                }
+                });
             }
 
             if (groupChanged) {
@@ -2347,13 +2341,11 @@ app.all('/api/check-inactive-users', async (req, res) => {
                 batchOpCount++;
             }
 
-            // Commit batch if getting too large
-            if (batchOpCount > 300) {
+            if (batchOpCount > 400) {
                 await batch.commit();
                 batch = db.batch();
                 batchOpCount = 0;
             }
-
             processedCount++;
         }
 
