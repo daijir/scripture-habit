@@ -468,7 +468,7 @@ const LanguageRedirect = ({ location }) => {
 
   // Otherwise, prefix with current detected language
   const newPath = `/${language}${path === '/' ? '' : path}`;
-  return <Navigate to={newPath} replace />;
+  return <Navigate to={newPath} replace state={location.state} />;
 };
 
 const BrowserWarningWrapper = ({ isOpen, onClose }) => {

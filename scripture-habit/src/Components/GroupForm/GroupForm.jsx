@@ -11,7 +11,7 @@ import { useLanguage } from '../../Context/LanguageContext';
 import Mascot from '../Mascot/Mascot';
 
 export default function GroupForm() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [groupName, setGroupName] = useState("");
   const [description, setDescription] = useState("");
   const [maxMembers, setMaxMembers] = useState(100000);
@@ -61,7 +61,7 @@ export default function GroupForm() {
       });
 
       toast.success(`🎉 ${t('groupForm.successCreated')}`);
-      navigate('/dashboard');
+      navigate(`/${language}/dashboard`, { state: { initialGroupId: newGroupId, showWelcome: true, initialView: 2 } });
 
     } catch (e) {
       console.error("Error creating group or updating user:", e);

@@ -96,6 +96,46 @@ const LandingPage = () => {
                     </div>
                 </section>
 
+                {/* Use Cases Section */}
+                <section className="use-cases-section">
+                    <h2 className="section-title">{t('landing.useCases.title')}</h2>
+                    <div className="use-cases-grid">
+                        <div className="use-case-card">
+                            <h3 className="use-case-persona">{t('landing.useCases.teacher.title')}</h3>
+                            <div className="comparison-container">
+                                <div className="comparison-box problem">
+                                    <span className="comparison-label">{t('landing.useCases.status.problem')}</span>
+                                    <p className="comparison-text">{t('landing.useCases.teacher.problem')}</p>
+                                </div>
+                                <div className="comparison-arrow">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                                </div>
+                                <div className="comparison-box solution">
+                                    <span className="comparison-label solution-label">{t('landing.useCases.status.solution')}</span>
+                                    <p className="comparison-text">{t('landing.useCases.teacher.solution')}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="use-case-card">
+                            <h3 className="use-case-persona">{t('landing.useCases.student.title')}</h3>
+                            <div className="comparison-container">
+                                <div className="comparison-box problem">
+                                    <span className="comparison-label">{t('landing.useCases.status.problem')}</span>
+                                    <p className="comparison-text">{t('landing.useCases.student.problem')}</p>
+                                </div>
+                                <div className="comparison-arrow">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+                                </div>
+                                <div className="comparison-box solution">
+                                    <span className="comparison-label solution-label">{t('landing.useCases.status.solution')}</span>
+                                    <p className="comparison-text">{t('landing.useCases.student.solution')}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
                 {/* Unity Section */}
                 <section className="unity-section">
                     <div className="unity-content">

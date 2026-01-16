@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 import Footer from '../Footer/Footer';
 
 export default function LoginForm() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nickname, setNickname] = useState('');
@@ -65,7 +65,7 @@ export default function LoginForm() {
         setPendingGoogleUser(user);
         setNickname(user.displayName || '');
       } else {
-        navigate('/dashboard');
+        navigate(`/${language}/dashboard`);
       }
 
     } catch (error) {
@@ -107,7 +107,7 @@ export default function LoginForm() {
       await setDoc(doc(db, 'users', pendingGoogleUser.uid), userData);
 
       // Profile complete, redirect to dashboard
-      navigate('/dashboard');
+      navigate(`/${language}/dashboard`);
 
     } catch (firestoreError) {
       console.error("Error writing user data to Firestore:", firestoreError);
@@ -129,7 +129,7 @@ export default function LoginForm() {
         return;
       }
 
-      navigate('/dashboard');
+      navigate(`/${language}/dashboard`);
     } catch (error) {
       console.error("Error signing in with email/password:", error);
       if (error.code === 'auth/invalid-credential' ||

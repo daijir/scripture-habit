@@ -178,7 +178,7 @@ export default function JoinGroup() {
       });
       if (resp.ok) {
         toast.success(`🎉 ${t('joinGroup.successJoined')} ${groupData.name}`);
-        navigate('/dashboard', { state: { initialGroupId: groupId, showWelcome: true, initialView: 2 } });
+        navigate(`/${language}/dashboard`, { state: { initialGroupId: groupId, showWelcome: true, initialView: 2 } });
         return;
       }
       const errText = await resp.text();
@@ -202,7 +202,7 @@ export default function JoinGroup() {
         });
         await batch.commit();
         toast.success(`🎉 ${t('joinGroup.successJoined')} ${groupData.name}`);
-        navigate('/dashboard', { state: { initialGroupId: groupId, showWelcome: true, initialView: 2 } });
+        navigate(`/${language}/dashboard`, { state: { initialGroupId: groupId, showWelcome: true, initialView: 2 } });
       } catch (e) {
         console.error("Error joining group:", e);
         setError(t('joinGroup.errorJoinFailed'));
@@ -256,7 +256,7 @@ export default function JoinGroup() {
   };
 
   const handleOpenGroup = (groupId) => {
-    navigate('/dashboard', { state: { initialGroupId: groupId, showWelcome: false, initialView: 2 } });
+    navigate(`/${language}/dashboard`, { state: { initialGroupId: groupId, showWelcome: false, initialView: 2 } });
   };
 
   useEffect(() => {

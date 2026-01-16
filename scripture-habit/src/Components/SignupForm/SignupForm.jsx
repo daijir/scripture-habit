@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 import Footer from '../Footer/Footer';
 
 export default function SignupForm() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -64,7 +64,7 @@ export default function SignupForm() {
         setNickname(user.displayName || '');
       } else {
         // User exists, redirect to dashboard
-        navigate('/dashboard');
+        navigate(`/${language}/dashboard`);
       }
 
     } catch (error) {
@@ -103,7 +103,7 @@ export default function SignupForm() {
       await setDoc(doc(db, 'users', pendingGoogleUser.uid), userData);
 
       // Profile complete, redirect to dashboard
-      navigate('/dashboard');
+      navigate(`/${language}/dashboard`);
 
     } catch (firestoreError) {
       console.error("Error writing user data to Firestore:", firestoreError);
@@ -149,7 +149,7 @@ export default function SignupForm() {
 
       await signOut(auth);
       toast.info(t('signup.verificationSent'));
-      navigate('/login');
+      navigate(`/${language}/login`);
 
     } catch (authError) {
       console.error("Error creating user in Authentication:", authError);

@@ -57,6 +57,19 @@ const STREAK_ANNOUNCEMENT_TEMPLATES = {
     sw: "🎉🎉🎉 **{nickname} amefikisha mfululizo wa siku {streak}!!** 🎉🎉🎉"
 };
 
+const languageNames = {
+    'ja': 'Japanese',
+    'en': 'English',
+    'es': 'Spanish',
+    'pt': 'Portuguese',
+    'ko': 'Korean',
+    'zho': 'Chinese (Traditional)',
+    'vi': 'Vietnamese',
+    'th': 'Thai',
+    'tl': 'Tagalog',
+    'sw': 'Swahili'
+};
+
 const weeklyRecapSchema = z.object({
     groupId: z.string().min(1),
     language: z.enum(supportedLanguages).optional()
@@ -1522,6 +1535,88 @@ However, please write questions that are easy to understand even for investigato
             detail = JSON.stringify(error.response.data);
         }
         res.status(500).json({ error: 'Failed to generate questions.', details: detail });
+    }
+});
+
+// AI Translation Endpoint
+app.post('/api/translate', aiLimiter, async (req, res) => {
+    const validation = translateSchema.safeParse(req.body);
+    if (!validation.success) {
+        return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
+    }
+    const { text, targetLanguage } = validation.data;
+
+    if (!process.env.GEMINI_API_KEY) {
+        return res.status(500).json({ error: 'Gemini API Key is not configured.' });
+    }
+
+    try {
+        const cacheKey = crypto.createHash('md5').update(`${text}_${targetLanguage}`).digest('hex');
+        const db = admin.firestore();
+        const cacheRef = db.collection('translation_cache').doc(cacheKey);
+
+        const cacheDoc = await cacheRef.get();
+        if (cacheDoc.exists) {
+            return res.json({ translatedText: cacheDoc.data().translatedText });
+        }
+
+        const targetLangName = languageNames[targetLanguage] || targetLanguage;
+        const prompt = `Task: Translate the following text into ${targetLangName}. 
+Output only the translated text. No explanations.
+
+Text:
+${text}`;
+
+        const apiKey = (process.env.GEMINI_API_KEY || '').trim();
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-4b-it:generateContent?key=${apiKey}`;
+
+        const response = await axios.post(apiUrl, {
+            contents: [{
+                parts: [{
+                    text: prompt
+                }]
+            }],
+            safetySettings: [
+                { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_NONE" },
+                { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_NONE" },
+                { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_NONE" },
+                { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_NONE" }
+            ]
+        });
+
+        const rawText = response.data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+
+        // Powerful Cleanup: Remove common AI preambles, notes, and quotes
+        let resultText = rawText
+            .replace(/<translation>|<\/translation>/gi, '') // Remove tags if present
+            .replace(/^.*?translation.*?:/i, '')           // Remove "Here is the translation:"
+            .replace(/^.*?translated text.*?:/i, '')       // Remove "The translated text is:"
+            .replace(/---[\s\S]*$/g, '')                   // Remove everything after horizontal rule
+            .replace(/\*\*Notes:[\s\S]*$/gi, '')            // Remove "Notes:" section
+            .replace(/\*\*Notes on[\s\S]*$/gi, '')          // Remove "Notes on translation"
+            .replace(/^["'「](.*)["'」]$/g, '$1')           // Remove surrounding quotes
+            .trim();
+
+        if (!resultText && rawText) {
+            resultText = rawText.split('\n').find(line => line.trim().length > 0) || rawText;
+        }
+
+        if (!resultText) {
+            throw new Error('AI blocked the response or failed to format.');
+        }
+
+        // Save to Cache (asynchronously)
+        cacheRef.set({
+            originalText: text,
+            translatedText: resultText,
+            targetLanguage: targetLanguage,
+            createdAt: admin.firestore.FieldValue.serverTimestamp()
+        }).catch(err => console.error('Error saving to translation cache:', err));
+
+        res.json({ translatedText: resultText });
+    } catch (error) {
+        console.error('Error in translate endpoint:', error.message);
+        res.status(500).json({ error: 'Failed to translate', details: error.message });
     }
 });
 

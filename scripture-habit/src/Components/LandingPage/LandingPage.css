@@ -222,6 +222,114 @@ section {
     line-height: 1.6;
 }
 
+/* Use Cases Section */
+.use-cases-section {
+    padding: 100px 24px;
+}
+
+.use-cases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 40px;
+}
+
+.use-case-card {
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 40px;
+    border-radius: 32px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+}
+
+.use-case-persona {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 24px;
+    color: var(--text-main);
+    text-align: center;
+}
+
+.comparison-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.comparison-box {
+    width: 100%;
+    padding: 24px;
+    border-radius: 20px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.comparison-box.problem {
+    background: rgba(239, 68, 68, 0.05);
+    /* Very light red */
+    border: 1px solid rgba(239, 68, 68, 0.1);
+}
+
+.comparison-box.solution {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.05);
+}
+
+.comparison-label {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 4px 12px;
+    border-radius: 50px;
+    margin-bottom: 12px;
+    background: #ef4444;
+    color: white;
+}
+
+.solution-label {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.comparison-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-main);
+    margin: 0;
+}
+
+.comparison-arrow {
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    animation: bounceDown 2s infinite;
+}
+
+@keyframes bounceDown {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-5px);
+    }
+
+    60% {
+        transform: translateY(-3px);
+    }
+}
+
 /* Unity Section */
 .unity-section {
     background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
@@ -424,5 +532,17 @@ section {
 
     .faq-container {
         padding: 30px;
+    }
+
+    .use-cases-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .use-case-card {
+        padding: 24px;
+    }
+
+    .use-case-persona {
+        font-size: 1.5rem;
     }
 }

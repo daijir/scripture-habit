@@ -10,7 +10,7 @@ import './InviteRedirect.css';
 export default function InviteRedirect() {
     const { inviteCode } = useParams();
     const navigate = useNavigate();
-    const { t } = useLanguage();
+    const { t, language } = useLanguage();
     const [groupInfo, setGroupInfo] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -40,7 +40,7 @@ export default function InviteRedirect() {
         const unsubscribe = auth.onAuthStateChanged((user) => {
             if (user && !loading) {
                 // If logged in, go to dashboard where the join logic will trigger
-                navigate('/dashboard', { replace: true });
+                navigate(`/${language}/dashboard`, { replace: true });
             }
         });
 
@@ -49,7 +49,7 @@ export default function InviteRedirect() {
 
     const handleJoin = () => {
         if (auth.currentUser) {
-            navigate('/dashboard', { replace: true });
+            navigate(`/${language}/dashboard`, { replace: true });
         } else {
             navigate('/welcome', { replace: true });
         }
