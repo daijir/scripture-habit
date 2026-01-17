@@ -95,6 +95,15 @@ const SEOManager = () => {
     if (title) {
       document.querySelector('meta[property="og:title"]')?.setAttribute('content', title);
       document.querySelector('meta[property="twitter:title"]')?.setAttribute('content', title);
+
+      // Explicitly set og:site_name to help with Google's Site Name recognition
+      let siteNameTag = document.querySelector('meta[property="og:site_name"]');
+      if (!siteNameTag) {
+        siteNameTag = document.createElement('meta');
+        siteNameTag.setAttribute('property', 'og:site_name');
+        document.head.appendChild(siteNameTag);
+      }
+      siteNameTag.setAttribute('content', 'Scripture Habit');
     }
 
     // Update Canonical Tag
@@ -185,7 +194,7 @@ const SEOManager = () => {
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "Scripture Habit",
-        "alternateName": ["Scripture Habit LDS", "スクハビ", "ScriptureHabit"],
+        "alternateName": ["Scripture Habit LDS", "スクハビ", "ScriptureHabit", "ScriptureHabit LDS"],
         "url": `https://scripturehabit.app/${language}/`
       },
       {
