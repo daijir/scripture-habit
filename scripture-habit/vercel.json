@@ -45,10 +45,6 @@
             "source": "/(.*)",
             "headers": [
                 {
-                    "key": "Link",
-                    "value": "<https://scripturehabit.app/$1>; rel=\"canonical\""
-                },
-                {
                     "key": "Cross-Origin-Opener-Policy",
                     "value": "unsafe-none"
                 },

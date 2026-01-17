@@ -183,6 +183,7 @@ const SEOManager = () => {
       "@context": "https://schema.org",
       "@type": "SoftwareApplication",
       "name": "Scripture Habit",
+      "alternateName": ["スクハビ", "ScriptureHabit"],
       "operatingSystem": "Web",
       "applicationCategory": "SocialNetworkingApplication",
       "offers": {
