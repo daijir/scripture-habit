@@ -10,8 +10,8 @@
       window.location.replace("https://scripturehabit.app" + current + window.location.search + window.location.hash);
     }
   </script>
-  <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/png" href="/favicon-192.png" sizes="192x192" />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/svg+xml" href="/logo.svg" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/manifest.json" />
@@ -30,19 +30,28 @@
     rel="stylesheet">
   <title>Scripture Habit</title>
   <script type="application/ld+json" id="json-ld-schema">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Scripture Habit",
-      "operatingSystem": "Web",
-      "applicationCategory": "EducationApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Scripture Habit",
+        "alternateName": ["Scripture Habit LDS", "スクハビ", "ScriptureHabit"],
+        "url": "https://scripturehabit.app/"
       },
-      "url": "https://scripturehabit.app/"
-    }
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Scripture Habit",
+        "operatingSystem": "Web",
+        "applicationCategory": "SocialNetworkingApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "url": "https://scripturehabit.app/"
+      }
+    ]
   </script>
 </head>
 

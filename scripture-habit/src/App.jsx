@@ -180,26 +180,34 @@ const SEOManager = () => {
       document.head.appendChild(jsonLdScript);
     }
 
-    const schemaData = {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Scripture Habit",
-      "alternateName": ["スクハビ", "ScriptureHabit"],
-      "operatingSystem": "Web",
-      "applicationCategory": "SocialNetworkingApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
+    const schemaData = [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Scripture Habit",
+        "alternateName": ["Scripture Habit LDS", "スクハビ", "ScriptureHabit"],
+        "url": `https://scripturehabit.app/${language}/`
       },
-      "description": description,
-      "url": `https://scripturehabit.app/${language}/`,
-      "softwareVersion": "1.0",
-      "author": {
-        "@type": "Person",
-        "name": "Dazhi"
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Scripture Habit",
+        "operatingSystem": "Web",
+        "applicationCategory": "SocialNetworkingApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "description": description,
+        "url": `https://scripturehabit.app/${language}/`,
+        "softwareVersion": "1.0",
+        "author": {
+          "@type": "Person",
+          "name": "Dazhi"
+        }
       }
-    };
+    ];
     jsonLdScript.text = JSON.stringify(schemaData);
   }, [language, t, location.pathname]);
 
