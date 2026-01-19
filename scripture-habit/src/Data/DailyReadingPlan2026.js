@@ -23,6 +23,28 @@ export const DailyReadingPlan2026 = [
     { day: 22, scripts: ["Genesis 3:1-7", "Moses 4:1-11"], date: "2026-01-19" },
     { day: 23, scripts: ["Genesis 3:8-19", "Moses 4:12-25"], date: "2026-01-20" },
     { day: 24, scripts: ["Genesis 3:20-24", "Moses 4:26-32"], date: "2026-01-21" },
+    { day: 25, scripts: ["Moses 5:1-15"], date: "2026-01-22" },
+    { day: 26, scripts: ["Genesis 4:1-8", "Moses 5:16-33"], date: "2026-01-23"},
+    { day: 27, scripts: ["Genesis 4:9-16", "Moses 5:34-41"], date: "2026-01-24"},
+    { day: 28, scripts: ["Genesis 4:17-26", "Moses 5:42-59"], date: "2026-01-25"},
+    { day: 29, scripts: ["Moses 6:1-9"], date: "2026-01-26", date: "2026-01-26"},
+    { day: 30, scripts: ["Genesis 5:1-11", "Moses 6:10-18"], date: "2026-01-27"},
+    { day: 31, scripts: ["Genesis 5:12-20", "Moses 6:19-24"], date: "2026-01-28"},
+    { day: 32, scripts: ["Genesis 5:21-24", "Moses 6:25-34"], date: "2026-01-29"},
+    { day: 33, scripts: ["Moses 6:35-46"], date: "2026-01-30"},
+    { day: 34, scripts: ["Moses 6:47-57"], date: "2026-01-31"},
+    { day: 35, scripts: ["Moses 6:58-68"], date: "2026-02-01"},
+    { day: 36, scripts: ["Moses 7:1-11"], date: "2026-02-02"},
+    { day: 37, scripts: ["Moses 7:12-17"], date: "2026-02-03"},
+    { day: 38, scripts: ["Moses 7:18-27"], date: "2026-02-04"},
+    { day: 39, scripts: ["Moses 7:28-40"], date: "2026-02-05"},
+    { day: 40, scripts: ["Moses 7:41-47"], date: "2026-02-06"},
+    { day: 41, scripts: ["Moses 7:48-59"], date: "2026-02-07"},
+    { day: 42, scripts: ["Moses 7:60-69"], date: "2026-02-08"},
+    { day: 43, scripts: ["Moses 8:1-30"], date: "2026-02-09"},
+    { day: 44, scripts: ["Genesis 6:1-22"], date: "2026-02-10"},
+    { day: 45, scripts: ["Genesis 7:1-24"], date: "2026-02-11"},
+    { day: 46, scripts: ["Genesis 8:1-22"], date: "2026-02-12"}
 ];
 
 export const getTodayReadingPlan = () => {
