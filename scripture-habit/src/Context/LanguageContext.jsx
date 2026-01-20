@@ -65,7 +65,10 @@ export const LanguageProvider = ({ children }) => {
             pathParts.splice(1, 0, newLanguage);
         }
 
-        const newPath = pathParts.join('/') || '/';
+        let newPath = pathParts.join('/') || '/';
+        if (!newPath.endsWith('/')) {
+            newPath += '/';
+        }
         navigate(newPath);
     };
 

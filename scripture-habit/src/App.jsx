@@ -113,8 +113,8 @@ const SEOManager = () => {
       : path;
 
     // Canonical URL for the CURRENT language
-    let canonicalPath = `/${language}${baseContentPath === '/' ? '' : baseContentPath}`;
-    if (canonicalPath !== '/' && !canonicalPath.endsWith('/')) {
+    let canonicalPath = `/${language}${baseContentPath === '/' ? '/' : baseContentPath}`;
+    if (!canonicalPath.endsWith('/')) {
       canonicalPath += '/';
     }
     const canonicalUrl = `https://scripturehabit.app${canonicalPath}`;
@@ -159,8 +159,8 @@ const SEOManager = () => {
         document.head.appendChild(link);
       }
 
-      let langSpecificPath = `/${lang}${baseContentPath === '/' ? '' : baseContentPath}`;
-      if (langSpecificPath !== '/' && !langSpecificPath.endsWith('/')) {
+      let langSpecificPath = `/${lang}${baseContentPath === '/' ? '/' : baseContentPath}`;
+      if (!langSpecificPath.endsWith('/')) {
         langSpecificPath += '/';
       }
       link.setAttribute('href', `https://scripturehabit.app${langSpecificPath}`);
@@ -174,8 +174,8 @@ const SEOManager = () => {
       xDefault.setAttribute('hreflang', 'x-default');
       document.head.appendChild(xDefault);
     }
-    let xDefaultPath = `/en${baseContentPath === '/' ? '' : baseContentPath}`;
-    if (xDefaultPath !== '/' && !xDefaultPath.endsWith('/')) {
+    let xDefaultPath = `/en${baseContentPath === '/' ? '/' : baseContentPath}`;
+    if (!xDefaultPath.endsWith('/')) {
       xDefaultPath += '/';
     }
     xDefault.setAttribute('href', `https://scripturehabit.app${xDefaultPath}`);
@@ -487,7 +487,10 @@ const LanguageRedirect = ({ location }) => {
   }
 
   // Otherwise, prefix with current detected language
-  const newPath = `/${language}${path === '/' ? '' : path}`;
+  let newPath = `/${language}${path === '/' ? '/' : path}`;
+  if (!newPath.endsWith('/')) {
+    newPath += '/';
+  }
   return <Navigate to={newPath} replace state={location.state} />;
 };
 

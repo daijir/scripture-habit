@@ -3,13 +3,7 @@
 
 <head>
   <meta charset="UTF-8" />
-  <script>
-    if (window.location.hostname.includes('vercel.app')) {
-      var current = window.location.pathname;
-      if (current !== '/' && !current.endsWith('/')) { current += '/'; }
-      window.location.replace("https://scripturehabit.app" + current + window.location.search + window.location.hash);
-    }
-  </script>
+  <!-- Removed redundant JS redirect; handled by vercel.json 301s -->
   <link rel="icon" type="image/png" href="/favicon-192.png" sizes="192x192" />
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
   <link rel="icon" type="image/svg+xml" href="/logo.svg" />
