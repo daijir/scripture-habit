@@ -14,11 +14,6 @@ const LegalDisclosure = () => {
         { label: t('legalDisclosure.address'), value: t('legalDisclosure.requestDisclosure') },
         { label: t('legalDisclosure.phone'), value: t('legalDisclosure.requestDisclosure') },
         { label: t('legalDisclosure.email'), value: 'dazhilangxianggen@gmail.com' },
-        { label: t('legalDisclosure.price'), value: t('legalDisclosure.priceDetail') },
-        { label: t('legalDisclosure.paymentTiming'), value: t('legalDisclosure.paymentTimingDetail') },
-        { label: t('legalDisclosure.paymentMethod'), value: t('legalDisclosure.onlinePaymentMethod') },
-        { label: t('legalDisclosure.deliveryTiming'), value: t('legalDisclosure.deliveryTimingDetail') },
-        { label: t('legalDisclosure.cancellation'), value: t('legalDisclosure.cancelDetail') },
         { label: t('legalDisclosure.environment'), value: t('legalDisclosure.environmentDetail') },
     ];
 
