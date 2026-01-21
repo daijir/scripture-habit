@@ -207,7 +207,7 @@ const SEOManager = () => {
         "@type": "WebSite",
         "name": "Scripture Habit",
         "alternateName": ["Scripture Habit LDS", "スクハビ", "ScriptureHabit", "ScriptureHabit LDS"],
-        "url": `https://scripturehabit.app/${language}/`
+        "url": "https://scripturehabit.app/"
       },
       {
         "@context": "https://schema.org",
