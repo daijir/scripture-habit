@@ -77,8 +77,19 @@ const SEOManager = () => {
       robotsTag.setAttribute('name', 'robots');
       document.head.appendChild(robotsTag);
     }
-    // Only index landing page (empty route)
-    if (shouldIndex && route === '') {
+
+    // Add explicit no-index for more app routes
+    const noIndexRoutes = [
+      'dashboard', 'welcome', 'login', 'signup', 'forgot-password',
+      'group-form', 'join-group', 'group-options', 'group', 'join',
+      'profile', 'my-notes', 'settings'
+    ];
+    if (noIndexRoutes.includes(route)) {
+      shouldIndex = false;
+    }
+
+    // Index if shouldIndex is true (has language prefix and is a public route)
+    if (shouldIndex) {
       robotsTag.setAttribute('content', 'index, follow');
     } else {
       robotsTag.setAttribute('content', 'noindex, nofollow');
