@@ -8,6 +8,33 @@
     "trailingSlash": true,
     "redirects": [
         {
+            "source": "/",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "www.scripturehabit.app"
+                },
+                {
+                    "type": "header",
+                    "key": "accept-language",
+                    "value": "ja.*"
+                }
+            ],
+            "destination": "https://scripturehabit.app/ja/",
+            "permanent": true
+        },
+        {
+            "source": "/",
+            "has": [
+                {
+                    "type": "host",
+                    "value": "www.scripturehabit.app"
+                }
+            ],
+            "destination": "https://scripturehabit.app/en/",
+            "permanent": true
+        },
+        {
             "source": "/(.*)",
             "has": [
                 {
@@ -28,6 +55,23 @@
             ],
             "destination": "https://scripturehabit.app/$1",
             "permanent": true
+        },
+        {
+            "source": "/",
+            "has": [
+                {
+                    "type": "header",
+                    "key": "accept-language",
+                    "value": "ja.*"
+                }
+            ],
+            "destination": "/ja/",
+            "permanent": false
+        },
+        {
+            "source": "/",
+            "destination": "/en/",
+            "permanent": false
         }
     ],
     "rewrites": [

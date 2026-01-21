@@ -42,13 +42,14 @@ const SEOManager = () => {
     // Determine route type
     const path = location.pathname;
     const pathParts = path.split('/').filter(p => p !== '');
-    // If there's a language prefix, the actual path start at index 1
-    const baseIndex = SUPPORTED_LANGUAGES.includes(pathParts[0]) ? 1 : 0;
+    // Check if there's a language prefix
+    const hasLangPrefix = SUPPORTED_LANGUAGES.includes(pathParts[0]);
+    const baseIndex = hasLangPrefix ? 1 : 0;
     const route = pathParts[baseIndex] || '';
 
     // Route-specific Title and Indexing
     let title = t('seo.title') || "Scripture Habit";
-    let shouldIndex = true;
+    let shouldIndex = hasLangPrefix;
 
     if (route === 'dashboard') {
       title = `${t('sidebar.dashboard')} | Scripture Habit`;
