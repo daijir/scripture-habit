@@ -4,7 +4,7 @@ import admin from 'firebase-admin';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import axios from 'axios';
-import { load } from 'cheerio';
+import * as cheerio from 'cheerio';
 import { z } from 'zod';
 
 dotenv.config();
@@ -1244,7 +1244,7 @@ app.get('/api/fetch-gc-metadata', async (req, res) => {
             return res.json({ title: '', speaker: '' });
         }
 
-        const $ = load(response.data);
+        const $ = cheerio.load(response.data);
 
         // Attempt to find title
         // 1. Try Open Graph Title first (usually most accurate and clean)
@@ -1340,8 +1340,8 @@ app.get(['/api/url-preview', '/api/url-preview/'], async (req, res) => {
             // Continue with fallback data
         }
 
-        if (response && response.data && typeof response.data === 'string' && typeof load === 'function') {
-            const $ = load(response.data);
+        if (response && response.data && typeof response.data === 'string' && typeof cheerio.load === 'function') {
+            const $ = cheerio.load(response.data);
 
             // 1. Title
             let title = $('meta[property="og:title"]').attr('content') ||
