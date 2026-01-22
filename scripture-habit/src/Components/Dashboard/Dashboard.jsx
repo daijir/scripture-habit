@@ -42,7 +42,6 @@ const Dashboard = () => {
   const [selectedView, setSelectedView] = useState(0);
   const [groupTotalNotes, setGroupTotalNotes] = useState(0);
   const [personalNotesCount, setPersonalNotesCount] = useState(null);
-  const [recentNotes, setRecentNotes] = useState([]);
   const [userGroups, setUserGroups] = useState([]);
   const [rawUserGroups, setRawUserGroups] = useState([]);
   const [groupStates, setGroupStates] = useState({});
@@ -372,34 +371,7 @@ const Dashboard = () => {
     }
   }, [userGroups, userData, activeGroupId, loading]);
 
-  useEffect(() => {
-    if (!userData || !userData.uid) return;
 
-    try {
-      const notesRef = collection(db, 'users', userData.uid, 'notes');
-      const q = query(
-        notesRef,
-        orderBy('createdAt', 'desc'),
-        limit(5)
-      );
-
-      const unsubscribeRecent = onSnapshot(q, (querySnapshot) => {
-        const notes = [];
-        querySnapshot.forEach((doc) => {
-          notes.push({ id: doc.id, ...doc.data() });
-        });
-        setRecentNotes(notes);
-      }, (err) => {
-        if (err.code !== 'permission-denied') {
-          console.error("Error fetching recent notes:", err);
-        }
-      });
-
-      return () => unsubscribeRecent();
-    } catch (err) {
-      console.error("Error setting up recent notes listener:", err);
-    }
-  }, [userData?.uid]);
 
   // No longer using real-time listener for the entire collection to get count
   // personalNotesCount is now derived from userData.totalNotes
@@ -963,28 +935,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="dashboard-section">
-              <div className="section-header">
-                <h3>{t('dashboard.recentNotes')}</h3>
-                <Link to="#" className="see-all" onClick={(e) => { e.preventDefault(); setSelectedView(1); }}>{t('dashboard.seeAll')}</Link>
-              </div>
-              <div className="gallery-container">
-                <div className="recent-notes-grid">
-                  {recentNotes.length === 0 ? (
-                    <p className="no-notes-dashboard">{t('dashboard.noRecentNotes')}</p>
-                  ) : (
-                    recentNotes.map((note) => (
-                      <NoteCard
-                        key={note.id}
-                        note={note}
-                        className="dashboard-note-card"
-                        isEditable={false}
-                      />
-                    ))
-                  )}
-                </div>
-              </div>
-            </div>
+
             <Footer />
           </div>
         )}
