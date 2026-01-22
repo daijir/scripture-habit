@@ -4,10 +4,8 @@ import admin from 'firebase-admin';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import axios from 'axios';
-import * as cheerio from 'cheerio';
+import { load } from 'cheerio';
 import { z } from 'zod';
-import helmet from 'helmet';
-import rateLimit from 'express-rate-limit'; // Back to default just in case
 
 dotenv.config();
 
@@ -390,21 +388,19 @@ app.use(cors({
     }
 }));
 
-// Body Parsing with Size Limit (DoS Protection)
-app.use(express.json({ limit: '10kb' }));
+// Body Parsing
+app.use(express.json({ limit: '50kb' }));
 
-// ... (rest of code)
-
-// Apply general limiter only if valid
-if (typeof rateLimit === 'function') {
-    const limiter = rateLimit({
-        windowMs: 15 * 60 * 1000,
-        max: 100,
-        standardHeaders: true,
-        legacyHeaders: false,
+// Health check
+app.get('/api/health', (req, res) => {
+    res.json({
+        status: 'ok',
+        time: new Date().toISOString(),
+        node: process.version
     });
-    app.use(limiter);
-}
+});
+
+app.get('/api/test', (req, res) => res.send('OK'));
 
 // --- Routes ---
 
@@ -1413,9 +1409,7 @@ app.get(['/api/url-preview', '/api/url-preview/'], async (req, res) => {
                         noLangUrl.searchParams.delete('lang');
                         response = await fetchWithLang(noLangUrl.toString());
                     }
-                } catch (err2) {
-                    // Fail silently here, we'll try to extract what we can or use error fallback
-                }
+                } catch (err2) { }
             }
 
             if (!response) {
@@ -1424,8 +1418,8 @@ app.get(['/api/url-preview', '/api/url-preview/'], async (req, res) => {
             }
         }
 
-        if (response && response.data && typeof response.data === 'string' && cheerio && cheerio.load) {
-            const $ = cheerio.load(response.data);
+        if (response && response.data && typeof response.data === 'string' && typeof load === 'function') {
+            const $ = load(response.data);
 
             // 1. Title Extraction
             let title = $('meta[property="og:title"]').attr('content') ||
@@ -2111,38 +2105,38 @@ app.get('/api/check-inactive-users', async (req, res) => {
         // Allow manual run for now if secret matching, or maybe open it temporarily
         // But let's keep it safe if secret exists.
     }
-
-
+ 
+ 
 try {
     const groupsRef = db.collection('groups');
     const snapshot = await groupsRef.get();
     let totalUpdated = 0;
-
+ 
     for (const docSnap of snapshot.docs) {
         const groupId = docSnap.id;
         const groupData = docSnap.data();
         const members = groupData.members || [];
-
+ 
         if (members.length === 0) continue;
-
+ 
         // Fetch last 100 messages to check for recent activity
         const messagesRef = groupsRef.doc(groupId).collection('messages');
         const msgsSnap = await messagesRef
             .orderBy('createdAt', 'desc')
             .limit(200) // Check last 200 messages
             .get();
-
+ 
         const updates = {};
         const foundMembers = new Set();
-
+ 
         // Existing activity data
         const currentLastActive = groupData.memberLastActive || {};
-
+ 
         msgsSnap.forEach(msgDoc => {
             const data = msgDoc.data();
             const senderId = data.senderId;
             const createdAt = data.createdAt;
-
+ 
             // If this is a user message (specifically a NOTE/ENTRY) and we haven't found a newer one for this user match
             if (senderId && (data.isNote || data.isEntry) && members.includes(senderId) && !foundMembers.has(senderId)) {
                 // Update only if current data is missing or older
@@ -2153,16 +2147,16 @@ try {
                 foundMembers.add(senderId);
             }
         });
-
+ 
         if (Object.keys(updates).length > 0) {
             await groupsRef.doc(groupId).update(updates);
             totalUpdated += Object.keys(updates).length;
             console.log(`Updated ${Object.keys(updates).length} members in group ${groupData.name || groupId}`);
         }
     }
-
+ 
     res.json({ message: `Repair complete. Updated activity logs for ${totalUpdated} members.` });
-
+ 
 } catch (error) {
     console.error('Error repairing logs:', error);
     res.status(500).json({ error: error.message });
