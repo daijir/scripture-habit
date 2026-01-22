@@ -359,31 +359,34 @@ app.use(
 // CORS Configuration
 const allowedOrigins = [
     'https://scripturehabit.app',
-    'http://localhost:3000', // For local development
-    'http://localhost:5173',  // Vite default port
-    'https://localhost',      // Android Capacitor
-    'capacitor://localhost',  // iOS Capacitor
-    'http://localhost'        // Android Capacitor (http)
+    'https://www.scripturehabit.app', // Added www
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'https://localhost',
+    'capacitor://localhost',
+    'http://localhost'
 ];
 
 app.use(cors({
     origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests) if you want, 
-        // OR strict mode: keys must be protected otherwise.
-        // For web apps, origin is usually present.
         if (!origin) return callback(null, true);
 
-        if (allowedOrigins.indexOf(origin) === -1) {
-            // If origin is not in allowed list, you can block it,
-            // OR if you want to allow preview deployments (e.g. vercel preview urls), you might need regex.
-            // For now, strict allow list for security.
-            if (process.env.NODE_ENV !== 'production') {
-                return callback(null, true); // Allow all in dev
-            }
-            var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-            return callback(new Error(msg), false);
+        // Allow exact matches
+        if (allowedOrigins.indexOf(origin) !== -1) {
+            return callback(null, true);
         }
-        return callback(null, true);
+
+        // Allow Vercel preview deployments (e.g. *-your-username.vercel.app)
+        if (origin.endsWith('.vercel.app') || origin.includes('scripture-habit')) {
+            return callback(null, true);
+        }
+
+        if (process.env.NODE_ENV !== 'production') {
+            return callback(null, true);
+        }
+
+        var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+        return callback(new Error(msg), false);
     }
 }));
 
@@ -1356,72 +1359,115 @@ app.get('/api/fetch-gc-metadata', async (req, res) => {
 });
 
 app.get('/api/url-preview', async (req, res) => {
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.setHeader('Pragma', 'no-cache');
+    res.setHeader('Expires', '0');
+
     const { url, lang } = req.query;
 
-    if (!url) {
-        return res.status(400).json({ error: 'URL parameter is required' });
-    }
+    if (!url) return res.status(400).json({ error: 'URL parameter is required' });
 
     try {
         const parsedUrl = new URL(url);
+        const isChurchUrl = parsedUrl.hostname.includes('churchofjesuschrist.org') || parsedUrl.hostname.includes('general-conference');
 
-        // If it's a Church of Jesus Christ URL, append the lang parameter for localized metadata
-        if (lang && (parsedUrl.hostname.includes('churchofjesuschrist.org') || parsedUrl.hostname.includes('general-conference'))) {
-            parsedUrl.searchParams.set('lang', lang);
+        if (lang && isChurchUrl) {
+            const currentLang = parsedUrl.searchParams.get('lang');
+            if (!currentLang || (lang === 'ja' && currentLang === 'jpn') || (lang === 'jpn' && currentLang === 'ja')) {
+                parsedUrl.searchParams.set('lang', lang);
+            }
         }
 
-        const fetchUrl = parsedUrl.toString();
+        const fetchWithLang = async (targetUrl, targetLang) => {
+            const u = new URL(targetUrl);
+            if (targetLang) u.searchParams.set('lang', targetLang);
+            return axios.get(u.toString(), {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+                },
+                timeout: 10000
+            });
+        };
 
-        const response = await axios.get(fetchUrl, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-                'Accept-Language': 'en-US,en;q=0.5',
-            },
-            timeout: 5000
-        });
+        let response;
+        try {
+            response = await fetchWithLang(parsedUrl.toString());
+        } catch (err) {
+            if (err.response?.status === 404 && isChurchUrl) {
+                try {
+                    const altLang = (parsedUrl.searchParams.get('lang') === 'jpn' ? 'ja' : 'jpn');
+                    response = await fetchWithLang(parsedUrl.toString(), altLang);
+                } catch (err2) {
+                    if (err2.response?.status === 404) {
+                        const noLangUrl = new URL(parsedUrl.toString());
+                        noLangUrl.searchParams.delete('lang');
+                        response = await fetchWithLang(noLangUrl.toString());
+                    } else throw err2;
+                }
+            } else throw err;
+        }
 
         const $ = cheerio.load(response.data);
 
-        const title = $('meta[property="og:title"]').attr('content') ||
-            $('meta[name="twitter:title"]').attr('content') ||
-            $('title').text().trim() ||
-            parsedUrl.hostname;
+        // 1. Specialized Title Extraction
+        let title = '';
+        if (isChurchUrl) {
+            title = $('meta[property="og:title"]').attr('content') ||
+                $('h1').first().text().trim() ||
+                $('title').text().trim();
+            if (title.includes(' | ')) title = title.split(' | ')[0];
+        } else {
+            title = $('meta[property="og:title"]').attr('content') ||
+                $('meta[name="twitter:title"]').attr('content') ||
+                $('title').text().trim() ||
+                $('h1').first().text().trim();
+        }
 
-        const description = $('meta[property="og:description"]').attr('content') ||
-            $('meta[name="description"]').attr('content') ||
-            $('meta[name="twitter:description"]').attr('content') ||
-            null;
-
-        const image = $('meta[property="og:image"]').attr('content') ||
-            $('meta[name="twitter:image"]').attr('content') ||
-            null;
-
-        const siteName = $('meta[property="og:site_name"]').attr('content') || parsedUrl.hostname;
-
-        let favicon = $('link[rel="shortcut icon"]').attr('href') ||
-            $('link[rel="icon"]').attr('href') ||
-            $('link[rel*="icon"]').attr('href');
-
-        if (favicon && !favicon.startsWith('http')) {
-            favicon = new URL(favicon, url).href;
-        } else if (!favicon) {
-            favicon = `https://www.google.com/s2/favicons?domain=${parsedUrl.hostname}&sz=64`;
+        // 2. Specialized Speaker Extraction
+        let speaker = '';
+        if (isChurchUrl) {
+            speaker = $('div.byline p.author-name').first().text().trim() ||
+                $('p.author-name').first().text().trim() ||
+                $('a.author-name').first().text().trim();
+            if (speaker) {
+                speaker = speaker.replace(/^(By|Par|De|Por)\s+/i, '').trim();
+            }
         }
 
         let displayTitle = title;
-        if (displayTitle.includes(' | ')) displayTitle = displayTitle.split(' | ')[0];
-        if (displayTitle.includes(' - ')) displayTitle = displayTitle.split(' - ')[0];
+        if (speaker && displayTitle && !displayTitle.includes(speaker)) {
+            displayTitle = `${title} (${speaker})`;
+        }
+
+        const description = $('meta[property="og:description"]').attr('content') ||
+            $('meta[name="description"]').attr('content') ||
+            null;
+
+        let image = $('meta[property="og:image"]').attr('content') ||
+            $('meta[name="twitter:image"]').attr('content');
+        if (image && !image.startsWith('http')) {
+            image = new URL(image, url).href;
+        }
+
+        const siteName = $('meta[property="og:site_name"]').attr('content') || (isChurchUrl ? 'Church of Jesus Christ' : parsedUrl.hostname);
+
+        let favicon = $('link[rel="shortcut icon"]').attr('href') ||
+            $('link[rel="icon"]').attr('href') ||
+            `https://www.google.com/s2/favicons?domain=${parsedUrl.hostname}&sz=64`;
+
+        if (favicon && !favicon.startsWith('http')) {
+            favicon = new URL(favicon, url).href;
+        }
 
         res.json({
             url,
-            title: displayTitle.trim(),
+            title: (displayTitle ? displayTitle.trim() : parsedUrl.hostname),
             description: description ? description.trim() : null,
             image,
             favicon,
             siteName: siteName
         });
-
     } catch (error) {
         console.error('Error fetching URL preview:', error.message);
         try {

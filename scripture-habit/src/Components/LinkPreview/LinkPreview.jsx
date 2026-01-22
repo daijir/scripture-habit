@@ -19,18 +19,21 @@ const LinkPreview = ({ url, isSent, language, t }) => {
 
                 const baseUrl = Capacitor.isNativePlatform() ? API_BASE_URL : '';
                 const langParam = language ? `&lang=${language}` : '';
-                const response = await fetch(`${baseUrl}/api/url-preview?url=${encodeURIComponent(url)}${langParam}`, {
+                // Add trailing slash to ensure it matches Vercel/Express routing correctly
+                const response = await fetch(`${baseUrl}/api/url-preview/?url=${encodeURIComponent(url)}${langParam}`, {
                     cache: 'no-store'
                 });
 
                 if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Link preview API error response:', errorText);
                     throw new Error(`Failed to fetch preview: ${response.status}`);
                 }
 
                 const data = await response.json();
                 setPreview(data);
             } catch (err) {
-                console.error('Error fetching link preview:', err);
+                console.error('Error fetching link preview for URL:', url, err);
                 setError(true);
             } finally {
                 setLoading(false);

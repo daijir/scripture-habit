@@ -127,7 +127,13 @@ self.addEventListener('fetch', (event) => {
     }
 
     // For everything else, use Cache First strategy for static assets, 
-    // or Network First strategy for API/Dynamic content
+    // or Network First strategy for API/Dynamic content.
+    // EXCEPTION: Always bypass cache for API calls to ensure fresh data.
+    if (event.request.url.includes('/api/')) {
+        event.respondWith(fetch(event.request));
+        return;
+    }
+
     event.respondWith(
         caches.match(event.request).then((response) => {
             return response || fetch(event.request).then((networkResponse) => {
