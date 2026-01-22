@@ -19,8 +19,7 @@ const LinkPreview = ({ url, isSent, language, t }) => {
 
                 const baseUrl = Capacitor.isNativePlatform() ? API_BASE_URL : '';
                 const langParam = language ? `&lang=${language}` : '';
-                // Add trailing slash to ensure it matches Vercel/Express routing correctly
-                const response = await fetch(`${baseUrl}/api/url-preview/?url=${encodeURIComponent(url)}${langParam}`, {
+                const response = await fetch(`${baseUrl}/api/url-preview?url=${encodeURIComponent(url)}${langParam}`, {
                     cache: 'no-store'
                 });
 

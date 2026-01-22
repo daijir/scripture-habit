@@ -1359,130 +1359,142 @@ app.get('/api/fetch-gc-metadata', async (req, res) => {
 });
 
 app.get('/api/url-preview', async (req, res) => {
+    // Force no-cache headers for link previews
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
 
     const { url, lang } = req.query;
 
-    if (!url) return res.status(400).json({ error: 'URL parameter is required' });
+    if (!url) {
+        return res.status(400).json({ error: 'URL parameter is required' });
+    }
+
+    // Default fallback data in case everything fails
+    let previewData = {
+        url,
+        title: '',
+        description: null,
+        image: null,
+        favicon: null,
+        siteName: ''
+    };
 
     try {
         const parsedUrl = new URL(url);
-        const isChurchUrl = parsedUrl.hostname.includes('churchofjesuschrist.org') || parsedUrl.hostname.includes('general-conference');
+        previewData.title = parsedUrl.hostname;
+        previewData.siteName = parsedUrl.hostname;
+        previewData.favicon = `https://www.google.com/s2/favicons?domain=${parsedUrl.hostname}&sz=64`;
 
-        if (lang && isChurchUrl) {
-            const currentLang = parsedUrl.searchParams.get('lang');
-            if (!currentLang || (lang === 'ja' && currentLang === 'jpn') || (lang === 'jpn' && currentLang === 'ja')) {
-                parsedUrl.searchParams.set('lang', lang);
-            }
-        }
+        const isChurchUrl = parsedUrl.hostname.includes('churchofjesuschrist.org') || parsedUrl.hostname.includes('general-conference');
 
         const fetchWithLang = async (targetUrl, targetLang) => {
             const u = new URL(targetUrl);
             if (targetLang) u.searchParams.set('lang', targetLang);
             return axios.get(u.toString(), {
                 headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0',
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
                     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
                 },
-                timeout: 10000
+                timeout: 8000
             });
         };
 
         let response;
         try {
-            response = await fetchWithLang(parsedUrl.toString());
+            const fetchUrl = new URL(url);
+            if (lang && isChurchUrl) {
+                fetchUrl.searchParams.set('lang', lang);
+            }
+            response = await fetchWithLang(fetchUrl.toString());
         } catch (err) {
-            if (err.response?.status === 404 && isChurchUrl) {
+            // Specialized Church URL language fallback
+            if (isChurchUrl && err.response?.status === 404) {
                 try {
-                    const altLang = (parsedUrl.searchParams.get('lang') === 'jpn' ? 'ja' : 'jpn');
-                    response = await fetchWithLang(parsedUrl.toString(), altLang);
-                } catch (err2) {
-                    if (err2.response?.status === 404) {
-                        const noLangUrl = new URL(parsedUrl.toString());
+                    const altLang = (lang === 'ja' || lang === 'jpn') ? (lang === 'ja' ? 'jpn' : 'ja') : null;
+                    if (altLang) {
+                        response = await fetchWithLang(url, altLang);
+                    } else {
+                        const noLangUrl = new URL(url);
                         noLangUrl.searchParams.delete('lang');
                         response = await fetchWithLang(noLangUrl.toString());
-                    } else throw err2;
+                    }
+                } catch (err2) {
+                    throw err; // Throw original error if fallback also fails
                 }
-            } else throw err;
-        }
-
-        const $ = cheerio.load(response.data);
-
-        // 1. Specialized Title Extraction
-        let title = '';
-        if (isChurchUrl) {
-            title = $('meta[property="og:title"]').attr('content') ||
-                $('h1').first().text().trim() ||
-                $('title').text().trim();
-            if (title.includes(' | ')) title = title.split(' | ')[0];
-        } else {
-            title = $('meta[property="og:title"]').attr('content') ||
-                $('meta[name="twitter:title"]').attr('content') ||
-                $('title').text().trim() ||
-                $('h1').first().text().trim();
-        }
-
-        // 2. Specialized Speaker Extraction
-        let speaker = '';
-        if (isChurchUrl) {
-            speaker = $('div.byline p.author-name').first().text().trim() ||
-                $('p.author-name').first().text().trim() ||
-                $('a.author-name').first().text().trim();
-            if (speaker) {
-                speaker = speaker.replace(/^(By|Par|De|Por)\s+/i, '').trim();
+            } else {
+                throw err;
             }
         }
 
-        let displayTitle = title;
-        if (speaker && displayTitle && !displayTitle.includes(speaker)) {
-            displayTitle = `${title} (${speaker})`;
+        if (response && response.data && typeof response.data === 'string') {
+            const $ = cheerio.load(response.data);
+
+            // 1. Title Extraction
+            let title = $('meta[property="og:title"]').attr('content') ||
+                $('meta[name="twitter:title"]').attr('content') ||
+                $('h1').first().text().trim() ||
+                $('title').text().trim();
+
+            if (title) {
+                if (title.includes(' | ')) title = title.split(' | ')[0];
+                if (title.includes(' - ')) title = title.split(' - ')[0];
+                previewData.title = title.trim();
+            }
+
+            // 2. Speaker Extraction (Church specific)
+            if (isChurchUrl) {
+                let speaker = $('div.byline p.author-name').first().text().trim() ||
+                    $('p.author-name').first().text().trim() ||
+                    $('a.author-name').first().text().trim() ||
+                    $('div.byline p').first().text().trim();
+
+                if (speaker) {
+                    speaker = speaker.replace(/^(By|Par|De|Por)\s+/i, '').trim();
+                    if (previewData.title && !previewData.title.includes(speaker)) {
+                        previewData.title = `${previewData.title} (${speaker})`;
+                    }
+                }
+            }
+
+            // 3. Description Extraction
+            previewData.description = $('meta[property="og:description"]').attr('content') ||
+                $('meta[name="description"]').attr('content') ||
+                $('meta[name="twitter:description"]').attr('content') ||
+                null;
+
+            // 4. Image Extraction
+            let image = $('meta[property="og:image"]').attr('content') ||
+                $('meta[name="twitter:image"]').attr('content');
+            if (image) {
+                if (!image.startsWith('http')) {
+                    image = new URL(image, url).href;
+                }
+                previewData.image = image;
+            }
+
+            // 5. Site Name Extraction
+            previewData.siteName = $('meta[property="og:site_name"]').attr('content') ||
+                (isChurchUrl ? 'Church of Jesus Christ' : parsedUrl.hostname);
+
+            // 6. Favicon Extraction
+            let favicon = $('link[rel="shortcut icon"]').attr('href') ||
+                $('link[rel="icon"]').attr('href') ||
+                $('link[rel*="icon"]').attr('href');
+            if (favicon) {
+                if (!favicon.startsWith('http')) {
+                    favicon = new URL(favicon, url).href;
+                }
+                previewData.favicon = favicon;
+            }
         }
 
-        const description = $('meta[property="og:description"]').attr('content') ||
-            $('meta[name="description"]').attr('content') ||
-            null;
+        return res.json(previewData);
 
-        let image = $('meta[property="og:image"]').attr('content') ||
-            $('meta[name="twitter:image"]').attr('content');
-        if (image && !image.startsWith('http')) {
-            image = new URL(image, url).href;
-        }
-
-        const siteName = $('meta[property="og:site_name"]').attr('content') || (isChurchUrl ? 'Church of Jesus Christ' : parsedUrl.hostname);
-
-        let favicon = $('link[rel="shortcut icon"]').attr('href') ||
-            $('link[rel="icon"]').attr('href') ||
-            `https://www.google.com/s2/favicons?domain=${parsedUrl.hostname}&sz=64`;
-
-        if (favicon && !favicon.startsWith('http')) {
-            favicon = new URL(favicon, url).href;
-        }
-
-        res.json({
-            url,
-            title: (displayTitle ? displayTitle.trim() : parsedUrl.hostname),
-            description: description ? description.trim() : null,
-            image,
-            favicon,
-            siteName: siteName
-        });
     } catch (error) {
-        console.error('Error fetching URL preview:', error.message);
-        try {
-            const parsedUrl = new URL(url);
-            res.json({
-                url,
-                title: parsedUrl.hostname,
-                description: null,
-                image: null,
-                favicon: `https://www.google.com/s2/favicons?domain=${parsedUrl.hostname}&sz=64`,
-                siteName: parsedUrl.hostname
-            });
-        } catch {
-            res.status(400).json({ error: 'Invalid URL' });
-        }
+        console.error('URL Preview Error for:', url, error.message);
+        // Always return at least the hostname even on error to satisfy the UI
+        return res.json(previewData);
     }
 });
 
