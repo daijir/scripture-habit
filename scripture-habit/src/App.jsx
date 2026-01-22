@@ -125,7 +125,8 @@ const SEOManager = () => {
       : path;
 
     // Canonical URL for the CURRENT language
-    let canonicalPath = `/${language}${baseContentPath === '/' ? '/' : baseContentPath}`;
+    const normalizedBaseContentPath = baseContentPath === '' ? '/' : baseContentPath;
+    let canonicalPath = `/${language}${normalizedBaseContentPath === '/' ? '/' : normalizedBaseContentPath}`;
     if (!canonicalPath.endsWith('/')) {
       canonicalPath += '/';
     }
@@ -171,7 +172,7 @@ const SEOManager = () => {
         document.head.appendChild(link);
       }
 
-      let langSpecificPath = `/${lang}${baseContentPath === '/' ? '/' : baseContentPath}`;
+      let langSpecificPath = `/${lang}${normalizedBaseContentPath === '/' ? '/' : normalizedBaseContentPath}`;
       if (!langSpecificPath.endsWith('/')) {
         langSpecificPath += '/';
       }
@@ -186,7 +187,7 @@ const SEOManager = () => {
       xDefault.setAttribute('hreflang', 'x-default');
       document.head.appendChild(xDefault);
     }
-    let xDefaultPath = `/en${baseContentPath === '/' ? '/' : baseContentPath}`;
+    let xDefaultPath = `/en${normalizedBaseContentPath === '/' ? '/' : normalizedBaseContentPath}`;
     if (!xDefaultPath.endsWith('/')) {
       xDefaultPath += '/';
     }
@@ -201,13 +202,14 @@ const SEOManager = () => {
       document.head.appendChild(jsonLdScript);
     }
 
+    const currentLangHomepage = `https://scripturehabit.app/${language}/`;
     const schemaData = [
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "Scripture Habit",
         "alternateName": ["Scripture Habit LDS", "スクハビ", "ScriptureHabit", "ScriptureHabit LDS"],
-        "url": "https://scripturehabit.app/"
+        "url": currentLangHomepage
       },
       {
         "@context": "https://schema.org",
@@ -221,7 +223,7 @@ const SEOManager = () => {
           "priceCurrency": "USD"
         },
         "description": description,
-        "url": `https://scripturehabit.app/${language}/`,
+        "url": currentLangHomepage,
         "softwareVersion": "1.0",
         "author": {
           "@type": "Person",
