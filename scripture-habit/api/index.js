@@ -1295,26 +1295,21 @@ app.get('/api/fetch-gc-metadata', async (req, res) => {
 });
 
 app.get(['/api/url-preview', '/api/url-preview/'], async (req, res) => {
-    // Force no-cache headers for link previews to prevent stale/broken previews
-    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-    res.setHeader('Pragma', 'no-cache');
-    res.setHeader('Expires', '0');
-
     const { url, lang } = req.query;
+    console.log(`[Preview Request] URL: ${url}, Lang: ${lang}`);
 
-    // We'll prepare the safest possible fallback from the start
-    let previewData = {
-        url: url || '',
+    if (!url || typeof url !== 'string') {
+        return res.status(400).json({ error: 'URL is required' });
+    }
+
+    const previewData = {
+        url,
         title: '',
         description: null,
         image: null,
         favicon: null,
         siteName: ''
     };
-
-    if (!url || typeof url !== 'string') {
-        return res.status(400).json({ error: 'URL parameter is required' });
-    }
 
     try {
         const parsedUrl = new URL(url);
@@ -1324,53 +1319,31 @@ app.get(['/api/url-preview', '/api/url-preview/'], async (req, res) => {
 
         const isChurchUrl = parsedUrl.hostname.includes('churchofjesuschrist.org') || parsedUrl.hostname.includes('general-conference');
 
-        const fetchWithLang = async (targetUrl, targetLang) => {
-            const u = new URL(targetUrl);
-            if (targetLang) u.searchParams.set('lang', targetLang);
-
-            return axios.get(u.toString(), {
-                headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
-                    'Accept-Language': 'en-US,en;q=0.9,ja;q=0.8',
-                },
-                timeout: 7000, // Slightly shorter timeout to stay within Vercel execution limits
-                maxContentLength: 1024 * 1024 * 2, // 2MB limit to prevent OOM
-            });
-        };
-
+        console.log(`[Preview] Fetching content for: ${url}`);
         let response;
         try {
             const fetchUrl = new URL(url);
-            if (lang && isChurchUrl) {
-                fetchUrl.searchParams.set('lang', lang);
-            }
-            response = await fetchWithLang(fetchUrl.toString());
-        } catch (err) {
-            // Specialized Church URL language fallback logic
-            if (isChurchUrl && err.response?.status === 404) {
-                try {
-                    const altLang = (lang === 'ja' || lang === 'jpn') ? (lang === 'ja' ? 'jpn' : 'ja') : null;
-                    if (altLang) {
-                        response = await fetchWithLang(url, altLang);
-                    } else {
-                        const noLangUrl = new URL(url);
-                        noLangUrl.searchParams.delete('lang');
-                        response = await fetchWithLang(noLangUrl.toString());
-                    }
-                } catch (err2) { }
-            }
+            if (lang && isChurchUrl) fetchUrl.searchParams.set('lang', lang);
 
-            if (!response) {
-                // If secondary attempts also failed, throw the original error
-                throw err;
-            }
+            response = await axios.get(fetchUrl.toString(), {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                },
+                timeout: 4000, // Very short to avoid Vercel Function Timeout
+                maxContentLength: 512 * 1024, // 512KB is enough for metadata
+                validateStatus: () => true // Don't throw on 404/500
+            });
+            console.log(`[Preview] Fetch complete. Status: ${response?.status}`);
+        } catch (fetchErr) {
+            console.warn(`[Preview] Network/Timeout error: ${fetchErr.message}`);
+            // Continue with fallback data
         }
 
         if (response && response.data && typeof response.data === 'string' && typeof load === 'function') {
             const $ = load(response.data);
 
-            // 1. Title Extraction
+            // 1. Title
             let title = $('meta[property="og:title"]').attr('content') ||
                 $('meta[name="twitter:title"]').attr('content') ||
                 $('h1').first().text().trim() ||
@@ -1382,58 +1355,41 @@ app.get(['/api/url-preview', '/api/url-preview/'], async (req, res) => {
                 previewData.title = title.trim();
             }
 
-            // 2. Speaker Extraction (Church specific)
+            // 2. Speaker (Church sites)
             if (isChurchUrl) {
-                let speaker = $('div.byline p.author-name').first().text().trim() ||
+                const speaker = $('div.byline p.author-name').first().text().trim() ||
                     $('p.author-name').first().text().trim() ||
-                    $('a.author-name').first().text().trim() ||
-                    $('div.byline p').first().text().trim();
-
+                    $('a.author-name').first().text().trim();
                 if (speaker) {
-                    speaker = speaker.replace(/^(By|Par|De|Por)\s+/i, '').trim();
-                    if (previewData.title && !previewData.title.includes(speaker)) {
-                        previewData.title = `${previewData.title} (${speaker})`;
+                    const clean = speaker.replace(/^(By|Par|De|Por)\s+/i, '').trim();
+                    if (!previewData.title.includes(clean)) {
+                        previewData.title = `${previewData.title} (${clean})`;
                     }
                 }
             }
 
-            // 3. Description Extraction
+            // 3. Description
             previewData.description = $('meta[property="og:description"]').attr('content') ||
-                $('meta[name="description"]').attr('content') ||
-                $('meta[name="twitter:description"]').attr('content') ||
-                null;
+                $('meta[name="description"]').attr('content') || null;
 
-            // 4. Image Extraction
-            let image = $('meta[property="og:image"]').attr('content') ||
-                $('meta[name="twitter:image"]').attr('content');
-            if (image) {
-                if (!image.startsWith('http')) {
-                    try { image = new URL(image, url).href; } catch (e) { }
+            // 4. Image
+            let img = $('meta[property="og:image"]').attr('content') || $('meta[name="twitter:image"]').attr('content');
+            if (img && typeof img === 'string') {
+                if (!img.startsWith('http')) {
+                    try { img = new URL(img, url).href; } catch (e) { }
                 }
-                previewData.image = image;
+                previewData.image = img;
             }
 
-            // 5. Site Name Extraction
             previewData.siteName = $('meta[property="og:site_name"]').attr('content') ||
                 (isChurchUrl ? 'Church of Jesus Christ' : parsedUrl.hostname);
-
-            // 6. Favicon Extraction
-            let favicon = $('link[rel="shortcut icon"]').attr('href') ||
-                $('link[rel="icon"]').attr('href') ||
-                $('link[rel*="icon"]').attr('href');
-            if (favicon) {
-                if (!favicon.startsWith('http')) {
-                    try { favicon = new URL(favicon, url).href; } catch (e) { }
-                }
-                previewData.favicon = favicon;
-            }
         }
 
+        console.log(`[Preview] Success returning for: ${url}`);
         return res.json(previewData);
 
     } catch (error) {
-        // Log error but NEVER crash the function
-        console.error('Final URL Preview Catch-All Error:', url, error.message);
+        console.error(`[Preview] CRITICAL ERROR for ${url}:`, error.message);
         return res.json(previewData);
     }
 });
