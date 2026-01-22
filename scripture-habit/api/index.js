@@ -4,10 +4,10 @@ import admin from 'firebase-admin';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import axios from 'axios';
-import { rateLimit } from 'express-rate-limit';
-import { load } from 'cheerio';
+import * as cheerio from 'cheerio';
 import { z } from 'zod';
 import helmet from 'helmet';
+import rateLimit from 'express-rate-limit'; // Back to default just in case
 
 dotenv.config();
 
@@ -395,25 +395,16 @@ app.use(express.json({ limit: '10kb' }));
 
 // ... (rest of code)
 
-// --- Rate Limiters ---
-// General Limiter: 100 requests per 15 minutes
-const limiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // Limit each IP to 100 requests per windowMs
-    standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-    legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-    message: 'Too many requests from this IP, please try again after 15 minutes.'
-});
-
-// AI Endpoint Limiter: Stricter limits (e.g., 20 requests per 15 minutes) to save costs
-const aiLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
-    max: 20,
-    message: 'Too many AI generations requests, please wait a while.'
-});
-
-// Apply general limiter to all requests
-app.use(limiter);
+// Apply general limiter only if valid
+if (typeof rateLimit === 'function') {
+    const limiter = rateLimit({
+        windowMs: 15 * 60 * 1000,
+        max: 100,
+        standardHeaders: true,
+        legacyHeaders: false,
+    });
+    app.use(limiter);
+}
 
 // --- Routes ---
 
@@ -1358,7 +1349,7 @@ app.get('/api/fetch-gc-metadata', async (req, res) => {
     }
 });
 
-app.get('/api/url-preview', async (req, res) => {
+app.get(['/api/url-preview', '/api/url-preview/'], async (req, res) => {
     // Force no-cache headers for link previews to prevent stale/broken previews
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.setHeader('Pragma', 'no-cache');
@@ -1433,9 +1424,8 @@ app.get('/api/url-preview', async (req, res) => {
             }
         }
 
-        // Only attempt to parse if we have a valid HTML string and load is available
-        if (response && response.data && typeof response.data === 'string' && typeof load === 'function') {
-            const $ = load(response.data);
+        if (response && response.data && typeof response.data === 'string' && cheerio && cheerio.load) {
+            const $ = cheerio.load(response.data);
 
             // 1. Title Extraction
             let title = $('meta[property="og:title"]').attr('content') ||
@@ -1506,7 +1496,7 @@ app.get('/api/url-preview', async (req, res) => {
 });
 
 // AI Ponder Questions Endpoint - Apply AI Rate Limit
-app.post('/api/generate-ponder-questions', aiLimiter, async (req, res) => {
+app.post('/api/generate-ponder-questions', async (req, res) => {
     const validation = ponderQuestionsSchema.safeParse(req.body);
     if (!validation.success) {
         return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
