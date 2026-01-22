@@ -9,27 +9,100 @@ import { z } from 'zod';
 
 dotenv.config();
 
-// --- Zod Schemas ---
-const verifyLoginSchema = z.object({
-    token: z.string().min(1)
+const app = express();
+
+// --- 1. Emergency Diagnostics (Before any complex logic) ---
+app.get(['/api/test', '/api/test/'], (req, res) => res.status(200).send('API is ALIVE'));
+app.get(['/api/health', '/api/health/'], (req, res) => {
+    res.json({
+        status: 'ok',
+        time: new Date().toISOString(),
+        node: process.version,
+        env: process.env.NODE_ENV
+    });
 });
 
+// --- 2. Middleware & Configuration ---
+app.set('trust proxy', 1);
+
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin ||
+            origin.includes('scripturehabit.app') ||
+            origin.includes('vercel.app') ||
+            origin.includes('localhost') ||
+            origin.includes('capacitor://localhost')) {
+            return callback(null, true);
+        }
+        callback(new Error('CORS not allowed'), false);
+    }
+}));
+
+app.use(express.json({ limit: '50kb' }));
+
+// Request Logger
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+    next();
+});
+
+// --- 3. Firebase Initialization (Wrapped in try-catch to prevent total crash) ---
+let db, messaging;
+try {
+    if (!admin.apps.length) {
+        const privateKey = process.env.FIREBASE_PRIVATE_KEY
+            ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
+            : undefined;
+
+        const serviceAccount = {
+            type: "service_account",
+            project_id: process.env.FIREBASE_PROJECT_ID,
+            private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
+            private_key: privateKey,
+            client_email: process.env.FIREBASE_CLIENT_EMAIL,
+            client_id: process.env.FIREBASE_CLIENT_ID,
+            auth_uri: "https://accounts.google.com/o/oauth2/auth",
+            token_uri: "https://oauth2.googleapis.com/token",
+            auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
+            client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL
+        };
+
+        if (serviceAccount.project_id && serviceAccount.private_key) {
+            admin.initializeApp({
+                credential: admin.credential.cert(serviceAccount)
+            });
+            console.log('Firebase Admin initialized successfully');
+        } else {
+            console.warn('Firebase environment variables are missing. Some features will be disabled.');
+        }
+    }
+    db = admin.firestore();
+    messaging = admin.messaging();
+} catch (fbError) {
+    console.error('FIREBASE CRITICAL ERROR DURING INIT:', fbError.message);
+}
+
+// --- Zod Schemas ---
+const supportedLanguages = ['en', 'ja', 'es', 'pt', 'zh', 'zho', 'vi', 'th', 'ko', 'tl', 'sw'];
+const languageNames = {
+    'ja': 'Japanese', 'en': 'English', 'es': 'Spanish', 'pt': 'Portuguese',
+    'ko': 'Korean', 'zho': 'Chinese (Traditional)', 'vi': 'Vietnamese',
+    'th': 'Thai', 'tl': 'Tagalog', 'sw': 'Swahili'
+};
+
+const verifyLoginSchema = z.object({ token: z.string().min(1) });
 const joinGroupSchema = z.object({
-    token: z.string().min(1).optional(), // Can match bearer logic if needed, but schema validates body
+    token: z.string().min(1).optional(),
     groupId: z.string().min(1)
 });
-
 const leaveGroupSchema = z.object({
     token: z.string().min(1).optional(),
-    groupId: z.string().optional() // Optional in logic
+    groupId: z.string().optional()
 });
-
 const deleteGroupSchema = z.object({
     token: z.string().min(1).optional(),
     groupId: z.string().min(1)
 });
-
-const supportedLanguages = ['en', 'ja', 'es', 'pt', 'zh', 'zho', 'vi', 'th', 'ko', 'tl', 'sw'];
 
 const ponderQuestionsSchema = z.object({
     scripture: z.string().min(1).max(100),
@@ -53,19 +126,6 @@ const STREAK_ANNOUNCEMENT_TEMPLATES = {
     ko: "🎉🎉🎉 **{nickname}님이 {streak}일 연속 달성했습니다!!** 🎉🎉🎉",
     tl: "🎉🎉🎉 **Naabot ni {nickname} ang {streak} na araw na streak!!** 🎉🎉🎉",
     sw: "🎉🎉🎉 **{nickname} amefikisha mfululizo wa siku {streak}!!** 🎉🎉🎉"
-};
-
-const languageNames = {
-    'ja': 'Japanese',
-    'en': 'English',
-    'es': 'Spanish',
-    'pt': 'Portuguese',
-    'ko': 'Korean',
-    'zho': 'Chinese (Traditional)',
-    'vi': 'Vietnamese',
-    'th': 'Thai',
-    'tl': 'Tagalog',
-    'sw': 'Swahili'
 };
 
 const weeklyRecapSchema = z.object({
@@ -171,31 +231,6 @@ const CHEER_NOTIFICATION_TEMPLATES = {
         "Tulenge umoja wa 100%! {nickname} amekutumia nguvu! 💪"
     ]
 };
-
-// Initialize Firebase Admin SDK
-// Check if already initialized to avoid "default app already exists" error in serverless environment
-if (!admin.apps.length) {
-    // Construct service account from environment variables
-    const serviceAccount = {
-        type: "service_account",
-        project_id: process.env.FIREBASE_PROJECT_ID,
-        private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
-        private_key: process.env.FIREBASE_PRIVATE_KEY ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n') : undefined,
-        client_email: process.env.FIREBASE_CLIENT_EMAIL,
-        client_id: process.env.FIREBASE_CLIENT_ID,
-        auth_uri: "https://accounts.google.com/o/oauth2/auth",
-        token_uri: "https://oauth2.googleapis.com/token",
-        auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
-        client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL
-    };
-
-    admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount)
-    });
-}
-
-const db = admin.firestore();
-const messaging = admin.messaging();
 
 async function sendPushNotification(tokens, payload) {
     if (!tokens || tokens.length === 0) return { successCount: 0, failureCount: 0, failedTokens: [] };
@@ -315,92 +350,6 @@ async function notifyGroupMembers(groupId, senderUid, payload, memberIdsOverride
     }
 }
 
-const app = express();
-
-// Important for Vercel/proxies so that rate limiter sees the real IP
-app.set('trust proxy', 1);
-
-// Security Headers with Custom CSP
-app.use(
-    helmet({
-        contentSecurityPolicy: {
-            directives: {
-                defaultSrc: ["'self'"],
-                scriptSrc: [
-                    "'self'",
-                    "https://apis.google.com",
-                    "https://www.googleapis.com",
-                    "https://www.gstatic.com",
-                    // "'unsafe-inline'" is often needed for React apps unless nonce is used
-                    "'unsafe-inline'",
-                ],
-                styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
-                imgSrc: ["'self'", "data:", "https://*.googleusercontent.com", "https://*.ggpht.com"], // Google profile images
-                connectSrc: [
-                    "'self'",
-                    "https://identitytoolkit.googleapis.com",
-                    "https://securetoken.googleapis.com",
-                    "https://firestore.googleapis.com",
-                    "https://www.googleapis.com",
-                    // Add your backend URL if it's different in production, but 'self' covers relative API calls
-                    "https://scripturehabit.app",
-                    "http://localhost:3000"
-                ],
-                fontSrc: ["'self'", "https://fonts.gstatic.com"],
-                objectSrc: ["'none'"],
-                upgradeInsecureRequests: [], // Disable auto-upgrade for localhost dev
-            },
-        },
-    })
-);
-
-// CORS Configuration
-const allowedOrigins = [
-    'https://scripturehabit.app',
-    'https://www.scripturehabit.app', // Added www
-    'http://localhost:3000',
-    'http://localhost:5173',
-    'https://localhost',
-    'capacitor://localhost',
-    'http://localhost'
-];
-
-app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin) return callback(null, true);
-
-        // Allow exact matches
-        if (allowedOrigins.indexOf(origin) !== -1) {
-            return callback(null, true);
-        }
-
-        // Allow Vercel preview deployments (e.g. *-your-username.vercel.app)
-        if (origin.endsWith('.vercel.app') || origin.includes('scripture-habit')) {
-            return callback(null, true);
-        }
-
-        if (process.env.NODE_ENV !== 'production') {
-            return callback(null, true);
-        }
-
-        var msg = 'The CORS policy for this site does not allow access from the specified Origin.';
-        return callback(new Error(msg), false);
-    }
-}));
-
-// Body Parsing
-app.use(express.json({ limit: '50kb' }));
-
-// Health check
-app.get('/api/health', (req, res) => {
-    res.json({
-        status: 'ok',
-        time: new Date().toISOString(),
-        node: process.version
-    });
-});
-
-app.get('/api/test', (req, res) => res.send('OK'));
 
 // --- Routes ---
 
