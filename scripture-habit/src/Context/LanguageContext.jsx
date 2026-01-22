@@ -69,7 +69,7 @@ export const LanguageProvider = ({ children }) => {
         if (!newPath.endsWith('/')) {
             newPath += '/';
         }
-        navigate(newPath);
+        navigate(newPath + window.location.search);
     };
 
     const t = (key, replacements = {}) => {

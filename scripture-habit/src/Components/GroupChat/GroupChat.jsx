@@ -2897,7 +2897,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                           )}
                           {/* Show link previews for regular messages with URLs */}
                           {!msg.isNote && !msg.isEntry && extractUrls(msg.text).slice(0, 1).map((url, idx) => (
-                            <LinkPreview key={idx} url={url} isSent={msg.senderId === userData?.uid} />
+                            <LinkPreview key={idx} url={url} isSent={msg.senderId === userData?.uid} language={language} />
                           ))}
                         </div>
                       </div>

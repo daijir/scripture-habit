@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, Navigate, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { safeStorage } from '../../Utils/storage';
 import { auth, db } from '../../firebase';
 import { doc, onSnapshot, collection, query, where, orderBy, limit, updateDoc, getDocs } from 'firebase/firestore';
@@ -36,10 +36,31 @@ import NotificationPromptModal from './NotificationPromptModal';
 
 const Dashboard = () => {
   const [user, setUser] = useState(null);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // Initialize state from URL query parameters or location state
+  const getInitialState = () => {
+    const searchParams = new URLSearchParams(location.search);
+    const gid = searchParams.get('groupId');
+    const viewParam = searchParams.get('view');
+    const openNewNote = searchParams.get('openNewNote');
+
+    return {
+      activeGroupId: gid || location.state?.initialGroupId || null,
+      selectedView: gid ? 2 : (viewParam ? parseInt(viewParam) : (location.state?.initialView !== undefined ? location.state.initialView : 0)),
+      isModalOpen: openNewNote === 'true'
+    };
+  };
+
+  const initialState = getInitialState();
+  const [selectedView, setSelectedView] = useState(initialState.selectedView);
+  const [activeGroupId, setActiveGroupId] = useState(initialState.activeGroupId);
+  const [isModalOpen, setIsModalOpen] = useState(initialState.isModalOpen);
+
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedView, setSelectedView] = useState(0);
   const [groupTotalNotes, setGroupTotalNotes] = useState(0);
   const [personalNotesCount, setPersonalNotesCount] = useState(null);
   const [userGroups, setUserGroups] = useState([]);
@@ -48,12 +69,7 @@ const Dashboard = () => {
   const [loadingGroupStates, setLoadingGroupStates] = useState(true);
   const [latestNoteNotification, setLatestNoteNotification] = useState(null);
 
-  const location = useLocation();
-  // Initialize activeGroupId from location state if available, to avoid initial null state
-  const [activeGroupId, setActiveGroupId] = useState(location.state?.initialGroupId || null);
   const [showWelcomeStory, setShowWelcomeStory] = useState(false);
-
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [warnings, setWarnings] = useState([]);
   const [showEditProfileModal, setShowEditProfileModal] = useState(false);
@@ -78,34 +94,14 @@ const Dashboard = () => {
       setActiveGroupId(location.state.initialGroupId);
     }
 
-    // Handle deep-linking from URL query parameters (e.g., from notifications)
+    // URL Cleanup: if parameters were used to initialize state, clean them from the URL
+    // so they don't re-trigger on refresh. We use navigate with replace: true
+    // so it doesn't add to the history stack.
     const searchParams = new URLSearchParams(location.search);
-    const gid = searchParams.get('groupId');
-    if (gid) {
-      setActiveGroupId(gid);
-      setSelectedView(2); // Switch to GroupChat view
-
-      // Clean up the URL to prevent re-triggering on refresh
-      const newUrl = window.location.pathname;
-      window.history.replaceState({}, '', newUrl);
+    if (searchParams.has('groupId') || searchParams.has('openNewNote') || searchParams.has('view')) {
+      navigate(location.pathname, { replace: true });
     }
-
-    const openNewNote = searchParams.get('openNewNote');
-    if (openNewNote === 'true') {
-      setIsModalOpen(true);
-      // Clean URL for this too
-      const newUrl = window.location.pathname;
-      window.history.replaceState({}, '', newUrl);
-    }
-
-    const viewParam = searchParams.get('view');
-    if (viewParam) {
-      setSelectedView(parseInt(viewParam));
-      // Clean URL
-      const newUrl = window.location.pathname;
-      window.history.replaceState({}, '', newUrl);
-    }
-  }, [location.search, location.state]);
+  }, [location.search, location.state, navigate]);
 
   useEffect(() => {
     // Show notification prompt after 3 seconds on dashboard

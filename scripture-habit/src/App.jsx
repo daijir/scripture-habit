@@ -495,8 +495,9 @@ const LanguageRedirect = ({ location }) => {
   const pathParts = path.split('/');
   const firstPart = pathParts[1];
 
-  // If already prefixed with a supported language, don't redirect (let Routes handle it)
-  if (SUPPORTED_LANGUAGES.includes(firstPart)) {
+  // Exclude API routes and public assets from language redirection
+  const excludedPaths = ['api', 'sw.js', 'manifest.json', 'images', 'favicon.ico', 'logo.svg'];
+  if (SUPPORTED_LANGUAGES.includes(firstPart) || excludedPaths.includes(firstPart)) {
     return null;
   }
 
@@ -505,6 +506,12 @@ const LanguageRedirect = ({ location }) => {
   if (!newPath.endsWith('/')) {
     newPath += '/';
   }
+
+  // Preserve query parameters
+  if (location.search) {
+    newPath += location.search;
+  }
+
   return <Navigate to={newPath} replace state={location.state} />;
 };
 
