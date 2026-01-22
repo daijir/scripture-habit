@@ -1295,7 +1295,7 @@ app.get('/api/fetch-gc-metadata', async (req, res) => {
             return res.json({ title: '', speaker: '' });
         }
 
-        const $ = cheerio.load(response.data);
+        const $ = load(response.data);
 
         // Attempt to find title
         // 1. Try Open Graph Title first (usually most accurate and clean)
@@ -1588,7 +1588,7 @@ However, please write questions that are easy to understand even for investigato
 });
 
 // AI Translation Endpoint
-app.post('/api/translate', aiLimiter, async (req, res) => {
+app.post('/api/translate', async (req, res) => {
     const validation = translateSchema.safeParse(req.body);
     if (!validation.success) {
         return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
@@ -1670,7 +1670,7 @@ ${text}`;
 });
 
 // AI Weekly Recap Endpoint
-app.post('/api/generate-weekly-recap', aiLimiter, async (req, res) => {
+app.post('/api/generate-weekly-recap', async (req, res) => {
     const validation = weeklyRecapSchema.safeParse(req.body);
     if (!validation.success) {
         return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
@@ -1797,7 +1797,7 @@ ${notesText}`,
 筆記內容：
 ${notesText}`,
             'tl': `Ikaw ay si Professor John W. Welch, ang tagapagtatag ng Scripture Central at isang tanyag na legal at biblical scholar, na nagsisilbing announcer para sa isang scripture study group ng Ang Simbahan ni Jesucristo ng mga Banal sa mga Huling Araw.
-Nasa ibaba ang mga (anonymized) study notes na ibinahagi ng mga miyembro ng grupo sa nakaraang linggo.
+Nasa ibaba ang mga (anonymized) study notes na ibhagagi ng mga miyembro ng grupo sa nakaraang linggo.
 Suriin ang mga ito at gumawa ng maikli at nakaka-enkanyong ulat tungkol sa "learning trends" o "deepening themes" ng grupo.
 Format ng Output:
 Magsimula sa "Weekly Reflection:", na susundan ng iyong pagsusuri.
@@ -1883,7 +1883,7 @@ ${notesText}`;
 });
 
 // AI Personal Weekly Recap Endpoint
-app.post('/api/generate-personal-weekly-recap', aiLimiter, async (req, res) => {
+app.post('/api/generate-personal-weekly-recap', async (req, res) => {
     const validation = personalRecapSchema.safeParse(req.body);
     if (!validation.success) {
         return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
@@ -2586,7 +2586,7 @@ app.get('/api/test-inactive-check/:groupId', async (req, res) => {
     }
 });
 
-app.post('/translate', aiLimiter, async (req, res) => {
+app.post('/api/translate', async (req, res) => {
     const validation = translateSchema.safeParse(req.body);
     if (!validation.success) {
         return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
