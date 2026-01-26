@@ -49,7 +49,10 @@ const SEOManager = () => {
 
     // Route-specific Title and Indexing
     let title = t('seo.title') || "Scripture Habit";
-    let shouldIndex = hasLangPrefix;
+
+    // Explicit list of routes that SHOULD be indexed
+    const publicRoutes = ['', 'privacy', 'terms', 'legal'];
+    let shouldIndex = hasLangPrefix || publicRoutes.includes(route);
 
     if (route === 'dashboard') {
       title = `${t('sidebar.dashboard')} | Scripture Habit`;
