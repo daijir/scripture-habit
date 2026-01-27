@@ -138,7 +138,10 @@ export const translations = {
             sharedActivity: "Shared Activity",
             noteDeletedSuccess: "Note deleted successfully",
             noteDeletedError: "Failed to delete note",
-            letterSaveError: "Failed to save letter."
+            letterSaveError: "Failed to save letter.",
+            prevPage: "Previous",
+            nextPage: "Next",
+            pageInfo: "Page {current} of {total}"
         },
         recapModal: {
             title: "Your Weekly Letter",
@@ -1029,7 +1032,10 @@ export const translations = {
             sharedActivity: "Shared Activity",
             noteDeletedSuccess: "ノートを削除しました",
             noteDeletedError: "ノートの削除に失敗しました",
-            letterSaveError: "レターの保存に失敗しました"
+            letterSaveError: "レターの保存に失敗しました",
+            prevPage: "前へ",
+            nextPage: "次へ",
+            pageInfo: "{total} ページ中 {current} ページ目"
         },
         recapModal: {
             title: "今週の振り返りレター",

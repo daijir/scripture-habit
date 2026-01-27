@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import * as Sentry from "@sentry/react";
 import axios from 'axios';
 import { Capacitor } from '@capacitor/core';
 import { db } from '../../firebase';
 import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc, updateDoc, increment, addDoc, serverTimestamp } from 'firebase/firestore';
 import ReactMarkdown from 'react-markdown';
-import { UilPlus, UilBookOpen, UilSearchAlt, UilAnalysis, UilEnvelope } from '@iconscout/react-unicons';
+import { UilPlus, UilBookOpen, UilSearchAlt, UilAnalysis, UilEnvelope, UilAngleLeft, UilAngleRight } from '@iconscout/react-unicons';
 import NewNote from '../NewNote/NewNote';
 import NoteCard from '../NoteCard/NoteCard';
 import RecapModal from '../RecapModal/RecapModal'; // Import RecapModal
@@ -30,6 +30,8 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const [currentPage, setCurrentPage] = useState(1);
+  const NOTES_PER_PAGE = 7;
 
   const [recapLoading, setRecapLoading] = useState(false);
   const [newNoteInitialData, setNewNoteInitialData] = useState(null);
@@ -230,6 +232,28 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
     return matchesSearch && matchesCategory;
   });
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredNotes.length / NOTES_PER_PAGE);
+
+  const paginatedNotes = useMemo(() => {
+    const startIndex = (currentPage - 1) * NOTES_PER_PAGE;
+    return filteredNotes.slice(startIndex, startIndex + NOTES_PER_PAGE);
+  }, [filteredNotes, currentPage]);
+
+  // Reset to first page when filtering or changing category
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory]);
+
+  // Handle page changes with smooth scroll to top
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage);
+    const container = document.querySelector('.MyNotes');
+    if (container) {
+      container.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   // Calculate if recap can be generated
   let canGenerateRecap = true;
   let daysLeft = 0;
@@ -360,7 +384,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
             <div className="no-results" style={{ gridColumn: '1 / -1', textAlign: 'center', color: '#999', padding: '2rem' }}>
               {t('dashboard.noRecentNotes')}
             </div>
-          ) : filteredNotes.map((note) => (
+          ) : paginatedNotes.map((note) => (
             <NoteCard
               key={note.id}
               note={note}
@@ -369,6 +393,32 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
               className="my-notes-card"
             />
           ))}
+        </div>
+      )}
+
+      {totalPages > 1 && (
+        <div className="pagination-controls">
+          <button
+            className="pagination-btn"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            <UilAngleLeft size="20" />
+            <span>{t('myNotes.prevPage')}</span>
+          </button>
+
+          <div className="page-indicator">
+            {t('myNotes.pageInfo', { current: currentPage, total: totalPages })}
+          </div>
+
+          <button
+            className="pagination-btn"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            <span>{t('myNotes.nextPage')}</span>
+            <UilAngleRight size="20" />
+          </button>
         </div>
       )
       }
