@@ -1531,6 +1531,46 @@ export const translations = {
             finalCta: {
                 title: "Pronto para começar um novo hábito?",
                 button: "Comece do Zero Hoje"
+            },
+            useCases: {
+                title: "Tornar a Escola Dominical Melhor e Mais Divertida",
+                status: {
+                    problem: "Desafios Atuais",
+                    solution: "Com o Scripture Habit"
+                },
+                teacher: {
+                    title: "Para Professores",
+                    problem: "Não saber o progresso diário de estudo ou as reflexões dei alunos. É difícil 'Ensinar à Maneira do Salvador' sem conhecer suas necessidades.",
+                    solution: "Entender os aprendizados e as perguntas dos alunos. Preparar lições adaptadas especificamente às suas necessidades espirituais."
+                },
+                student: {
+                    title: "Para Alunos",
+                    problem: "A correria diária torna difícil manter o estudo pessoal. É difícil sustentar a motivação, levando à desistência.",
+                    solution: "Aprofundar o aprendizado através do encorajamento mútuo e da edificação. Aumentar a motivação e evitar ficar para trás."
+                }
+            },
+            seoContent: {
+                why: {
+                    title: "Por que construir um Hábito das Escrituras?",
+                    text: "Estabelecer um hábito diário de estudo das escrituras é mais do que apenas ler; trata-se de criar um espaço consistente para revelação pessoal e crescimento espiritual. O Scripture Habit fornece as ferramentas e o apoio comunitário para ajudá-lo a manter o compromisso com seus estudos, quer você esteja seguindo o 'Vem, e Segue-Me', estudando a Bíblia ou mergulhando no Livro de Mórmon."
+                },
+                community: {
+                    title: "O Poder do Estudo em Comunidade",
+                    text: "Pesquisas mostram que construir hábitos com amigos aumenta significativamente sua taxa de sucesso. O Scripture Habit permite que você forme grupos pequenos e íntimos onde pode compartilhar insights diariamente. Esse resultado colaborativo (compartilhar o que você aprende) reforça seu próprio entendimento e edifica os outros, cumprindo o princípio de se regozijarem juntos."
+                },
+                comparison: {
+                    title: "O Melhor App SUD para Consistência de Hábito",
+                    text: "Comparado a outras ferramentas de estudo, o Scripture Habit foca especificamente na responsabilidade diária e na edificação comunitária. Nossa regra única de 3 dias garante que os grupos permaneçam ativos, enquanto nossas cartas semanais geradas por IA ajudam você a visualizar o crescimento espiritual de uma forma que os planos de leitura estática não conseguem. É más do que um rastreador; é uma ferramenta para revelação pessoal."
+                },
+                faq: {
+                    title: "Perguntas Frequentes",
+                    q1: "Como começo um hábito de estudo das escrituras?",
+                    a1: "A mejor maneira de começar um hábito das escrituras é começar aos poucos e ser consistente. A regra de 3 dias do Scripture Habit ajuda você a manter um ritmo constante sem se sentir sobrecarregado.",
+                    q2: "O Scripture Habit é um app oficial SUD?",
+                    a2: "O Scripture Habit é um projeto pessoal destinado a apoiar os membros de A Igreja de Jesus Cristo dos Santos dos Últimos Dias e todos os estudantes das escrituras. Não é um app oficial da Igreja, mas foi projetado para funcionar perfeitamente com a Biblioteca do Evangelho.",
+                    q3: "Posso usá-lo para estudo da Bíblia?",
+                    a3: "Com certeza! O Scripture Habit é projetado para qualquer estudo das escrituras, incluindo a Bíblia (Antigo e Novo Testamento), o Livro de Mórmon e outros textos sagrados."
+                }
             }
         },
         sidebar: {
@@ -1824,7 +1864,10 @@ export const translations = {
             sharedActivity: "Atividade Compartilhada",
             noteDeletedSuccess: "Nota excluída com sucesso",
             noteDeletedError: "Falha ao excluir a nota",
-            letterSaveError: "Falha ao salvar a carta."
+            letterSaveError: "Falha ao salvar a carta.",
+            prevPage: "Anterior",
+            nextPage: "Próximo",
+            pageInfo: "Página {current} de {total}"
         },
         recapModal: {
             title: "Sua Carta Semanal",
@@ -2234,6 +2277,46 @@ export const translations = {
             finalCta: {
                 title: "準備好開始新習慣了嗎？",
                 button: "今天就重新開始"
+            },
+            useCases: {
+                title: "讓主日學變得更好、更有趣",
+                status: {
+                    problem: "目前的挑戰",
+                    solution: "使用 Scripture Habit 後"
+                },
+                teacher: {
+                    title: "給教師",
+                    problem: "不清楚學生每天的學習進度或感觸。在不了解學生需求的情況下，很難「以救主的方式教學」。",
+                    solution: "了解學生的學習心得和疑問。準備專門針對其靈性需求而設計的課程。"
+                },
+                student: {
+                    title: "給學生",
+                    problem: "日常忙碌使得個人學習難以持續。很難維持動力，容易中途放棄。",
+                    solution: "透過互相鼓勵和教導來深化學習。提高動力並防止落後。"
+                }
+            },
+            seoContent: {
+                why: {
+                    title: "為什麼要建立聖典學習習慣？",
+                    text: "建立每日聖典學習習慣不僅僅是閱讀，更是為個人啟示和靈性成長創造一個持續的空間。無論您是在跟隨『跟我來』、學習聖經，還是深入研究摩門經，Scripture Habit 都能提供工具和社群支持，幫助您堅持學習。"
+                },
+                community: {
+                    title: "社群學習的力量",
+                    text: "研究顯示，與朋友一起建立習慣可以顯著提高成功的機率。Scripture Habit 讓您可以組成親密的小組，每天分享心得。這種協作產出（分享所學）能加強您自己的理解並教導他人，實現「一同喜樂」的原則。"
+                },
+                comparison: {
+                    title: "最適合聖徒習慣養成的 App",
+                    text: "與其他學習工具相比，Scripture Habit 特別專注於每日責任和社群教導。我們獨特的 3 天規則確保小組保持活躍，而 AI 生成的每週信件能幫助您以直觀的方式看見靈性成長。它不僅僅是一個記錄器，更是獲得個人啟示的工具。"
+                },
+                faq: {
+                    title: "常見問題",
+                    q1: "如何開始聖典學習習慣？",
+                    a1: "開始聖典學習習慣的最佳方法是從小處著手並保持一致。Scripture Habit 的 3 天規則可幫助您保持穩定的節律，而不感到負擔過重。",
+                    q2: "Scripture Habit 是官方的耶穌基督後期聖徒教會 App 嗎？",
+                    a2: "Scripture Habit 是一個個人項目，旨在支持耶穌基督後期聖徒教會的成員和所有聖典學生。它不是教會的官方 App，但其設計可與福音圖書館無縫協作。",
+                    q3: "我可以用它來學習聖經嗎？",
+                    a3: "當然可以！Scripture Habit 專為任何聖典學習而設計，包括聖經（舊約和新約）、摩門經和其他神聖經文。"
+                }
             }
         },
         sidebar: {
@@ -2496,7 +2579,10 @@ export const translations = {
             sharedActivity: "分享的活動",
             noteDeletedSuccess: "筆記刪除成功",
             noteDeletedError: "刪除筆記失敗",
-            letterSaveError: "存入信箱失敗。"
+            letterSaveError: "存入信箱失敗。",
+            prevPage: "上一頁",
+            nextPage: "下一頁",
+            pageInfo: "第 {current} 頁，共 {total} 頁"
         },
         recapModal: {
             title: "您的每週信件",
@@ -2907,6 +2993,46 @@ export const translations = {
             finalCta: {
                 title: "¿Listo para comenzar un nuevo hábito?",
                 button: "Empieza de nuevo hoy"
+            },
+            useCases: {
+                title: "Haz que la Escuela Dominical sea Mejor y Más Divertida",
+                status: {
+                    problem: "Desafíos Actuales",
+                    solution: "Con Scripture Habit"
+                },
+                teacher: {
+                    title: "Para Maestros",
+                    problem: "Desconocimiento del progreso o las reflexiones diarias de los alumnos. Es difícil 'Enseñar a la Manera del Salvador' sin conocer sus necesidades.",
+                    solution: "Entender los aprendizajes y las preguntas de los alumnos. Preparar lecciones adaptadas específicamente a sus necesidades espirituales."
+                },
+                student: {
+                    title: "Para Alumnos",
+                    problem: "El ajetreo diario dificulta mantener el estudio personal. Es difícil sostener la motivación, lo que lleva al abandono.",
+                    solution: "Profundizar el aprendizaje mediante el ánimo mutuo y la edificación. Aumentar la motivación y evitar quedarse atrás."
+                }
+            },
+            seoContent: {
+                why: {
+                    title: "¿Por qué crear un hábito de estudio de las Escrituras?",
+                    text: "Establecer un hábito diario de estudio de las escrituras es más que solo leer; se trata de crear un espacio constante para la revelación personal y el crecimiento espiritual. Scripture Habit proporciona las herramientas y el apoyo comunitario para ayudarte a mantener el compromiso con tus estudios, ya sea que estés siguiendo 'Ven, sígueme', estudiando la Biblia o sumergiéndote en el Libro de Mormón."
+                },
+                community: {
+                    title: "El poder del estudio en comunidad",
+                    text: "Las investigaciones muestran que crear hábitos con amigos aumenta significativamente tu tasa de éxito. Scripture Habit te permite formar grupos pequeños e íntimos donde puedes compartir ideas diariamente. Este resultado colaborativo (compartir lo que aprendes) refuerza tu propio entendimiento y edifica a otros, cumpliendo el principio de regocijarse juntos."
+                },
+                comparison: {
+                    title: "La mejor aplicación SUD para la constancia del hábito",
+                    text: "En comparación con otras herramientas de estudio, Scripture Habit se enfoca específicamente en la responsabilidad diaria y la edificación comunitaria. Nuestra regla única de 3 días garantiza que los grupos permanezcan activos, mientras que nuestras cartas semanalas generadas por IA te ayudan a visualizar el crecimiento espiritual de una manera que los planes de lectura estática no pueden. Es más que un rastreador; es una herramienta para la revelación personal."
+                },
+                faq: {
+                    title: "Preguntas Frecuentes",
+                    q1: "¿Cómo empiezo un hábito de estudio de las Escrituras?",
+                    a1: "La mejor manera de empezar un hábito de las escrituras es empezar poco a poco y ser constante. La regla de 3 días de Scripture Habit te ayuda a mantener un ritmo constante sin sentirte abrumado.",
+                    q2: "¿Es Scripture Habit una aplicación oficial de la Iglesia?",
+                    a2: "Scripture Habit es un proyecto personal destinado a apoyar a los miembros de La Iglesia de Jesucristo de los Santos de los Últimos Días y a todos los estudiantes de las escrituras. No es una aplicación oficial de la Iglesia, pero está diseñada para funcionar perfectamente con la Biblioteca del Evangelio.",
+                    q3: "¿Puedo usarlo para el estudio de la Biblia?",
+                    a3: "¡Absolutamente! Scripture Habit está diseñado para cualquier estudio de las escrituras, incluyendo la Biblia (Antigo y Nuevo Testamento), el Libro de Mormón y otros textos sagrados."
+                }
             }
         },
         sidebar: {
@@ -3195,7 +3321,10 @@ export const translations = {
             sharedActivity: "Actividad Compartida",
             noteDeletedSuccess: "Nota eliminada con éxito",
             noteDeletedError: "Error al eliminar la nota",
-            letterSaveError: "Error al guardar la carta."
+            letterSaveError: "Error al guardar la carta.",
+            prevPage: "Anterior",
+            nextPage: "Siguiente",
+            pageInfo: "Página {current} de {total}"
         },
         recapModal: {
             title: "Tu Carta Semanal",
@@ -3581,6 +3710,46 @@ export const translations = {
             finalCta: {
                 title: "Sẵn sàng để bắt đầu một thói quen mới?",
                 button: "Bắt đầu mới ngay hôm nay"
+            },
+            useCases: {
+                title: "Làm cho Lớp Học Chủ Nhật Tốt Hơn & Thú Vị Hơn",
+                status: {
+                    problem: "Thách Thức Hiện Tại",
+                    solution: "Với Scripture Habit"
+                },
+                teacher: {
+                    title: "Cho Giảng Viên",
+                    problem: "Không biết tiến trình học tập hoặc suy ngẫm hàng ngày của học viên. Rất khó để 'Giảng Dạy theo Cách của Đấng Cứu Rỗi' mà không biết nhu cầu của họ.",
+                    solution: "Hiểu được những điều học viên học được và các câu hỏi của họ. Chuẩn bị các bài học phù hợp cụ thể với nhu cầu tâm linh của họ."
+                },
+                student: {
+                    title: "Cho Học Viên",
+                    problem: "Công việc bận rộn hàng ngày khiến việc duy trì học tập cá nhân trở nên khó khăn. Khó duy trì động lực, dẫn đến bỏ cuộc.",
+                    solution: "Học sâu hơn thông qua sự khuyến khích và gây dựng lẫn nhau. Tăng cường động lực và tránh bị tụt lại phía sau."
+                }
+            },
+            seoContent: {
+                why: {
+                    title: "Tại sao nên xây dựng Thói quen Học Thánh Thư?",
+                    text: "Thiết lập thói quen học thánh thư hàng ngày không chỉ là đọc; đó là việc tạo ra một không gian nhất quán cho sự mặc khải cá nhân và sự tăng trưởng tâm linh. Scripture Habit cung cấp các công cụ và sự hỗ trợ cộng đồng để giúp bạn duy trì cam kết học tập, cho dù bạn đang theo 'Hãy Đến Mà Theo Ta', học Kinh Thánh hay đi sâu vào Sách Mặc Môn."
+                },
+                community: {
+                    title: "Sức mạnh của việc Học tập trong Cộng đồng",
+                    text: "Nghiên cứu cho thấy việc xây dựng thói quen với bạn bè sẽ tăng đáng kể tỷ lệ thành công của bạn. Scripture Habit cho phép bạn hình thành các nhóm nhỏ, thân mật nơi bạn có thể chia sẻ những hiểu biết hàng ngày. Kết quả hợp tác này (chia sẻ những gì bạn học được) củng cố sự hiểu biết của chính bạn và gây dựng cho người khác, thực hiện nguyên tắc cùng nhau vui mừng."
+                },
+                comparison: {
+                    title: "Ứng dụng Thánh Hữu Ngày Sau Tốt Nhất cho Sự Nhất Quán",
+                    text: "So với các công cụ học tập khác, Scripture Habit tập trung cụ thể vào trách nhiệm hàng ngày và sự gây dựng cộng đồng. Quy tắc 3 ngày độc đáo của chúng tôi đảm bảo các nhóm luôn hoạt động, trong khi các thư hàng tuần do AI tạo ra giúp bạn hình dung sự tăng trưởng tâm linh theo cách mà các kế hoạch đọc tĩnh không thể làm được. Nó không chỉ là một trình theo dõi; đó là một công cụ cho sự mặc khải cá nhân."
+                },
+                faq: {
+                    title: "Câu hỏi Thường gặp",
+                    q1: "Làm thế nào để tôi bắt đầu thói quen học thánh thư?",
+                    a1: "Cách tốt nhất để bắt đầu thói quen thánh thư là bắt đầu từ những việc nhỏ và kiên trì. Quy tắc 3 ngày của Scripture Habit giúp bạn duy trì nhịp điệu ổn định mà không cảm thấy quá tải.",
+                    q2: "Scripture Habit có phải là ứng dụng chính thức của Giáo hội không?",
+                    a2: "Scripture Habit là một dự án cá nhân nhằm hỗ trợ các thành viên của Giáo Hội Các Thánh Hữu Ngày Sau của Chúa Giê Su Ky Tô và tất cả những người học thánh thư. Đây không phải là ứng dụng chính thức của Giáo hội, nhưng nó được thiết kế để hoạt động liền mạch với Thư viện Phúc âm.",
+                    q3: "Tôi có thể sử dụng nó để học Kinh Thánh không?",
+                    a3: "Chắc chắn rồi! Scripture Habit được thiết kế cho bất kỳ việc học thánh thư nào, bao gồm Kinh Thánh (Cựu Ước và Tân Ước), Sách Mặc Môn và các văn bản thiêng liêng khác."
+                }
             }
         },
         sidebar: {
@@ -3857,7 +4026,10 @@ export const translations = {
             sharedActivity: "Hoạt động được chia sẻ",
             noteDeletedSuccess: "Xóa ghi chú thành công",
             noteDeletedError: "Không thể xóa ghi chú",
-            letterSaveError: "Không thể lưu thư vào hộp thư."
+            letterSaveError: "Không thể lưu thư vào hộp thư.",
+            prevPage: "Trước",
+            nextPage: "Tiếp",
+            pageInfo: "Trang {current} / {total}"
         },
         recapModal: {
             title: "Thư hàng tuần của bạn",
@@ -4611,7 +4783,10 @@ export const translations = {
             sharedActivity: "กิจกรรมที่แชร์",
             noteDeletedSuccess: "ลบบันทึกสำเร็จ",
             noteDeletedError: "ไม่สามารถลบบันทึกได้",
-            letterSaveError: "ไม่สามารถบันทึกจดหมายลงในกล่องจดหมายได้"
+            letterSaveError: "ไม่สามารถบันทึกจดหมายลงในกล่องจดหมายได้",
+            prevPage: "ก่อนหน้า",
+            nextPage: "ถัดไป",
+            pageInfo: "หน้า {current} จาก {total}"
         },
         recapModal: {
             title: "จดหมายรายสัปดาห์ของคุณ",
@@ -5021,6 +5196,46 @@ export const translations = {
             finalCta: {
                 title: "새로운 습관을 시작할 준비가 되셨나요?",
                 button: "오늘부터 새롭게 시작하기"
+            },
+            useCases: {
+                title: "더 나은 즐거운 주일학교 만들기",
+                status: {
+                    problem: "현재의 과제",
+                    solution: "With Scripture Habit"
+                },
+                teacher: {
+                    title: "교사를 위해",
+                    problem: "학생들의 일일 학습 진도나 소감을 알 수 없습니다. 학생들의 필요를 모른 채 '구주께서 가르치신 방법대로 가르치기'는 어렵습니다.",
+                    solution: "학생들이 무엇을 배우고 무엇을 궁금해하는지 이해합니다. 각자의 영적 필요에 맞춘 공과를 준비할 수 있습니다."
+                },
+                student: {
+                    title: "학생을 위해",
+                    problem: "바쁜 일상으로 인해 개인 학습을 유지하기가 어렵습니다. 동기를 유지하기 힘들어 중도에 포기하게 됩니다.",
+                    solution: "서로 격려하고 고취하며 학습을 심화합니다. 동기 부여를 높이고 뒤처지는 것을 방지합니다."
+                }
+            },
+            seoContent: {
+                why: {
+                    title: "왜 경전 공부 습관을 만들어야 하나요?",
+                    text: "매일 경전을 공부하는 습관을 들이는 것은 단순히 읽는 것 이상의 의미가 있습니다. 이는 개인적인 계시와 영적 성장을 위한 지속적인 공간을 만드는 것입니다. Scripture Habit은 '와서 나를 따르라', 성경 공부, 또는 몰몬경 연구 등 여러분의 학습에 전념할 수 있도록 도구와 커뮤니티 지원을 제공합니다."
+                },
+                community: {
+                    title: "공동체 학습의 힘",
+                    text: "연구에 따르면 친구와 함께 습관을 만들 때 성공률이 현저히 높아집니다. Scripture Habit을 통해 매일 소감을 나눌 수 있는 작고 친밀한 그룹을 형성할 수 있습니다. 이러한 협력적 결과물(배운 것을 나누는 것)은 자신의 이해를 강화하고 다른 사람들을 고취하며, 함께 기뻐하는 원리를 실천하게 합니다."
+                },
+                comparison: {
+                    title: "습관 유지를 위한 최고의 LDS 앱",
+                    text: "다른 학습 도구와 비교하여 Scripture Habit은 일일 책임감과 공동체적 고취에 특별히 집중합니다. 독특한 3일 규칙은 그룹의 활성화를 보장하며, AI 기반 주간 리포트는 정적인 읽기 계획이 할 수 없는 방식으로 영적 성장을 시각화하도록 돕습니다. 단순한 추적기 그 이상으로, 개인적 계시를 위한 도구입니다."
+                },
+                faq: {
+                    title: "자주 묻는 질문",
+                    q1: "경전 공부 습관을 어떻게 시작하나요?",
+                    a1: "경전 습관을 시작하는 가장 좋은 방법은 작게 시작하고 꾸준히 하는 것입니다. Scripture Habit의 3일 규칙은 부담을 느끼지 않으면서도 일정한 리듬을 유지하도록 돕습니다.",
+                    q2: "Scripture Habit은 공식 LDS 앱인가요?",
+                    a2: "Scripture Habit은 예수 그리스도 후기 성도 교회 회원들과 모든 경전 학습자들을 지원하기 위한 개인 프로젝트입니다. 교회의 공식 앱은 아니지만, 복음 자료실과 원활하게 연동되도록 설계되었습니다.",
+                    q3: "성경 공부에도 사용할 수 있나요?",
+                    a3: "물론입니다! Scripture Habit은 성경(구약 및 신약), 몰몬경 및 기타 경전 공부를 위해 설계되었습니다."
+                }
             }
         },
         sidebar: {
@@ -5323,7 +5538,10 @@ export const translations = {
             sharedActivity: "공유 활동",
             noteDeletedSuccess: "노트가 성공적으로 삭제되었습니다",
             noteDeletedError: "노트 삭제 실패",
-            letterSaveError: "편지함에 편지를 저장하지 못했습니다."
+            letterSaveError: "편지함에 편지를 저장하지 못했습니다.",
+            prevPage: "이전",
+            nextPage: "다음",
+            pageInfo: "{total}페이지 중 {current}페이지"
         },
         recapModal: {
             title: "당신의 주간 편지",
@@ -5733,6 +5951,46 @@ export const translations = {
             finalCta: {
                 title: "Handa ka na bang magsimula ng bagong ugali?",
                 button: "Magsimula Nang Bago Ngayon"
+            },
+            useCases: {
+                title: "Gawing Mas Mabuti at Mas Masaya ang Sunday School",
+                status: {
+                    problem: "Mga Kasalukuyang Hamon",
+                    solution: "Gamit ang Scripture Habit"
+                },
+                teacher: {
+                    title: "Para sa mga Guro",
+                    problem: "Hindi alam ang araw-araw na progreso ng pag-aaral o pagninilay ng mga estudyante. Mahirap 'Magturo sa Paraan ng Tagapagligtas' nang hindi nalalaman ang kanilang mga pangangailangan.",
+                    solution: "Unawain ang mga natutunan at katanungan ng mga estudyante. Maghanda ng mga lesson na sadyang iniangkop sa kanilang espirituwal na pangangailangan."
+                },
+                student: {
+                    title: "Para sa mga Estudyante",
+                    problem: "Ang pagiging abala sa araw-araw ay ginagawang mahirap panatilihin ang personal na pag-aaral. Mahirap mapanatili ang motibasyon, na humahantong sa pagsuko.",
+                    solution: "Palalimin ang pag-aaral sa pamamagitan ng paghihikayat at pagpapalakas sa isa't isa. Dagdagan ang motibasyon at iwasang mapag-iwanan."
+                }
+            },
+            seoContent: {
+                why: {
+                    title: "Bakit kailangang bumuo ng Scripture Habit?",
+                    text: "Ang pagtatatag ng araw-araw na gawi sa pag-aaral ng mga banal na kasulatan ay higit pa sa pagbabasa lamang; ito ay tungkol sa paglikha ng isang pare-parehong espasyo para sa personal na paghahayag at espirituwal na paglago. Ang Scripture Habit ay nagbibigay ng mga tool at suporta ng komunidad upang matulungan kang manatiling tapat sa iyong pag-aaral, sinusunod mo man ang 'Come, Follow Me', nag-aaral ng Biblia, o nagbabasa ng Aklat ni Mormon."
+                },
+                community: {
+                    title: "Ang Kapangyarihan ng Pag-aaral sa Komunidad",
+                    text: "Ipinapakita ng pananaliksik na ang pagbuo ng mga gawi kasama ang mga kaibigan ay makabuluhang nagpapataas ng iyong rate ng tagumpay. Pinapayagan ka ng Scripture Habit na bumuo ng mga maliit at matalik na grupo kung saan maaari kang magbahagi ng mga pananaw araw-araw. Ang collaborative output na ito (pagbabahagi ng iyong natutunan) ay nagpapatibay sa iyong sariling pag-unawa at nagpapalakas sa iba, na tinutupad ang prinsipyo ng sama-samang kagalakan."
+                },
+                comparison: {
+                    title: "Ang Pinakamahusay na LDS App para sa Consistency ng Gawi",
+                    text: "Kumpara sa ibang mga tool sa pag-aaral, ang Scripture Habit ay partikular na nakatuon sa araw-araw na pananagutan at pagpapatibay sa komunidad. Ang aming natatanging 3-araw na panuntunan ay nagsisiguro na ang mga grupo ay mananatiling aktibo, habang ang aming mga lingguhang sulat na binuo ng AI ay tumutulong sa iyo na mailarawan ang espirituwal na paglago sa paraang hindi magagawa ng mga static reading plan. Ito ay higit pa sa isang tracker; ito ay isang tool para sa personal na paghahayag."
+                },
+                faq: {
+                    title: "Mga Madalas Itanong",
+                    q1: "Paano ako magsisimula ng gawi sa pag-aaral ng mga banal na kasulatan?",
+                    a1: "Ang pinakamahusay na paraan upang simulan ang isang gawi sa banal na kasulatan ay magsimula nang maliit at maging pare-pareho. Ang 3-araw na panuntunan ng Scripture Habit ay tumutulong sa iyo na mapanatili ang isang matatag na ritmo nang hindi nakakaramdam ng labis na pagkapagod.",
+                    q2: "Ang Scripture Habit ba ay isang opisyal na LDS app?",
+                    a2: "Ang Scripture Habit ay isang personal na proyekto na inilaan upang suportahan ang mga miyembro ng Ang Simbahan ni Jesucristo ng mga Banal sa mga Huling Araw at lahat ng mga estudyante ng banal na kasulatan. Hindi ito isang opisyal na app ng Simbahan, ngunit idinisenyo ito upang gumana nang maayos kasama ang Gospel Library.",
+                    q3: "Maaari ko ba itong gamitin para sa pag-aaral ng Biblia?",
+                    a3: "Tiyak! Ang Scripture Habit ay idinisenyo para sa anumang pag-aaral ng banal na kasulatan, kabilang ang Biblia (Lumang Tipan at Bagong Tipan), Aklat ni Mormon, at iba pang sagradong teksto."
+                }
             }
         },
         sidebar: {
@@ -6020,7 +6278,10 @@ export const translations = {
             sharedActivity: "Ibinahaging Aktibidad",
             noteDeletedSuccess: "Matagumpay na nabura ang tala",
             noteDeletedError: "Nabigong burahin ang tala",
-            letterSaveError: "Nabigong i-save ang sulat sa Inbox."
+            letterSaveError: "Nabigong i-save ang sulat sa Inbox.",
+            prevPage: "Nakaraan",
+            nextPage: "Susunod",
+            pageInfo: "Pahina {current} ng {total}"
         },
         recapModal: {
             title: "Ang Iyong Lingguhang Sulat",
@@ -6430,6 +6691,46 @@ export const translations = {
             finalCta: {
                 title: "Uko tayari kuanza tabia mpya?",
                 button: "Anza Upya Leo"
+            },
+            useCases: {
+                title: "Fanya Shule ya Jumapili iwe Bora na Inayofurahisha Zaidi",
+                status: {
+                    problem: "Changamoto za Sasa",
+                    solution: "Ukiwa na Scripture Habit"
+                },
+                teacher: {
+                    title: "Kwa Walimu",
+                    problem: "Kutofahamu maendeleo ya kila siku ya kujifunza au tafakari za wanafunzi. Ni vigumu 'Kufundisha kwa Njia ya Mwokozi' bila kujua mahitaji yao.",
+                    solution: "Elewa mafunzo na maswali ya wanafunzi. Andaa masomo yaliyoundwa mahususi kulingana na mahitaji yao ya kiroho."
+                },
+                student: {
+                    title: "Kwa Wanafunzi",
+                    problem: "Shughuli nyingi za kila siku hufanya somo la kibinafsi kuwa vigumu kudumisha. Ni vigumu kudumisha motisha, na kupelekea kukata tamaa.",
+                    solution: "Ongeza uelewa wa kujifunza kupitia kuhimizana na kujengana. Ongeza motisha na uepuke kuachwa nyuma."
+                }
+            },
+            seoContent: {
+                why: {
+                    title: "Kwa nini ujenge Tabia ya Maandiko?",
+                    text: "Kuanzisha tabia ya kila siku ya kujifunza maandiko ni zaidi ya kusoma tu; ni kuunda nafasi thabiti ya ufunuo wa kibinafsi na ukuaji wa kiroho. Scripture Habit hutoa zana na usaidizi wa jamii ili kukusaidia kubaki mwaminifu kwa masomo yako, iwe unafuata 'Njoo, Unifuate', unajifunza Biblia, au unazama ndani ya Kitabu cha Mormoni."
+                },
+                community: {
+                    title: "Nguvu ya Kujifunza kwa Jamii",
+                    text: "Utafiti unaonyesha kuwa kujenga tabia na marafiki huongeza kiwango chako cha mafanikio kwa kiasi kipigo. Scripture Habit hukuruhusu kuunda vikundi vidogo, vya karibu ambapo unaweza kushiriki maarifa kila siku. Matokeo haya ya ushirikiano (kushiriki unachojifunza) huimarisha uelewa wako mwenyewe na kuwajenga wengine, ukitimiza kanuni ya kufurahi pamoja."
+                },
+                comparison: {
+                    title: "Programu Bora ya LDS kwa Uthabiti wa Tabia",
+                    text: "Ikilinganishwa na zana nyingine za kujifunza, Scripture Habit inazingatia hasa uwajibikaji wa kila siku na kujengana kwa jamii. Sheria yetu ya kipekee ya siku 3 inahakikisha kwamba vikundi vinabaki hai, wakati barua zetu za kila wiki zinazozalishwa na AI zinakusaidia kuona ukuaji wako wa kiroho kwa njia ambayo mipango ya kusoma isioweza badilika haiwezi. Ni zaidi ya kifuatiliaji; ni zana ya ufunuo wa kibinafsi."
+                },
+                faq: {
+                    title: "Maswali yanayoulizwa mara kwa mara",
+                    q1: "Ninaanzaje tabia ya kujifunza maandiko?",
+                    a1: "Njia bora ya kuanza tabia ya maandiko ni kuanza kwa udogo na kuwa thabiti. Sheria ya siku 3 ya Scripture Habit inakusaidia kudumisha mdundo thabiti bila kuhisi kulemewa.",
+                    q2: "Je, Scripture Habit ni programu rasmi ya LDS?",
+                    a2: "Scripture Habit ni mradi wa kibinafsi uliokusudiwa kusaidia washiriki wa Kanisa la Yesu Kristo la Watakatifu wa Siku za Mwisho na wanafunzi wote wa maandiko. Sio programu rasmi ya Kanisa, lakini imeundwa kufanya kazi vizuri na Maktaba ya Injili.",
+                    q3: "Je, ninaweza kuitumia kwa kujifunza Biblia?",
+                    a3: "Kabisa! Scripture Habit imeundwa kwa ajili ya somo lolote la maandiko, ikiwa ni pamoja na Biblia (Agano la Kale na Jipya), Kitabu cha Mormoni, na maandishi mengine matakatifu."
+                }
             }
         },
         sidebar: {
@@ -6731,7 +7032,10 @@ export const translations = {
             sharedActivity: "Shughuli Iliyoshirikiwa",
             noteDeletedSuccess: "Dokezo limefutwa kwa mafanikio",
             noteDeletedError: "Imeshindwa kufuta dokezo",
-            letterSaveError: "Imeshindwa kuhifadhi barua kwenye Sanduku la Barua."
+            letterSaveError: "Imeshindwa kuhifadhi barua kwenye Sanduku la Barua.",
+            prevPage: "Iliyopita",
+            nextPage: "Inayofuata",
+            pageInfo: "Ukurasa {current} kati ya {total}"
         },
         recapModal: {
             title: "Barua Yako ya Wiki",
