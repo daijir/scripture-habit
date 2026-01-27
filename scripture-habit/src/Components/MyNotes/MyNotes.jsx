@@ -3,7 +3,7 @@ import * as Sentry from "@sentry/react";
 import axios from 'axios';
 import { Capacitor } from '@capacitor/core';
 import { db } from '../../firebase';
-import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc, updateDoc, increment, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc, updateDoc, increment, addDoc, serverTimestamp, limit, startAfter } from 'firebase/firestore';
 import ReactMarkdown from 'react-markdown';
 import { UilPlus, UilBookOpen, UilSearchAlt, UilAnalysis, UilEnvelope, UilAngleLeft, UilAngleRight } from '@iconscout/react-unicons';
 import NewNote from '../NewNote/NewNote';
@@ -36,6 +36,11 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
   const [recapLoading, setRecapLoading] = useState(false);
   const [newNoteInitialData, setNewNoteInitialData] = useState(null);
 
+  // Pagination State for Server-Side
+  const [lastDocsStack, setLastDocsStack] = useState([]); // Stack of document snapshots for cursors
+  const [latestSnapshotDocs, setLatestSnapshotDocs] = useState([]); // Snapshots of current view
+  const [isLastPage, setIsLastPage] = useState(false);
+
   // New state for RecapModal
   const [isRecapModalOpen, setIsRecapModalOpen] = useState(false);
   const [generatedRecapText, setGeneratedRecapText] = useState('');
@@ -66,23 +71,67 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
     });
 
     const notesRef = collection(db, 'users', userData.uid, 'notes');
-    const q = query(
-      notesRef,
-      orderBy('createdAt', 'desc')
-    );
+    let q;
+
+    if (searchTerm) {
+      // SEARCH MODE: Fetch all (or large limit) and filter locally (Previous specific behavior preserved for search)
+      // This allows the local search filter to work across all notes.
+      q = query(
+        notesRef,
+        orderBy('createdAt', 'desc')
+      );
+    } else {
+      // BROWSE MODE: Server-side pagination (Optimized for reads)
+      const constraints = [orderBy('createdAt', 'desc')];
+
+      // Apply Category Filter in DB (requires index)
+      if (selectedCategory !== 'All') {
+        constraints.push(where('scripture', '==', selectedCategory));
+      }
+
+      // Apply Cursor (Pagination)
+      if (currentPage > 1 && lastDocsStack.length >= currentPage - 1) {
+        const cursor = lastDocsStack[currentPage - 2];
+        if (cursor) {
+          constraints.push(startAfter(cursor));
+        }
+      }
+
+      // Limit
+      constraints.push(limit(NOTES_PER_PAGE));
+
+      q = query(notesRef, ...constraints);
+    }
 
     const unsubscribeNotes = onSnapshot(q, (querySnapshot) => {
       const fetchedNotes = [];
       querySnapshot.forEach((doc) => {
         fetchedNotes.push({ id: doc.id, ...doc.data() });
       });
+
+      setLatestSnapshotDocs(querySnapshot.docs);
       setNotes(fetchedNotes);
+
+      if (searchTerm) {
+        // In search mode, we don't know "last page" by limit check easily, handled by client pagination
+        setIsLastPage(false);
+      } else {
+        // In server mode, if we got fewer than limit, it's the last page
+        setIsLastPage(fetchedNotes.length < NOTES_PER_PAGE);
+      }
+
       setLoading(false);
     }, (error) => {
       console.error("Error fetching notes:", error);
       const isQuota = error.code === 'resource-exhausted' || error.message.toLowerCase().includes('quota exceeded');
+      const isIndexError = error.code === 'failed-precondition'; // Missing index
+
       if (isQuota) {
         toast.error(t('systemErrors.quotaExceededMessage'), { toastId: 'quota-error' });
+      } else if (isIndexError) {
+        console.error("Missing Index Link:", error.message);
+        // toast.error("System: Index required for this category filter. Check console."); 
+        // Failing silently-ish for user but logging for dev
       } else {
         Sentry.captureException(error);
       }
@@ -93,7 +142,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
       unsubscribeUser();
       unsubscribeNotes();
     };
-  }, [userData?.uid]); // Only re-run if UID changes
+  }, [userData?.uid, currentPage, selectedCategory, searchTerm, lastDocsStack]); // Depend on cursor stack indirectly via currentPage, but stack needed for construction
 
   const handleNoteClick = (note) => {
     setSelectedNote(note);
@@ -233,19 +282,57 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
   });
 
   // Pagination logic
-  const totalPages = Math.ceil(filteredNotes.length / NOTES_PER_PAGE);
+
+  // Calculate total pages ONLY for Search Mode (Client side)
+  // For server side, we don't know total.
+  const totalPages = searchTerm
+    ? Math.ceil(filteredNotes.length / NOTES_PER_PAGE)
+    : -1; // -1 indicates server side mode
 
   const paginatedNotes = useMemo(() => {
-    const startIndex = (currentPage - 1) * NOTES_PER_PAGE;
-    return filteredNotes.slice(startIndex, startIndex + NOTES_PER_PAGE);
-  }, [filteredNotes, currentPage]);
+    if (searchTerm) {
+      // Search Mode: Client-side slice
+      const startIndex = (currentPage - 1) * NOTES_PER_PAGE;
+      return filteredNotes.slice(startIndex, startIndex + NOTES_PER_PAGE);
+    } else {
+      // Server Mode: The fetched notes ARE the page
+      // But filteredNotes logic (category match) currently runs on 'notes'.
+      // In Server Mode, 'notes' is already filtered by DB query (mostly).
+      // We return filteredNotes directly (which should be same as notes)
+      return filteredNotes;
+    }
+  }, [filteredNotes, currentPage, searchTerm]);
 
   // Reset to first page when filtering or changing category
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, selectedCategory]);
+    setLastDocsStack([]); // Reset cursor stack
+  }, [selectedCategory, searchTerm]);
 
-  // Handle page changes with smooth scroll to top
+  // Handle page changes
+  const handleNextPage = () => {
+    if (searchTerm) {
+      if (currentPage < totalPages) handlePageChange(currentPage + 1);
+    } else {
+      // Server Mode Next
+      if (!isLastPage && latestSnapshotDocs.length > 0) {
+        const lastDoc = latestSnapshotDocs[latestSnapshotDocs.length - 1];
+        setLastDocsStack(prev => [...prev, lastDoc]);
+        handlePageChange(currentPage + 1);
+      }
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      if (!searchTerm) {
+        // Server Mode Prev: Pop stack
+        setLastDocsStack(prev => prev.slice(0, -1));
+      }
+      handlePageChange(currentPage - 1);
+    }
+  };
+
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage);
     const container = document.querySelector('.MyNotes');
@@ -396,32 +483,64 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
         </div>
       )}
 
-      {totalPages > 1 && (
-        <div className="pagination-controls">
-          <button
-            className="pagination-btn"
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            <UilAngleLeft size="20" />
-            <span>{t('myNotes.prevPage')}</span>
-          </button>
+      {/* Conditional Pagination Controls */}
+      {searchTerm ? (
+        // CLIENT SIDE PAGINATION (Search Mode)
+        totalPages > 1 && (
+          <div className="pagination-controls">
+            <button
+              className="pagination-btn"
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+            >
+              <UilAngleLeft size="20" />
+              <span>{t('myNotes.prevPage')}</span>
+            </button>
 
-          <div className="page-indicator">
-            {t('myNotes.pageInfo', { current: currentPage, total: totalPages })}
+            <div className="page-indicator">
+              {t('myNotes.pageInfo', { current: currentPage, total: totalPages })}
+            </div>
+
+            <button
+              className="pagination-btn"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              <span>{t('myNotes.nextPage')}</span>
+              <UilAngleRight size="20" />
+            </button>
           </div>
+        )
+      ) : (
+        // SERVER SIDE PAGINATION (Browse Mode)
+        // Show if we have moved past page 1 OR if we have more to show
+        (currentPage > 1 || (!isLastPage && notes.length === NOTES_PER_PAGE)) && (
+          <div className="pagination-controls">
+            <button
+              className="pagination-btn"
+              onClick={handlePrevPage}
+              disabled={currentPage === 1}
+            >
+              <UilAngleLeft size="20" />
+              <span>{t('myNotes.prevPage')}</span>
+            </button>
 
-          <button
-            className="pagination-btn"
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            <span>{t('myNotes.nextPage')}</span>
-            <UilAngleRight size="20" />
-          </button>
-        </div>
-      )
-      }
+            <div className="page-indicator">
+              {/* Just show current page number since total is unknown */}
+              Page {currentPage}
+            </div>
+
+            <button
+              className="pagination-btn"
+              onClick={handleNextPage}
+              disabled={isLastPage || notes.length < NOTES_PER_PAGE}
+            >
+              <span>{t('myNotes.nextPage')}</span>
+              <UilAngleRight size="20" />
+            </button>
+          </div>
+        )
+      )}
 
       {
         isDeleteModalOpen && (
