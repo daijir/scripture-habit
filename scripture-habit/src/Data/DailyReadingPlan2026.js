@@ -44,7 +44,24 @@ export const DailyReadingPlan2026 = [
     { day: 43, scripts: ["Moses 8:1-30"], date: "2026-02-09"},
     { day: 44, scripts: ["Genesis 6:1-22"], date: "2026-02-10"},
     { day: 45, scripts: ["Genesis 7:1-24"], date: "2026-02-11"},
-    { day: 46, scripts: ["Genesis 8:1-22"], date: "2026-02-12"}
+    { day: 46, scripts: ["Genesis 8:1-22"], date: "2026-02-12"},
+    { day: 47, scripts: ["Genesis 9:1-29"], date: "2026-02-13"},
+    { day: 48, scripts: ["Genesis 10:1-32"], date: "2026-02-14"},
+    { day: 49, scripts: ["Genesis 11:1-32"], date: "2026-02-15"},
+    { day: 50, scripts: ["Abraham 1:1-31"], date: "2026-02-16"},
+    { day: 51, scripts: ["Genesis 12:1-9", "Abraham 2:1-20"], date: "2026-02-17"},
+    { day: 52, scripts: ["Genesis 12:10-20", "Abraham 2:21-25"], date: "2026-02-18"},
+    { day: 53, scripts: ["Genesis 13:1-18", "Genesis 14:1-16"], date: "2026-02-19"},
+    { day: 54, scripts: ["Genesis 14:17-24", "Genesis 15:1-21"], date: "2026-02-20"},
+    { day: 55, scripts: ["Genesis 16:1-16"], date: "2026-02-21"},
+    { day: 56, scripts: ["Genesis 17:1-27"], date: "2026-02-22"},
+    { day: 57, scripts: ["Genesis 18:1-33"], date: "2026-02-23"},
+    { day: 58, scripts: ["Genesis 19:1-38"], date: "2026-02-24"},
+    { day: 59, scripts: ["Genesis 20:1-18"], date: "2026-02-25"},
+    { day: 60, scripts: ["Genesis 21:1-21"], date: "2026-02-26"},
+    { day: 61, scripts: ["Genesis 21:22-34"], date: "2026-02-27"}, 
+    { day: 62, scripts: ["Genesis 22:1-24"], date: "2026-02-28"},
+    { day: 63, scripts: ["Genesis 23:1-20"], date: "2026-03-01"}
 ];
 
 export const getTodayReadingPlan = () => {
