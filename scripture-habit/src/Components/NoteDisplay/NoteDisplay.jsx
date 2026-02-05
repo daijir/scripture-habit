@@ -89,12 +89,13 @@ const GCNoteRenderer = ({ header, scriptureValue, chapterValue, comment, url, la
         const commentWithLinks = cleanComment.replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)');
 
         // Use double newlines to ensure line breaks in all Markdown renderers
-        return [
+        const lines = [
             headerLine,
             `**${scriptureLabel}:** ${scriptName}`,
-            `**${fieldLabel}:** ${fieldValue}`,
-            `**${commentLabel}:**\n${commentWithLinks}`
-        ].join('\n').trim();
+            `**${fieldLabel}:** ${fieldValue}`
+        ];
+
+        return lines.join('\n') + `\n\n**${commentLabel}:**\n${commentWithLinks}`;
 
     }, [data, loading, header, scriptureValue, comment, t, url, isOther, isBYU]);
 
@@ -258,12 +259,13 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
     else if (isGC) chapLabel = t('noteLabels.talk');
 
     // Use double newlines for consistent spacing
-    const finalMd = [
+    const topLines = [
         `📖 **${headerLabel}**`,
         `**${t('noteLabels.scripture')}:** ${scriptureNameTrans}`,
-        (translateChapterField(chapterValue, language) || chapterValue) ? `**${chapLabel}:** ${translateChapterField(chapterValue, language) || chapterValue}` : null,
-        `**${t('noteLabels.comment')}:**\n${comment.replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)')}`
-    ].filter(Boolean).join('\n').trim();
+        (translateChapterField(chapterValue, language) || chapterValue) ? `**${chapLabel}:** ${translateChapterField(chapterValue, language) || chapterValue}` : null
+    ].filter(Boolean);
+
+    const finalMd = topLines.join('\n') + `\n\n**${t('noteLabels.comment')}:**\n${comment.replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)')}`;
 
     return (
         <div style={{ textAlign: 'left' }}>
