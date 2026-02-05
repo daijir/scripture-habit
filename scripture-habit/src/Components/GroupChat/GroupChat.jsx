@@ -2574,7 +2574,15 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                 <button
                   className="modal-btn primary"
                   onClick={handleUpdateGroupName}
-                  disabled={!newGroupName.trim() || (newGroupName === groupData?.name && newGroupDescription === (groupData?.description || ''))}
+                  disabled={
+                    !newGroupName.trim() ||
+                    (
+                      (newGroupName === groupData?.name) &&
+                      (newGroupDescription === (groupData?.description || '')) &&
+                      (newTranslatedName === (translatedGroupName || groupData?.translations?.[language]?.name || '')) &&
+                      (newTranslatedDesc === (translatedGroupDesc || groupData?.translations?.[language]?.description || ''))
+                    )
+                  }
                 >
                   {t('groupChat.save')}
                 </button>
