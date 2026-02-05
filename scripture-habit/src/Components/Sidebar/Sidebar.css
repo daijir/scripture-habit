@@ -191,34 +191,6 @@
     max-width: 120px;
 }
 
-.desktop-group-list {
-    display: flex;
-    flex-direction: column;
-    max-height: 45vh;
-    /* Secure enough space and scroll after that */
-    overflow-y: auto;
-    padding-right: 4px;
-    scrollbar-width: thin;
-    scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
-}
-
-.desktop-group-list::-webkit-scrollbar {
-    width: 4px;
-}
-
-.desktop-group-list::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-.desktop-group-list::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-}
-
-.desktop-group-list::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.2);
-}
-
 .unread-badge {
     background-color: var(--pink);
     color: white;

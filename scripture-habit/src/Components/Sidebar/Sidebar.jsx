@@ -193,9 +193,6 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
     return Math.round((uniquePosters.size / group.members.length) * 100);
   };
 
-
-
-
   return (
     <>
       <div className={`Sidebar ${hideMobile ? 'hide-mobile' : ''}`}>
@@ -232,19 +229,17 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
             <div className="menu-header">
               {t('sidebar.myGroups')} <span style={{ fontSize: '1.2em' }}>({userGroups.length}/12)</span>
             </div>
-            <div className="desktop-group-list">
-              {userGroups.map((group) => (
-                <SidebarGroupItem
-                  key={group.id}
-                  group={group}
-                  language={language}
-                  isActive={selected === 2 && activeGroupId === group.id}
-                  onClick={() => handleGroupClick(group.id)}
-                  getGroupStatusEmoji={getGroupStatusEmoji}
-                  getUnityPercentage={getUnityPercentage}
-                />
-              ))}
-            </div>
+            {userGroups.map((group) => (
+              <SidebarGroupItem
+                key={group.id}
+                group={group}
+                language={language}
+                isActive={selected === 2 && activeGroupId === group.id}
+                onClick={() => handleGroupClick(group.id)}
+                getGroupStatusEmoji={getGroupStatusEmoji}
+                getUnityPercentage={getUnityPercentage}
+              />
+            ))}
 
             {userGroups.length < 12 && (
               <div className="menuItem create-group-item" onClick={() => navigate(`/${language}/group-options`)}>
