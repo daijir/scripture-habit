@@ -94,7 +94,7 @@ const GCNoteRenderer = ({ header, scriptureValue, chapterValue, comment, url, la
             `**${scriptureLabel}:** ${scriptName}`,
             `**${fieldLabel}:** ${fieldValue}`,
             `**${commentLabel}:**\n${commentWithLinks}`
-        ].join('\n\n').trim();
+        ].join('\n').trim();
 
     }, [data, loading, header, scriptureValue, comment, t, url, isOther, isBYU]);
 
@@ -130,14 +130,14 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
             <div style={{ textAlign: 'left' }}>
                 <ReactMarkdown components={{
                     a: p => <a {...p} target="_blank" rel="noopener noreferrer" style={{ color: linkColor || (isSent ? 'white' : 'var(--purple)'), textDecoration: 'underline' }} onClick={e => e.stopPropagation()} />,
-                    p: p => <p {...p} style={{ margin: '0.4rem 0', whiteSpace: 'pre-wrap' }} />
+                    p: p => <p {...p} style={{ margin: '0.2rem 0', whiteSpace: 'pre-wrap' }} />
                 }}>
                     {processedText}
                 </ReactMarkdown>
                 {translatedText && (
-                    <div style={{ marginTop: '0.5rem', borderTop: '1px dashed #ccc', paddingTop: '0.5rem' }}>
+                    <div style={{ marginTop: '0.4rem', borderTop: '1px dashed #ccc', paddingTop: '0.4rem' }}>
                         <div style={{ fontSize: '0.75rem', opacity: 0.8, fontWeight: 'bold' }}>✨ AI {t('groupChat.translated')}</div>
-                        <ReactMarkdown components={{ p: p => <p {...p} style={{ margin: '0.3rem 0', whiteSpace: 'pre-wrap' }} /> }}>{translatedText}</ReactMarkdown>
+                        <ReactMarkdown components={{ p: p => <p {...p} style={{ margin: '0.2rem 0', whiteSpace: 'pre-wrap' }} /> }}>{translatedText}</ReactMarkdown>
                     </div>
                 )}
                 {simpleUrls.length > 0 && (
@@ -263,7 +263,7 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
         `**${t('noteLabels.scripture')}:** ${scriptureNameTrans}`,
         (translateChapterField(chapterValue, language) || chapterValue) ? `**${chapLabel}:** ${translateChapterField(chapterValue, language) || chapterValue}` : null,
         `**${t('noteLabels.comment')}:**\n${comment.replace(/(https?:\/\/[^\s]+)/g, '[$1]($1)')}`
-    ].filter(Boolean).join('\n\n').trim();
+    ].filter(Boolean).join('\n').trim();
 
     return (
         <div style={{ textAlign: 'left' }}>
@@ -274,9 +274,9 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
                 {finalMd}
             </ReactMarkdown>
             {translatedText && (
-                <div style={{ marginTop: '0.8rem', borderTop: '1px dashed #ccc', paddingTop: '0.6rem' }}>
+                <div style={{ marginTop: '0.6rem', borderTop: '1px dashed #ccc', paddingTop: '0.4rem' }}>
                     <div style={{ fontSize: '0.75rem', opacity: 0.8, fontWeight: 'bold' }}>✨ AI {t('groupChat.translated')}</div>
-                    <ReactMarkdown components={{ p: p => <p {...p} style={{ margin: '0.3rem 0', whiteSpace: 'pre-wrap' }} /> }}>{translatedText}</ReactMarkdown>
+                    <ReactMarkdown components={{ p: p => <p {...p} style={{ margin: '0.2rem 0', whiteSpace: 'pre-wrap' }} /> }}>{translatedText}</ReactMarkdown>
                 </div>
             )}
         </div>

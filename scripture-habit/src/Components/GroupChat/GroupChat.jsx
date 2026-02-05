@@ -1774,9 +1774,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     let translatedHeader = '';
     if (headerMatch) {
       if (headerMatch[0].includes('New Study Note')) {
-        translatedHeader = `📖 **${t('noteLabels.newStudyNote')}**\n\n`;
+        translatedHeader = `📖 **${t('noteLabels.newStudyNote')}**\n`;
       } else {
-        translatedHeader = `📖 **${t('noteLabels.newStudyEntry')}**\n\n`;
+        translatedHeader = `📖 **${t('noteLabels.newStudyEntry')}**\n`;
       }
     }
 
@@ -1791,7 +1791,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       const scripture = t('scriptures.other');
       const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
       const comment = body.substring(scriptureEnd).trim();
-      return `${translatedHeader}**${t('noteLabels.scripture')}:** ${scripture}\n\n**${t('noteLabels.comment')}:**\n${comment}`;
+      return `${translatedHeader}**${t('noteLabels.scripture')}:** ${scripture}\n**${t('noteLabels.comment')}:**\n${comment}`;
     }
 
     if (chapterMatch && scriptureMatch) {
@@ -1817,7 +1817,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
       const comment = body.substring(maxEnd).trim();
 
-      return `${translatedHeader}**${t('noteLabels.scripture')}:** ${scripture}\n**${chapterLabel}:** ${chapter}\n\n**${t('noteLabels.comment')}:**\n${comment}`;
+      return `${translatedHeader}**${t('noteLabels.scripture')}:** ${scripture}\n**${chapterLabel}:** ${chapter}\n**${t('noteLabels.comment')}:**\n${comment}`;
     }
 
     // If no structured format found, just translate the labels in the raw text
