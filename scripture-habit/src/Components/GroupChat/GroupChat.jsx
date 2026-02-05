@@ -198,6 +198,8 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   const [showEditNameModal, setShowEditNameModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
   const [newGroupDescription, setNewGroupDescription] = useState('');
+  const [newTranslatedName, setNewTranslatedName] = useState('');
+  const [newTranslatedDesc, setNewTranslatedDesc] = useState('');
   const [selectedMember, setSelectedMember] = useState(null);
   const [showUnityModal, setShowUnityModal] = useState(false);
   const [unityModalData, setUnityModalData] = useState({ posted: [], notPosted: [] });
@@ -1299,15 +1301,36 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     }
 
     try {
-      const groupRef = doc(db, 'groups', groupId);
-      await updateDoc(groupRef, {
+      const updatePayload = {
         name: newGroupName.trim(),
         description: newGroupDescription.trim()
-      });
+      };
+
+      // Only update translation if language is present and user modified something
+      if (language) {
+        // If the user provided a translation, save it. 
+        // Note: We use dot notation for nested fields update in Firestore
+        if (newTranslatedName.trim()) {
+          updatePayload[`translations.${language}.name`] = newTranslatedName.trim();
+        }
+        if (newTranslatedDesc.trim()) {
+          updatePayload[`translations.${language}.description`] = newTranslatedDesc.trim();
+        }
+      }
+
+      const groupRef = doc(db, 'groups', groupId);
+      await updateDoc(groupRef, updatePayload);
+
+      // Update local state immediately to reflect changes without waiting for round trip
+      if (language && newTranslatedName.trim()) setTranslatedGroupName(newTranslatedName.trim());
+      if (language && newTranslatedDesc.trim()) setTranslatedGroupDesc(newTranslatedDesc.trim());
+
       toast.success(t('groupChat.groupNameChanged'));
       setShowEditNameModal(false);
       setNewGroupName('');
       setNewGroupDescription('');
+      setNewTranslatedName('');
+      setNewTranslatedDesc('');
     } catch (error) {
       console.error("Error updating group name:", error);
       toast.error(t('groupChat.errorChangeGroupName'));
@@ -2097,6 +2120,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                 onClick={() => {
                   setNewGroupName(groupData.name);
                   setNewGroupDescription(groupData.description || '');
+                  // Initialize with current translated values or fallbacks
+                  setNewTranslatedName(translatedGroupName || groupData.translations?.[language]?.name || '');
+                  setNewTranslatedDesc(translatedGroupDesc || groupData.translations?.[language]?.description || '');
                   setShowEditNameModal(true);
                 }}
                 style={{
@@ -2264,6 +2290,8 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                 <div className="mobile-menu-item" onClick={() => {
                   setNewGroupName(groupData.name);
                   setNewGroupDescription(groupData.description || '');
+                  setNewTranslatedName(translatedGroupName || groupData.translations?.[language]?.name || '');
+                  setNewTranslatedDesc(translatedGroupDesc || groupData.translations?.[language]?.description || '');
                   setShowMobileMenu(false);
                   setShowEditNameModal(true);
                 }}>
@@ -2502,8 +2530,47 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                 />
               </div>
 
+              {/* Translation Fields */}
+              <div style={{ width: '100%', height: '1px', background: 'var(--gray)', opacity: 0.2, margin: '1rem 0' }}></div>
+              <h4 style={{ fontSize: '0.9rem', color: 'var(--gray)', margin: '0 0 10px 0' }}>
+                {t('languages.' + language) || language} {t('groupChat.translation') || 'Translation'}
+              </h4>
+
+              <div className="edit-group-field" style={{ width: '100%', textAlign: 'left' }}>
+                <label style={{ fontSize: '0.8rem', color: 'var(--gray)', fontWeight: 'bold', marginBottom: '4px', display: 'block' }}>
+                  {t('groupForm.groupNameLabel')} ({t('languages.' + language) || language})
+                </label>
+                <input
+                  type="text"
+                  className="delete-confirmation-input"
+                  value={newTranslatedName}
+                  onChange={(e) => setNewTranslatedName(e.target.value)}
+                  placeholder={t('groupChat.enterNewGroupName') + ` (${language})`}
+                  style={{ marginBottom: '1rem' }}
+                />
+              </div>
+
+              <div className="edit-group-field" style={{ width: '100%', textAlign: 'left' }}>
+                <label style={{ fontSize: '0.8rem', color: 'var(--gray)', fontWeight: 'bold', marginBottom: '4px', display: 'block' }}>
+                  {t('groupForm.descriptionLabel')} ({t('languages.' + language) || language})
+                </label>
+                <textarea
+                  className="delete-confirmation-input"
+                  value={newTranslatedDesc}
+                  onChange={(e) => setNewTranslatedDesc(e.target.value)}
+                  placeholder={t('groupForm.descriptionLabel') + ` (${language})`}
+                  style={{ minHeight: '80px', resize: 'vertical', padding: '10px' }}
+                />
+              </div>
+
               <div className="leave-modal-actions" style={{ marginTop: '1.5rem' }}>
-                <button className="modal-btn cancel" onClick={() => { setShowEditNameModal(false); setNewGroupName(''); setNewGroupDescription(''); }}>{t('groupChat.cancel')}</button>
+                <button className="modal-btn cancel" onClick={() => {
+                  setShowEditNameModal(false);
+                  setNewGroupName('');
+                  setNewGroupDescription('');
+                  setNewTranslatedName('');
+                  setNewTranslatedDesc('');
+                }}>{t('groupChat.cancel')}</button>
                 <button
                   className="modal-btn primary"
                   onClick={handleUpdateGroupName}
