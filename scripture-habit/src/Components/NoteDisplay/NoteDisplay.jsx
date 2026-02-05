@@ -95,7 +95,7 @@ const GCNoteRenderer = ({ header, scriptureValue, chapterValue, comment, url, la
             `**${fieldLabel}:** ${fieldValue}`
         ];
 
-        return lines.join('\n') + `\n\n**${commentLabel}:**\n${commentWithLinks}`;
+        return lines.join('\n') + `\n**${commentLabel}:**\n${commentWithLinks}`;
 
     }, [data, loading, header, scriptureValue, comment, t, url, isOther, isBYU]);
 
