@@ -539,8 +539,11 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                 if (change.type === "added") {
                   const data = change.doc.data();
 
-                  // Trigger confetti for streaks!
-                  if (data.messageType === 'streakAnnouncement' && data.messageData?.userId !== userData?.uid) {
+                  // Trigger confetti for streaks! (only if truly new - within last 30 seconds)
+                  const messageTime = data.createdAt?.toMillis ? data.createdAt.toMillis() : (data.createdAt?.seconds ? data.createdAt.seconds * 1000 : 0);
+                  const isTrulyNew = messageTime && (Date.now() - messageTime) < 30000;
+
+                  if (data.messageType === 'streakAnnouncement' && data.messageData?.userId !== userData?.uid && isTrulyNew) {
                     confetti({
                       particleCount: 150,
                       spread: 70,
@@ -584,8 +587,11 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
               if (change.type === "added") {
                 const data = change.doc.data();
 
-                // Trigger confetti for streaks (avoiding local user duplication)
-                if (data.messageType === 'streakAnnouncement' && data.messageData?.userId !== userData?.uid) {
+                // Trigger confetti for streaks (only if truly new - within last 30 seconds)
+                const messageTime = data.createdAt?.toMillis ? data.createdAt.toMillis() : (data.createdAt?.seconds ? data.createdAt.seconds * 1000 : 0);
+                const isTrulyNew = messageTime && (Date.now() - messageTime) < 30000;
+
+                if (data.messageType === 'streakAnnouncement' && data.messageData?.userId !== userData?.uid && isTrulyNew) {
                   confetti({
                     particleCount: 150,
                     spread: 70,
@@ -779,15 +785,10 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   const prevMessageCountRef = useRef(0);
 
   // Scroll to bottom using the end ref
+  // Scroll to bottom using the container ref directly (safer than scrollIntoView which can shift viewport)
   const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
-    } else {
-      // Fallback: try to scroll container directly
-      const container = document.querySelector('.GroupChat');
-      if (container) {
-        container.scrollTop = container.scrollHeight;
-      }
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   };
 

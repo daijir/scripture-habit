@@ -54,10 +54,18 @@
     font-weight: bold;
 }
 
-/* Desktop Styles */
 @media screen and (min-width: 769px) {
+    .Sidebar {
+        padding-top: 2rem;
+    }
+
+    .menu {
+        margin-top: 2rem;
+        gap: 0.8rem;
+    }
+
     .menuItem {
-        margin: 0.4rem 1rem;
+        margin: 0.2rem 1rem;
     }
 
     .menuItem span {
@@ -302,4 +310,31 @@
     cursor: pointer;
     margin-top: 0.5rem;
     color: var(--black);
+}
+
+/* Sidebar Group Scrollbar */
+@media screen and (min-width: 769px) {
+    .sidebar-group-list-container {
+        display: flex;
+        flex-direction: column;
+        max-height: 18rem;
+        /* Font-size relative height */
+        overflow-y: auto;
+        padding-right: 5px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+    }
+
+    .sidebar-group-list-container::-webkit-scrollbar {
+        width: 4px;
+    }
+
+    .sidebar-group-list-container::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .sidebar-group-list-container::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+    }
 }

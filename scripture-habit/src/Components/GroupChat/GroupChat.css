@@ -11,18 +11,31 @@
     position: relative;
 }
 
+/* Align chat container with sidebar on desktop to match padding and avoid corner clipping */
+@media screen and (min-width: 769px) {
+    .GroupChat {
+        margin-top: 2rem;
+        height: calc(100% - 2rem);
+        margin-bottom: 0.5rem;
+        /* Small bottom gap for symmetry */
+    }
+}
+
 .chat-header {
-    padding: 1rem 2rem;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 2rem;
+    padding: 0.75rem 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.6);
+    /* Match container corners */
+    border-top-left-radius: 2rem;
+    border-top-right-radius: 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
     z-index: 15;
-    height: 60px;
+    min-height: 70px;
+    height: auto;
     position: sticky;
     top: 0;
 }

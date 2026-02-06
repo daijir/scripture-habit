@@ -229,17 +229,19 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
             <div className="menu-header">
               {t('sidebar.myGroups')} <span style={{ fontSize: '1.2em' }}>({userGroups.length}/12)</span>
             </div>
-            {userGroups.map((group) => (
-              <SidebarGroupItem
-                key={group.id}
-                group={group}
-                language={language}
-                isActive={selected === 2 && activeGroupId === group.id}
-                onClick={() => handleGroupClick(group.id)}
-                getGroupStatusEmoji={getGroupStatusEmoji}
-                getUnityPercentage={getUnityPercentage}
-              />
-            ))}
+            <div className="sidebar-group-list-container">
+              {userGroups.map((group) => (
+                <SidebarGroupItem
+                  key={group.id}
+                  group={group}
+                  language={language}
+                  isActive={selected === 2 && activeGroupId === group.id}
+                  onClick={() => handleGroupClick(group.id)}
+                  getGroupStatusEmoji={getGroupStatusEmoji}
+                  getUnityPercentage={getUnityPercentage}
+                />
+              ))}
+            </div>
 
             {userGroups.length < 12 && (
               <div className="menuItem create-group-item" onClick={() => navigate(`/${language}/group-options`)}>
