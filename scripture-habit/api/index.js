@@ -1045,7 +1045,6 @@ app.post('/api/post-message', async (req, res) => {
                 lastMessageAt: admin.firestore.FieldValue.serverTimestamp(),
                 lastMessageByNickname: userData.nickname || 'Member',
                 lastMessageByUid: uid,
-                [`memberLastActive.${uid}`]: admin.firestore.FieldValue.serverTimestamp(),
                 [`memberLastReadAt.${uid}`]: admin.firestore.FieldValue.serverTimestamp()
             });
 
