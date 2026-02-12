@@ -4,7 +4,7 @@ import { safeStorage } from '../../Utils/storage';
 import { Capacitor } from '@capacitor/core';
 import { db, auth } from '../../firebase';
 import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle, UilUsersAlt, UilPen, UilWhatsapp, UilCommentAlt, UilFacebookMessenger, UilInstagram } from '@iconscout/react-unicons';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc, getDoc, limit, startAfter, startAt, endBefore } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc, getDoc, limit, startAfter, startAt, endBefore, runTransaction } from 'firebase/firestore';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ChatSkeleton } from '../Skeleton/Skeleton';
@@ -2024,7 +2024,8 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     if (!userData?.uid || !groupId) return;
 
     if (unityPercentage === 100) {
-      const todayStr = new Date().toDateString();
+      const timeZone = userData?.timeZone || 'UTC';
+      const todayStr = new Date().toLocaleDateString('en-CA', { timeZone });
       const storageKey = `unity_firework_${groupId}_${userData.uid}`;
       const lastSeen = safeStorage.get(storageKey);
 
@@ -2044,7 +2045,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
           }
 
           const particleCount = 50 * (timeLeft / duration);
-          // since particles fall down, start a bit higher than random
           confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
           confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
         }, 250);
@@ -2054,30 +2054,35 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
         // EXTRA: Send a system message to the chat if not already sent today
         // Use group-level tracking to prevent duplicates from multiple users
-        const messagesRef = collection(db, 'groups', groupId, 'messages');
         const groupRef = doc(db, 'groups', groupId);
 
-        // Check if announcement was already sent today at group level
+        // Check if announcement was already sent today at group level using a transaction to prevent duplicates
         const checkAndSendAnnouncement = async () => {
           try {
-            const groupSnap = await getDoc(groupRef);
-            const lastAnnouncementDate = groupSnap.data()?.lastUnityAnnouncementDate;
+            await runTransaction(db, async (transaction) => {
+              const groupSnap = await transaction.get(groupRef);
+              if (!groupSnap.exists()) return;
 
-            // If no announcement was sent today, send one
-            if (lastAnnouncementDate !== todayStr) {
-              // Add the message
-              await addDoc(messagesRef, {
-                senderId: 'system',
-                isSystemMessage: true,
-                messageType: 'unityAnnouncement',
-                createdAt: serverTimestamp()
-              });
+              const lastAnnouncementDate = groupSnap.data()?.lastUnityAnnouncementDate;
 
-              // Update the group's last announcement date
-              await updateDoc(groupRef, {
-                lastUnityAnnouncementDate: todayStr
-              });
-            }
+              // If no announcement was sent today, send one
+              if (lastAnnouncementDate !== todayStr) {
+                // Update the group's last announcement date first to "lock" it
+                transaction.update(groupRef, {
+                  lastUnityAnnouncementDate: todayStr
+                });
+
+                // Add the message inside the transaction
+                const messagesRef = collection(db, 'groups', groupId, 'messages');
+                const newMessageRef = doc(messagesRef);
+                transaction.set(newMessageRef, {
+                  senderId: 'system',
+                  isSystemMessage: true,
+                  messageType: 'unityAnnouncement',
+                  createdAt: serverTimestamp()
+                });
+              }
+            });
           } catch (err) {
             console.error("Error sending unity announcement:", err);
           }
