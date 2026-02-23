@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
-import { getMessaging } from "firebase/messaging"; // Add this
+import { getMessaging, isSupported } from "firebase/messaging";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -19,18 +19,19 @@ const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
 
-// Initialize messaging with support check to avoid crashes in in-app browsers
+// Initialize messaging with isSupported() check (async)
 let messaging = null;
 
-// Only try to initialize if we are in a browser environment
 if (typeof window !== 'undefined') {
-  try {
-    // Note: getMessaging() itself can throw if the browser is unsupported
-    // In some SDK versions, we should use isSupported() before getMessaging()
-    messaging = getMessaging(app);
-  } catch (err) {
-    console.warn("Firebase Messaging is not supported in this browser:", err.message);
-  }
+  isSupported()
+    .then((supported) => {
+      if (supported) {
+        messaging = getMessaging(app);
+      }
+    })
+    .catch((err) => {
+      console.log("Firebase Messaging not supported:", err.message);
+    });
 }
 
 // Initialize Firestore with persistent cache (modern way)
