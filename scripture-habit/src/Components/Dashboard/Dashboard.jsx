@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { safeStorage } from '../../Utils/storage';
 import { auth, db } from '../../firebase';
-import { doc, onSnapshot, collection, query, where, orderBy, limit, updateDoc, getDocs } from 'firebase/firestore';
+import { doc, onSnapshot, collection, query, where, updateDoc, getDocs } from 'firebase/firestore';
 import { onAuthStateChanged } from 'firebase/auth';
-import ReactMarkdown from 'react-markdown';
 import { UilPlus, UilPen } from '@iconscout/react-unicons';
-import Hero from '../Hero/Hero';
 import Sidebar from '../Sidebar/Sidebar';
 import GroupChat from '../GroupChat/GroupChat';
 import './Dashboard.css';
@@ -17,11 +15,9 @@ import { toast } from 'react-toastify';
 import NewNote from '../NewNote/NewNote';
 import MyNotes from '../MyNotes/MyNotes';
 import Profile from '../Profile/Profile';
-import { getGospelLibraryUrl, getScriptureInfoFromText } from '../../Utils/gospelLibraryMapper';
+import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
 import { translateChapterField } from '../../Utils/bookNameTranslations';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
-import NoteDisplay from '../NoteDisplay/NoteDisplay';
-import NoteCard from '../NoteCard/NoteCard';
 import { getTodayReadingPlan } from '../../Data/DailyReadingPlan';
 import WelcomeStoryModal from '../WelcomeStoryModal/WelcomeStoryModal';
 import Donate from '../Donate/Donate';
@@ -61,7 +57,6 @@ const Dashboard = () => {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [groupTotalNotes, setGroupTotalNotes] = useState(0);
   const [personalNotesCount, setPersonalNotesCount] = useState(null);
   const [userGroups, setUserGroups] = useState([]);
   const [rawUserGroups, setRawUserGroups] = useState([]);
@@ -101,6 +96,7 @@ const Dashboard = () => {
     if (searchParams.has('groupId') || searchParams.has('openNewNote') || searchParams.has('view')) {
       navigate(location.pathname, { replace: true });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.search, location.state, navigate]);
 
   useEffect(() => {
@@ -227,6 +223,7 @@ const Dashboard = () => {
     };
 
     migrateLevelData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, userData?.daysStudiedCount, userData?.streakCount, userData?.uid]);
   // -----------------------------------------------------------
 
@@ -295,6 +292,7 @@ const Dashboard = () => {
     return () => {
       cleanupPromise.then(cleanup => cleanup && cleanup());
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(userData?.groupIds), userData?.groupId]);
 
   // Fetch user group states (read counts)
@@ -318,6 +316,7 @@ const Dashboard = () => {
     });
 
     return () => unsubscribe();
+
   }, [userData?.uid]);
 
   // Combine raw groups with unread counts
@@ -336,6 +335,7 @@ const Dashboard = () => {
       };
     });
     setUserGroups(combinedGroups);
+
   }, [rawUserGroups, groupStates, loadingGroupStates]);
 
   // Update activeGroupId if the user leaves the current group or if we need to validate the current selection
@@ -375,18 +375,7 @@ const Dashboard = () => {
     if (userData) {
       setPersonalNotesCount(userData.totalNotes || 0);
     }
-  }, [userData?.totalNotes]);
-
-  useEffect(() => {
-    if (userData && activeGroupId) {
-      const activeGroup = userGroups.find(g => g.id === activeGroupId);
-      if (activeGroup) {
-        setGroupTotalNotes(activeGroup.noteCount || 0);
-      }
-    } else {
-      setGroupTotalNotes(0);
-    }
-  }, [activeGroupId, userGroups]);
+  }, [userData]);
 
   // Check for inactivity warnings
   useEffect(() => {
@@ -414,6 +403,7 @@ const Dashboard = () => {
     });
 
     setWarnings(newWarnings);
+
   }, [userGroups, userData]);
 
   // Check for recent notes from others to show notification
@@ -467,6 +457,7 @@ const Dashboard = () => {
     });
 
     setLatestNoteNotification(mostRecent);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userGroups, userData?.uid, groupStates, loadingGroupStates]);
 
   // --- Invitation Handling ---
@@ -545,6 +536,7 @@ const Dashboard = () => {
     if (!showWelcomeStory && userData && user) {
       processPendingInvite();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, userData, showWelcomeStory, t]);
 
   if (loading) {
@@ -643,51 +635,6 @@ const Dashboard = () => {
 
   // Allow access if user has groups, even if groupId is not set (migration case)
   const hasGroups = (userData.groupIds && userData.groupIds.length > 0) || userData.groupId;
-  const pendingInviteCode = safeStorage.get('pendingInviteCode');
-
-  const getDisplayStreak = () => {
-    try {
-      if (!userData) return 0;
-      const streak = userData.streakCount || 0;
-      if (!userData.lastPostDate) return 0;
-
-      let timeZone = userData.timeZone || 'UTC';
-      try {
-        Intl.DateTimeFormat(undefined, { timeZone });
-      } catch (e) {
-        console.warn("Invalid timezone in userData, falling back to UTC:", timeZone);
-        timeZone = 'UTC';
-      }
-
-      const now = new Date();
-      const todayStr = now.toLocaleDateString('en-CA', { timeZone });
-
-      let lastPostDate;
-      if (userData.lastPostDate && typeof userData.lastPostDate.toDate === 'function') {
-        lastPostDate = userData.lastPostDate.toDate();
-      } else {
-        lastPostDate = new Date(userData.lastPostDate);
-      }
-
-      if (isNaN(lastPostDate.getTime())) return 0;
-
-      const lastPostDateStr = lastPostDate.toLocaleDateString('en-CA', { timeZone });
-
-      const today = new Date(todayStr);
-      const lastPost = new Date(lastPostDateStr);
-      const diffTime = today - lastPost;
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-      if (diffDays <= 1) return streak;
-
-      return 0;
-    } catch (error) {
-      console.error("Error calculating streak:", error);
-      return 0;
-    }
-  };
-
-
 
   const handleUpdateProfile = async () => {
     if (!newNickname.trim() || !user || !userData) return;

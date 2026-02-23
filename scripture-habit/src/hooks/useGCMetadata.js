@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Capacitor } from '@capacitor/core';
 import { safeStorage } from '../Utils/storage';
 
 // Cache in memory as well to avoid reading localStorage constantly for the same session

@@ -3,7 +3,7 @@ import './LinkPreview.css';
 
 import { Capacitor } from '@capacitor/core';
 
-const LinkPreview = ({ url, isSent, language, t }) => {
+const LinkPreview = ({ url, isSent, language }) => {
     const [preview, setPreview] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
@@ -42,7 +42,7 @@ const LinkPreview = ({ url, isSent, language, t }) => {
         if (url) {
             fetchPreview();
         }
-    }, [url]);
+    }, [url, language]);
 
     if (loading) {
         return (

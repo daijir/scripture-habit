@@ -14,7 +14,6 @@ export default function GroupForm() {
   const { t, language } = useLanguage();
   const [groupName, setGroupName] = useState("");
   const [description, setDescription] = useState("");
-  const [maxMembers, setMaxMembers] = useState(100000);
   const [isPublic, setIsPublic] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -41,7 +40,7 @@ export default function GroupForm() {
         groupStreak: 0,
         inviteCode: inviteCode,
         isPublic: isPublic,
-        maxMembers: Number(maxMembers),
+        maxMembers: 100000,
         membersCount: 1,
         messageCount: 0,
         noteCount: 0,

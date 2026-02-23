@@ -40,7 +40,7 @@ export default function GroupCreate({ currentUser, onCreated }: Props) {
       setDescription('');
       toast.success(t('groupForm.successCreated') || 'Group created successfully!');
       onCreated?.(docRef.id);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to create group', err);
       toast.error(t('groupForm.errorCreateFailed') || 'Failed to create group');
     } finally {

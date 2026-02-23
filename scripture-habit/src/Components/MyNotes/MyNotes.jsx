@@ -4,15 +4,12 @@ import axios from 'axios';
 import { Capacitor } from '@capacitor/core';
 import { db } from '../../firebase';
 import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc, updateDoc, increment, addDoc, serverTimestamp, limit, startAfter } from 'firebase/firestore';
-import ReactMarkdown from 'react-markdown';
-import { UilPlus, UilBookOpen, UilSearchAlt, UilAnalysis, UilEnvelope, UilAngleLeft, UilAngleRight } from '@iconscout/react-unicons';
+import { UilBookOpen, UilSearchAlt, UilAnalysis, UilEnvelope, UilAngleLeft, UilAngleRight } from '@iconscout/react-unicons';
 import NewNote from '../NewNote/NewNote';
 import NoteCard from '../NoteCard/NoteCard';
 import RecapModal from '../RecapModal/RecapModal'; // Import RecapModal
 import LetterBox from '../LetterBox/LetterBox'; // Import LetterBox
 import { toast } from 'react-toastify';
-import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
-import { translateChapterField } from '../../Utils/bookNameTranslations';
 import './MyNotes.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 import NoteDetailModal from './NoteDetailModal';
@@ -142,7 +139,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
       unsubscribeUser();
       unsubscribeNotes();
     };
-  }, [userData?.uid, currentPage, selectedCategory, searchTerm, lastDocsStack]); // Depend on cursor stack indirectly via currentPage, but stack needed for construction
+  }, [userData, currentPage, selectedCategory, searchTerm, lastDocsStack, t]); // Depend on cursor stack indirectly via currentPage, but stack needed for construction
 
   const handleNoteClick = (note) => {
     setSelectedNote(note);

@@ -3,7 +3,7 @@ import './Mascot.css';
 import { useLanguage } from '../../Context/LanguageContext';
 
 const Mascot = ({ userData, onClick, customMessage = null, reversed = false }) => {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const mascotImg = '/images/mascot.png';
 
   const isDoneToday = useMemo(() => {
@@ -12,7 +12,7 @@ const Mascot = ({ userData, onClick, customMessage = null, reversed = false }) =
     let timeZone = userData.timeZone || 'UTC';
     try {
       Intl.DateTimeFormat(undefined, { timeZone });
-    } catch (e) {
+    } catch {
       timeZone = 'UTC';
     }
 

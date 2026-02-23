@@ -4,16 +4,14 @@ import { safeStorage } from '../../Utils/storage';
 import { Capacitor } from '@capacitor/core';
 import { db, auth } from '../../firebase';
 import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle, UilUsersAlt, UilPen, UilWhatsapp, UilCommentAlt, UilFacebookMessenger, UilInstagram } from '@iconscout/react-unicons';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc, getDoc, limit, startAfter, startAt, endBefore, runTransaction } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc, getDoc, limit, startAfter, startAt, runTransaction } from 'firebase/firestore';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { ChatSkeleton } from '../Skeleton/Skeleton';
 import ReactMarkdown from 'react-markdown';
 import NewNote from '../NewNote/NewNote';
 import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
-import { translateChapterField } from '../../Utils/bookNameTranslations';
 import { NOTE_HEADER_REGEX, removeNoteHeader } from '../../Utils/noteUtils';
-import LinkPreview from '../LinkPreview/LinkPreview';
 import './GroupChat.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 import NoteDisplay from '../NoteDisplay/NoteDisplay';
@@ -22,7 +20,7 @@ import UserProfileModal from '../UserProfileModal/UserProfileModal';
 import Mascot from '../Mascot/Mascot';
 import { UilExclamationTriangle } from '@iconscout/react-unicons';
 
-const GroupMenuItem = ({ group, currentGroupId, language, onSelect, t, timeZone = 'UTC' }) => {
+const GroupMenuItem = ({ group, currentGroupId, language, onSelect, timeZone = 'UTC' }) => {
   const [translatedName, setTranslatedName] = useState('');
   const translationAttemptedRef = useRef(false);
 
@@ -56,7 +54,6 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, t, timeZone 
       try {
         const idToken = await auth.currentUser?.getIdToken();
         const API_BASE = window.location.hostname === 'localhost' ? '' : 'https://scripturehabit.app';
-        const inviteUrl = `https://scripturehabit.app/join/${groupId}`;
 
         const response = await fetch(`${API_BASE}/api/translate`, {
           method: 'POST',
@@ -358,13 +355,10 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     };
 
     autoTranslateGroupInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupId, groupData?.name, groupData?.description, groupData?.translations, language]);
 
   useEffect(() => {
-    const hasDismissed = safeStorage.get('hasDismissedInactivityPolicy');
-    if (!hasDismissed) {
-    }
-
     // Check for welcome guide logic from navigation state
     if (location.state?.showWelcome && location.state?.initialGroupId === groupId) {
       setShowWelcomeGuide(true);
@@ -400,7 +394,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         setShowAddNoteTooltip(true);
       }, 1000);
       return () => clearTimeout(timer);
-    } else {
     }
   }, [groupId]);
 
@@ -425,7 +418,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     setShowWelcomeGuide(false);
   };
   const textareaRef = useRef(null);
-  const firstUnreadRef = useRef(null);
   const messagesEndRef = useRef(null);
   const currentGroupIdRef = useRef(groupId);
 
@@ -643,6 +635,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       unsubscribeGroup();
       unsubscribeNewMessages();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupId]);
 
   // Log whenever messages or groupData updates to see incoming data
@@ -669,7 +662,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     candidates.push(t('groupChat.placeholderEncourage'));
 
     return candidates[Math.floor(Math.random() * candidates.length)];
-  }, [t, groupId, language]); // Re-roll when group or language changes
+  }, [t]); // Re-roll when language changes
 
   // Fetch user's read count when entering the group
   useEffect(() => {
@@ -779,6 +772,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupId, userData?.uid, isActive, initialScrollDone, messages.length, userReadCount, groupData?.messageCount]);
 
   // Track previous message count to only auto-scroll on new messages, not updates
@@ -992,7 +986,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     setIsSendingCheer(true);
     try {
       const idToken = await auth.currentUser.getIdToken();
-      const apiBase = import.meta.env.VITE_API_BASE_URL || '';
       const response = await fetch(`${API_BASE}/api/send-cheer`, {
         method: 'POST',
         headers: {
@@ -1410,18 +1403,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   };
 
   // Context menu handlers for own messages
-  const handleContextMenu = (e, msg) => {
-    if (msg.senderId !== userData?.uid) return; // Only for own messages
-    e.preventDefault();
-    setContextMenu({
-      show: true,
-      x: e.clientX,
-      y: e.clientY,
-      messageId: msg.id,
-      message: msg
-    });
-  };
-
   const handleLongPressStart = (msg) => {
     longPressTimer.current = setTimeout(() => {
       setContextMenu({
@@ -1698,139 +1679,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     }
   };
 
-  // Helper function to translate scripture names
-  const translateScriptureName = (scriptureName) => {
-    const scriptureMapping = {
-      'Old Testament': 'scriptures.oldTestament',
-      'New Testament': 'scriptures.newTestament',
-      'Book of Mormon': 'scriptures.bookOfMormon',
-      'Doctrine and Covenants': 'scriptures.doctrineAndCovenants',
-      'Doctrine and Convenants': 'scriptures.doctrineAndCovenants', // typo variant for legacy data
-      'Pearl of Great Price': 'scriptures.pearlOfGreatPrice',
-      'Ordinances and Proclamations': 'scriptures.ordinancesAndProclamations',
-      // Also handle variations
-      '旧約聖書': 'scriptures.oldTestament',
-      '新約聖書': 'scriptures.newTestament',
-      'モルモン書': 'scriptures.bookOfMormon',
-      '教義と聖約': 'scriptures.doctrineAndCovenants',
-      '高価な真珠': 'scriptures.pearlOfGreatPrice',
-      'General Conference': 'scriptures.generalConference',
-      '総大会': 'scriptures.generalConference',
-      'Conferência Geral': 'scriptures.generalConference',
-      '總會大會': 'scriptures.generalConference',
-      'Conferencia General': 'scriptures.generalConference',
-      'Đại Hội Trung Ương': 'scriptures.generalConference',
-      'การประชุมใหญ่สามัญ': 'scriptures.generalConference',
-      '연차 대회': 'scriptures.generalConference',
-      'Pangkalahatang Kumperensya': 'scriptures.generalConference',
-      'Mkutano Mkuu': 'scriptures.generalConference',
-    };
-
-    const translationKey = scriptureMapping[scriptureName];
-    return translationKey ? t(translationKey) : scriptureName;
-  };
-
-
-
-  // Helper function to render text with clickable links
-  const renderTextWithLinks = (text, isSent) => {
-    if (!text) return null;
-
-    // URL regex pattern
-    const urlPattern = /(https?:\/\/[^\s<]+[^<.,:;"')\]\s])/g;
-
-    const parts = text.split(urlPattern);
-
-    return parts.map((part, index) => {
-      if (urlPattern.test(part)) {
-        // Reset the regex lastIndex
-        urlPattern.lastIndex = 0;
-        return (
-          <a
-            key={index}
-            href={part}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              color: isSent ? 'white' : '#0056b3',
-              textDecoration: 'underline',
-              wordBreak: 'break-all'
-            }}
-          >
-            {part}
-          </a>
-        );
-      }
-      return part;
-    });
-  };
-
-  const formatNoteForDisplay = (text) => {
-    if (!text) return '';
-    let content = text;
-
-    // Translate header
-    const headerMatch = content.match(/^(📖 \*\*New Study Note\*\*\n+|📖 \*\*New Study Entry\*\*\n+)/);
-    let translatedHeader = '';
-    if (headerMatch) {
-      if (headerMatch[0].includes('New Study Note')) {
-        translatedHeader = `📖 **${t('noteLabels.newStudyNote')}**\n`;
-      } else {
-        translatedHeader = `📖 **${t('noteLabels.newStudyEntry')}**\n`;
-      }
-    }
-
-    let body = content.replace(/^(📖 \*\*New Study Note\*\*\n+|📖 \*\*New Study Entry\*\*\n+)/, '');
-
-    // Match both English and various language formats
-    const chapterMatch = body.match(/\*\*(?:Chapter|Title|Speech|章|タイトル|スピーチ|Capítulo|Título|章節|標題|Chương|Tiêu đề):\*\* (.*?)(?:\n|$)/);
-    const scriptureMatch = body.match(/\*\*(?:Scripture|聖典|Escritura|經文|Thánh Thư):\*\* (.*?)(?:\n|$)/);
-
-    // Handle "Other" category - no chapter field
-    if (scriptureMatch && (scriptureMatch[1].trim() === 'Other' || scriptureMatch[1].trim() === 'その他')) {
-      const scripture = t('scriptures.other');
-      const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
-      const comment = body.substring(scriptureEnd).trim();
-      return `${translatedHeader}**${t('noteLabels.scripture')}:** ${scripture}\n\n**${t('noteLabels.comment')}:**\n${comment}`;
-    }
-
-    if (chapterMatch && scriptureMatch) {
-      const rawChapter = chapterMatch[1].trim();
-      const rawScripture = scriptureMatch[1].trim();
-      const chapter = translateChapterField(rawChapter, language);
-      const scripture = translateScriptureName(rawScripture);
-
-      // Check if scripture is General Conference to use appropriate label
-      const gcVariants = ['General Conference', '総大会', 'Conferência Geral', '總會大會', 'Conferencia General', 'Đại Hội Trung Ương', 'การประชุมใหญ่สามัญ', '연차 대회', 'Pangkalahatang Kumperensya', 'Mkutano Mkuu'];
-      const isGC = gcVariants.includes(rawScripture);
-      let chapterLabel = isGC ? t('noteLabels.talk') : t('noteLabels.chapter');
-
-      if (rawScripture === 'BYU Speeches') {
-        chapterLabel = t('noteLabels.speech');
-      } else if (chapterMatch[0].includes('Title')) {
-        chapterLabel = t('noteLabels.title');
-      }
-
-      const chapterEnd = chapterMatch.index + chapterMatch[0].length;
-      const scriptureEnd = scriptureMatch.index + scriptureMatch[0].length;
-      const maxEnd = Math.max(chapterEnd, scriptureEnd);
-
-      const comment = body.substring(maxEnd).trim();
-
-      return `${translatedHeader}**${t('noteLabels.scripture')}:** ${scripture}\n**${chapterLabel}:** ${chapter}\n\n**${t('noteLabels.comment')}:**\n${comment}`;
-    }
-
-    // If no structured format found, just translate the labels in the raw text
-    return content
-      .replace(/\*\*Scripture:\*\*/g, `**${t('noteLabels.scripture')}:**`)
-      .replace(/\*\*Chapter:\*\*/g, `**${t('noteLabels.chapter')}:**`)
-      .replace(/\*\*Speech:\*\*/g, `**${t('noteLabels.speech')}:**`)
-      .replace(/\*\*Title:\*\*/g, `**${t('noteLabels.title')}:**`)
-      .replace(/📖 \*\*New Study Note\*\*/g, `📖 **${t('noteLabels.newStudyNote')}**`)
-      .replace(/📖 \*\*New Study Entry\*\*/g, `📖 **${t('noteLabels.newStudyEntry')}**`);
-  };
-
   const togglePublicStatus = async () => {
     if (!groupData || !groupId) return;
     try {
@@ -2091,7 +1939,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         checkAndSendAnnouncement();
       }
     }
-  }, [unityPercentage, groupId, userData?.uid]);
+  }, [unityPercentage, groupId, userData?.uid, userData?.timeZone]);
 
   if (!groupId) return null;
 
@@ -2394,7 +2242,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                     currentGroupId={groupId}
                     language={language}
                     onSelect={() => {
-                      onGroupSelect && onGroupSelect(group.id);
+                      if (onGroupSelect) onGroupSelect(group.id);
                       setShowMobileMenu(false);
                     }}
                     t={t}
@@ -2915,7 +2763,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                                   if (scripture && chapterValue) {
                                     const scripLower = scripture.toLowerCase();
                                     const isOther = scripLower.includes('other') || scripLower.includes('その他') || scripture === '';
-                                    const isGC = scripLower.includes('general') || scripLower.includes('総大会');
                                     const isBYU = scripLower.includes('byu');
 
                                     // CASE A: Direct URL (Other, GC, BYU with full URL)
@@ -3545,7 +3392,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={handleKeyDown}
             onFocus={() => {
-              onInputFocusChange && onInputFocusChange(true);
+              if (onInputFocusChange) onInputFocusChange(true);
               // Scroll to bottom when keyboard appears on mobile
               if (containerRef.current && window.innerWidth <= 768) {
                 setTimeout(() => {

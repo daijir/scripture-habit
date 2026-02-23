@@ -73,7 +73,7 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
                 const targetLang = langParam.split('=')[1]; // Extract 'jpn', 'eng', etc.
                 url.searchParams.set('lang', targetLang);
                 return url.toString();
-            } catch (e) {
+            } catch {
                 return chapterInput;
             }
         }
@@ -147,7 +147,7 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
     // Group 1: Book name
     // Group 2: Chapter number
     // Group 3: Verses (optional, allows digits, hyphens, commas)
-    const match = cleanChapterInput.match(/(.*?)\s*(\d+)(?::([\d\s,\-]+))?\s*$/);
+    const match = cleanChapterInput.match(/(.*?)\s*(\d+)(?::([\d\s,-]+))?\s*$/);
 
     if (!match) return null; // Could not find a chapter number
 
@@ -171,6 +171,7 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
     }
 
     // Mapping for other volumes
+    /* eslint-disable no-dupe-keys */
     const bookMappings = {
         // Book of Mormon
         "1 nephi": "1-ne", "1 ne": "1-ne",

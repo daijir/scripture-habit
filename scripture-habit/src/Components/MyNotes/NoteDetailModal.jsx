@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { UilTimes, UilPen, UilTrashAlt, UilComment, UilThumbsUp } from '@iconscout/react-unicons';
 import { db } from '../../firebase';
-import { doc, getDoc, collection, query, where, onSnapshot } from 'firebase/firestore';
-import ReactMarkdown from 'react-markdown';
+import { doc, collection, query, where, onSnapshot } from 'firebase/firestore';
 import NoteDisplay from '../NoteDisplay/NoteDisplay';
 import { useLanguage } from '../../Context/LanguageContext';
 import './NoteDetailModal.css';
 
-const NoteDetailModal = ({ isOpen, onClose, note, userData, userGroups, onEdit, onDelete }) => {
+const NoteDetailModal = ({ isOpen, onClose, note, userGroups, onEdit, onDelete }) => {
     const { t, language } = useLanguage();
     const [sharedDetails, setSharedDetails] = useState([]);
     const [loadingDetails, setLoadingDetails] = useState(false);
@@ -142,7 +141,6 @@ const getScriptureKey = (scriptureName) => {
 const SharedGroupSection = ({ groupId, messageId, groupName, t, isMember, language }) => {
     const [reactions, setReactions] = useState([]);
     const [replies, setReplies] = useState([]);
-    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -150,7 +148,6 @@ const SharedGroupSection = ({ groupId, messageId, groupName, t, isMember, langua
             return;
         }
 
-        setLoading(true);
 
         // 1. Listen to the message for reactions
         const messageRef = doc(db, 'groups', groupId, 'messages', messageId);
@@ -184,10 +181,8 @@ const SharedGroupSection = ({ groupId, messageId, groupName, t, isMember, langua
             });
 
             setReplies(fetchedReplies);
-            setLoading(false);
         }, (error) => {
             console.log("Error fetching replies:", error);
-            setLoading(false);
             if (error.code === 'permission-denied') {
                 setError(true);
             }

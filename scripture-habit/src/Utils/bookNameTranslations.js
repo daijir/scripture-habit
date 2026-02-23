@@ -1014,7 +1014,7 @@ export const translateChapterField = (chapterText, language) => {
 
     // Special handling for BYU Speeches
     if (chapterText.includes('speeches.byu.edu')) {
-        const byuMatch = chapterText.match(/speeches\.byu\.edu\/talks\/([^\/]+)\/([^\/]+)/);
+        const byuMatch = chapterText.match(/speeches\.byu\.edu\/talks\/([^/]+)\/([^/]+)/);
         if (byuMatch) {
             const speakerSlug = byuMatch[1];
             const titleSlug = byuMatch[2];
@@ -1046,7 +1046,7 @@ export const translateChapterField = (chapterText, language) => {
     // First, try to match patterns with chapter numbers
     // Pattern: book name (letters/Japanese/hyphens/spaces) + optional space + chapter:verse
     // Handles: "Alma7:11", "Alma 7:11", "2ニーファイ2:15", "1 Nephi 3:7", "Articles of Faith 1:13", "Joseph Smith-History 1:5", "Moroni 7:45, 47-48"
-    const match = chapterText.match(/^((?:\d\s*)?[A-Za-zぁ-んァ-ン一-龯\s\-—]+)(?:\s+|(?=\d))(\d+(?::[\d\s,\-]+)?)$/);
+    const match = chapterText.match(/^((?:\d\s*)?[A-Za-zぁ-んァ-ン一-龯\s—-]+)(?:\s+|(?=\d))(\d+(?::[\d\s,-]+)?)$/);
 
     if (match) {
         let bookName = match[1].trim();

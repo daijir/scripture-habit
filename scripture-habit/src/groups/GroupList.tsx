@@ -8,7 +8,7 @@ type Props = {
 };
 
 export default function GroupList({ currentUser }: Props) {
-  const [groups, setGroups] = useState<Array<any>>([]);
+  const [groups, setGroups] = useState<Array<{ id: string; name: string; description?: string; members?: string[]; lastMessageAt?: unknown; messageCount?: number;[key: string]: unknown }>>([]);
   const db = getFirestore(app);
 
   useEffect(() => {
@@ -16,8 +16,8 @@ export default function GroupList({ currentUser }: Props) {
     const unsub = onSnapshot(
       q,
       (snap) => {
-        const items: any[] = [];
-        snap.forEach((d) => items.push({ id: d.id, ...d.data() }));
+        const items: Array<{ id: string; name: string; description?: string; members?: string[]; lastMessageAt?: unknown; messageCount?: number;[key: string]: unknown }> = [];
+        snap.forEach((d) => items.push({ id: d.id, ...(d.data() as { name: string; description?: string; members?: string[]; lastMessageAt?: unknown; messageCount?: number;[key: string]: unknown }) }));
         setGroups(items);
       },
       (err) => {

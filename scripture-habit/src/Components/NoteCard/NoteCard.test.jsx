@@ -5,7 +5,7 @@ import { LanguageProvider } from '../../Context/LanguageContext';
 
 // Mock dependencies
 vi.mock('../../Utils/gospelLibraryMapper', () => ({
-    getGospelLibraryUrl: vi.fn((scripture, chapter) => {
+    getGospelLibraryUrl: vi.fn((scripture) => {
         if (scripture === 'Book of Mormon') return 'https://fake-url.com';
         return null;
     }),

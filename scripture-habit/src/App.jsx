@@ -1,5 +1,6 @@
-import { Routes, Route, Link, useLocation, Navigate } from 'react-router-dom';
-import { ToastContainer } from "react-toastify";
+/* eslint-disable react-refresh/only-export-components */
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from 'react';
 import { Analytics } from "@vercel/analytics/react";
@@ -10,7 +11,6 @@ import { onAuthStateChanged } from 'firebase/auth';
 
 import SignupForm from './Components/SignupForm/SignupForm';
 import LoginForm from './Components/LoginForm/LoginForm';
-import Button from './Components/Button/Button';
 import Dashboard from './Components/Dashboard/Dashboard';
 import GroupForm from './Components/GroupForm/GroupForm';
 import JoinGroup from './Components/JoinGroup/JoinGroup';
@@ -249,63 +249,57 @@ const PWAUpdateHandler = () => {
       const updateMessage = t('installPrompt.updateAvailable');
       const updateButtonText = t('installPrompt.updateButton');
 
-      import('react-toastify').then(({ toast }) => {
-        toast.info(
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '10px' }}>
-            <span style={{ fontSize: '0.9rem' }}>{updateMessage}</span>
-            <button
-              onClick={() => {
-                console.log('Update button clicked. Registration:', registration);
+      toast.info(
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', gap: '10px' }}>
+          <span style={{ fontSize: '0.9rem' }}>{updateMessage}</span>
+          <button
+            onClick={() => {
+              console.log('Update button clicked. Registration:', registration);
 
-                // Track if we successfully sent a signal
-                let signaling = false;
-
-                if (registration) {
-                  const worker = registration.waiting || registration.installing;
-                  if (worker) {
-                    worker.postMessage({ type: 'SKIP_WAITING' });
-                    signaling = true;
-                  }
+              if (registration) {
+                const worker = registration.waiting || registration.installing;
+                if (worker) {
+                  worker.postMessage({ type: 'SKIP_WAITING' });
                 }
+              }
 
-                // If no worker found or signaling failed, or as a safety measure,
-                // give it a short moment to activate and then force reload
-                setTimeout(() => {
-                  window.location.reload();
-                }, 500);
-              }}
-              style={{
-                padding: '6px 12px',
-                background: '#4a90e2',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontWeight: 'bold',
-                fontSize: '0.8rem',
-                whiteSpace: 'nowrap'
-              }}
-            >
-              {updateButtonText}
-            </button>
-          </div>,
-          {
-            toastId: 'pwa-update',
-            position: "bottom-center",
-            autoClose: false,
-            closeOnClick: false,
-            draggable: false,
-            closeButton: false,
-            style: {
-              background: '#fff',
-              color: '#1a202c',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-              borderRadius: '12px',
-              padding: '12px'
-            }
+              // If no worker found or signaling failed, or as a safety measure,
+              // give it a short moment to activate and then force reload
+              setTimeout(() => {
+                window.location.reload();
+              }, 500);
+            }}
+            style={{
+              padding: '6px 12px',
+              background: '#4a90e2',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '0.8rem',
+              whiteSpace: 'nowrap'
+            }}
+          >
+            {updateButtonText}
+          </button>
+        </div>,
+        {
+          toastId: 'pwa-update',
+          position: "bottom-center",
+          autoClose: false,
+          closeOnClick: false,
+          draggable: false,
+          closeButton: false,
+          style: {
+            background: '#fff',
+            color: '#1a202c',
+            boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
+            borderRadius: '12px',
+            padding: '12px'
           }
-        );
-      });
+        }
+      );
     };
 
     window.addEventListener('pwa-update-available', handleUpdateAvailable);
@@ -316,13 +310,11 @@ const PWAUpdateHandler = () => {
 };
 
 const App = () => {
-  const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [showBrowserWarning, setShowBrowserWarning] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
+    const unsubscribe = onAuthStateChanged(auth, () => {
       setAuthLoading(false);
     });
     return unsubscribe;
@@ -363,9 +355,11 @@ const App = () => {
     const [state, setState] = useState({ loading: true, error: null });
     useEffect(() => {
       return effect();
-    }, []);
+    }, [effect]);
     return [state, setState];
   }
+
+  const location = useLocation();
 
   if (MAINTENANCE_MODE || systemStatus.error === 'quota' || systemStatus.maintenance) {
     return (
@@ -377,8 +371,6 @@ const App = () => {
       </SettingsProvider>
     );
   }
-
-  const location = useLocation();
   const getAppClass = () => {
     const path = location.pathname;
     const pathParts = path.split('/');
@@ -565,7 +557,7 @@ export default Sentry.withErrorBoundary(App, {
       >
         Reload Application
       </button>
-      {process.env.NODE_ENV === 'development' && (
+      {import.meta.env.MODE === 'development' && (
         <pre style={{
           marginTop: '2rem',
           textAlign: 'left',

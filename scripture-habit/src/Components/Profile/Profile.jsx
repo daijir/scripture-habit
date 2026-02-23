@@ -5,7 +5,7 @@ import { useSettings } from '../../Context/SettingsContext.jsx';
 import { auth, db } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 import { UilSignOutAlt } from '@iconscout/react-unicons';
-import { doc, updateDoc, deleteDoc, collection, query, where, getDocs, writeBatch, getDoc } from 'firebase/firestore';
+import { doc, updateDoc, deleteDoc, collection, getDocs, writeBatch, getDoc } from 'firebase/firestore';
 import { deleteUser } from 'firebase/auth';
 import Button from '../Button/Button';
 import { toast } from 'react-toastify';

@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { safeStorage } from '../Utils/storage';
 
@@ -21,12 +22,17 @@ export const SettingsProvider = ({ children }) => {
         document.documentElement.style.fontSize = fontSizeMap[fontSize] || '16px';
     }, [fontSize]);
 
-    const setFontSize = (size) => {
+    const setFontSize = React.useCallback((size) => {
         setFontSizeState(size);
-    };
+    }, []);
+
+    const contextValue = React.useMemo(() => ({
+        fontSize,
+        setFontSize
+    }), [fontSize, setFontSize]);
 
     return (
-        <SettingsContext.Provider value={{ fontSize, setFontSize }}>
+        <SettingsContext.Provider value={contextValue}>
             {children}
         </SettingsContext.Provider>
     );

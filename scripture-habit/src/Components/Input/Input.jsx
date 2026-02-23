@@ -13,10 +13,10 @@ const Input = ({
   min,
   ...rest
 }) => {
+  const generatedId = React.useId();
+  const inputId = id || generatedId;
 
   const Component = as === 'textarea' ? 'textarea' : 'input';
-
-  const inputId = id || `input-${Math.random().toString(36).substr(2, 9)}`;
 
   return (
     <div className="GlassInputContainer">

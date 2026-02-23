@@ -79,7 +79,7 @@ describe('GroupChat', () => {
 
     it('renders loading state initially', () => {
         // Implement mock for group snapshot
-        firestore.onSnapshot.mockImplementation((ref, callback) => {
+        firestore.onSnapshot.mockImplementation(() => {
             // Do nothing or simulate pending
             return () => { };
         });
@@ -96,7 +96,7 @@ describe('GroupChat', () => {
         ];
 
         // Mock group and message snapshots
-        firestore.onSnapshot.mockImplementation((ref, callback) => {
+        firestore.onSnapshot.mockImplementation((_ref, callback) => {
             // We can use a simple heuristic:
             // The component calls onSnapshot twice.
             // 1. Group Doc: callback expects { exists(), data() }
@@ -142,7 +142,7 @@ describe('GroupChat', () => {
     });
 
     it('sends a message', async () => {
-        firestore.onSnapshot.mockImplementation((ref, callback) => {
+        firestore.onSnapshot.mockImplementation((_ref, callback) => {
             const mockMessages = [{ id: 'msg1', text: 'Hi', senderId: 'other' }];
             const superSnap = {
                 exists: () => true,

@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import * as Sentry from "@sentry/react";
 import axios from 'axios';
 import { Capacitor } from '@capacitor/core';
-import { db, auth } from '../../firebase';
-import { collection, addDoc, serverTimestamp, updateDoc, doc, getDoc, increment, query, where, getDocs, Timestamp, arrayUnion, setDoc, writeBatch } from 'firebase/firestore';
-import { toast } from 'react-toastify';
+import { auth, db } from '../../firebase';
+import { collection, serverTimestamp, doc, getDoc, query, where, getDocs, writeBatch } from 'firebase/firestore';
 import { UilTrashAlt, UilShuffle } from '@iconscout/react-unicons';
+import { toast } from 'react-toastify';
 import Select from 'react-select';
 import { ScripturesOptions } from '../../Data/Data';
 import { MasteryScriptures } from '../../Data/MasteryScriptures';
@@ -21,7 +21,6 @@ import { translateChapterField } from '../../Utils/bookNameTranslations';
 import { getGospelLibraryUrl, getCategoryFromScripture } from '../../Utils/gospelLibraryMapper';
 import { getTodayReadingPlan } from '../../Data/DailyReadingPlan';
 import { localizeLdsUrl } from '../../Utils/urlLocalizer';
-import { UilBookOpen } from '@iconscout/react-unicons';
 import { useGCMetadata } from '../../hooks/useGCMetadata';
 import confetti from 'canvas-confetti';
 import { getBookSuggestions } from '../../Utils/suggestionUtils';
@@ -47,16 +46,20 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
     const isUrl = chapter && (chapter.startsWith('http') || chapter.includes('churchofjesuschrist.org'));
     const { data: gcMeta, loading: gcLoading } = useGCMetadata(isUrl ? chapter : null, language);
 
-    // Randomized placeholders state
-    const [currentChapterPlaceholder, setCurrentChapterPlaceholder] = useState('');
-    const [currentCommentPlaceholder, setCurrentCommentPlaceholder] = useState('');
+    // Randomized placeholders
+    const currentChapterPlaceholder = React.useMemo(() => {
+        const raw = t('newNote.chapterPlaceholder');
+        return Array.isArray(raw) ? raw[Math.floor(Math.random() * raw.length)] : raw;
+    }, [t]);
 
-
+    const currentCommentPlaceholder = React.useMemo(() => {
+        const raw = t('newNote.commentPlaceholder');
+        return Array.isArray(raw) ? raw[Math.floor(Math.random() * raw.length)] : raw;
+    }, [t]);
 
     const [loading, setLoading] = useState(false);
     const [aiLoading, setAiLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [lastAiResponse, setLastAiResponse] = useState('');
     const [showScriptureSelectionModal, setShowScriptureSelectionModal] = useState(false);
     const [showRandomMenu, setShowRandomMenu] = useState(false);
     const [availableReadingPlanScripts, setAvailableReadingPlanScripts] = useState([]);
@@ -84,18 +87,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
     }));
 
     useEffect(() => {
-        if (isOpen) {
-            const rawChapterPh = t('newNote.chapterPlaceholder');
-            setCurrentChapterPlaceholder(Array.isArray(rawChapterPh) ? rawChapterPh[Math.floor(Math.random() * rawChapterPh.length)] : rawChapterPh);
-
-            const rawCommentPh = t('newNote.commentPlaceholder');
-            setCurrentCommentPlaceholder(Array.isArray(rawCommentPh) ? rawCommentPh[Math.floor(Math.random() * rawCommentPh.length)] : rawCommentPh);
-        }
-    }, [isOpen, language, t]);
-
-    useEffect(() => {
         if (isOpen && noteToEdit) {
-            setLastAiResponse('');
             let text = removeNoteHeader(noteToEdit.text || '');
 
             const chapterMatch = text.match(/\*\*(?:Chapter|Title|Speech):\*\* (.*?)(?:\n|$)/);
@@ -132,8 +124,6 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             setSelectedShareGroups([]);
 
         } else if (isOpen && !noteToEdit) {
-            setLastAiResponse('');
-
             // Check for initialData
             if (initialData) {
                 setChapter(initialData.chapter || '');
@@ -164,6 +154,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             }
             setSelectedShareGroups([]);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isOpen, noteToEdit, userGroups.length, isGroupContext, initialData]);
 
     // Real-time validation for missing chapter/verse digits
@@ -581,7 +572,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     }
                 });
 
-                const { newStreak, streakUpdated } = response.data;
+                const { streakUpdated } = response.data;
                 toast.success(t('newNote.successPost'));
 
                 // Handle Level Up Celebration (Simplified, using stats from when the modal opened + sync with what backend might have changed)

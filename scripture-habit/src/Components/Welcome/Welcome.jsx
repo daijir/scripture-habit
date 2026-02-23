@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Button from '../Button/Button';
 import Mascot from '../Mascot/Mascot';
 import { useLanguage } from '../../Context/LanguageContext';

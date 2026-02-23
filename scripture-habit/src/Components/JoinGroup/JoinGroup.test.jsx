@@ -1,9 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import JoinGroup from './JoinGroup';
 import { LanguageProvider } from '../../Context/LanguageContext';
 import { MemoryRouter } from 'react-router-dom';
-import * as firestore from 'firebase/firestore';
 
 // Mock mocks variable accessed via dependency injection
 const mocks = vi.hoisted(() => ({
@@ -66,7 +65,7 @@ vi.mock('firebase/auth', async (importOriginal) => {
 });
 
 // Mock fetch for public groups URL
-global.fetch = vi.fn();
+globalThis.fetch = vi.fn();
 
 // Mock window.alert
 window.alert = vi.fn();
@@ -86,7 +85,7 @@ describe('JoinGroup', () => {
         vi.clearAllMocks();
         mocks.auth.currentUser = { uid: 'user123', getIdToken: vi.fn().mockResolvedValue('token') };
         // Reset fetch mock default
-        global.fetch.mockResolvedValue({
+        globalThis.fetch.mockResolvedValue({
             ok: true,
             json: async () => ([]) // default empty array
         });
@@ -98,7 +97,7 @@ describe('JoinGroup', () => {
             { id: 'g1', name: 'Public Group 1', isPublic: true },
             { id: 'g2', name: 'Public Group 2', isPublic: true }
         ];
-        global.fetch.mockResolvedValueOnce({
+        globalThis.fetch.mockResolvedValueOnce({
             ok: true,
             json: async () => publicGroups
         });

@@ -123,7 +123,7 @@ describe('Dashboard', () => {
             callback({
                 exists: () => true,
                 data: () => mockUserData,
-                forEach: (fn) => { } // For query snapshots
+                forEach: () => { } // For query snapshots
             });
             return () => { };
         });

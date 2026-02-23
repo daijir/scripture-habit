@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './WelcomeStoryModal.css';
 import { useLanguage } from '../../Context/LanguageContext';
-import { UilTimes, UilArrowRight, UilCheck } from '@iconscout/react-unicons';
+import { UilTimes, UilCheck } from '@iconscout/react-unicons';
 import confetti from 'canvas-confetti';
 
 const WelcomeStoryModal = ({ isOpen, onClose, userData }) => {

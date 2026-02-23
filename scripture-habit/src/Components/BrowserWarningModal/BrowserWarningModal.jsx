@@ -4,7 +4,7 @@ import './BrowserWarningModal.css';
 import { UilCheckCircle, UilInfoCircle, UilCopyAlt, UilExternalLinkAlt } from '@iconscout/react-unicons';
 import { toast } from 'react-toastify';
 
-const BrowserWarningModal = ({ isOpen, onClose, onContinue, t }) => {
+const BrowserWarningModal = ({ isOpen, onContinue, t }) => {
     const { detectedApp, isAndroid, isIos } = useMemo(() => {
         const ua = navigator.userAgent || navigator.vendor || window.opera;
         return {

@@ -1,13 +1,10 @@
 import './JoinGroup.css';
-import { Capacitor } from '@capacitor/core';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { auth, db } from '../../firebase';
-import { doc, getDoc, writeBatch, onSnapshot, increment, arrayUnion, collection, query, where, getDocs, getCountFromServer } from 'firebase/firestore';
+import { doc, getDoc, writeBatch, onSnapshot, increment, arrayUnion, collection, query, where, getDocs } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import { onAuthStateChanged } from "firebase/auth";
 import '../GroupForm/GroupForm.css';
-import Button from '../Button/Button';
-import Input from '../Input/Input';
 import GroupCard from '../../groups/GroupCard';
 import { useLanguage } from '../../Context/LanguageContext';
 import UserProfileModal from '../UserProfileModal/UserProfileModal';
@@ -29,7 +26,7 @@ export default function JoinGroup() {
   const [translatingIds, setTranslatingIds] = useState(new Set());
   const navigate = useNavigate();
 
-  const handleTranslateGroup = async (groupId, name, description) => {
+  const handleTranslateGroup = useCallback(async (groupId, name, description) => {
     if (translatingIds.has(groupId)) return;
 
     // Toggle if already translated
@@ -88,7 +85,7 @@ export default function JoinGroup() {
         return next;
       });
     }
-  };
+  }, [language, t, user, translatingIds, translatedDescs, translatedNames, API_BASE]);
 
   useEffect(() => {
     let userDocUnsubscribe = () => { };
@@ -136,7 +133,7 @@ export default function JoinGroup() {
     fetchPublicGroups();
 
     return () => { authUnsubscribe(); userDocUnsubscribe(); };
-  }, []);
+  }, [API_BASE]);
 
   const joinGroup = async (groupId, groupData) => {
     if (!user) {
@@ -231,7 +228,7 @@ export default function JoinGroup() {
             if (uSnap.exists()) {
               return { uid, ...uSnap.data() };
             }
-          } catch (e) {
+          } catch {
             console.warn("Failed to fetch user", uid);
           }
           return null;
@@ -243,6 +240,12 @@ export default function JoinGroup() {
     }
     setLoadingMembers(false);
   };
+
+  useEffect(() => {
+    if (selectedGroup && !translatedNames[selectedGroup.id] && !translatingIds.has(selectedGroup.id)) {
+      handleTranslateGroup(selectedGroup.id, selectedGroup.name, selectedGroup.description);
+    }
+  }, [selectedGroup, language, handleTranslateGroup, translatedNames, translatingIds]);
 
   if (!t) return null; // Wait for translations
 
@@ -258,12 +261,6 @@ export default function JoinGroup() {
   const handleOpenGroup = (groupId) => {
     navigate(`/${language}/dashboard`, { state: { initialGroupId: groupId, showWelcome: false, initialView: 2 } });
   };
-
-  useEffect(() => {
-    if (selectedGroup && !translatedNames[selectedGroup.id] && !translatingIds.has(selectedGroup.id)) {
-      handleTranslateGroup(selectedGroup.id, selectedGroup.name, selectedGroup.description);
-    }
-  }, [selectedGroup, language]);
 
 
 

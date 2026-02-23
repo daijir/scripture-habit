@@ -21,7 +21,7 @@ const app = initializeApp(firebaseConfig);
 let analytics = null;
 try {
   analytics = getAnalytics(app);
-} catch (err) {
+} catch {
   console.log("Firebase Analytics not supported in this environment");
 }
 
@@ -29,7 +29,7 @@ try {
 let auth = null;
 try {
   auth = getAuth(app);
-} catch (err) {
+} catch {
   console.log("Firebase Auth failed to initialize");
 }
 

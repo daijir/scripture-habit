@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { translations } from '../Data/Translations.js';
@@ -49,7 +50,7 @@ export const LanguageProvider = ({ children }) => {
     }, [language]);
 
     // Wrapper to save to localStorage and optionally update URL
-    const setLanguage = (newLanguage) => {
+    const setLanguage = React.useCallback((newLanguage) => {
         if (!SUPPORTED_LANGUAGES.includes(newLanguage)) return;
 
         safeStorage.set('language', newLanguage);
@@ -70,9 +71,9 @@ export const LanguageProvider = ({ children }) => {
             newPath += '/';
         }
         navigate(newPath + window.location.search);
-    };
+    }, [navigate]);
 
-    const t = (key, replacements = {}) => {
+    const t = React.useCallback((key, replacements = {}) => {
         const keys = key.split('.');
         let value = translations[language];
         for (const k of keys) {
@@ -91,10 +92,16 @@ export const LanguageProvider = ({ children }) => {
         }
 
         return value;
-    };
+    }, [language]);
+
+    const contextValue = React.useMemo(() => ({
+        language,
+        setLanguage,
+        t
+    }), [language, setLanguage, t]);
 
     return (
-        <LanguageContext.Provider value={{ language, setLanguage, t }}>
+        <LanguageContext.Provider value={contextValue}>
             {children}
         </LanguageContext.Provider>
     );

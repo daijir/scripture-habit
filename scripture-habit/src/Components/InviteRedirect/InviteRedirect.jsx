@@ -45,7 +45,7 @@ export default function InviteRedirect() {
         });
 
         return () => unsubscribe();
-    }, [inviteCode, navigate, loading]);
+    }, [inviteCode, navigate, loading, language]);
 
     const handleJoin = () => {
         if (auth.currentUser) {

@@ -7,10 +7,10 @@ import { useLanguage } from '../Context/LanguageContext';
 import { toast } from 'react-toastify';
 
 type Props = {
-  group: { id: string; name: string; description?: string; members?: string[]; lastMessageAt?: any; messageCount?: number };
+  group: { id: string; name: string; description?: string; members?: string[]; lastMessageAt?: unknown; messageCount?: number };
   currentUser: { uid: string } | null;
-  onJoin?: (groupId: string, groupData?: any) => Promise<void> | void;
-  onOpen?: (group: any) => void;
+  onJoin?: (groupId: string, groupData?: unknown) => Promise<void> | void;
+  onOpen?: (group: unknown) => void;
 };
 
 export default function GroupCard({ group, currentUser, onJoin, onOpen }: Props) {
@@ -78,12 +78,13 @@ export default function GroupCard({ group, currentUser, onJoin, onOpen }: Props)
     const ONE_HOUR = 1000 * 60 * 60;
 
     // 1. Check Message Activity
-    let lastDate = null;
+    let lastDate: Date | null = null;
     if (group.lastMessageAt) {
-      if (group.lastMessageAt.toDate) lastDate = group.lastMessageAt.toDate();
-      else if (group.lastMessageAt.seconds) lastDate = new Date(group.lastMessageAt.seconds * 1000);
-      else if (group.lastMessageAt._seconds) lastDate = new Date(group.lastMessageAt._seconds * 1000);
-      else lastDate = new Date(group.lastMessageAt);
+      const gDate = group.lastMessageAt as { toDate?: () => Date; seconds?: number; _seconds?: number };
+      if (gDate.toDate) lastDate = gDate.toDate();
+      else if (gDate.seconds) lastDate = new Date(gDate.seconds * 1000);
+      else if (gDate._seconds) lastDate = new Date(gDate._seconds * 1000);
+      else lastDate = new Date(group.lastMessageAt as string | number);
     }
 
     if (lastDate && !isNaN(lastDate.getTime())) {
@@ -94,12 +95,13 @@ export default function GroupCard({ group, currentUser, onJoin, onOpen }: Props)
 
     // 2. No messages? Check New (Created < 48h)
     let createdDate = null;
-    const g = group as any;
+    const g = group as { createdAt?: unknown };
     if (g.createdAt) {
-      if (g.createdAt.toDate) createdDate = g.createdAt.toDate();
-      else if (g.createdAt.seconds) createdDate = new Date(g.createdAt.seconds * 1000);
-      else if (g.createdAt._seconds) createdDate = new Date(g.createdAt._seconds * 1000);
-      else createdDate = new Date(g.createdAt);
+      const gDate = g.createdAt as { toDate?: () => Date; seconds?: number; _seconds?: number };
+      if (gDate.toDate) createdDate = gDate.toDate();
+      else if (gDate.seconds) createdDate = new Date(gDate.seconds * 1000);
+      else if (gDate._seconds) createdDate = new Date(gDate._seconds * 1000);
+      else createdDate = new Date(g.createdAt as string | number);
     }
 
     if (createdDate && !isNaN(createdDate.getTime())) {

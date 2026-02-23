@@ -2,13 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './Sidebar.css';
 import { SidebarData } from '../../Data/Data';
 import {
-  UilEstate,
-  UilClipboardNotes,
-  UilUser,
   UilUsersAlt,
   UilBookOpen,
-  UilSignOutAlt,
-  UilGlobe,
   UilPlusCircle,
 } from "@iconscout/react-unicons";
 import { useNavigate } from 'react-router-dom';
@@ -19,24 +14,6 @@ const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEm
   const [translatedName, setTranslatedName] = useState('');
   const translationAttemptedRef = React.useRef(false);
 
-  // Firestore update helper
-  const saveTranslationToFirestore = async (translatedText) => {
-    try {
-      const { doc, updateDoc } = await import('firebase/firestore');
-      const { db } = await import('../../firebase');
-
-      const groupRef = doc(db, 'groups', group.id);
-      // Construct the update object strictly for this language's name to merge
-      const updateData = {};
-      updateData[`translations.${language}.name`] = translatedText;
-
-      await updateDoc(groupRef, updateData);
-      console.log(`Saved translation for ${language} to Firestore`);
-    } catch (err) {
-      console.error('Failed to save translation to Firestore:', err);
-    }
-  };
-
   useEffect(() => {
     // 1. Check Firestore Data (Real-time sync makes this fast)
     if (group.translations && group.translations[language] && group.translations[language].name) {
@@ -46,6 +23,24 @@ const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEm
 
     // Check if we already attempted translation in this session
     if (translationAttemptedRef.current) return;
+
+    // Firestore update helper
+    const saveTranslationToFirestore = async (translatedText) => {
+      try {
+        const { doc, updateDoc } = await import('firebase/firestore');
+        const { db } = await import('../../firebase');
+
+        const groupRef = doc(db, 'groups', group.id);
+        // Construct the update object strictly for this language's name to merge
+        const updateData = {};
+        updateData[`translations.${language}.name`] = translatedText;
+
+        await updateDoc(groupRef, updateData);
+        console.log(`Saved translation for ${language} to Firestore`);
+      } catch (err) {
+        console.error('Failed to save translation to Firestore:', err);
+      }
+    };
 
     const autoTranslate = async () => {
       if (!group.name || !language) return;

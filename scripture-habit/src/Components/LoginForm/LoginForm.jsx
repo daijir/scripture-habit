@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './LoginForm.css';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 import { auth, db } from '../../firebase';
-import { signInWithEmailAndPassword, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, signOut, sendEmailVerification, signInWithCredential } from 'firebase/auth';
+import { signInWithEmailAndPassword, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, sendEmailVerification, signInWithCredential } from 'firebase/auth';
 import { Capacitor } from '@capacitor/core';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';

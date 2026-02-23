@@ -52,7 +52,7 @@ const translateScriptureName = (name, t) => {
 /**
  * Renders rich content (Titles, Labels)
  */
-const GCNoteRenderer = ({ header, scriptureValue, chapterValue, comment, url, language, t, isSent, linkColor, translatedText }) => {
+const GCNoteRenderer = ({ scriptureValue, comment, url, language, t, isSent, linkColor, translatedText }) => {
     const { data, loading } = useGCMetadata(url, language);
 
     const scripLower = (scriptureValue || '').toLowerCase();
@@ -97,7 +97,7 @@ const GCNoteRenderer = ({ header, scriptureValue, chapterValue, comment, url, la
 
         return lines.join('\n') + `\n**${commentLabel}:**\n${commentWithLinks}`;
 
-    }, [data, loading, header, scriptureValue, comment, t, url, isOther, isBYU]);
+    }, [data, loading, scriptureValue, comment, t, url, isOther, isBYU]);
 
     return (
         <div style={{ textAlign: 'left' }}>
@@ -246,7 +246,6 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
             <GCNoteRenderer
                 header={headerMatch ? headerMatch[0].trim() : ''}
                 scriptureValue={scriptureValue}
-                chapterValue={chapterValue}
                 comment={comment}
                 url={primaryUrl}
                 language={language} t={t} isSent={isSent} linkColor={linkColor} translatedText={translatedText}

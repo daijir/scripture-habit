@@ -3,7 +3,6 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import GroupForm from './GroupForm';
 import { LanguageProvider } from '../../Context/LanguageContext';
 import { MemoryRouter } from 'react-router-dom';
-import * as fireauth from 'firebase/auth';
 import * as firestore from 'firebase/firestore';
 
 // Mock dependencies
