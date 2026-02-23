@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { detectInAppBrowser, getAndroidIntentUrl } from '../../Utils/browserDetection';
+import { detectInAppBrowser, getAndroidIntentUrl, getLineExternalUrl } from '../../Utils/browserDetection';
 import './BrowserWarningModal.css';
 import { UilCheckCircle, UilInfoCircle, UilCopyAlt, UilExternalLinkAlt } from '@iconscout/react-unicons';
 import { toast } from 'react-toastify';
@@ -15,6 +15,7 @@ const BrowserWarningModal = ({ isOpen, onClose, onContinue, t }) => {
     }, []);
 
     const getCopyButtonText = () => {
+        if (isIos && detectedApp === 'line') return t('browserWarning.openInSafari') || 'Safariで開く';
         if (isIos) return t('browserWarning.copyLinkIos');
         if (isAndroid) return t('browserWarning.copyLinkAndroid');
         return t('browserWarning.copyLinkDefault');
@@ -26,6 +27,9 @@ const BrowserWarningModal = ({ isOpen, onClose, onContinue, t }) => {
             window.location.href = getAndroidIntentUrl();
             // Also copy to clipboard as fallback
             navigator.clipboard.writeText(window.location.href);
+        } else if (isIos && detectedApp === 'line') {
+            // SPECIFIC FOR LINE ON IOS: Open in Safari
+            window.location.href = getLineExternalUrl();
         } else {
             // On iOS/others, copy to clipboard
             navigator.clipboard.writeText(window.location.href);

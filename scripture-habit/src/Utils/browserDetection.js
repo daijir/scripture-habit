@@ -29,23 +29,16 @@ export const isInAppBrowser = () => {
 };
 
 export const handleInAppBrowserRedirect = () => {
-    const app = detectInAppBrowser();
-    if (!app) return false;
+    // We disable automatic redirects because they often cause white screens or hang-ups
+    // especially in the LINE in-app browser on iOS.
+    // Instead, we show a BrowserWarningModal.
+    return false;
+};
 
-    /* 
-    // LINE: Use built-in external browser parameter 
-    // Disable automatic redirect to troubleshoot white screen issues on iOS
-    if (app === 'line') {
-        if (window.location.search.indexOf('openExternalBrowser=1') === -1) {
-            const separator = window.location.search ? '&' : '?';
-            window.location.href = window.location.href + separator + 'openExternalBrowser=1';
-            return true;
-        }
-    }
-    */
-    return false;
-    // We will handle this via a button click in the BrowserWarningModal instead.
-    return false;
+export const getLineExternalUrl = () => {
+    const url = new URL(window.location.href);
+    url.searchParams.set('openExternalBrowser', '1');
+    return url.toString();
 };
 
 export const getAndroidIntentUrl = () => {
