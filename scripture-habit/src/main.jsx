@@ -4,6 +4,12 @@ import { BrowserRouter, useLocation, useNavigationType, createRoutesFromChildren
 import * as Sentry from "@sentry/react";
 import './index.css'
 import App from './App.jsx'
+import VConsole from 'vconsole';
+
+// Only initialize vConsole if ?vconsole=true is in the URL
+if (window.location.search.includes('vconsole=true')) {
+  new VConsole();
+}
 
 // Capture beforeinstallprompt event globally to prevent it from being missed during app initialization/auth loading
 window.deferredPWAPrompt = null;

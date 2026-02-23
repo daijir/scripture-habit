@@ -126,7 +126,10 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
 
     if (!headerMatch && !hasCategoryLabel) {
         const simpleUrls = extractUrls(text);
-        const processedText = (text || '').replace(/(?<!\]\()https?:\/\/[^\s]+/g, '[$&]($&)');
+        const processedText = (text || '').replace(/(\]\()?https?:\/\/[^\s]+/g, (match, p1) => {
+            if (p1) return match;
+            return `[${match}](${match})`;
+        });
         return (
             <div style={{ textAlign: 'left' }}>
                 <ReactMarkdown components={{
