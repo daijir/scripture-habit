@@ -72,6 +72,11 @@ export const requestNotificationPermission = async (userId, t) => {
                 }
 
                 // 6. Get FCM token
+                if (!messaging) {
+                    console.warn('Messaging is not initialized. Skipping token generation.');
+                    return null;
+                }
+
                 const token = await getToken(messaging, {
                     vapidKey: VAPID_KEY,
                     serviceWorkerRegistration: registration
@@ -133,6 +138,7 @@ export const requestNotificationPermission = async (userId, t) => {
 // Handle foreground messages
 export const onMessageListener = () =>
     new Promise((resolve) => {
+        if (!messaging) return;
         onMessage(messaging, (payload) => {
             resolve(payload);
         });
@@ -141,7 +147,7 @@ export const onMessageListener = () =>
 export const disableNotifications = async (userId) => {
     try {
         const registration = await navigator.serviceWorker.getRegistration();
-        if (registration) {
+        if (registration && messaging) {
             const token = await getToken(messaging, {
                 vapidKey: VAPID_KEY,
                 serviceWorkerRegistration: registration
@@ -154,7 +160,9 @@ export const disableNotifications = async (userId) => {
             }
         }
         // Also try to delete the token from local storage/FCM
-        await deleteToken(messaging);
+        if (messaging) {
+            await deleteToken(messaging);
+        }
         return true;
     } catch (error) {
         console.error('Error disabling notifications:', error);

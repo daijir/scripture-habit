@@ -18,7 +18,20 @@ import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
-const messaging = getMessaging(app); // Initialize messaging
+
+// Initialize messaging with support check to avoid crashes in in-app browsers
+let messaging = null;
+
+// Only try to initialize if we are in a browser environment
+if (typeof window !== 'undefined') {
+  try {
+    // Note: getMessaging() itself can throw if the browser is unsupported
+    // In some SDK versions, we should use isSupported() before getMessaging()
+    messaging = getMessaging(app);
+  } catch (err) {
+    console.warn("Firebase Messaging is not supported in this browser:", err.message);
+  }
+}
 
 // Initialize Firestore with persistent cache (modern way)
 const db = initializeFirestore(app, {
