@@ -16,21 +16,37 @@ const firebaseConfig = {
 import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth(app);
+
+// Initialize services with safety checks for restricted browsers
+let analytics = null;
+try {
+  analytics = getAnalytics(app);
+} catch (err) {
+  console.log("Firebase Analytics not supported in this environment");
+}
+
+let auth = null;
+try {
+  auth = getAuth(app);
+} catch (err) {
+  console.log("Firebase Auth failed to initialize");
+}
 
 // Initialize messaging with isSupported() check (async)
 let messaging = null;
-
 if (typeof window !== 'undefined') {
   isSupported()
     .then((supported) => {
       if (supported) {
-        messaging = getMessaging(app);
+        try {
+          messaging = getMessaging(app);
+        } catch (e) {
+          console.log("getMessaging failed:", e.message);
+        }
       }
     })
     .catch((err) => {
-      console.log("Firebase Messaging not supported:", err.message);
+      console.log("Firebase Messaging check failed:", err.message);
     });
 }
 
