@@ -32,7 +32,9 @@ export const handleInAppBrowserRedirect = () => {
     const app = detectInAppBrowser();
     if (!app) return false;
 
-    // LINE: Use built-in external browser parameter (This works automatically)
+    /* 
+    // LINE: Use built-in external browser parameter 
+    // Disable automatic redirect to troubleshoot white screen issues on iOS
     if (app === 'line') {
         if (window.location.search.indexOf('openExternalBrowser=1') === -1) {
             const separator = window.location.search ? '&' : '?';
@@ -40,8 +42,8 @@ export const handleInAppBrowserRedirect = () => {
             return true;
         }
     }
-
-    // Android/Instagram/FB: Automatic redirect often fails due to "User Gesture" requirements.
+    */
+    return false;
     // We will handle this via a button click in the BrowserWarningModal instead.
     return false;
 };
