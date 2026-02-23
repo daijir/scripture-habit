@@ -65,7 +65,9 @@ const BrowserWarningModal = ({ isOpen, onClose, onContinue, t }) => {
                             <span>
                                 {detectedApp === 'facebook'
                                     ? (isIos ? t('browserWarning.howToOpen.facebook_ios') : t('browserWarning.howToOpen.facebook_android'))
-                                    : t(`browserWarning.howToOpen.${detectedApp}`)}
+                                    : (detectedApp === 'line' && isIos)
+                                        ? t('browserWarning.howToOpen.line_ios')
+                                        : t(`browserWarning.howToOpen.${detectedApp}`)}
                             </span>
                         </div>
                     </div>
