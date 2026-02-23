@@ -11,14 +11,21 @@ if (window.location.search.includes('vconsole=true')) {
   new VConsole();
 }
 
-// Capture beforeinstallprompt event globally to prevent it from being missed during app initialization/auth loading
+// Capture beforeinstallprompt event globally 
 window.deferredPWAPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {
-  // Prevent Chrome 67 and later from automatically showing the prompt
   e.preventDefault();
-  // Stash the event so it can be triggered later.
   window.deferredPWAPrompt = e;
   console.log('Global beforeinstallprompt captured in main.jsx');
+});
+
+// SILENCE NON-CRITICAL ERRORS: 
+// Especially 'AbortError' which often happens in Firebase Analytics/SW on mobile
+window.addEventListener('unhandledrejection', (event) => {
+  if (event.reason && (event.reason.name === 'AbortError' || event.reason.message?.includes('user aborted'))) {
+    console.warn('Caught and silenced non-critical AbortError:', event.reason.message);
+    event.preventDefault(); // This stops it from showing as a red Uncaught error
+  }
 });
 
 Sentry.init({
