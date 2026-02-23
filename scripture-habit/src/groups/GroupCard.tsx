@@ -38,7 +38,7 @@ export default function GroupCard({ group, currentUser, onJoin, onOpen }: Props)
 
       setTranslating(true);
       try {
-        const idToken = await auth.currentUser?.getIdToken();
+        const idToken = await auth?.currentUser?.getIdToken();
         const backend = import.meta.env.VITE_BACKEND_URL ?? '';
         const API_BASE = backend || (window.location.hostname === 'localhost' ? '' : 'https://scripturehabit.app');
 
@@ -129,7 +129,7 @@ export default function GroupCard({ group, currentUser, onJoin, onOpen }: Props)
         return;
       }
       const backend = import.meta.env.VITE_BACKEND_URL ?? '/api';
-      const idToken = await auth.currentUser?.getIdToken();
+      const idToken = await auth?.currentUser?.getIdToken();
       if (idToken) {
         const res = await fetch(`${backend}/join-group`, {
           method: 'POST',

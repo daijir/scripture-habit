@@ -17,7 +17,7 @@ import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager
 
 const app = initializeApp(firebaseConfig);
 
-// Initialize services with safety checks for restricted browsers
+/** @type {import("firebase/analytics").Analytics | null} */
 let analytics = null;
 try {
   analytics = getAnalytics(app);
@@ -25,6 +25,7 @@ try {
   console.log("Firebase Analytics not supported in this environment");
 }
 
+/** @type {import("firebase/auth").Auth | null} */
 let auth = null;
 try {
   auth = getAuth(app);
@@ -32,7 +33,7 @@ try {
   console.log("Firebase Auth failed to initialize");
 }
 
-// Initialize messaging with isSupported() check (async)
+/** @type {import("firebase/messaging").Messaging | null} */
 let messaging = null;
 if (typeof window !== 'undefined') {
   isSupported()
@@ -57,5 +58,5 @@ const db = initializeFirestore(app, {
   })
 });
 
-export { app, analytics, auth, db, messaging }; // Export messaging
+export { app, analytics, auth, db, messaging };
 
