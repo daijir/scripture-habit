@@ -14,7 +14,6 @@ const InstallPrompt = () => {
     // Capture beforeinstallprompt event and detect platform
     useEffect(() => {
         const handleBeforeInstallPrompt = (e) => {
-            console.log('beforeinstallprompt event fired (handled in component)');
             // Prevent Chrome 76 and later from automatically showing the prompt
             e.preventDefault();
             // Stash the event so it can be triggered later.
@@ -26,7 +25,6 @@ const InstallPrompt = () => {
 
         // Check if the event was already captured globally (in main.jsx)
         if (window.deferredPWAPrompt) {
-            console.log('Using globally captured PWA prompt event');
             handleBeforeInstallPrompt(window.deferredPWAPrompt);
             window.deferredPWAPrompt = null; // Clear it to avoid double handling logic if any
         }
@@ -75,7 +73,6 @@ const InstallPrompt = () => {
 
         // Wait for the user to respond to the prompt
         const { outcome } = await deferredPrompt.userChoice;
-        console.log(`User response to the install prompt: ${outcome}`);
 
         // We've used the prompt, and can't use it again, throw it away
         setDeferredPrompt(null);

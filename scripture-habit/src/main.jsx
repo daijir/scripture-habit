@@ -16,14 +16,12 @@ window.deferredPWAPrompt = null;
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   window.deferredPWAPrompt = e;
-  console.log('Global beforeinstallprompt captured in main.jsx');
 });
 
 // SILENCE NON-CRITICAL ERRORS: 
 // Especially 'AbortError' which often happens in Firebase Analytics/SW on mobile
 window.addEventListener('unhandledrejection', (event) => {
   if (event.reason && (event.reason.name === 'AbortError' || event.reason.message?.includes('user aborted'))) {
-    console.warn('Caught and silenced non-critical AbortError:', event.reason.message);
     event.preventDefault(); // This stops it from showing as a red Uncaught error
   }
 });
@@ -60,11 +58,9 @@ if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
       .then(registration => {
-        console.log('SW registered: ', registration);
 
         // 1. Check if there's already a waiting worker (e.g., from a previous session)
         if (registration.waiting) {
-          console.log('New SW already waiting for activation.');
           window.dispatchEvent(new CustomEvent('pwa-update-available', { detail: registration }));
         }
 
@@ -76,11 +72,7 @@ if ('serviceWorker' in navigator) {
               if (installingWorker.state === 'installed') {
                 if (navigator.serviceWorker.controller) {
                   // New content is available; please refresh.
-                  console.log('New content is available; please refresh.');
                   window.dispatchEvent(new CustomEvent('pwa-update-available', { detail: registration }));
-                } else {
-                  // Content is cached for offline use.
-                  console.log('Content is cached for offline use.');
                 }
               }
             };
@@ -97,7 +89,6 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.addEventListener('controllerchange', () => {
     if (refreshing) return;
     refreshing = true;
-    console.log('SW controller changed, reloading page...');
     window.location.reload();
   });
 }
