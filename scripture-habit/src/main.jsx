@@ -36,13 +36,16 @@ Sentry.init({
       createRoutesFromChildren,
       matchRoutes,
     }),
-    Sentry.replayIntegration(),
+    Sentry.replayIntegration({
+      maskAllText: false,
+      blockAllMedia: true,
+    }),
   ],
   // Performance Monitoring
-  tracesSampleRate: 1.0,
+  tracesSampleRate: 0.1, // Only send 10% of performance traces to save bandwidth
   // Session Replay
-  replaysSessionSampleRate: 0.1,
-  replaysOnErrorSampleRate: 1.0,
+  replaysSessionSampleRate: 0, // Disable full session recordings to prevent "Content Too Large"
+  replaysOnErrorSampleRate: 1.0, // Only record when an error occurs
 });
 
 createRoot(document.getElementById('root')).render(

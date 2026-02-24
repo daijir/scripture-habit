@@ -1,6 +1,7 @@
 import { messaging, db } from '../firebase';
 import { getToken, onMessage, deleteToken } from 'firebase/messaging';
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { toast } from 'react-toastify';
 
 // VAPID Key from Firebase Console (Messaging -> Web Push certificates)
 const VAPID_KEY = "BM2Y3WcLC7cH5CHND3nzDh2eoNvsIxc7X2aRTaQj0TXENvee9klPqLrJvb8x2DfQ-yMgMHlXMhkal0tt6czIaKM";
@@ -21,18 +22,14 @@ export const requestNotificationPermission = async (userId, t) => {
     // 1. Check basic support
     if (!('serviceWorker' in navigator) || !('Notification' in window) || !('PushManager' in window)) {
         console.warn('Push notifications are not supported in this browser.');
-        import('react-toastify').then(({ toast }) => {
-            toast.warn(translate('notificationSetup.notSupported', 'Your browser does not support notification features. Please try with the latest Chrome or Safari.'));
-        });
+        toast.warn(translate('notificationSetup.notSupported', 'Your browser does not support notification features. Please try with the latest Chrome or Safari.'));
         return;
     }
 
     // 2. Check for In-App Browsers
     if (isInAppBrowser()) {
         console.warn('Push notifications often fail in In-App Browsers.');
-        import('react-toastify').then(({ toast }) => {
-            toast.info(translate('notificationSetup.inAppBrowserWarning', 'Notifications may not work in app-specific browsers. Please reopen in a standard browser (Chrome or Safari) using the button at the bottom right.'));
-        });
+        toast.info(translate('notificationSetup.inAppBrowserWarning', 'Notifications may not work in app-specific browsers. Please reopen in a standard browser (Chrome or Safari) using the button at the bottom right.'));
     }
 
     try {
@@ -90,9 +87,7 @@ export const requestNotificationPermission = async (userId, t) => {
                             fcmTokens: arrayUnion(token)
                         });
                     }
-                    import('react-toastify').then(({ toast }) => {
-                        toast.success(translate('notificationSetup.success', 'Notification settings complete! 🎉'));
-                    });
+                    toast.success(translate('notificationSetup.success', 'Notification settings complete! 🎉'));
                     return token;
                 } else {
                     console.log('No FCM token received.');
@@ -109,27 +104,19 @@ export const requestNotificationPermission = async (userId, t) => {
                     userFriendlyMsg = translate('notificationSetup.permissionBlocked', 'Notification permission is blocked. Please allow it in your browser settings.');
                 }
 
-                import('react-toastify').then(({ toast }) => {
-                    toast.error(userFriendlyMsg);
-                });
+                toast.error(userFriendlyMsg);
                 throw innerError;
             }
         } else if (permission === 'denied') {
             console.warn('Notification permission denied by user.');
-            import('react-toastify').then(({ toast }) => {
-                toast.info(translate('notificationSetup.permissionDenied', 'Notifications are blocked. Please enable them in your browser settings (icon to the left of the URL).'));
-            });
+            toast.info(translate('notificationSetup.permissionDenied', 'Notifications are blocked. Please enable them in your browser settings (icon to the left of the URL).'));
         }
     } catch (error) {
         console.error('An error occurred during notification setup flow:', error);
         if (error.name === 'NotAllowedError') {
-            import('react-toastify').then(({ toast }) => {
-                toast.error(translate('notificationSetup.notAllowedError', 'Notification settings are restricted in your browser (possibly due to Incognito mode or settings).'));
-            });
+            toast.error(translate('notificationSetup.notAllowedError', 'Notification settings are restricted in your browser (possibly due to Incognito mode or settings).'));
         } else {
-            import('react-toastify').then(({ toast }) => {
-                toast.error(translate('notificationSetup.setupFailed', 'Notification setup failed. Please try again later.'));
-            });
+            toast.error(translate('notificationSetup.setupFailed', 'Notification setup failed. Please try again later.'));
         }
     }
 };

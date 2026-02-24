@@ -7,7 +7,8 @@ import {
   UilPlusCircle,
 } from "@iconscout/react-unicons";
 import { useNavigate } from 'react-router-dom';
-import { auth } from '../../firebase';
+import { auth, db } from '../../firebase';
+import { doc, updateDoc } from 'firebase/firestore';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 
 const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEmoji, getUnityPercentage, isModal = false }) => {
@@ -27,8 +28,7 @@ const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEm
     // Firestore update helper
     const saveTranslationToFirestore = async (translatedText) => {
       try {
-        const { doc, updateDoc } = await import('firebase/firestore');
-        const { db } = await import('../../firebase');
+
 
         const groupRef = doc(db, 'groups', group.id);
         // Construct the update object strictly for this language's name to merge

@@ -1,0 +1,1563 @@
+diff --git a/scripture-habit/src/Components/GroupChat/GroupChat.jsx b/scripture-habit/src/Components/GroupChat/GroupChat.jsx
+index 1e6fbeb..b45265f 100644
+--- a/scripture-habit/src/Components/GroupChat/GroupChat.jsx
++++ b/scripture-habit/src/Components/GroupChat/GroupChat.jsx
+@@ -18,6 +18,10 @@ import NoteDisplay from '../NoteDisplay/NoteDisplay';
+ import confetti from 'canvas-confetti';
+ import UserProfileModal from '../UserProfileModal/UserProfileModal';
+ import Mascot from '../Mascot/Mascot';
++import MessageItem from './MessageItem';
++import MessageInput from './MessageInput';
++import GroupChatModals from './GroupChatModals';
++import { useGroupMessages } from './useGroupMessages';
+ import { UilExclamationTriangle } from '@iconscout/react-unicons';
+ 
+ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, timeZone = 'UTC' }) => {
+@@ -164,12 +168,8 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
+   const API_BASE = Capacitor.isNativePlatform() ? 'https://scripturehabit.app' : '';
+   const navigate = useNavigate();
+   const location = useLocation();
+-  const [messages, setMessages] = useState([]);
+-  const [groupData, setGroupData] = useState(null);
+   const [newMessage, setNewMessage] = useState('');
+   const [replyTo, setReplyTo] = useState(null);
+-  const [loading, setLoading] = useState(true);
+-  const [error, setError] = useState(null);
+   const [isNewNoteOpen, setIsNewNoteOpen] = useState(false);
+   const [showLeaveModal, setShowLeaveModal] = useState(false);
+   const [isLeaving, setIsLeaving] = useState(false);
+@@ -187,8 +187,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
+   const [showReactionsModal, setShowReactionsModal] = useState(false);
+   const [reactionsToShow, setReactionsToShow] = useState([]);
+   const [showMobileMenu, setShowMobileMenu] = useState(false);
+-  const [userReadCount, setUserReadCount] = useState(null);
+-  const [initialScrollDone, setInitialScrollDone] = useState(false);
++
+   const [isRecapLoading, setIsRecapLoading] = useState(false);
+   const [showInactivityPolicyBanner, setShowInactivityPolicyBanner] = useState(false);
+   const [showWelcomeGuide, setShowWelcomeGuide] = useState(false);
+@@ -209,8 +208,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
+   const longPressTimer = useRef(null);
+   const containerRef = useRef(null);
+   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
+-  const [hasMoreOlder, setHasMoreOlder] = useState(true);
+-  const latestMessageRef = useRef(null);
+   const [showAddNoteTooltip, setShowAddNoteTooltip] = useState(false);
+   const [showInviteModal, setShowInviteModal] = useState(false);
+   const [translatedTexts, setTranslatedTexts] = useState({});
+@@ -218,6 +215,23 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
+   const [translatedGroupName, setTranslatedGroupName] = useState('');
+   const [translatedGroupDesc, setTranslatedGroupDesc] = useState('');
+ 
++  const textareaRef = useRef(null);
++  const messagesEndRef = useRef(null);
++  const previousScrollHeightRef = useRef(0);
++  const scrollDebounceRef = useRef(null);
++  const {
++    messages, setMessages,
++    groupData, setGroupData,
++    loading, setLoading,
++    error, setError,
++    userReadCount, setUserReadCount,
++    initialScrollDone, setInitialScrollDone,
++    hasMoreOlder, setHasMoreOlder,
++    currentGroupIdRef,
++    prevMessageCountRef,
++    latestMessageRef
++  } = useGroupMessages(groupId, userData, t);
++
+   /* 
+    * Translation State Tracking refs to prevent loops 
+    */
+@@ -417,226 +431,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
+   const handleDismissWelcomeGuide = () => {
+     setShowWelcomeGuide(false);
+   };
+-  const textareaRef = useRef(null);
+-  const messagesEndRef = useRef(null);
+-  const currentGroupIdRef = useRef(groupId);
+-
+-  const scrollDebounceRef = useRef(null);
+-  const previousScrollHeightRef = useRef(0);
+-
+-
+-  useEffect(() => {
+-    if (!groupId) return;
+-
+-    // Update ref FIRST - this is the source of truth for current group
+-    currentGroupIdRef.current = groupId;
+-
+-    // Reset all states when group changes
+-    setLoading(true);
+-    setMessages([]);
+-    setGroupData(null);
+-    setInitialScrollDone(false);
+-    setUserReadCount(null);
+-    setHasMoreOlder(true);
+-    prevMessageCountRef.current = 0;
+-    latestMessageRef.current = null;
+-
+-    let unsubscribeGroup = () => { };
+-    let unsubscribeNewMessages = () => { };
+-
+-    const groupRef = doc(db, 'groups', groupId);
+-    unsubscribeGroup = onSnapshot(groupRef, (docSnap) => {
+-      if (docSnap.exists()) {
+-        // Include groupId with the data so we can validate it later
+-        setGroupData({ ...docSnap.data(), _groupId: groupId });
+-      }
+-    }, (err) => {
+-      if (err.code === 'permission-denied') {
+-        return;
+-      }
+-      console.error("Error listening to group:", err);
+-      const isQuota = err.code === 'resource-exhausted' || err.message.toLowerCase().includes('quota exceeded');
+-      if (isQuota) {
+-        setError(t('systemErrors.quotaExceededMessage'));
+-      } else {
+-        Sentry.captureException(err);
+-        setError(err.message);
+-      }
+-    });
+-
+-    const initMessages = async () => {
+-      try {
+-        const messagesRef = collection(db, 'groups', groupId, 'messages');
+-        const lastViewedMsgId = userData?.uid ? safeStorage.get(`last_viewed_msg_${groupId}_${userData.uid}`) : null;
+-
+-        let initialMsgs = [];
+-        let anchorSnapshot = null;
+-
+-        // Strategy: 
+-        // 1. Try to fetch the 'last viewed' message to establish an anchor.
+-        // 2. If it exists, fetch surrounding messages (e.g. 5 before, 15 after).
+-        // 3. If not, fetch the latest 20 messages.
+-
+-        if (lastViewedMsgId) {
+-          try {
+-            // We need to get the actual document snapshot to use as a cursor
+-            const anchorRef = doc(db, 'groups', groupId, 'messages', lastViewedMsgId);
+-            anchorSnapshot = await getDoc(anchorRef);
+-          } catch (e) {
+-            console.log("Could not fetch anchor", e);
+-          }
+-        }
+-
+-        if (anchorSnapshot && anchorSnapshot.exists()) {
+-          // Restoring position from anchor
+-          // Newer context (including anchor) - "startAt" includes the anchor
+-          const nextQuery = query(messagesRef, orderBy('createdAt', 'asc'), startAt(anchorSnapshot), limit(15));
+-          const nextSnaps = await getDocs(nextQuery);
+-          const nextMsgs = nextSnaps.docs.map(d => ({ id: d.id, ...d.data() }));
+-
+-          // Older context - "startAfter" excludes anchor (going backwards, so older than anchor)
+-          // We use 'desc' to get the immediately preceding messages
+-          const prevQuery = query(messagesRef, orderBy('createdAt', 'desc'), startAfter(anchorSnapshot), limit(5));
+-          const prevSnaps = await getDocs(prevQuery);
+-          const prevMsgs = prevSnaps.docs.map(d => ({ id: d.id, ...d.data() })).reverse();
+-
+-          initialMsgs = [...prevMsgs, ...nextMsgs];
+-        } else {
+-          // Fallback: Latest 20
+-          // We query descending to get the newest, then reverse to display chronologically
+-          const latestQuery = query(messagesRef, orderBy('createdAt', 'desc'), limit(20));
+-          const latestSnaps = await getDocs(latestQuery);
+-          initialMsgs = latestSnaps.docs.map(d => ({ id: d.id, ...d.data() })).reverse();
+-        }
+-
+-        setMessages(initialMsgs);
+-        setLoading(false);
+-
+-        // Setup Real-time listener for NEW messages
+-        // Listen for messages created AFTER the last message in our initial list
+-        if (initialMsgs.length > 0) {
+-          const lastMsg = initialMsgs[initialMsgs.length - 1];
+-          latestMessageRef.current = lastMsg;
+-
+-          if (lastMsg.createdAt) {
+-            const newMsgsQuery = query(
+-              messagesRef,
+-              orderBy('createdAt', 'asc'),
+-              startAfter(lastMsg.createdAt)
+-            );
+-
+-            unsubscribeNewMessages = onSnapshot(newMsgsQuery, (snapshot) => {
+-              const newIncoming = [];
+-              snapshot.docChanges().forEach((change) => {
+-                if (change.type === "added") {
+-                  const data = change.doc.data();
+-
+-                  // Trigger confetti for streaks! (only if truly new - within last 30 seconds)
+-                  const messageTime = data.createdAt?.toMillis ? data.createdAt.toMillis() : (data.createdAt?.seconds ? data.createdAt.seconds * 1000 : 0);
+-                  const isTrulyNew = messageTime && (Date.now() - messageTime) < 30000;
+-
+-                  if (data.messageType === 'streakAnnouncement' && data.messageData?.userId !== userData?.uid && isTrulyNew) {
+-                    confetti({
+-                      particleCount: 150,
+-                      spread: 70,
+-                      origin: { y: 0.6 },
+-                      zIndex: 10000
+-                    });
+-                  }
+-
+-                  newIncoming.push({ id: change.doc.id, ...data });
+-                }
+-                if (change.type === "modified") {
+-                  setMessages(prev => prev.map(m => m.id === change.doc.id ? { id: change.doc.id, ...change.doc.data() } : m));
+-                }
+-                if (change.type === "removed") {
+-                  setMessages(prev => prev.filter(m => m.id !== change.doc.id));
+-                }
+-              });
+-
+-              if (newIncoming.length > 0) {
+-                setMessages(prev => {
+-                  const cleanIncoming = newIncoming.filter(n => !prev.some(p => p.id === n.id));
+-                  return [...prev, ...cleanIncoming];
+-                });
+-              }
+-            }, (err) => {
+-              if (err.code === 'permission-denied') {
+-                return;
+-              }
+-              console.error("Error listening to new messages:", err);
+-              if (err.code === 'resource-exhausted' || err.message.toLowerCase().includes('quota exceeded')) {
+-                setError(t('systemErrors.quotaExceededMessage'));
+-              }
+-              // else we don't necessarily want to break the whole chat UI for a sub-listener error unless it's critical
+-            });
+-          }
+-        } else {
+-          // If no messages at all, simply listen for any new messages
+-          const allNewQuery = query(messagesRef, orderBy('createdAt', 'asc'));
+-          unsubscribeNewMessages = onSnapshot(allNewQuery, (snapshot) => {
+-            snapshot.docChanges().forEach((change) => {
+-              if (change.type === "added") {
+-                const data = change.doc.data();
+-
+-                // Trigger confetti for streaks (only if truly new - within last 30 seconds)
+-                const messageTime = data.createdAt?.toMillis ? data.createdAt.toMillis() : (data.createdAt?.seconds ? data.createdAt.seconds * 1000 : 0);
+-                const isTrulyNew = messageTime && (Date.now() - messageTime) < 30000;
+-
+-                if (data.messageType === 'streakAnnouncement' && data.messageData?.userId !== userData?.uid && isTrulyNew) {
+-                  confetti({
+-                    particleCount: 150,
+-                    spread: 70,
+-                    origin: { y: 0.6 },
+-                    zIndex: 10000
+-                  });
+-                }
+-
+-                setMessages(prev => {
+-                  if (prev.some(m => m.id === change.doc.id)) return prev;
+-                  return [...prev, { id: change.doc.id, ...data }];
+-                });
+-              }
+-              if (change.type === "modified") {
+-                setMessages(prev => prev.map(m => m.id === change.doc.id ? { id: change.doc.id, ...change.doc.data() } : m));
+-              }
+-              if (change.type === "removed") {
+-                setMessages(prev => prev.filter(m => m.id !== change.doc.id));
+-              }
+-            });
+-            setLoading(false);
+-          }, (err) => {
+-            if (err.code === 'permission-denied') {
+-              return;
+-            }
+-            console.error("Error listening to all messages:", err);
+-            if (err.code === 'resource-exhausted' || err.message.toLowerCase().includes('quota exceeded')) {
+-              setError(t('systemErrors.quotaExceededMessage'));
+-            }
+-          });
+-        }
+-
+-      } catch (err) {
+-        if (err.code !== 'permission-denied') {
+-          console.error("Error fetching messages:", err);
+-          setError("Failed to load messages.");
+-        }
+-        setLoading(false);
+-      }
+-    };
+-
+-    initMessages();
+-
+-    // --- Added Logs when opening Group Chat ---
+-
+-
+-    return () => {
+-
+-      unsubscribeGroup();
+-      unsubscribeNewMessages();
+-    };
+-    // eslint-disable-next-line react-hooks/exhaustive-deps
+-  }, [groupId]);
+ 
+   // Log whenever messages or groupData updates to see incoming data
+ 
+@@ -776,7 +570,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
+   }, [groupId, userData?.uid, isActive, initialScrollDone, messages.length, userReadCount, groupData?.messageCount]);
+ 
+   // Track previous message count to only auto-scroll on new messages, not updates
+-  const prevMessageCountRef = useRef(0);
++
+ 
+   // Scroll to bottom using the end ref
+   // Scroll to bottom using the container ref directly (safer than scrollIntoView which can shift viewport)
+@@ -2273,1153 +2067,109 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
+       )
+       }
+ 
+-      {
+-        showLeaveModal && (
+-          <div className="leave-modal-overlay">
+-            <div className="leave-modal-content">
+-              <h3>{t('groupChat.leaveGroup')}?</h3>
+-              <p>{t('groupChat.leaveConfirmMessage')}</p>
+-              <div className="leave-modal-actions">
+-                <button className="modal-btn cancel" onClick={() => setShowLeaveModal(false)} disabled={isLeaving}>{t('groupChat.cancel')}</button>
+-                <button className="modal-btn leave" onClick={handleLeaveGroup} disabled={isLeaving}>
+-                  {isLeaving ? '...' : t('groupChat.confirmLeave')}
+-                </button>
+-              </div>
+-            </div>
+-          </div>
+-        )
+-      }
+-
+-
+-
+-      {/* Welcome Guide Modal */}
+-      {
+-        showWelcomeGuide && (
+-          <div className="leave-modal-overlay guide-modal-overlay">
+-            <div className="leave-modal-content guide-modal-content">
+-              <div className="guide-image-container">
+-                <img src="/images/mascot.png" alt="Welcome Bird" className="guide-bird-image" />
+-              </div>
+-              <h3>{t('groupChat.welcomeGuideTitle')}</h3>
+-              <p className="guide-intro">{t('groupChat.welcomeGuideMessage')}</p>
+-
+-              <div className="guide-rule-box">
+-                <h4 className="guide-rule-title">{t('groupChat.welcomeGuideRule')}</h4>
+-                <p className="guide-rule-detail">{t('groupChat.welcomeGuideRuleDetail')}</p>
+-              </div>
+-
+-              <button className="modal-btn guide-btn" onClick={handleDismissWelcomeGuide}>
+-                {t('groupChat.welcomeGuideButton')}
+-              </button>
+-            </div>
+-          </div>
+-        )
+-      }
+-
+-      {
+-        showDeleteModal && (
+-          <div className="leave-modal-overlay">
+-            <div className="leave-modal-content">
+-              <h3 className="delete-modal-title">{t('groupChat.deleteGroup')}?</h3>
+-              <p>{t('groupChat.deleteConfirmMessage')}</p>
+-              <div style={{ marginBottom: '1rem' }}>
+-                {groupData && (
+-                  <ReactMarkdown components={{ p: 'span' }}>
+-                    {t('groupChat.typeToConfirm').replace('{groupName}', groupData.name)}
+-                  </ReactMarkdown>
+-                )}
+-              </div>
+-              <input
+-                type="text"
+-                className="delete-confirmation-input"
+-                value={deleteConfirmationName}
+-                onChange={(e) => setDeleteConfirmationName(e.target.value)}
+-                placeholder={t('groupChat.enterGroupNamePlaceholder')}
+-              />
+-              <div className="leave-modal-actions">
+-                <button className="modal-btn cancel" onClick={() => { setShowDeleteModal(false); setDeleteConfirmationName(''); }}>{t('groupChat.cancel')}</button>
+-                <button
+-                  className="modal-btn leave"
+-                  onClick={handleDeleteGroup}
+-                  disabled={deleteConfirmationName !== groupData?.name}
+-                >
+-                  {t('groupChat.confirmDelete')}
+-                </button>
+-              </div>
+-            </div>
+-          </div>
+-        )
+-      }
+-
+-      {
+-        showEditNameModal && (
+-          <div className="leave-modal-overlay">
+-            <div className="leave-modal-content edit-group-modal">
+-              <h3>{t('groupChat.changeGroupName')}</h3>
+-
+-              <div className="edit-group-field" style={{ width: '100%', textAlign: 'left', marginTop: '1rem' }}>
+-                <label style={{ fontSize: '0.8rem', color: 'var(--gray)', fontWeight: 'bold', marginBottom: '4px', display: 'block' }}>
+-                  {t('groupForm.groupNameLabel')}
+-                </label>
+-                <input
+-                  type="text"
+-                  className="delete-confirmation-input"
+-                  value={newGroupName}
+-                  onChange={(e) => setNewGroupName(e.target.value)}
+-                  placeholder={t('groupChat.enterNewGroupName')}
+-                  style={{ marginBottom: '1rem' }}
+-                />
+-              </div>
+-
+-              <div className="edit-group-field" style={{ width: '100%', textAlign: 'left' }}>
+-                <label style={{ fontSize: '0.8rem', color: 'var(--gray)', fontWeight: 'bold', marginBottom: '4px', display: 'block' }}>
+-                  {t('groupForm.descriptionLabel')}
+-                </label>
+-                <textarea
+-                  className="delete-confirmation-input"
+-                  value={newGroupDescription}
+-                  onChange={(e) => setNewGroupDescription(e.target.value)}
+-                  placeholder={t('groupForm.descriptionLabel')}
+-                  style={{ minHeight: '80px', resize: 'vertical', padding: '10px' }}
+-                />
+-              </div>
+-
+-              {/* Translation Fields */}
+-              <div style={{ width: '100%', height: '1px', background: 'var(--gray)', opacity: 0.2, margin: '1rem 0' }}></div>
+-              <h4 style={{ fontSize: '0.9rem', color: 'var(--gray)', margin: '0 0 10px 0' }}>
+-                {t('languages.' + language) || language} {t('groupChat.translation') || 'Translation'}
+-              </h4>
+-
+-              <div className="edit-group-field" style={{ width: '100%', textAlign: 'left' }}>
+-                <label style={{ fontSize: '0.8rem', color: 'var(--gray)', fontWeight: 'bold', marginBottom: '4px', display: 'block' }}>
+-                  {t('groupForm.groupNameLabel')} ({t('languages.' + language) || language})
+-                </label>
+-                <input
+-                  type="text"
+-                  className="delete-confirmation-input"
+-                  value={newTranslatedName}
+-                  onChange={(e) => setNewTranslatedName(e.target.value)}
+-                  placeholder={t('groupChat.enterNewGroupName') + ` (${language})`}
+-                  style={{ marginBottom: '1rem' }}
+-                />
+-              </div>
+-
+-              <div className="edit-group-field" style={{ width: '100%', textAlign: 'left' }}>
+-                <label style={{ fontSize: '0.8rem', color: 'var(--gray)', fontWeight: 'bold', marginBottom: '4px', display: 'block' }}>
+-                  {t('groupForm.descriptionLabel')} ({t('languages.' + language) || language})
+-                </label>
+-                <textarea
+-                  className="delete-confirmation-input"
+-                  value={newTranslatedDesc}
+-                  onChange={(e) => setNewTranslatedDesc(e.target.value)}
+-                  placeholder={t('groupForm.descriptionLabel') + ` (${language})`}
+-                  style={{ minHeight: '80px', resize: 'vertical', padding: '10px' }}
+-                />
+-              </div>
+-
+-              <div className="leave-modal-actions" style={{ marginTop: '1.5rem' }}>
+-                <button className="modal-btn cancel" onClick={() => {
+-                  setShowEditNameModal(false);
+-                  setNewGroupName('');
+-                  setNewGroupDescription('');
+-                  setNewTranslatedName('');
+-                  setNewTranslatedDesc('');
+-                }}>{t('groupChat.cancel')}</button>
+-                <button
+-                  className="modal-btn primary"
+-                  onClick={handleUpdateGroupName}
+-                  disabled={
+-                    !newGroupName.trim() ||
+-                    (
+-                      (newGroupName === groupData?.name) &&
+-                      (newGroupDescription === (groupData?.description || '')) &&
+-                      (newTranslatedName === (translatedGroupName || groupData?.translations?.[language]?.name || '')) &&
+-                      (newTranslatedDesc === (translatedGroupDesc || groupData?.translations?.[language]?.description || ''))
+-                    )
+-                  }
+-                >
+-                  {t('groupChat.save')}
+-                </button>
+-              </div>
+-            </div>
+-          </div>
+-        )
+-      }
+-
+-      {showInactivityPolicyBanner && (
+-        <div className="inactivity-policy-banner">
+-          <span>{t('groupChat.inactivityPolicyBanner')}</span>
+-          <button className="inactivity-policy-dismiss" onClick={handleDismissInactivityBanner}>
+-            <UilTimes size="16" />
+-          </button>
+-        </div>
+-      )}
+-
+-      <div
+-        className="messages-container"
+-        ref={containerRef}
+-        onScroll={handleScroll}
+-        onClick={() => {
+-          if (textareaRef.current) {
+-            textareaRef.current.blur();
+-          }
+-        }}
+-      >
+-
+-
+-        {loading && <ChatSkeleton />}
+-        {isLoadingOlder && (
+-          <div className="loading-older-messages" style={{ textAlign: 'center', padding: '10px', color: 'var(--gray)' }}>
+-            <i className="spinner-mini"></i>
+-          </div>
+-        )}
+-        {error && <p className="error-message">{error}</p>}
+-        {messages.map((msg, index) => {
+-          const prevMsg = messages[index - 1];
+-          const currentDate = msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000) : new Date();
+-          const prevDate = prevMsg?.createdAt?.seconds ? new Date(prevMsg.createdAt.seconds * 1000) : null;
+-
+-          let showDateSeparator = false;
+-          if (!prevDate) {
+-            showDateSeparator = true;
+-          } else if (currentDate.toDateString() !== prevDate.toDateString()) {
+-            showDateSeparator = true;
+-          }
+-
+-          return (
+-            <React.Fragment key={msg.id}>
+-              {showDateSeparator && (
+-                <div className="date-separator">
+-                  <span>{currentDate.toLocaleDateString([], { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short' })}</span>
+-                </div>
+-              )}
+-              {msg.senderId === 'system' || msg.isSystemMessage ? (
+-                <div id={`message-${msg.id}`} className={`message system-message ${msg.messageType === 'streakAnnouncement' ? 'streak-announcement' : ''} ${msg.messageType === 'unityAnnouncement' ? 'unity-announcement' : ''}`}>
+-                  <div className="message-content">
+-                    {msg.messageType === 'unityAnnouncement' && (
+-                      <div className="unity-announcement-body">
+-                        <img src="/images/mascot.png" alt="Mascot" className="mascot-avatar-celestial" />
+-                      </div>
+-                    )}
+-                    <ReactMarkdown>
+-                      {(() => {
+-                        // New format: has messageType and messageData
+-                        if (msg.messageType === 'streakAnnouncement' && msg.messageData) {
+-                          return t('groupChat.streakAnnouncement', {
+-                            nickname: msg.messageData.nickname,
+-                            streak: msg.messageData.streak
+-                          });
+-                        }
+-
+-                        if (msg.messageType === 'userJoined' && msg.messageData) {
+-                          return t('groupChat.userJoined', {
+-                            nickname: msg.messageData.nickname
+-                          });
+-                        }
+-
+-                        if (msg.messageType === 'userLeft' && msg.messageData) {
+-                          return t('groupChat.userLeft', {
+-                            nickname: msg.messageData.nickname
+-                          });
+-                        }
+-
+-                        if (msg.messageType === 'unityAnnouncement') {
+-                          return t('groupChat.unityAnnouncement');
+-                        }
+-
+-                        if (msg.messageType === 'weeklyRecap') {
+-                          // Just return text, maybe bold the title if we want, but markdown handles it.
+-                          // The text comes with "Weekly Reflection: ..." or similar
+-                          return msg.text;
+-                        }
+-
+-                        // Legacy format: parse from text
+-                        // Streak patterns for various languages:
+-                        const streakPatterns = [
+-                          /\*\*(.+?) reached a (\d+) day streak/,           // English
+-                          /\*\*(.+?)さんが(\d+)日連続/,                      // Japanese
+-                          /\*\*(.+?) alcançou uma ofensiva de (\d+) dias/, // Portuguese
+-                          /\*\*(.+?) 達成了 (\d+) 天連續紀錄/,              // Chinese
+-                          /\*\*¡?(.+?) alcanzó una racha de (\d+) días/,     // Spanish
+-                          /\*\*(.+?) đã đạt chuỗi (\d+) ngày/,             // Vietnamese
+-                          /\*\*(.+?) ทำต่อเนื่องได้ (\d+) วันแล้ว/,             // Thai
+-                          /\*\*(.+?)님이 (\d+)일 연속 기록/,                 // Korean
+-                          /\*\*Naabot ni (.+?) ang (\d+) araw/,             // Tagalog
+-                          /\*\*(.+?) amefikisha mfululizo wa siku (\d+)/,   // Swahili
+-                        ];
+-
+-                        for (const pattern of streakPatterns) {
+-                          const match = msg.text?.match(pattern);
+-                          if (match) {
+-                            const nickname = match[1];
+-                            const streak = match[2];
+-                            return t('groupChat.streakAnnouncement', { nickname, streak });
+-                          }
+-                        }
+-
+-                        // Legacy join patterns
+-                        const joinPatterns = [
+-                          /\*\*(.+?)\*\* joined the group/,      // English
+-                          /\*\*(.+?)\*\*さんがグループに参加/,    // Japanese
+-                          /\*\*(.+?)\*\* entrou no grupo/,       // Portuguese
+-                          /\*\*(.+?)\*\* 加入了群組/,            // Chinese
+-                          /\*\*(.+?)\*\* se unió al grupo/,      // Spanish
+-                          /\*\*(.+?)\*\* đã tham gia nhóm/,      // Vietnamese
+-                          /\*\*(.+?)\*\* เข้าร่วมกลุ่มแล้ว/,         // Thai
+-                          /\*\*(.+?)\*\*님이 그룹에 참여/,        // Korean
+-                          /\*\*(.+?)\*\* sumali sa grupo/,       // Tagalog
+-                          /\*\*(.+?)\*\* amejiunga na kikundi/,  // Swahili
+-                        ];
+-
+-                        for (const pattern of joinPatterns) {
+-                          const match = msg.text?.match(pattern);
+-                          if (match) {
+-                            return t('groupChat.userJoined', { nickname: match[1] });
+-                          }
+-                        }
+-
+-                        // Legacy leave patterns
+-                        const leavePatterns = [
+-                          /\*\*(.+?)\*\* left the group/,        // English
+-                          /\*\*(.+?)\*\*さんがグループを退会/,    // Japanese
+-                          /\*\*(.+?)\*\* saiu do grupo/,         // Portuguese
+-                          /\*\*(.+?)\*\* 離開了群組/,            // Chinese
+-                          /\*\*(.+?)\*\* salió del grupo/,       // Spanish
+-                          /\*\*(.+?)\*\* đã rời nhóm/,           // Vietnamese
+-                          /\*\*(.+?)\*\* ออกจากกลุ่มแล้ว/,          // Thai
+-                          /\*\*(.+?)\*\*님이 그룹을 나갔/,         // Korean
+-                          /\*\*(.+?)\*\* umalis sa grupo/,        // Tagalog
+-                          /\*\*(.+?)\*\* ameondoka kwenye kikundi/, // Swahili
+-                        ];
+-
+-                        for (const pattern of leavePatterns) {
+-                          const match = msg.text?.match(pattern);
+-                          if (match) {
+-                            return t('groupChat.userLeft', { nickname: match[1] });
+-                          }
+-                        }
+-
+-                        // Inactivity Removal Pattern
+-                        const inactivityPattern = /👋 \*\*(\d+) member\(s\)\*\* were removed due to inactivity \(3\+ days\)\./;
+-                        const inactivityMatch = msg.text?.match(inactivityPattern);
+-                        if (inactivityMatch) {
+-                          return t('groupChat.inactivityRemoval', { count: inactivityMatch[1] });
+-                        }
+-
+-                        // No match found, return original text
+-                        return msg.text;
+-                      })()}
+-                    </ReactMarkdown>
+-                  </div>
+-                </div>
+-              ) : (
+-                <div id={`message-${msg.id}`} className={`message-wrapper ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}>
+-                  <div
+-                    className={`message ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}
+-                    onTouchStart={() => handleLongPressStart(msg)}
+-                    onTouchEnd={handleLongPressEnd}
+-                    onTouchMove={handleLongPressEnd}
+-                    style={{ cursor: 'pointer' }}
+-                  >
+-                    {/* Hover action buttons */}
+-                    <div className={`message-hover-actions ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}>
+-                      {msg.senderId === userData?.uid ? (
+-                        <>
+-                          <button
+-                            className="hover-action-btn"
+-                            onClick={(e) => { e.stopPropagation(); handleEditMessage(msg); }}
+-                            title={t('groupChat.editMessage')}
+-                          >
+-                            ✏️
+-                          </button>
+-                          <button
+-                            className="hover-action-btn delete"
+-                            onClick={(e) => { e.stopPropagation(); handleDeleteMessageClick(msg); }}
+-                            title={t('groupChat.deleteMessage')}
+-                          >
+-                            🗑️
+-                          </button>
+-                          <button
+-                            className="hover-action-btn"
+-                            onClick={(e) => { e.stopPropagation(); handleReply(msg); }}
+-                            title={t('groupChat.reply')}
+-                          >
+-                            ↩️
+-                          </button>
+-                          <button
+-                            className={`hover-action-btn ${translatingIds.has(msg.id) ? 'translating' : ''}`}
+-                            onClick={(e) => { e.stopPropagation(); handleTranslateMessage(msg); }}
+-                            title={t('groupChat.translate')}
+-                          >
+-                            {translatingIds.has(msg.id) ? '⏳' : '✨'}
+-                          </button>
+-                        </>
+-                      ) : (
+-                        <>
+-                          <button
+-                            className="hover-action-btn"
+-                            onClick={(e) => { e.stopPropagation(); handleToggleReaction(msg); }}
+-                            title={msg.reactions?.find(r => r.odU === userData?.uid) ? t('groupChat.unlike') : t('groupChat.like')}
+-                          >
+-                            {msg.reactions?.find(r => r.odU === userData?.uid) ? '👍' : '👍'}
+-                          </button>
+-                          <button
+-                            className="hover-action-btn"
+-                            onClick={(e) => { e.stopPropagation(); handleReply(msg); }}
+-                            title={t('groupChat.reply')}
+-                          >
+-                            ↩️
+-                          </button>
+-                          <button
+-                            className={`hover-action-btn ${translatingIds.has(msg.id) ? 'translating' : ''}`}
+-                            onClick={(e) => { e.stopPropagation(); handleTranslateMessage(msg); }}
+-                            title={t('groupChat.translate')}
+-                          >
+-                            {translatingIds.has(msg.id) ? '⏳' : '✨'}
+-                          </button>
+-                          <button
+-                            className="hover-action-btn report-btn"
+-                            onClick={(e) => { e.stopPropagation(); handleReportClick(msg); }}
+-                            title={t('groupChat.report')}
+-                          >
+-                            🚩
+-                          </button>
+-                        </>
+-                      )}
+-                    </div>
+-                    <span
+-                      className="sender-name"
+-                      onClick={(e) => { e.stopPropagation(); handleUserProfileClick(msg.senderId); }}
+-                      style={{ cursor: 'pointer' }}
+-                    >
+-                      {msg.senderNickname}{msg.isEdited && <span className="edited-indicator"> ({t('groupChat.messageEdited')})</span>}
+-                    </span>
+-                    <div className="message-bubble-row" style={{ display: 'flex', alignItems: 'flex-end', gap: '5px' }}>
+-                      {msg.senderId === userData?.uid && (
+-                        <div className="message-status-column" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
+-                          {(() => {
+-                            if (!groupData?.memberLastReadAt || !msg.createdAt) return null;
+-                            const msgTime = msg.createdAt.toMillis ? msg.createdAt.toMillis() : (msg.createdAt.seconds * 1000);
+-                            let readCount = 0;
+-                            Object.keys(groupData.memberLastReadAt).forEach(uid => {
+-                              if (uid === msg.senderId) return;
+-                              const readAt = groupData.memberLastReadAt[uid];
+-                              if (!readAt) return;
+-                              const readTime = readAt.toMillis ? readAt.toMillis() : (readAt.seconds * 1000);
+-                              if (readTime >= msgTime) readCount++;
+-                            });
+-                            if (readCount === 0) return null;
+-                            return (
+-                              <span className="read-status" style={{ fontSize: '0.65rem', color: '#4A5568' }}>
+-                                {t('groupChat.readStatus', { count: readCount })}
+-                              </span>
+-                            );
+-                          })()}
+-                          <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', whiteSpace: 'nowrap' }}>
+-                            {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+-                          </span>
+-                        </div>
+-                      )}
+-                      <div className="message-bubble-column" style={{ display: 'flex', flexDirection: 'column', maxWidth: '100%', alignItems: msg.senderId === userData?.uid ? 'flex-end' : 'flex-start' }}>
+-                        {msg.replyTo && (
+-                          <div className="reply-context-label">
+-                            <span className="reply-context-prefix">{t('groupChat.replyTo')} </span>
+-                            <span className="reply-context-name">{msg.replyTo.senderNickname}</span>
+-                            <span className="reply-context-separator">: </span>
+-                            <span className="reply-context-text">
+-                              {msg.replyTo.isNote || msg.replyTo.text?.startsWith('📖 **New Study') || msg.replyTo.text?.startsWith('**New Study')
+-                                ? t('groupChat.studyNote')
+-                                : msg.replyTo.text
+-                              }
+-                            </span>
+-                          </div>
+-                        )}
+-                        <div className="message-content">
+-                          {msg.text && (
+-                            (msg.isNote || msg.isEntry) ? (
+-                              <div className="entry-message-content">
+-                                <NoteDisplay
+-                                  text={msg.text}
+-                                  isSent={msg.senderId === userData?.uid}
+-                                  translatedText={translatedTexts[msg.id]}
+-                                />
+-                                <div style={{ marginTop: '0.2rem' }}></div>
+-                                {(() => {
+-
+-
+-                                  // 1. Better search for URL specifically (most important for GC/BYU/Other)
+-                                  const urlMatch = msg.text.match(/(?:\*\*|)(?:Url|リンク)(?:\*\*|)(?::|：)\s*(.*?)(?:\n|$)/i);
+-                                  // 2. Generic label search (for scriptures)
+-                                  const labelMatch = msg.text.match(/(?:\*\*|)(?:Chapter|Talk|お話|Speech|スピーチ|Title|タイトル|章)(?:\*\*|)(?::|：)\s*(.*?)(?:\n|$)/i);
+-                                  const scriptureMatch = msg.text.match(/(?:\*\*|)(?:Scripture|Category|カテゴリ)(?:\*\*|)(?::|：)\s*(.*?)(?:\n|$)/i);
+-
+-                                  // Aggressively strip asterisks and trim
+-                                  const scripture = (msg.scripture || (scriptureMatch ? scriptureMatch[1].trim() : null))?.replace(/\*/g, '').trim();
+-                                  // Prioritize urlMatch result over labelMatch
+-                                  const chapterValue = (msg.chapter || (urlMatch ? urlMatch[1].trim() : (labelMatch ? labelMatch[1].trim() : null)))?.replace(/\*/g, '').trim();
+-
+-
+-
+-                                  if (scripture && chapterValue) {
+-                                    const scripLower = scripture.toLowerCase();
+-                                    const isOther = scripLower.includes('other') || scripLower.includes('その他') || scripture === '';
+-                                    const isBYU = scripLower.includes('byu');
+-
+-                                    // CASE A: Direct URL (Other, GC, BYU with full URL)
+-                                    if (chapterValue.toLowerCase().startsWith('http')) {
+-
+-                                      let linkLabel = t('dashboard.readInGospelLibrary');
+-                                      if (isOther) linkLabel = t('dashboard.readStudyMaterial');
+-                                      else if (isBYU) linkLabel = t('dashboard.goToByuSpeech');
+-
+-
+-
+-                                      return (
+-                                        <a
+-                                          href={chapterValue}
+-                                          target="_blank"
+-                                          rel="noopener noreferrer"
+-                                          onClick={(e) => e.stopPropagation()}
+-                                          className={`gospel-link ${msg.senderId === userData?.uid ? 'sent' : ''}`}
+-                                        >
+-                                          {linkLabel}
+-                                        </a>
+-                                      );
+-                                    }
+-
+-                                    // CASE B: Scripture reference or GC shortcode (handled by Mapper)
+-                                    const url = getGospelLibraryUrl(scripture, chapterValue, language);
+-
+-
+-                                    if (url) {
+-                                      return (
+-                                        <a
+-                                          href={url}
+-                                          target="_blank"
+-                                          rel="noopener noreferrer"
+-                                          onClick={(e) => e.stopPropagation()}
+-                                          className={`gospel-link ${msg.senderId === userData?.uid ? 'sent' : ''}`}
+-                                        >
+-                                          {isBYU ? t('dashboard.goToByuSpeech') : (isOther ? t('dashboard.readStudyMaterial') : t('dashboard.readInGospelLibrary'))}
+-                                        </a>
+-                                      );
+-
+-                                    }
+-                                  }
+-                                  return null;
+-                                })()}
+-                              </div>
+-                            ) : (
+-                              <NoteDisplay
+-                                text={msg.text}
+-                                isSent={msg.senderId === userData?.uid}
+-                                translatedText={translatedTexts[msg.id]}
+-                              />
+-                            )
+-                          )}
+-                        </div>
+-                      </div>
+-                      {msg.senderId !== userData?.uid && (
+-                        <span className="message-time" style={{ fontSize: '0.7rem', color: 'var(--gray)', marginBottom: '2px', whiteSpace: 'nowrap' }}>
+-                          {msg.createdAt?.seconds ? new Date(msg.createdAt.seconds * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}
+-                        </span>
+-                      )}
+-                    </div>
+-                    {/* Reactions display */}
+-                    {msg.reactions && msg.reactions.length > 0 && (
+-                      <div
+-                        className={`message-reactions ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}
+-                        onClick={(e) => {
+-                          e.stopPropagation();
+-                          handleShowReactions(msg.reactions);
+-                        }}
+-                      >
+-                        <span className="reaction-emoji">👍</span>
+-                        <span className="reaction-count">{msg.reactions.length}</span>
+-                      </div>
+-                    )}
+-                  </div>
+-                </div>
+-              )}
+-            </React.Fragment>
+-          );
+-        })}
+-        {/* Scroll target at the end of messages */}
+-        <div ref={messagesEndRef} />
+-      </div>
+-
+-      {/* Context Menu for messages */}
+-      {
+-        contextMenu.show && (
+-          <div
+-            className="message-context-menu"
+-            style={{
+-              position: 'fixed',
+-              top: contextMenu.y,
+-              left: contextMenu.x,
+-              transform: 'translate(-50%, -50%)'
+-            }}
+-            onClick={(e) => e.stopPropagation()}
+-          >
+-            {contextMenu.message?.senderId === userData?.uid ? (
+-              <>
+-                <button onClick={() => handleEditMessage(contextMenu.message)}>
+-                  ✏️ {t('groupChat.editMessage')}
+-                </button>
+-                <button onClick={() => handleDeleteMessageClick(contextMenu.message)} className="delete-option">
+-                  🗑️ {t('groupChat.deleteMessage')}
+-                </button>
+-                <button onClick={() => { handleReply(contextMenu.message); closeContextMenu(); }}>
+-                  ↩️ {t('groupChat.reply')}
+-                </button>
+-                <button onClick={() => { handleTranslateMessage(contextMenu.message); closeContextMenu(); }}>
+-                  {translatingIds.has(contextMenu.message.id) ? '⏳ ...' : `✨ ${t('groupChat.translate')}`}
+-                </button>
+-              </>
+-            ) : (
+-              <>
+-                <button onClick={() => handleToggleReaction(contextMenu.message)}>
+-                  {contextMenu.message?.reactions?.find(r => r.odU === userData?.uid) ? `👎 ${t('groupChat.unlike')}` : `👍 ${t('groupChat.like')}`}
+-                </button>
+-                <button onClick={() => { handleReply(contextMenu.message); closeContextMenu(); }}>
+-                  ↩️ {t('groupChat.reply')}
+-                </button>
+-                <button onClick={() => { handleTranslateMessage(contextMenu.message); closeContextMenu(); }}>
+-                  {translatingIds.has(contextMenu.message.id) ? '⏳ ...' : `✨ ${t('groupChat.translate')}`}
+-                </button>
+-                <button onClick={() => handleReportClick(contextMenu.message)} className="report-option">
+-                  🚩 {t('groupChat.report')}
+-                </button>
+-              </>
+-            )}
+-          </div>
+-        )
+-      }
+-
+-      {/* Delete Message Confirmation Modal */}
+-      {
+-        showDeleteMessageModal && (
+-          <div className="leave-modal-overlay">
+-            <div className="leave-modal-content" style={{ maxWidth: '360px' }}>
+-              <h3>{t('groupChat.deleteMessageConfirm')}</h3>
+-              {(messageToDelete?.isNote || messageToDelete?.isEntry) && messageToDelete?.originalNoteId && (
+-                <p style={{ color: '#ff9800', fontSize: '0.9rem', margin: '0.5rem 0' }}>
+-                  ⚠️ {t('groupChat.deleteMessageWarning')}
+-                </p>
+-              )}
+-              <div className="leave-modal-actions">
+-                <button className="modal-btn cancel" onClick={() => { setShowDeleteMessageModal(false); setMessageToDelete(null); }}>
+-                  {t('groupChat.cancel')}
+-                </button>
+-                <button className="modal-btn leave" onClick={handleConfirmDeleteMessage}>
+-                  {t('groupChat.deleteMessage')}
+-                </button>
+-              </div>
+-            </div>
+-          </div>
+-        )
+-      }
+-
+-      {/* Edit Message Modal */}
+-      {
+-        editingMessage && (
+-          <div className="leave-modal-overlay">
+-            <div className="leave-modal-content edit-message-modal">
+-              <h3>{t('groupChat.editMessage')}</h3>
+-              <textarea
+-                className="edit-message-textarea"
+-                value={editText}
+-                onChange={(e) => setEditText(e.target.value)}
+-                autoFocus
+-              />
+-              <div className="leave-modal-actions">
+-                <button className="modal-btn cancel" onClick={handleCancelEdit}>
+-                  {t('groupChat.cancel')}
+-                </button>
+-                <button className="modal-btn leave" onClick={handleSaveEdit} style={{ background: 'var(--pink)' }}>
+-                  {t('groupChat.editMessage')}
+-                </button>
+-              </div>
+-            </div>
+-          </div>
+-        )
+-      }
+-
+-      {/* Reactions Modal */}
+-      {
+-        showReactionsModal && (
+-          <div className="leave-modal-overlay" onClick={() => setShowReactionsModal(false)}>
+-            <div className="leave-modal-content reactions-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '300px' }}>
+-              <h3>👍 Reactions</h3>
+-              <div className="reactions-list">
+-                {reactionsToShow.map((reaction, idx) => (
+-                  <div
+-                    key={idx}
+-                    className="reaction-user"
+-                    onClick={() => handleUserProfileClick(reaction.odU)}
+-                    style={{ cursor: 'pointer' }}
+-                  >
+-                    <span className="reaction-user-emoji">👍</span>
+-                    <span className="reaction-user-name">{reaction.nickname}</span>
+-                  </div>
+-                ))}
+-              </div>
+-              <div className="leave-modal-actions">
+-                <button className="modal-btn cancel" onClick={() => setShowReactionsModal(false)}>
+-                  {t('groupChat.cancel')}
+-                </button>
+-              </div>
+-            </div>
+-          </div>
+-        )
+-      }
+-
+-
+-
+-      {/* Members List Modal */}
+-      {
+-        showMembersModal && (
+-          <div className="leave-modal-overlay" onClick={() => setShowMembersModal(false)}>
+-            <div className="leave-modal-content members-modal" onClick={(e) => e.stopPropagation()} style={{ maxHeight: '80vh', display: 'flex', flexDirection: 'column' }}>
+-              <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+-                <h3>{t('groupChat.groupMembers')} ({membersList.length})</h3>
+-                <button className="close-menu-btn" onClick={() => setShowMembersModal(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}>
+-                  <UilTimes size="24" />
+-                </button>
+-              </div>
+-
+-              <div className="members-list-container" style={{ overflowY: 'auto', flex: 1, display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+-                {membersLoading ? (
+-                  <p style={{ textAlign: 'center', padding: '1rem', color: 'var(--gray)' }}>Loading members...</p>
+-                ) : (
+-                  membersList.map((member) => (
+-                    <div
+-                      key={member.id}
+-                      className="member-item"
+-                      onClick={() => setSelectedMember(member)}
+-                      style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.5rem', borderRadius: '8px', background: 'var(--glass)', cursor: 'pointer' }}
+-                    >
+-                      <div className="member-avatar" style={{
+-                        width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg, #FF919D 0%, #fc6777 100%)',
+-                        display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.2rem'
+-                      }}>
+-                        {member.nickname ? member.nickname.substring(0, 1).toUpperCase() : '?'}
+-                      </div>
+-                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+-                        <span style={{ fontWeight: '500', color: 'var(--black)' }}>
+-                          {member.nickname || 'Unknown User'}
+-                          {member.id === groupData.ownerUserId && <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', background: '#ffe0e3', color: 'var(--pink)', padding: '2px 6px', borderRadius: '4px' }}>Owner</span>}
+-                          {member.id === userData.uid && <span style={{ marginLeft: '0.5rem', fontSize: '0.75rem', background: '#e0e0e0', color: 'var(--gray)', padding: '2px 6px', borderRadius: '4px' }}>You</span>}
+-                        </span>
+-                        <span style={{ fontSize: '0.75rem', color: 'var(--gray)' }}>
+-                          {(() => {
+-                            const lastActive = (groupData?.memberLastActive && groupData.memberLastActive[member.id]) || member.lastPostDate;
+-                            if (!lastActive) return t('groupChat.noActivity') || "No recent activity";
+-
+-                            let dateObj;
+-                            if (lastActive.toDate) dateObj = lastActive.toDate();
+-                            else if (lastActive.seconds) dateObj = new Date(lastActive.seconds * 1000);
+-                            else dateObj = new Date(lastActive);
+-
+-                            const now = new Date();
+-                            const diffDays = Math.floor((now - dateObj) / (1000 * 60 * 60 * 24));
+-
+-                            if (diffDays <= 0) return t('groupChat.activeToday') || "Active today";
+-                            if (diffDays === 1) return t('groupChat.activeYesterday') || "Active yesterday";
+-                            if (diffDays < 30) return (t('groupChat.activeDaysAgo') || "Active {days} days ago").replace('{days}', diffDays);
+-                            const diffMonths = Math.floor(diffDays / 30);
+-                            return (t('groupChat.activeMonthsAgo') || "Active > {months} months ago").replace('{months}', diffMonths);
+-                          })()}
+-                        </span>
+-                      </div>
+-                    </div>
+-                  ))
+-                )}
+-              </div>
+-            </div>
+-          </div>
+-        )
+-      }
+-
+-      {/* Unity Percentage Modal */}
+-      {showUnityModal && (
+-        <div className="leave-modal-overlay" onClick={() => setShowUnityModal(false)}>
+-          <div className="leave-modal-content unity-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '380px', maxHeight: '85vh', display: 'flex', flexDirection: 'column', padding: '1.5rem' }}>
+-            <div className="modal-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+-              <span style={{ fontSize: '1.8rem' }}>
+-                {unityPercentage === 100 ? '☀️' :
+-                  unityPercentage >= 66 ? '🌕' :
+-                    unityPercentage >= 33 ? '🌠' :
+-                      '🌑'}
+-              </span>
+-              <button className="close-menu-btn" onClick={() => setShowUnityModal(false)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--gray)' }}>
+-                <UilTimes size="24" />
+-              </button>
+-            </div>
+-
+-            <div className="unity-modal-body" style={{ overflowY: 'auto', flex: 1, paddingRight: '5px' }}>
+-              <p className="unity-description" style={{ fontSize: '1.1rem', fontWeight: 'bold', color: 'var(--black)', textAlign: 'center', margin: '1rem 0', lineHeight: '1.4' }}>
+-                {t('groupChat.unityModalDescription') || "Let's all aim for the Celestial Kingdom together!"}
+-              </p>
+-
+-              <div className="unity-percentage-display" style={{ textAlign: 'center', margin: '1.5rem 0' }}>
+-                <div style={{ fontSize: '3.5rem', fontWeight: '800', color: 'var(--pink)', lineHeight: '1' }}>{unityPercentage}%</div>
+-                <div className="unity-progress-container" style={{ width: '100%', height: '14px', background: 'rgba(0,0,0,0.05)', borderRadius: '7px', overflow: 'hidden', marginTop: '12px' }}>
+-                  <div className="unity-progress-bar" style={{ width: `${unityPercentage}%`, height: '100%', background: 'linear-gradient(90deg, #FF919D 0%, #fc6777 100%)', transition: 'width 1s cubic-bezier(0.34, 1.56, 0.64, 1)' }}></div>
+-                </div>
+-
+-                <div className="unity-legend" style={{ marginTop: '1.5rem', padding: '1rem', background: 'rgba(0,0,0,0.02)', borderRadius: '12px', border: '1px solid rgba(0,0,0,0.05)' }}>
+-                  <h5 style={{ margin: '0 0 10px 0', fontSize: '0.8rem', color: 'var(--gray)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: '600' }}>{t('groupChat.unityModalLegendTitle') || "Progress Guide"}</h5>
+-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem' }}>
+-                      <span style={{ fontSize: '1.1rem' }}>☀️</span>
+-                      <span style={{ color: unityPercentage === 100 ? 'var(--pink)' : 'var(--black)', fontWeight: unityPercentage === 100 ? 'bold' : 'normal' }}>{t('groupChat.unityModalLegendCelestial') || "Celestial (100%)"}</span>
+-                    </div>
+-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem' }}>
+-                      <span style={{ fontSize: '1.1rem' }}>🌕</span>
+-                      <span style={{ color: (unityPercentage >= 66 && unityPercentage < 100) ? 'var(--pink)' : 'var(--black)', fontWeight: (unityPercentage >= 66 && unityPercentage < 100) ? 'bold' : 'normal' }}>{t('groupChat.unityModalLegendTerrestrial') || "Terrestrial (66%~)"}</span>
+-                    </div>
+-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem' }}>
+-                      <span style={{ fontSize: '1.1rem' }}>🌠</span>
+-                      <span style={{ color: (unityPercentage >= 33 && unityPercentage < 66) ? 'var(--pink)' : 'var(--black)', fontWeight: (unityPercentage >= 33 && unityPercentage < 66) ? 'bold' : 'normal' }}>{t('groupChat.unityModalLegendTelestial') || "Telestial (33%~)"}</span>
+-                    </div>
+-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem' }}>
+-                      <span style={{ fontSize: '1.1rem' }}>🌑</span>
+-                      <span style={{ color: unityPercentage < 33 ? 'var(--pink)' : 'var(--black)', fontWeight: unityPercentage < 33 ? 'bold' : 'normal' }}>{t('groupChat.unityModalLegendEmpty') || "Starting (0%~)"}</span>
+-                    </div>
+-                  </div>
+-                </div>
+-              </div>
+-
+-              {membersLoading ? (
+-                <div style={{ textAlign: 'center', padding: '2rem' }}>
+-                  <div className="spinner-mini" style={{ margin: '0 auto', width: '30px', height: '30px', border: '3px solid rgba(255,145,157,0.3)', borderTopColor: 'var(--pink)' }}></div>
+-                  <p style={{ marginTop: '10px', color: 'var(--gray)' }}>Loading members...</p>
+-                </div>
+-              ) : (
+-                <div className="unity-lists" style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+-                  <div className="unity-list-section">
+-                    <h4 style={{ color: '#27ae60', display: 'flex', alignItems: 'center', gap: '6px', margin: '0 0 10px 0', fontSize: '1rem' }}>
+-                      <span style={{ fontSize: '1.2rem' }}>✅</span> {t('groupChat.unityModalPosted') || "Members who posted notes"}
+-                    </h4>
+-                    <div className="unity-nicknames" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+-                      {unityModalData.posted.length > 0 ? (
+-                        unityModalData.posted.map((member, i) => (
+-                          <span
+-                            key={i}
+-                            className="unity-nickname-chip"
+-                            onClick={() => handleUserProfileClick(member.id)}
+-                            style={{
+-                              background: '#e8f8f0',
+-                              color: '#27ae60',
+-                              padding: '6px 12px',
+-                              borderRadius: '20px',
+-                              fontSize: '0.9rem',
+-                              fontWeight: '500',
+-                              boxShadow: '0 2px 4px rgba(39, 174, 96, 0.1)',
+-                              cursor: 'pointer'
+-                            }}
+-                          >
+-                            {member.nickname}
+-                          </span>
+-                        ))
+-                      ) : (
+-                        <span style={{ fontStyle: 'italic', color: 'var(--gray)', fontSize: '0.9rem', padding: '5px 0' }}>{t('groupChat.unityModalNoPostsYet') || "No posts yet today"}</span>
+-                      )}
+-                    </div>
+-                  </div>
+-
+-                  <div className="unity-list-section">
+-                    <h4 style={{ color: 'var(--pink)', display: 'flex', alignItems: 'center', gap: '6px', margin: '0 0 10px 0', fontSize: '1rem' }}>
+-                      {t('groupChat.unityModalNotPosted') || "Let's encourage those who haven't posted yet!"}
+-                    </h4>
+-                    <div className="unity-nicknames" style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+-                      {unityModalData.notPosted.length > 0 ? (
+-                        unityModalData.notPosted.map((member, i) => (
+-                          <span
+-                            key={i}
+-                            className={`unity-nickname-chip ${cheeredTodayUids.has(member.id) ? 'cheered' : ''}`}
+-                            onClick={() => {
+-                              if (member.id === userData?.uid) return;
+-                              if (cheeredTodayUids.has(member.id)) {
+-                                toast.info(t('groupChat.cheerAlreadySent') || "Already sent a cheer today");
+-                                return;
+-                              }
+-                              handleCheerClick(member);
+-                            }}
+-                            style={{
+-                              background: member.id === userData?.uid ? '#f0f0f0' : (cheeredTodayUids.has(member.id) ? '#f5f5f5' : '#fff0f3'),
+-                              color: member.id === userData?.uid ? 'var(--gray)' : (cheeredTodayUids.has(member.id) ? '#bdc3c7' : 'var(--pink)'),
+-                              padding: '6px 12px',
+-                              borderRadius: '20px',
+-                              fontSize: '0.9rem',
+-                              fontWeight: '500',
+-                              boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+-                              cursor: (member.id === userData?.uid || cheeredTodayUids.has(member.id)) ? 'default' : 'pointer',
+-                              border: member.id === userData?.uid ? '1px dashed #ccc' : (cheeredTodayUids.has(member.id) ? '1px solid #eee' : 'none'),
+-                              opacity: cheeredTodayUids.has(member.id) ? 0.8 : 1
+-                            }}
+-                          >
+-                            {member.id === userData?.uid ? `${member.nickname} (${t('profile.you') || 'You'})` : (cheeredTodayUids.has(member.id) ? `✅ ${member.nickname}` : member.nickname)}
+-                          </span>
+-                        ))
+-                      ) : (
+-                        <div style={{ background: '#fff9e6', color: '#B8860B', padding: '10px 15px', borderRadius: '12px', fontSize: '0.95rem', fontWeight: 'bold', width: '100%', textAlign: 'center', border: '1px solid #ffeeba' }}>
+-                          ✨ {t('groupChat.unityModalAllPosted') || 'Everyone has posted today! Amazing unity!'} ✨
+-                        </div>
+-                      )}
+-                    </div>
+-                  </div>
+-                </div>
+-              )}
+-            </div>
+-
+-            <div className="leave-modal-actions" style={{ marginTop: '1.5rem' }}>
+-              <button className="modal-btn primary" onClick={() => setShowUnityModal(false)} style={{ width: '100%', maxWidth: 'none' }}>
+-                {t('groupChat.welcomeGuideButton') || t('welcomeGuideButton') || "Got it!"}
+-              </button>
+-            </div>
+-          </div>
+-        </div>
+-      )}
+-
+-      {/* Cheer Confirmation Modal */}
+-      {cheerTarget && (
+-        <div className="leave-modal-overlay cheer-modal-overlay" onClick={() => setCheerTarget(null)}>
+-          <div className="leave-modal-content cheer-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: '360px', padding: '2rem' }}>
+-            <div style={{ marginBottom: '1rem', textAlign: 'center' }}></div>
+-            <h3 style={{ textAlign: 'center', marginBottom: '1rem', color: 'var(--black)' }}>{t('groupChat.cheerConfirmTitle') || "Send a Cheer"}</h3>
+-            <p style={{ textAlign: 'center', color: 'var(--gray)', marginBottom: '2rem', lineHeight: '1.4', fontSize: '1rem' }}>
+-              {t('groupChat.cheerConfirmMessage')?.replace('{nickname}', cheerTarget.nickname) || `Would you like to send a cheer to ${cheerTarget.nickname}?`}
+-            </p>
+-            <div className="leave-modal-actions" style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
+-              <button
+-                className="modal-btn delete"
+-                onClick={handleSendCheer}
+-                disabled={isSendingCheer}
+-                style={{
+-                  background: 'var(--pink)',
+-                  color: 'white',
+-                  width: '100%',
+-                  padding: '14px',
+-                  borderRadius: '12px',
+-                  fontWeight: '600',
+-                  fontSize: '1.05rem',
+-                  border: 'none',
+-                  cursor: isSendingCheer ? 'not-allowed' : 'pointer',
+-                  boxShadow: '0 4px 12px rgba(255, 145, 157, 0.3)'
+-                }}
+-              >
+-                {isSendingCheer ? (
+-                  <div className="spinner-mini" style={{ width: '20px', height: '20px', margin: '0 auto', border: '2px solid rgba(255,255,255,0.3)', borderTopColor: 'white' }}></div>
+-                ) : (t('groupChat.cheerConfirmButton') || "Send Cheer")}
+-              </button>
+-              <button
+-                className="modal-btn cancel"
+-                onClick={() => setCheerTarget(null)}
+-                style={{
+-                  width: '100%',
+-                  padding: '14px',
+-                  borderRadius: '12px',
+-                  border: '1px solid #ddd',
+-                  background: 'white',
+-                  color: 'var(--gray)',
+-                  fontWeight: '500',
+-                  cursor: 'pointer'
+-                }}
+-              >
+-                {t('profile.cancel') || "Cancel"}
+-              </button>
+-            </div>
+-          </div>
+-        </div>
+-      )}
+-
+-      {/* Report Modal */}
+-      {showReportModal && (
+-        <div className="leave-modal-overlay report-modal-overlay" onClick={() => setShowReportModal(false)}>
+-          <div className="leave-modal-content report-modal" onClick={(e) => e.stopPropagation()}>
+-            <div className="modal-header">
+-              <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+-                <UilExclamationTriangle size="24" color="#E53E3E" />
+-                {t('groupChat.reportUser')}
+-              </h3>
+-              <button className="close-menu-btn" onClick={() => setShowReportModal(false)}>
+-                <UilTimes size="24" />
+-              </button>
+-            </div>
+-
+-            <div className="report-modal-body">
+-              <p className="report-hint">{t('groupChat.reportReason')}:</p>
+-
+-              <div className="report-options">
+-                <label className={`report-option-label ${reportReason === 'inappropriate' ? 'selected' : ''}`}>
+-                  <input
+-                    type="radio"
+-                    name="reportReason"
+-                    value="inappropriate"
+-                    checked={reportReason === 'inappropriate'}
+-                    onChange={(e) => setReportReason(e.target.value)}
+-                  />
+-                  <span>{t('groupChat.reportInappropriate')}</span>
+-                </label>
+-
+-                <label className={`report-option-label ${reportReason === 'harassment' ? 'selected' : ''}`}>
+-                  <input
+-                    type="radio"
+-                    name="reportReason"
+-                    value="harassment"
+-                    checked={reportReason === 'harassment'}
+-                    onChange={(e) => setReportReason(e.target.value)}
+-                  />
+-                  <span>{t('groupChat.reportHarassment')}</span>
+-                </label>
+-
+-                <label className={`report-option-label ${reportReason === 'spam' ? 'selected' : ''}`}>
+-                  <input
+-                    type="radio"
+-                    name="reportReason"
+-                    value="spam"
+-                    checked={reportReason === 'spam'}
+-                    onChange={(e) => setReportReason(e.target.value)}
+-                  />
+-                  <span>{t('groupChat.reportSpam')}</span>
+-                </label>
+-
+-                <label className={`report-option-label ${reportReason === 'other' ? 'selected' : ''}`}>
+-                  <input
+-                    type="radio"
+-                    name="reportReason"
+-                    value="other"
+-                    checked={reportReason === 'other'}
+-                    onChange={(e) => setReportReason(e.target.value)}
+-                  />
+-                  <span>{t('groupChat.reportOther')}</span>
+-                </label>
+-              </div>
+-            </div>
+-
+-            <div className="leave-modal-actions">
+-              <button className="modal-btn cancel" onClick={() => setShowReportModal(false)}>
+-                {t('groupChat.cancel')}
+-              </button>
+-              <button className="modal-btn leave report-submit" onClick={confirmReport}>
+-                {t('groupChat.report')}
+-              </button>
+-            </div>
+-          </div>
+-        </div>
+-      )}
+-
+-      {/* User Profile Modal */}
+-      {selectedMember && (
+-        <UserProfileModal
+-          user={selectedMember}
+-          onClose={() => setSelectedMember(null)}
+-        />
+-      )}
+-
+-      {/* Invite Friends Modal */}
+-      {showInviteModal && (
+-        <div className="leave-modal-overlay" onClick={() => setShowInviteModal(false)}>
+-          <div className="leave-modal-content invite-modal" onClick={(e) => e.stopPropagation()}>
+-            <div className="modal-header">
+-              <h3>{t('groupChat.inviteLink')}</h3>
+-              <button className="close-menu-btn" onClick={() => setShowInviteModal(false)}>
+-                <UilTimes size="24" />
+-              </button>
+-            </div>
+-            <div className="invite-modal-body">
+-              <Mascot customMessage={t('groupChat.inviteFriendsPrompt')} userData={userData} />
+-              <div className="invite-link-card" onClick={handleCopyInviteLink}>
+-                <div className="invite-link-content">
+-                  <span className="invite-link-url">{window.location.origin}/join/{groupData?.inviteCode}</span>
+-                </div>
+-                <div className="copy-badge">
+-                  <UilCopy size="18" />
+-                  <span>{t('groupChat.inviteLink')}</span>
+-                </div>
+-              </div>
+-              <div className="share-buttons-grid">
+-                <button className="share-btn line" onClick={handleShareLine}>
+-                  <UilCommentAlt size="20" />
+-                  <span>{t('groupChat.inviteLine')}</span>
+-                </button>
+-                <button className="share-btn whatsapp" onClick={handleShareWhatsApp}>
+-                  <UilWhatsapp size="20" />
+-                  <span>{t('groupChat.inviteWhatsApp')}</span>
+-                </button>
+-                <button className="share-btn messenger" onClick={handleShareMessenger}>
+-                  <UilFacebookMessenger size="20" />
+-                  <span>{t('groupChat.inviteMessenger')}</span>
+-                </button>
+-                <button className="share-btn instagram" onClick={handleShareInstagram}>
+-                  <UilInstagram size="20" />
+-                  <span>{t('groupChat.inviteInstagram')}</span>
+-                </button>
+-              </div>
+-              <p className="invite-footer-hint">{t('groupChat.inviteLinkHint')}</p>
+-            </div>
+-          </div>
+-        </div>
+-      )}
++      <GroupChatModals
++        t={t}
++        language={language}
++        userData={userData}
++        groupData={groupData}
++
++        showLeaveModal={showLeaveModal}
++        setShowLeaveModal={setShowLeaveModal}
++        isLeaving={isLeaving}
++        handleLeaveGroup={handleLeaveGroup}
++
++        showWelcomeGuide={showWelcomeGuide}
++        handleDismissWelcomeGuide={handleDismissWelcomeGuide}
++
++        showDeleteModal={showDeleteModal}
++        setShowDeleteModal={setShowDeleteModal}
++        deleteConfirmationName={deleteConfirmationName}
++        setDeleteConfirmationName={setDeleteConfirmationName}
++        handleDeleteGroup={handleDeleteGroup}
++
++        showEditNameModal={showEditNameModal}
++        setShowEditNameModal={setShowEditNameModal}
++        newGroupName={newGroupName}
++        setNewGroupName={setNewGroupName}
++        newGroupDescription={newGroupDescription}
++        setNewGroupDescription={setNewGroupDescription}
++        newTranslatedName={newTranslatedName}
++        setNewTranslatedName={setNewTranslatedName}
++        newTranslatedDesc={newTranslatedDesc}
++        setNewTranslatedDesc={setNewTranslatedDesc}
++        handleUpdateGroupName={handleUpdateGroupName}
++        translatedGroupName={translatedGroupName}
++        translatedGroupDesc={translatedGroupDesc}
++
++        showDeleteMessageModal={showDeleteMessageModal}
++        setShowDeleteMessageModal={setShowDeleteMessageModal}
++        messageToDelete={messageToDelete}
++        setMessageToDelete={setMessageToDelete}
++        handleConfirmDeleteMessage={handleConfirmDeleteMessage}
++
++        editingMessage={editingMessage}
++        editText={editText}
++        setEditText={setEditText}
++        handleCancelEdit={handleCancelEdit}
++        handleSaveEdit={handleSaveEdit}
++
++        showReactionsModal={showReactionsModal}
++        setShowReactionsModal={setShowReactionsModal}
++        reactionsToShow={reactionsToShow}
++
++        showMembersModal={showMembersModal}
++        setShowMembersModal={setShowMembersModal}
++        membersList={membersList}
++        membersLoading={membersLoading}
++        setSelectedMember={setSelectedMember}
++
++        showUnityModal={showUnityModal}
++        setShowUnityModal={setShowUnityModal}
++        unityPercentage={unityPercentage}
++        unityModalData={unityModalData}
++        cheeredTodayUids={cheeredTodayUids}
++        handleCheerClick={handleCheerClick}
++
++        cheerTarget={cheerTarget}
++        setCheerTarget={setCheerTarget}
++        isSendingCheer={isSendingCheer}
++        handleSendCheer={handleSendCheer}
++
++        showReportModal={showReportModal}
++        setShowReportModal={setShowReportModal}
++        reportReason={reportReason}
++        setReportReason={setReportReason}
++        confirmReport={confirmReport}
++
++        selectedMember={selectedMember}
++        handleUserProfileClick={setSelectedMember}
++
++        showInviteModal={showInviteModal}
++        setShowInviteModal={setShowInviteModal}
++        handleCopyInviteLink={handleCopyInviteLink}
++        handleShareLine={handleShareLine}
++        handleShareWhatsApp={handleShareWhatsApp}
++        handleShareMessenger={handleShareMessenger}
++        handleShareInstagram={handleShareInstagram}
++      />
+ 
+-      <form
+-        onSubmit={handleSendMessage}
+-        className="send-message-form"
+-        style={window.innerWidth <= 768 && isAnyModalOpen ? { display: 'none' } : {}}
+-      >
+-        {replyTo && (
+-          <div className="reply-preview">
+-            <div className="reply-info">
+-              <span className="replying-to">{t('groupChat.replyingTo')} <strong>{replyTo.senderNickname}</strong></span>
+-              <p className="reply-text-preview">
+-                {replyTo.isNote || replyTo.isEntry
+-                  ? t('groupChat.studyNote')
+-                  : (replyTo.text ? (replyTo.text.substring(0, 50) + (replyTo.text.length > 50 ? '...' : '')) : 'Image/Note')
+-                }
+-              </p>
+-            </div>
+-            <div className="cancel-reply" onClick={() => setReplyTo(null)}>
+-              <UilTimes size="16" />
+-            </div>
+-          </div>
+-        )}
+-        <div className="input-wrapper">
+-          <textarea
+-            ref={textareaRef}
+-            value={newMessage}
+-            onChange={(e) => setNewMessage(e.target.value)}
+-            onKeyDown={handleKeyDown}
+-            onFocus={() => {
+-              if (onInputFocusChange) onInputFocusChange(true);
+-              // Scroll to bottom when keyboard appears on mobile
+-              if (containerRef.current && window.innerWidth <= 768) {
+-                setTimeout(() => {
+-                  containerRef.current.scrollTop = containerRef.current.scrollHeight;
+-                }, 300);
+-              }
+-            }}
+-            onBlur={() => onInputFocusChange && onInputFocusChange(false)}
+-            placeholder={inputPlaceholder}
+-            rows={1}
+-          />
+-          <div className="add-entry-btn-wrapper">
+-            {showAddNoteTooltip && (
+-              <div className="add-note-tooltip" onClick={(e) => { e.stopPropagation(); handleDismissTooltip(); }}>
+-                <div className="tooltip-content">
+-                  {t('groupChat.addNoteTooltip')}
+-                </div>
+-                <div className="tooltip-arrow"></div>
+-              </div>
+-            )}
+-            <div className="add-entry-btn" onClick={() => { setIsNewNoteOpen(true); handleDismissTooltip(); }}>
+-              <UilPlus />
+-            </div>
+-          </div>
+-          <button type="submit">{t('groupChat.send')}</button>
+-        </div>
+-      </form>
++      <MessageInput
++        handleSendMessage={handleSendMessage}
++        isAnyModalOpen={isAnyModalOpen}
++        replyTo={replyTo}
++        setReplyTo={setReplyTo}
++        t={t}
++        textareaRef={textareaRef}
++        newMessage={newMessage}
++        setNewMessage={setNewMessage}
++        handleKeyDown={handleKeyDown}
++        onInputFocusChange={onInputFocusChange}
++        containerRef={containerRef}
++        inputPlaceholder={inputPlaceholder}
++        showAddNoteTooltip={showAddNoteTooltip}
++        handleDismissTooltip={handleDismissTooltip}
++        setIsNewNoteOpen={setIsNewNoteOpen}
++      />
+     </div >
+   );
+ };
