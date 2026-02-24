@@ -13,6 +13,7 @@ export const useGroupMessages = (groupId, userData, t) => {
   const [userReadCount, setUserReadCount] = useState(null);
   const [initialScrollDone, setInitialScrollDone] = useState(false);
   const [hasMoreOlder, setHasMoreOlder] = useState(true);
+  const [membersMap, setMembersMap] = useState({});
 
   const currentGroupIdRef = useRef(groupId);
 
@@ -58,6 +59,36 @@ export const useGroupMessages = (groupId, userData, t) => {
       } else {
         Sentry.captureException(err);
         setError(err.message);
+      }
+    });
+
+    // Fetch members detail whenever group context changes
+    const fetchMembersDetails = async (membersArray) => {
+      if (!membersArray || membersArray.length === 0) return;
+
+      const newMap = { ...membersMap };
+      const uidsToFetch = membersArray.filter(uid => !newMap[uid]);
+
+      if (uidsToFetch.length === 0) return;
+
+      try {
+        const memberSnapshots = await Promise.all(uidsToFetch.map(uid => getDoc(doc(db, 'users', uid))));
+        memberSnapshots.forEach(snap => {
+          if (snap.exists()) {
+            newMap[snap.id] = snap.data();
+          }
+        });
+        setMembersMap(newMap);
+      } catch (err) {
+        console.error("Error fetching members details:", err);
+      }
+    };
+
+    const groupRefForInit = doc(db, 'groups', groupId);
+    getDoc(groupRefForInit).then(snap => {
+      if (snap.exists()) {
+        const data = snap.data();
+        if (data.members) fetchMembersDetails(data.members);
       }
     });
 
@@ -244,6 +275,7 @@ export const useGroupMessages = (groupId, userData, t) => {
     userReadCount, setUserReadCount,
     initialScrollDone, setInitialScrollDone,
     hasMoreOlder, setHasMoreOlder,
+    membersMap, setMembersMap,
     currentGroupIdRef,
     prevMessageCountRef,
     latestMessageRef

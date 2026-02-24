@@ -20,7 +20,8 @@ const MessageItem = ({
   groupData,
   translatedTexts,
   language,
-  handleShowReactions
+  handleShowReactions,
+  membersMap
 }) => {
   return (
     <>
@@ -145,9 +146,27 @@ const MessageItem = ({
         </div>
       ) : (
         <div id={`message-${msg.id}`} className={`message-wrapper ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}>
+          {msg.senderId !== userData?.uid && (
+            <div
+              className="message-avatar"
+              onClick={(e) => { e.stopPropagation(); handleUserProfileClick(msg.senderId); }}
+              style={{ cursor: 'pointer', overflow: 'hidden' }}
+            >
+              {(msg.senderPhotoURL || membersMap?.[msg.senderId]?.photoURL) ? (
+                <img
+                  src={msg.senderPhotoURL || membersMap?.[msg.senderId]?.photoURL}
+                  alt=""
+                  className="profile-avatar-img"
+                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                />
+              ) : (
+                msg.senderNickname ? msg.senderNickname.substring(0, 1).toUpperCase() : '?'
+              )}
+            </div>
+          )}
           <div
             className={`message ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}
-            onTouchStart={() => handleLongPressStart(msg)}
+            onTouchStart={(e) => handleLongPressStart(msg, e)}
             onTouchEnd={handleLongPressEnd}
             onTouchMove={handleLongPressEnd}
             style={{ cursor: 'pointer' }}

@@ -715,6 +715,63 @@ app.post('/migrate-data', async (req, res) => {
 });
 
 
+app.post('/post-message', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).send('Unauthorized');
+  }
+
+  const idToken = authHeader.split('Bearer ')[1];
+  const { groupId, text, replyTo } = req.body;
+
+  if (!groupId || !text) {
+    return res.status(400).send('Group ID and text are required.');
+  }
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const uid = decodedToken.uid;
+
+    const userRef = db.collection('users').doc(uid);
+    const userSnap = await userRef.get();
+    if (!userSnap.exists) return res.status(404).send('User not found');
+    const userData = userSnap.data();
+
+    const msgRef = db.collection('groups').doc(groupId).collection('messages').doc();
+    const serverTimestamp = admin.firestore.FieldValue.serverTimestamp();
+
+    await db.runTransaction(async (transaction) => {
+      transaction.set(msgRef, {
+        text,
+        senderId: uid,
+        senderNickname: userData.nickname || 'Member',
+        senderPhotoURL: userData.photoURL || null,
+        createdAt: serverTimestamp,
+        replyTo: replyTo || null
+      });
+
+      transaction.update(db.collection('groups').doc(groupId), {
+        messageCount: admin.firestore.FieldValue.increment(1),
+        lastMessageAt: serverTimestamp,
+        [`memberLastActive.${uid}`]: serverTimestamp
+      });
+    });
+
+    // Notify other members
+    notifyGroupMembers(groupId, uid, {
+      title: userData.nickname || 'Member',
+      body: text.substring(0, 100),
+      data: { type: 'chat', groupId }
+    }).catch(e => console.error('Error sending chat notifications:', e));
+
+    res.status(200).json({ message: 'Message sent successfully.', id: msgRef.id });
+  } catch (error) {
+    console.error('Error in /post-message:', error);
+    res.status(500).send(error.message);
+  }
+});
+
+
 app.post('/post-note', async (req, res) => {
   console.log('--- POST NOTE REQUEST ---');
   console.log('Body:', JSON.stringify(req.body, null, 2));
@@ -832,6 +889,9 @@ app.post('/post-note', async (req, res) => {
         if (targetId) groupsToPostTo = [targetId];
       }
 
+      // Ensure specific group IDs are valid strings and remove duplicates
+      groupsToPostTo = [...new Set(groupsToPostTo.filter(gid => typeof gid === 'string' && gid.trim().length > 0))];
+
       // 3. READ ALL NECESSARY DATA FIRST (Constraint: Reads before Writes)
       console.log(`Fetching ${groupsToPostTo.length} groups before any writes...`);
       const groupRefs = groupsToPostTo.map(gid => db.collection('groups').doc(gid));
@@ -863,7 +923,8 @@ app.post('/post-note', async (req, res) => {
           isNote: true,
           originalNoteId: personalNoteRef.id,
           scripture: scripture,
-          chapter: chapter
+          chapter: chapter,
+          senderPhotoURL: userData.photoURL || null
         });
 
         const timeZone = userData.timeZone || 'UTC';
@@ -989,6 +1050,9 @@ app.post('/post-note', async (req, res) => {
     res.status(200).json({ message: 'Note posted successfully.', ...result });
   } catch (error) {
     console.error('CRITICAL ERROR in /post-note:', error);
+    if (error.code) console.error('Error Code:', error.code);
+    if (error.details) console.error('Error Details:', error.details);
+
     res.status(500).json({
       error: error.message || 'Error saving note.',
       stack: error.stack,

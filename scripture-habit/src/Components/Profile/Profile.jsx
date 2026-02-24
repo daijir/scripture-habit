@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import { useLanguage } from '../../Context/LanguageContext.jsx';
 import { useSettings } from '../../Context/SettingsContext.jsx';
-import { auth, db } from '../../firebase';
+import { auth, db, storage } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
-import { UilSignOutAlt } from '@iconscout/react-unicons';
+import { UilSignOutAlt, UilCamera } from '@iconscout/react-unicons';
 import { doc, updateDoc, deleteDoc, collection, getDocs, writeBatch, getDoc } from 'firebase/firestore';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { deleteUser } from 'firebase/auth';
 import Button from '../Button/Button';
 import { toast } from 'react-toastify';
@@ -28,6 +29,9 @@ const Profile = ({ userData, stats }) => {
     const [confirmNickname, setConfirmNickname] = useState('');
     const [notifPermission, setNotifPermission] = useState(window.Notification ? window.Notification.permission : 'default');
     const [isNotifLoading, setIsNotifLoading] = useState(false);
+    const [photoURL, setPhotoURL] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
+    const fileInputRef = React.useRef(null);
 
     useEffect(() => {
         if (window.Notification) {
@@ -69,7 +73,97 @@ const Profile = ({ userData, stats }) => {
         if (userData?.bio) {
             setBio(userData.bio);
         }
+        if (userData?.photoURL) {
+            setPhotoURL(userData.photoURL);
+        }
     }, [userData]);
+
+    const resizeImage = (file, targetSize = 400) => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.src = event.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    // Center Crop to Square
+                    let sourceX, sourceY, sourceWidth, sourceHeight;
+                    if (img.width > img.height) {
+                        sourceWidth = img.height;
+                        sourceHeight = img.height;
+                        sourceX = (img.width - img.height) / 2;
+                        sourceY = 0;
+                    } else {
+                        sourceWidth = img.width;
+                        sourceHeight = img.width;
+                        sourceX = 0;
+                        sourceY = (img.height - img.width) / 2;
+                    }
+
+                    canvas.width = targetSize;
+                    canvas.height = targetSize;
+
+                    // Enable high quality image scaling
+                    ctx.imageSmoothingEnabled = true;
+                    ctx.imageSmoothingQuality = 'high';
+
+                    ctx.drawImage(
+                        img,
+                        sourceX, sourceY, sourceWidth, sourceHeight, // Source
+                        0, 0, targetSize, targetSize               // Destination
+                    );
+
+                    canvas.toBlob((blob) => {
+                        resolve(blob);
+                    }, 'image/jpeg', 0.85); // Compress quality
+                };
+            };
+        });
+    };
+
+    const handlePhotoClick = () => {
+        fileInputRef.current?.click();
+    };
+
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (!file || !userData?.uid) return;
+
+        // Increased limit to 20MB for modern smartphone photos
+        if (file.size > 20 * 1024 * 1024) {
+            toast.error(t('profile.imageTooLarge') || "Image is too large. Please pick a smaller one.");
+            return;
+        }
+
+        setIsUploading(true);
+        try {
+            // Automatically resize and crop to 400x400 square
+            const resizedBlob = await resizeImage(file, 400);
+
+            // Upload to Firebase Storage
+            const storageRef = ref(storage, `profile_pictures/${userData.uid}.jpg`);
+            await uploadBytes(storageRef, resizedBlob);
+
+            // Get download URL
+            const url = await getDownloadURL(storageRef);
+
+            // Update user document in Firestore
+            const userRef = doc(db, 'users', userData.uid);
+            await updateDoc(userRef, { photoURL: url });
+
+            setPhotoURL(url);
+            toast.success(t('profile.imageUploadSuccess') || "Profile picture updated!");
+        } catch (error) {
+            console.error("Error uploading image:", error);
+            toast.error(t('profile.imageUploadError') || "Failed to update profile picture.");
+        } finally {
+            setIsUploading(false);
+            e.target.value = ''; // Reset input
+        }
+    };
 
     const handleSaveProfile = async () => {
         if (!nickname.trim()) return;
@@ -213,6 +307,29 @@ const Profile = ({ userData, stats }) => {
             <div className="dashboard-header">
                 <h1>{t('profile.title')}</h1>
                 <p className="welcome-text">{t('profile.description')}</p>
+            </div>
+
+            <div className="profile-photo-section">
+                <div className="avatar-container" onClick={handlePhotoClick}>
+                    {photoURL ? (
+                        <img src={photoURL} alt="Avatar" className="profile-avatar-img" />
+                    ) : (
+                        <div className="profile-avatar-placeholder">
+                            {nickname ? nickname.substring(0, 1).toUpperCase() : '?'}
+                        </div>
+                    )}
+                    <div className="avatar-overlay">
+                        {isUploading ? <div className="spinner-small"></div> : <UilCamera size="24" color="white" />}
+                    </div>
+                </div>
+                <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept="image/*"
+                    style={{ display: 'none' }}
+                />
+                <p className="photo-hint">{t('profile.photoHint') || "Tap to change profile picture"}</p>
             </div>
 
             <div className="profile-section notification-toggle-section">

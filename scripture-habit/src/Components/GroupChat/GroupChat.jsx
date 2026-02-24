@@ -89,6 +89,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     userReadCount, setUserReadCount,
     initialScrollDone, setInitialScrollDone,
     hasMoreOlder, setHasMoreOlder,
+    membersMap, setMembersMap,
     currentGroupIdRef,
     prevMessageCountRef,
     latestMessageRef
@@ -1059,12 +1060,17 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   };
 
   // Context menu handlers for own messages
-  const handleLongPressStart = (msg) => {
+  const handleLongPressStart = (msg, e) => {
+    // Get touch coordinates if available
+    const touch = e.touches ? e.touches[0] : null;
+    const x = touch ? touch.clientX : window.innerWidth / 2;
+    const y = touch ? touch.clientY : window.innerHeight / 2;
+
     longPressTimer.current = setTimeout(() => {
       setContextMenu({
         show: true,
-        x: window.innerWidth / 2,
-        y: window.innerHeight / 2,
+        x: x,
+        y: y,
         messageId: msg.id,
         message: msg
       });
@@ -2004,6 +2010,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                 translatedTexts={translatedTexts}
                 language={language}
                 handleShowReactions={handleShowReactions}
+                membersMap={membersMap}
               />
               {/* Unread Message Divider */}
               {userReadCount !== null && index === Math.max(0, userReadCount - 1) && index < messages.length - 1 && msg.senderId !== 'system' && (
@@ -2020,45 +2027,75 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       {/* Context Menu for long press */}
       {contextMenu.show && contextMenu.message && (
         <>
-          <div className="modal-overlay" style={{ zIndex: 1000 }} onClick={closeContextMenu} />
+          <div className="modal-overlay" style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, zIndex: 1000, background: 'transparent' }} onClick={closeContextMenu} />
           <div
-            className="context-menu"
+            className="message-context-menu"
             style={{
               position: 'fixed',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)',
+              top: contextMenu.y,
+              left: contextMenu.x,
+              transform: 'translate(-50%, -100%)',
               zIndex: 1001,
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              padding: '8px',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-              minWidth: '200px'
+              marginTop: '-10px' // Offset to show above finger
             }}
           >
-            <div className="context-menu-item" onClick={() => {
+            <button style={{ display: 'flex', alignItems: 'center', gap: '14px', justifyContent: 'flex-start' }} onClick={() => {
               handleReply(contextMenu.message);
               closeContextMenu();
             }}>
-              <UilCommentAlt size="18" /> {t('groupChat.reply') || "Reply"}
-            </div>
+              <div style={{ width: '22px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <UilCommentAlt size="18" />
+              </div>
+              <span style={{ flex: 1 }}>{t('groupChat.reply') || "Reply"}</span>
+            </button>
+
+            {contextMenu.message.senderId !== userData?.uid && (
+              <button style={{ display: 'flex', alignItems: 'center', gap: '14px', justifyContent: 'flex-start' }} onClick={() => {
+                handleToggleReaction(contextMenu.message);
+                closeContextMenu();
+              }}>
+                <div style={{ width: '22px', fontSize: '18px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  👍
+                </div>
+                <span style={{ flex: 1 }}>{contextMenu.message.reactions?.find(r => r.odU === userData?.uid) ? t('groupChat.unlike') : t('groupChat.like')}</span>
+              </button>
+            )}
 
             {contextMenu.message.senderId === userData?.uid && (
-              <div className="context-menu-item" onClick={() => {
+              <button style={{ display: 'flex', alignItems: 'center', gap: '14px', justifyContent: 'flex-start' }} onClick={() => {
                 handleEditMessage(contextMenu.message);
                 closeContextMenu();
               }}>
-                <UilPen size="18" /> {t('groupChat.editMessage') || "Edit"}
-              </div>
+                <div style={{ width: '22px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <UilPen size="18" />
+                </div>
+                <span style={{ flex: 1 }}>{t('groupChat.editMessage') || "Edit"}</span>
+              </button>
             )}
 
-            {(contextMenu.message.senderId === userData?.uid || isOwner) && (
-              <div className="context-menu-item text-danger" onClick={() => {
+            {/* ONLY show delete for YOUR OWN messages, as requested. (Owners can moderator-delete from elsewhere or we hide it here per user's specific request) */}
+            {contextMenu.message.senderId === userData?.uid && (
+              <button className="delete-option" style={{ display: 'flex', alignItems: 'center', gap: '14px', justifyContent: 'flex-start' }} onClick={() => {
                 handleDeleteMessageClick(contextMenu.message);
                 closeContextMenu();
               }}>
-                <UilTrashAlt size="18" /> {t('groupChat.deleteMessage') || "Delete"}
-              </div>
+                <div style={{ width: '22px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <UilTrashAlt size="18" />
+                </div>
+                <span style={{ flex: 1 }}>{t('groupChat.deleteMessage') || "Delete"}</span>
+              </button>
+            )}
+
+            {contextMenu.message.senderId !== userData?.uid && (
+              <button style={{ display: 'flex', alignItems: 'center', gap: '14px', justifyContent: 'flex-start' }} onClick={() => {
+                handleReportClick(contextMenu.message);
+                closeContextMenu();
+              }}>
+                <div style={{ width: '22px', fontSize: '18px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  🚩
+                </div>
+                <span style={{ flex: 1 }}>{t('groupChat.report')}</span>
+              </button>
             )}
           </div>
         </>

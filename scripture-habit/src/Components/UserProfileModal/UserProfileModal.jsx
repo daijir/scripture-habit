@@ -6,6 +6,8 @@ import { useLanguage } from '../../Context/LanguageContext';
 const UserProfileModal = ({ user, onClose }) => {
     const { t } = useLanguage();
 
+    const [showFullImage, setShowFullImage] = React.useState(false);
+
     if (!user) return null;
 
     return (
@@ -15,10 +17,29 @@ const UserProfileModal = ({ user, onClose }) => {
                     <UilTimes size="24" />
                 </button>
                 <div className="modal-header">
-                    <div className="user-avatar-large">
-                        {user.nickname ? user.nickname.substring(0, 1).toUpperCase() : '?'}
+                    <div
+                        className={`user-avatar-large ${user.photoURL ? 'has-image' : ''}`}
+                        onClick={() => user.photoURL && setShowFullImage(true)}
+                        style={{ cursor: user.photoURL ? 'pointer' : 'default' }}
+                    >
+                        {user.photoURL ? (
+                            <img src={user.photoURL} alt={user.nickname} className="avatar-img" />
+                        ) : (
+                            user.nickname ? user.nickname.substring(0, 1).toUpperCase() : '?'
+                        )}
                     </div>
                 </div>
+
+                {showFullImage && user.photoURL && (
+                    <div className="full-image-overlay" onClick={() => setShowFullImage(false)}>
+                        <div className="full-image-content" onClick={(e) => e.stopPropagation()}>
+                            <img src={user.photoURL} alt={user.nickname} className="full-avatar-img" />
+                            <button className="full-image-close" onClick={() => setShowFullImage(false)}>
+                                <UilTimes size="32" color="white" />
+                            </button>
+                        </div>
+                    </div>
+                )}
 
                 <div className="modal-body">
                     <h2 className="user-nickname">{user.nickname}</h2>

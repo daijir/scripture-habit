@@ -364,9 +364,14 @@ const GroupChatModals = ({
                                     >
                                         <div className="member-avatar" style={{
                                             width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg, #FF919D 0%, #fc6777 100%)',
-                                            display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.2rem'
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '1.2rem',
+                                            overflow: 'hidden'
                                         }}>
-                                            {member.nickname ? member.nickname.substring(0, 1).toUpperCase() : '?'}
+                                            {member.photoURL ? (
+                                                <img src={member.photoURL} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                            ) : (
+                                                member.nickname ? member.nickname.substring(0, 1).toUpperCase() : '?'
+                                            )}
                                         </div>
                                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                                             <span style={{ fontWeight: '500', color: 'var(--black)' }}>

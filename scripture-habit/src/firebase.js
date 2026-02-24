@@ -51,6 +51,8 @@ if (typeof window !== 'undefined') {
     });
 }
 
+import { getStorage } from "firebase/storage";
+
 // Initialize Firestore with persistent cache (modern way)
 const db = initializeFirestore(app, {
   localCache: persistentLocalCache({
@@ -58,5 +60,7 @@ const db = initializeFirestore(app, {
   })
 });
 
-export { app, analytics, auth, db, messaging };
+const storage = getStorage(app);
+
+export { app, analytics, auth, db, messaging, storage };
 

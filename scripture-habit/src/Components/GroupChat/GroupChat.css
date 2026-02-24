@@ -382,9 +382,9 @@
 .sender-name {
     font-size: 0.7rem;
     color: var(--gray);
-    margin-bottom: 0.2rem;
-    margin-left: 0.8rem;
-    font-weight: 500;
+    margin-bottom: 0.1rem;
+    margin-left: 0.2rem;
+    font-weight: 600;
     transition: color 0.1s ease;
 }
 
@@ -1444,6 +1444,31 @@ input:checked+.slider:before {
 
 .message-wrapper.received {
     justify-content: flex-start;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 0.5rem;
+}
+
+.message-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FF919D 0%, #fc6777 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 4px;
+    /* Align roughly with the top of the message bubble */
+}
+
+.message.received {
+    max-width: calc(80% - 44px);
+    /* Account for avatar width + gap */
 }
 
 /* Hover Action Buttons */
