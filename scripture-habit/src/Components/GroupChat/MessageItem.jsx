@@ -170,6 +170,7 @@ const MessageItem = ({
             onClick={(e) => {
               // Ignore clicks on links so they can navigate normally
               if (e.target.tagName !== 'A') {
+                e.stopPropagation();
                 handleLongPressStart(msg, e);
               }
             }}
