@@ -167,15 +167,10 @@ const MessageItem = ({
           )}
           <div
             className={`message ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}
-            onTouchStart={(e) => handleLongPressStart(msg, e)}
-            onTouchEnd={handleLongPressEnd}
-            onTouchCancel={handleLongPressEnd}
-            onTouchMove={handleLongPressMove}
-            onContextMenu={(e) => {
-              // Prevent native context menu from appearing when long pressing text
-              // But don't prevent if they're interacting with real links
+            onClick={(e) => {
+              // Ignore clicks on links so they can navigate normally
               if (e.target.tagName !== 'A') {
-                e.preventDefault();
+                handleLongPressStart(msg, e);
               }
             }}
             style={{ cursor: 'pointer' }}

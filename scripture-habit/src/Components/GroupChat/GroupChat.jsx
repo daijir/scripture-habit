@@ -1053,64 +1053,36 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     };
   }, []);
 
-  // Context menu handlers for own messages
+  // Context menu handler (triggered instantly on click now)
   const handleLongPressStart = (msg, e) => {
-    window.logTouch?.('Touch START');
-    if (longPressTimer.current) {
-      window.logTouch?.('Timer WAS running, clearing');
-      clearTimeout(longPressTimer.current);
-    }
-    // Get touch coordinates if available
-    const touch = e.touches ? e.touches[0] : null;
-    if (touch) {
-      touchStartPos.current = { x: touch.clientX, y: touch.clientY };
+    // Get click coordinates (or touch if it was a tap translated to click)
+    let x, y;
+    if (e.clientX !== undefined) {
+      x = e.clientX;
+      y = e.clientY;
+    } else if (e.touches && e.touches[0]) {
+      x = e.touches[0].clientX;
+      y = e.touches[0].clientY;
     } else {
-      touchStartPos.current = null;
+      x = window.innerWidth / 2;
+      y = window.innerHeight / 2;
     }
 
-    const x = touch ? touch.clientX : window.innerWidth / 2;
-    const y = touch ? touch.clientY : window.innerHeight / 2;
-
-    longPressTimer.current = setTimeout(() => {
-      window.logTouch?.('Timer TRIGGERED');
-      setContextMenu({
-        show: true,
-        x: x,
-        y: y,
-        messageId: msg.id,
-        message: msg
-      });
-      longPressTimer.current = null;
-      touchStartPos.current = null;
-    }, 500); // 500ms long press is standard and feels better than 700ms
+    setContextMenu({
+      show: true,
+      x: x,
+      y: y,
+      messageId: msg.id,
+      message: msg
+    });
   };
 
   const handleLongPressMove = (e) => {
-    if (!touchStartPos.current || !longPressTimer.current) return;
-    const touch = e.touches ? e.touches[0] : null;
-    if (touch) {
-      const dx = touch.clientX - touchStartPos.current.x;
-      const dy = touch.clientY - touchStartPos.current.y;
-      // If moved more than 10 pixels, it's a swipe/scroll, so cancel the long press
-      if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
-        window.logTouch?.(`Touch MOVE cancelled (dx:${Math.round(dx)}, dy:${Math.round(dy)})`);
-        clearTimeout(longPressTimer.current);
-        longPressTimer.current = null;
-        touchStartPos.current = null;
-      }
-    }
+    // No longer needed
   };
 
   const handleLongPressEnd = () => {
-    window.logTouch?.('Touch END');
-    if (longPressTimer.current) {
-      window.logTouch?.('Timer CLEARED');
-      clearTimeout(longPressTimer.current);
-      longPressTimer.current = null;
-    } else {
-      window.logTouch?.('Timer was already null');
-    }
-    touchStartPos.current = null;
+    // No longer needed
   };
 
   const closeContextMenu = () => {
