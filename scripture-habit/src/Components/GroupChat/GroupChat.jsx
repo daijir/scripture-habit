@@ -1061,6 +1061,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
   // Context menu handlers for own messages
   const handleLongPressStart = (msg, e) => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+    }
     // Get touch coordinates if available
     const touch = e.touches ? e.touches[0] : null;
     const x = touch ? touch.clientX : window.innerWidth / 2;
@@ -1074,6 +1077,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         messageId: msg.id,
         message: msg
       });
+      longPressTimer.current = null;
     }, 700); // 700ms long press
   };
 

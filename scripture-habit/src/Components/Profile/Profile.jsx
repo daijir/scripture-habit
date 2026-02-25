@@ -33,6 +33,48 @@ const Profile = ({ userData, stats }) => {
     const [isUploading, setIsUploading] = useState(false);
     const fileInputRef = React.useRef(null);
 
+    // PWA Install properties
+    const [platform, setPlatform] = useState(null);
+    const [deferredPrompt, setDeferredPrompt] = useState(null);
+    const [isStandalone, setIsStandalone] = useState(false);
+
+    useEffect(() => {
+        // Platform detection
+        const ua = navigator.userAgent;
+        const isIOS = /iPad|iPhone|iPod/.test(ua) ||
+            (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const isAndroid = /Android/i.test(ua);
+
+        const standaloneCheck = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        setIsStandalone(standaloneCheck);
+
+        if (!standaloneCheck) {
+            if (isIOS) setPlatform('ios');
+            else if (isAndroid) setPlatform('android');
+        }
+
+        const handleBeforeInstallPrompt = (e) => {
+            e.preventDefault();
+            setDeferredPrompt(e);
+            setPlatform('android');
+        };
+
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+        if (window.deferredPWAPrompt) {
+            setDeferredPrompt(window.deferredPWAPrompt);
+        }
+
+        return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    }, []);
+
+    const handleInstallClick = async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        setDeferredPrompt(null);
+    };
+
     useEffect(() => {
         if (window.Notification) {
             setNotifPermission(window.Notification.permission);
@@ -352,6 +394,39 @@ const Profile = ({ userData, stats }) => {
                     )}
                 </div>
             </div>
+
+            {/* PWA Install App Section */}
+            {!isStandalone && platform && (
+                <div className="profile-section" style={{ marginTop: '-0.5rem', marginBottom: '2rem' }}>
+                    <h2 style={{ margin: 0, fontSize: '1.1rem' }}>{t('profile.installApp.title') || (language === 'ja' ? 'アプリをインストール' : 'Install App')}</h2>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--gray)', margin: '4px 0 12px' }}>
+                        {t('profile.installApp.description') || (language === 'ja' ? 'ホーム画面に追加してアプリとしてご利用いただけます。' : 'Add to home screen for a better app experience.')}
+                    </p>
+                    {platform === 'ios' ? (
+                        <div style={{ background: 'rgba(107, 70, 193, 0.05)', padding: '12px', borderRadius: '12px' }}>
+                            <p style={{ fontSize: '0.9rem', color: '#4a5568', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                {t('profile.installApp.iosInstruction') || (language === 'ja' ? 'Safariの下部中央にある「シェア」ボタンをタップし、「ホーム画面に追加」を選んでください。' : "Tap the Share button at the bottom of Safari, then select 'Add to Home Screen'.")}
+                            </p>
+                        </div>
+                    ) : (
+                        <Button
+                            onClick={handleInstallClick}
+                            style={{
+                                width: '100%',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                gap: '8px',
+                                background: !deferredPrompt ? undefined : 'linear-gradient(135deg, #FF919D 0%, #FF7081 100%)',
+                                color: !deferredPrompt ? undefined : 'white'
+                            }}
+                            disabled={!deferredPrompt}
+                        >
+                            {t('profile.installApp.androidButton') || (language === 'ja' ? 'アプリをホーム画面に追加' : "Add to Home Screen")}
+                        </Button>
+                    )}
+                </div>
+            )}
 
             <div className="profile-section">
                 <div className="input-group">

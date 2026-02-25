@@ -168,6 +168,7 @@ const MessageItem = ({
             className={`message ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}
             onTouchStart={(e) => handleLongPressStart(msg, e)}
             onTouchEnd={handleLongPressEnd}
+            onTouchCancel={handleLongPressEnd}
             onTouchMove={handleLongPressEnd}
             style={{ cursor: 'pointer' }}
           >

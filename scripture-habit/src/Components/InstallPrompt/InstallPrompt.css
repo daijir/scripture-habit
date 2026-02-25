@@ -1,18 +1,19 @@
 .install-prompt-overlay {
     position: fixed;
-    bottom: 2rem;
+    bottom: calc(2.5rem + env(safe-area-inset-bottom));
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
     max-width: 400px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 20px;
+    border-radius: 24px;
     padding: 1.5rem;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-    z-index: 9999;
-    animation: slideUp 0.5s ease-out;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+    z-index: 10001; /* Above almost everything */
+    animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes slideUp {

@@ -1186,14 +1186,15 @@ app.post('/generate-ponder-questions', async (req, res) => {
 
     if (langCode === 'ja') {
       prompt = `あなたは末日聖徒イエス・キリスト教会の「わたしに従ってきなさい」の学習ガイドです。
-ユーザーが「${scripture} ${chapter}」を読んでいます。
-この章について、深く考えるための質問（Ponder Question）を1つだけ提案してください。
+ユーザーが「${scripture}」のカテゴリーにある「${chapter}」を読んでいます。
+章番号（20など）だけに惑わされず、必ず「書名（創世記、出エジプト記、アルマ書など）」を厳密に確認し、その箇所の内容と文脈に完全に一致した、深く考えるための質問（Ponder Question）を1つだけ提案してください。
 箇条書きの記号（*や-など）は使わず、質問文のみをプレーンテキストで出力してください。
 霊的な洞察を促す、心に響く質問にしてください。`;
     } else {
       prompt = `You are a "Come, Follow Me" study guide for The Church of Jesus Christ of Latter-day Saints.
-The user is reading "${scripture} ${chapter}".
-Please suggest 1 Ponder Question to help them think deeply about this chapter.
+The user is reading "${chapter}" from the category "${scripture}".
+Strictly verify the specific "Book name" (e.g., Genesis, Exodus, Alma) and do not be confused by just the chapter number. 
+Suggest 1 Ponder Question that is perfectly aligned with the content and context of this specific passage.
 Do NOT use bullet points or markdown (*, -). Output only the question text.
 Make it spiritually thought-provoking.`;
     }

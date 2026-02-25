@@ -68,6 +68,12 @@ export const translations = {
             swahili: "Swahili (Swahili)"
         },
         profile: {
+            installApp: {
+                "title": "Install App",
+                "description": "Add to home screen for a better app experience.",
+                "iosInstruction": "Tap the Share button at the bottom of Safari, then select 'Add to Home Screen'.",
+                "androidButton": "Add to Home Screen"
+            },
             you: "You",
             title: "Profile",
             description: "Manage your profile settings.",
@@ -578,6 +584,7 @@ export const translations = {
             linkCopied: "Link copied!",
             recommended: "Recommended Browsers",
             howToOpen: {
+                line_ios: "Tap 'Open in browser' from the bottom right menu (︙).",
                 line: "Tap the three-dot menu (⋮) in the top right and select 'Open in browser'.",
                 instagram: "Tap the three-dot menu (⋮) in the top right and select 'Open in browser'.",
                 messenger: "Tap the ellipsis (...) and select 'Open in external browser'.",
@@ -815,6 +822,12 @@ export const translations = {
             swahili: "スワヒリ語 (Swahili)"
         },
         profile: {
+            installApp: {
+                "title": "アプリをインストール",
+                "description": "ホーム画面に追加してアプリとしてご利用いただけます。",
+                "iosInstruction": "Safariの下部中央にある「シェア」ボタンをタップし、「ホーム画面に追加」を選んでください。",
+                "androidButton": "アプリをホーム画面に追加"
+            },
             you: "あなた",
             title: "プロフィール",
             description: "プロフィール設定を管理します。",
@@ -1647,6 +1660,12 @@ export const translations = {
             swahili: "Suaíli (Swahili)"
         },
         profile: {
+            installApp: {
+                "title": "Instalar Aplicativo",
+                "description": "Adicione à tela inicial para uma melhor experiência do aplicativo.",
+                "iosInstruction": "Toque no botão Compartilhar na parte inferior do Safari e selecione 'Adicionar à Tela de Início'.",
+                "androidButton": "Adicionar à Tela de Início"
+            },
             you: "Você",
             title: "Perfil",
             description: "Gerencie as configurações do seu perfil.",
@@ -1697,6 +1716,7 @@ export const translations = {
             }
         },
         groupChat: {
+            translation: "Tradução",
             send: "Enviar",
             public: "Público",
             private: "Privado",
@@ -2159,6 +2179,7 @@ export const translations = {
             linkCopied: "Link copiado!",
             recommended: "Navegadores Recomendados",
             howToOpen: {
+                line_ios: "Toque em 'Abrir no navegador' no menu inferior direito (︙).",
                 line: "Toque no menu de três pontos (⋮) no canto superior direito e selecione 'Abrir no navegador'.",
                 instagram: "Toque no menu de três pontos (⋮) no canto superior direito e selecione 'Abrir no navegador'.",
                 messenger: "Toque nas reticências (...) e selecione 'Abrir no navegador externo'.",
@@ -2396,6 +2417,12 @@ export const translations = {
             swahili: "斯瓦希里文 (Swahili)"
         },
         profile: {
+            installApp: {
+                "title": "Install App",
+                "description": "Add to home screen for a better app experience.",
+                "iosInstruction": "Tap the Share button at the bottom of Safari, then select 'Add to Home Screen'.",
+                "androidButton": "Add to Home Screen"
+            },
             you: "您",
             title: "個人檔案",
             description: "管理您的個人檔案設定。",
@@ -2489,6 +2516,7 @@ export const translations = {
             deleteMessageWarning: "此操作也會從「我的筆記」中刪除此筆記。",
             errorTranslation: "翻譯訊息失敗",
             translate: "翻譯",
+            translation: "Translation",
             translating: "翻譯中...",
             translated: "已翻譯",
             reply: "回覆",
@@ -2878,6 +2906,7 @@ export const translations = {
             linkCopied: "連結已複製！",
             recommended: "推薦瀏覽器",
             howToOpen: {
+                line_ios: "從右下角選單 (︙) 點擊「在瀏覽器中開啟」。",
                 line: "點擊右上角的三圓點選單 (⋮)，然後選擇「在瀏覽器中開啟」。",
                 instagram: "點擊右上角的三圓點選單 (⋮)，然後選擇「在瀏覽器中開啟」。",
                 messenger: "點擊省略號 (...) 並選擇「在外部瀏覽器中開啟」。",
@@ -3115,6 +3144,12 @@ export const translations = {
             swahili: "Suajili (Swahili)"
         },
         profile: {
+            installApp: {
+                "title": "Instalar Aplicación",
+                "description": "Agregar a la pantalla de inicio para una mejor experiencia de la aplicación.",
+                "iosInstruction": "Toca el botón Compartir en la parte inferior de Safari y selecciona 'Agregar a Inicio'.",
+                "androidButton": "Agregar a Inicio"
+            },
             you: "Tú",
             title: "Perfil",
             description: "Administra la configuración de tu perfil.",
@@ -3165,6 +3200,7 @@ export const translations = {
             }
         },
         groupChat: {
+            translation: "Traducción",
             send: "Enviar",
             public: "Público",
             private: "Privado",
@@ -3598,6 +3634,7 @@ export const translations = {
             linkCopied: "¡Enlace copiado!",
             recommended: "Navegadores recomendados",
             howToOpen: {
+                line_ios: "Toca 'Abrir en el navegador' en el menú inferior derecho (︙).",
                 line: "Toca el menú de tres puntos (⋮) en la esquina superior derecha y selecciona 'Abrir en el navegador'.",
                 instagram: "Toca el menú de tres puntos (⋮) en la esquina superior derecha y selecciona 'Abrir en el navegador'.",
                 messenger: "Toca los puntos suspensivos (...) y selecciona 'Abrir en navegador externo'.",
@@ -3849,6 +3886,12 @@ export const translations = {
             swahili: "Tiếng Swahili (Swahili)"
         },
         profile: {
+            installApp: {
+                "title": "Install App",
+                "description": "Add to home screen for a better app experience.",
+                "iosInstruction": "Tap the Share button at the bottom of Safari, then select 'Add to Home Screen'.",
+                "androidButton": "Add to Home Screen"
+            },
             you: "Bạn",
             title: "Hồ sơ",
             description: "Quản lý cài đặt hồ sơ của bạn.",
@@ -3906,6 +3949,7 @@ export const translations = {
             inviteLinkCopied: "Đã sao chép liên kết mời!",
             errorTranslation: "Dịch tin nhắn thất bại",
             translate: "Dịch",
+            translation: "Translation",
             translating: "Đang dịch...",
             translated: "Đã dịch",
             original: "Bản gốc",
@@ -4350,6 +4394,7 @@ export const translations = {
             linkCopied: "Đã sao chép liên kết!",
             recommended: "Trình duyệt được khuyến nghị",
             howToOpen: {
+                line_ios: "Nhấn 'Mở trong trình duyệt' từ menu góc dưới bên phải (︙).",
                 line: "Nhấn vào menu ba chấm (⋮) ở góc trên bên phải và chọn 'Mở trong trình duyệt'.",
                 instagram: "Nhấn vào menu ba chấm (⋮) ở góc trên bên phải và chọn 'Mở trong trình duyệt'.",
                 messenger: "Nhấn vào dấu ba chấm (...) và chọn 'Mở trong trình duyệt bên ngoài'.",
@@ -4581,6 +4626,12 @@ export const translations = {
             swahili: "สวาฮีลี (Swahili)"
         },
         profile: {
+            installApp: {
+                "title": "Install App",
+                "description": "Add to home screen for a better app experience.",
+                "iosInstruction": "Tap the Share button at the bottom of Safari, then select 'Add to Home Screen'.",
+                "androidButton": "Add to Home Screen"
+            },
             you: "คุณ",
             title: "โปรไฟล์",
             description: "จัดการการตั้งค่าโปรไฟล์ของคุณ",
@@ -4702,6 +4753,7 @@ export const translations = {
             deleteMessageWarning: "การดำเนินการนี้จะลบบันทึกจาก บันทึกของฉัน ด้วย",
             errorTranslation: "การแปลข้อความล้มเหลว",
             translate: "แปล",
+            translation: "Translation",
             translating: "กำลังแปล...",
             translated: "แปลแล้ว",
             reply: "ตอบกลับ",
@@ -5111,6 +5163,7 @@ export const translations = {
             linkCopied: "คัดลอกลิงก์แล้ว!",
             recommended: "เบราว์เซอร์ที่แนะนำ",
             howToOpen: {
+                line_ios: "แตะ 'เปิดในเบราว์เซอร์' จากเมนูด้านล่างขวา (︙).",
                 line: "แตะเมนูสามจุด (⋮) ที่มุมขวาบนแล้วเลือก 'เปิดในเบราว์เซอร์'",
                 instagram: "แตะเมนูสามจุด (⋮) ที่มุมขวาบนแล้วเลือก 'เปิดในเบราว์เซอร์'",
                 messenger: "แตะจุดไข่ปลา (...) แล้วเลือก 'เปิดในเบราว์เซอร์ภายนอก'",
@@ -5342,6 +5395,12 @@ export const translations = {
             swahili: "스와힐리어 (Swahili)"
         },
         profile: {
+            installApp: {
+                "title": "Install App",
+                "description": "Add to home screen for a better app experience.",
+                "iosInstruction": "Tap the Share button at the bottom of Safari, then select 'Add to Home Screen'.",
+                "androidButton": "Add to Home Screen"
+            },
             you: "나",
             title: "프로필",
             description: "프로필 설정을 관리합니다.",
@@ -5461,6 +5520,7 @@ export const translations = {
             deleteMessageWarning: "이 작업은 내 노트에서도 해당 노트를 삭제합니다.",
             errorTranslation: "메시지 번역 실패",
             translate: "번역",
+            translation: "Translation",
             translating: "번역 중...",
             translated: "번역됨",
             reply: "답장",
@@ -5869,6 +5929,7 @@ export const translations = {
             linkCopied: "링크가 복사되었습니다!",
             recommended: "권장 브라우저",
             howToOpen: {
+                line_ios: "우측 하단 메뉴(︙)에서 '브라우저에서 열기'를 탭하세요.",
                 line: "오른쪽 상단의 점 세 개 메뉴(⋮)를 누르고 '다른 브라우저로 열기'를 선택하세요.",
                 instagram: "오른쪽 상단의 점 세 개 메뉴(⋮)를 누르고 '브라우저에서 열기'를 선택하세요.",
                 messenger: "줄임표(...)를 누르고 '외부 브라우저에서 열기'를 선택하세요.",
@@ -6086,6 +6147,12 @@ export const translations = {
             swahili: "Swahili (Swahili)"
         },
         profile: {
+            installApp: {
+                "title": "Install App",
+                "description": "Add to home screen for a better app experience.",
+                "iosInstruction": "Tap the Share button at the bottom of Safari, then select 'Add to Home Screen'.",
+                "androidButton": "Add to Home Screen"
+            },
             you: "Ikaw",
             title: "Profile",
             description: "Pamahalaan ang mga setting ng iyong profile.",
@@ -6205,6 +6272,7 @@ export const translations = {
             deleteMessageWarning: "Tatanggalin din nito ang tala mula sa Aking mga Tala.",
             errorTranslation: "Nabigong isalin ang mensahe",
             translate: "Isalin",
+            translation: "Translation",
             translating: "Isinasalin...",
             translated: "Naisalin na",
             reply: "Sumagot",
@@ -6613,6 +6681,7 @@ export const translations = {
             linkCopied: "Nakopya ang link!",
             recommended: "Inirerekomendang Browser",
             howToOpen: {
+                line_ios: "I-tap ang 'Open in browser' mula sa kanang ibabang menu (︙).",
                 line: "I-tap ang three-dot menu (⋮) sa kanang bahagi sa itaas at piliin ang 'Buksan sa browser'.",
                 instagram: "I-tap ang three-dot menu (⋮) sa kanang bahagi sa itaas at piliin ang 'Buksan sa browser'.",
                 messenger: "I-tap ang ellipsis (...) at piliin ang 'Buksan sa external browser'.",
@@ -6844,6 +6913,12 @@ export const translations = {
             swahili: "Kiswahili (Swahili)"
         },
         profile: {
+            installApp: {
+                "title": "Install App",
+                "description": "Add to home screen for a better app experience.",
+                "iosInstruction": "Tap the Share button at the bottom of Safari, then select 'Add to Home Screen'.",
+                "androidButton": "Add to Home Screen"
+            },
             you: "Wewe",
             title: "Wasifu",
             description: "Dhibiti mipangilio ya wasifu wako.",
@@ -6963,6 +7038,7 @@ export const translations = {
             deleteMessageWarning: "Hii pia itafuta maelezo kutoka Maelezo Yangu.",
             errorTranslation: "Imeshindwa kutafsiri ujumbe",
             translate: "Tafsiri",
+            translation: "Translation",
             translating: "Inatafsiri...",
             translated: "Imetafsiriwa",
             reply: "Jibu",
@@ -7371,6 +7447,7 @@ export const translations = {
             linkCopied: "Kiungo kimenakiliwa!",
             recommended: "Vivinjari Vinavyopendekezwi",
             howToOpen: {
+                line_ios: "Gonga 'Fungua katika kivinjari' kwenye menyu ya chini kulia (︙).",
                 line: "Gusa menyu ya vitone vitatu (⋮) upande wa juu kulia na uchague 'Fungua kwenye kivinjari'.",
                 instagram: "Gusa menyu ya vitone vitatu (⋮) upande wa juu kulia na uchague 'Fungua kwenye kivinjari'.",
                 messenger: "Gusa dokezo (...) na uchague 'Fungua kwenye kivinjari cha nje'.",
