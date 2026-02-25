@@ -1039,9 +1039,25 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     }
   };
 
+  useEffect(() => {
+    window.logTouch = (msg) => {
+      const el = document.getElementById('touch-debug');
+      if (el) {
+        const time = new Date().toISOString().split('T')[1].slice(0, 12);
+        el.innerHTML += `<div>[${time}] ${msg}</div>`;
+        if (el.children.length > 8) el.firstChild.remove();
+      }
+    };
+    return () => {
+      delete window.logTouch;
+    };
+  }, []);
+
   // Context menu handlers for own messages
   const handleLongPressStart = (msg, e) => {
+    window.logTouch?.('Touch START');
     if (longPressTimer.current) {
+      window.logTouch?.('Timer WAS running, clearing');
       clearTimeout(longPressTimer.current);
     }
     // Get touch coordinates if available
@@ -1056,6 +1072,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     const y = touch ? touch.clientY : window.innerHeight / 2;
 
     longPressTimer.current = setTimeout(() => {
+      window.logTouch?.('Timer TRIGGERED');
       setContextMenu({
         show: true,
         x: x,
@@ -1076,6 +1093,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       const dy = touch.clientY - touchStartPos.current.y;
       // If moved more than 10 pixels, it's a swipe/scroll, so cancel the long press
       if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+        window.logTouch?.(`Touch MOVE cancelled (dx:${Math.round(dx)}, dy:${Math.round(dy)})`);
         clearTimeout(longPressTimer.current);
         longPressTimer.current = null;
         touchStartPos.current = null;
@@ -1084,9 +1102,13 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   };
 
   const handleLongPressEnd = () => {
+    window.logTouch?.('Touch END');
     if (longPressTimer.current) {
+      window.logTouch?.('Timer CLEARED');
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
+    } else {
+      window.logTouch?.('Timer was already null');
     }
     touchStartPos.current = null;
   };
