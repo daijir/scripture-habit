@@ -1351,7 +1351,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   const handleCopyInviteLink = () => {
     if (groupData && groupData.inviteCode) {
       const baseUrl = window.location.origin;
-      const inviteLink = `${baseUrl}/join/${groupData.inviteCode}`;
+      const inviteLink = `${baseUrl}/join/${groupData.inviteCode}?openExternalBrowser=1`;
       navigator.clipboard.writeText(inviteLink);
       toast.success(t('groupChat.inviteLinkCopied'));
     }
@@ -1359,7 +1359,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
   const handleShareLine = () => {
     if (groupData && groupData.inviteCode) {
-      const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}`;
+      const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}?openExternalBrowser=1`;
       const text = t('groupChat.inviteMessage')
         .replace('{groupName}', groupData.name)
         .replace('{inviteLink}', inviteLink);
@@ -1370,7 +1370,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
   const handleShareWhatsApp = () => {
     if (groupData && groupData.inviteCode) {
-      const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}`;
+      const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}?openExternalBrowser=1`;
       const text = t('groupChat.inviteMessage')
         .replace('{groupName}', groupData.name)
         .replace('{inviteLink}', inviteLink);
@@ -1381,7 +1381,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
   const handleShareMessenger = async () => {
     if (groupData && groupData.inviteCode) {
-      const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}`;
+      const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}?openExternalBrowser=1`;
       const text = t('groupChat.inviteMessage')
         .replace('{groupName}', groupData.name)
         .replace('{inviteLink}', inviteLink);
