@@ -67,8 +67,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   const [cheerTarget, setCheerTarget] = useState(null);
   const [isSendingCheer, setIsSendingCheer] = useState(false);
   const [cheeredTodayUids, setCheeredTodayUids] = useState(new Set());
-  const longPressTimer = useRef(null);
-  const touchStartPos = useRef(null);
+
   const containerRef = useRef(null);
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
   const [showAddNoteTooltip, setShowAddNoteTooltip] = useState(false);
@@ -1054,7 +1053,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   }, []);
 
   // Context menu handler (triggered instantly on click now)
-  const handleLongPressStart = (msg, e) => {
+  const handleMessageClick = (msg, e) => {
     // Get click coordinates (or touch if it was a tap translated to click)
     let x, y;
     if (e.clientX !== undefined) {
@@ -1075,14 +1074,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       messageId: msg.id,
       message: msg
     });
-  };
-
-  const handleLongPressMove = (e) => {
-    // No longer needed
-  };
-
-  const handleLongPressEnd = () => {
-    // No longer needed
   };
 
   const closeContextMenu = () => {
@@ -1997,9 +1988,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                 msg={msg}
                 userData={userData}
                 t={t}
-                handleLongPressStart={handleLongPressStart}
-                handleLongPressEnd={handleLongPressEnd}
-                handleLongPressMove={handleLongPressMove}
+                handleMessageClick={handleMessageClick}
                 handleEditMessage={handleEditMessage}
                 handleDeleteMessageClick={handleDeleteMessageClick}
                 handleReply={handleReply}

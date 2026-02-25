@@ -7,9 +7,7 @@ const MessageItem = ({
   msg,
   userData,
   t,
-  handleLongPressStart,
-  handleLongPressEnd,
-  handleLongPressMove,
+  handleMessageClick,
   handleEditMessage,
   handleDeleteMessageClick,
   handleReply,
@@ -171,7 +169,7 @@ const MessageItem = ({
               // Ignore clicks on links so they can navigate normally
               if (e.target.tagName !== 'A') {
                 e.stopPropagation();
-                handleLongPressStart(msg, e);
+                handleMessageClick(msg, e);
               }
             }}
             style={{ cursor: 'pointer' }}
