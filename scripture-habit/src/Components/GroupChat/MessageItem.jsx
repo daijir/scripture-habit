@@ -9,6 +9,7 @@ const MessageItem = ({
   t,
   handleLongPressStart,
   handleLongPressEnd,
+  handleLongPressMove,
   handleEditMessage,
   handleDeleteMessageClick,
   handleReply,
@@ -169,7 +170,14 @@ const MessageItem = ({
             onTouchStart={(e) => handleLongPressStart(msg, e)}
             onTouchEnd={handleLongPressEnd}
             onTouchCancel={handleLongPressEnd}
-            onTouchMove={handleLongPressEnd}
+            onTouchMove={handleLongPressMove}
+            onContextMenu={(e) => {
+              // Prevent native context menu from appearing when long pressing text
+              // But don't prevent if they're interacting with real links
+              if (e.target.tagName !== 'A') {
+                e.preventDefault();
+              }
+            }}
             style={{ cursor: 'pointer' }}
           >
             {/* Hover action buttons */}

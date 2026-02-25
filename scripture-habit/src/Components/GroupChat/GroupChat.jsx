@@ -68,6 +68,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   const [isSendingCheer, setIsSendingCheer] = useState(false);
   const [cheeredTodayUids, setCheeredTodayUids] = useState(new Set());
   const longPressTimer = useRef(null);
+  const touchStartPos = useRef(null);
   const containerRef = useRef(null);
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
   const [showAddNoteTooltip, setShowAddNoteTooltip] = useState(false);
@@ -95,9 +96,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     latestMessageRef
   } = useGroupMessages(groupId, userData, t);
 
-  /* 
-   * Translation State Tracking refs to prevent loops 
-   */
   const groupNameTranslateRef = useRef({ id: null, lang: null });
   const groupDescTranslateRef = useRef({ id: null, lang: null });
 
@@ -239,10 +237,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     // Check for welcome guide logic from navigation state
     if (location.state?.showWelcome && location.state?.initialGroupId === groupId) {
       setShowWelcomeGuide(true);
-      // Clear the state so it doesn't show again on refresh/back (optional, but good practice)
-      // However, standard browser history might keep it. Ideally we rely on it being one-time.
-      // We can't easily clear location state without replacing history.
-      // window.history.replaceState({}, document.title); 
     }
   }, [location.state, groupId]);
 
@@ -1039,20 +1033,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   };
 
   const handleKeyDown = (e) => {
-    // User requested: Enter = Newline, Send = Click only (for Desktop)
-    // Simply do nothing on Enter key, allowing default behavior (newline)
-    // We can still support Shift+Enter for newline (default) or just Enter for newline (default)
-
-    // If we want to strictly follow "Send ONLY on click", we just remove the keydown handler's submit logic.
-    // However, usually "Enter" sends. The user specifically asked:
-    // "desktop-viewの時Enterを押したら改行にするようにしてほしい。送信は送信ボタンをクリックしたときのみどうさするようにしてほしい"
-    // (In desktop view, I want Enter to start a new line. I want sending to work ONLY when the send button is clicked.)
-
-    // So we just don't handle submission here anymore. 
-    // We might want to stop propagation if there was some existing form submission behavior, 
-    // but since this is presumably a textarea, Enter naturally creates a newline.
-    // We can just leave this empty or remove the block. 
-    // But to be safe and explicit about the change:
     if (e.key === 'Enter') {
       // Allow default behavior (newline)
       e.stopPropagation();
@@ -1066,6 +1046,12 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     }
     // Get touch coordinates if available
     const touch = e.touches ? e.touches[0] : null;
+    if (touch) {
+      touchStartPos.current = { x: touch.clientX, y: touch.clientY };
+    } else {
+      touchStartPos.current = null;
+    }
+
     const x = touch ? touch.clientX : window.innerWidth / 2;
     const y = touch ? touch.clientY : window.innerHeight / 2;
 
@@ -1078,7 +1064,23 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         message: msg
       });
       longPressTimer.current = null;
-    }, 700); // 700ms long press
+      touchStartPos.current = null;
+    }, 500); // 500ms long press is standard and feels better than 700ms
+  };
+
+  const handleLongPressMove = (e) => {
+    if (!touchStartPos.current || !longPressTimer.current) return;
+    const touch = e.touches ? e.touches[0] : null;
+    if (touch) {
+      const dx = touch.clientX - touchStartPos.current.x;
+      const dy = touch.clientY - touchStartPos.current.y;
+      // If moved more than 10 pixels, it's a swipe/scroll, so cancel the long press
+      if (Math.abs(dx) > 10 || Math.abs(dy) > 10) {
+        clearTimeout(longPressTimer.current);
+        longPressTimer.current = null;
+        touchStartPos.current = null;
+      }
+    }
   };
 
   const handleLongPressEnd = () => {
@@ -1086,6 +1088,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       clearTimeout(longPressTimer.current);
       longPressTimer.current = null;
     }
+    touchStartPos.current = null;
   };
 
   const closeContextMenu = () => {
@@ -2002,6 +2005,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                 t={t}
                 handleLongPressStart={handleLongPressStart}
                 handleLongPressEnd={handleLongPressEnd}
+                handleLongPressMove={handleLongPressMove}
                 handleEditMessage={handleEditMessage}
                 handleDeleteMessageClick={handleDeleteMessageClick}
                 handleReply={handleReply}
