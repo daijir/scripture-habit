@@ -419,7 +419,7 @@
     align-items: flex-end;
     background: linear-gradient(135deg, #FF919D 0%, #fc6777 100%);
     color: white;
-    border-bottom-right-radius: 0.2rem;
+    border-top-right-radius: 0.2rem;
     text-align: left;
     /* Force text to be left aligned inside the bubble */
 }
@@ -429,7 +429,7 @@
     text-align: left;
     background: white;
     color: var(--black);
-    border-bottom-left-radius: 0.2rem;
+    border-top-left-radius: 0.2rem;
 }
 
 /* AI Translation Styles */
