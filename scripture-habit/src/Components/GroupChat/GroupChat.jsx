@@ -789,6 +789,26 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     const messageToSend = newMessage;
     const replyToData = replyTo;
 
+    // Optimistically prepare reply data
+    let replyData = null;
+    if (replyToData) {
+      let replyText;
+      if (replyToData.isNote || replyToData.isEntry) {
+        replyText = t('groupChat.studyNote');
+      } else if (replyToData.text) {
+        replyText = replyToData.text.substring(0, 50) + (replyToData.text.length > 50 ? '...' : '');
+      } else {
+        replyText = 'Image/Note';
+      }
+
+      replyData = {
+        id: replyToData.id,
+        senderNickname: replyToData.senderNickname,
+        text: replyText,
+        isNote: replyToData.isNote || replyToData.isEntry
+      };
+    }
+
     // 1. Optimistic UI: Clear input immediately to eliminate lag
     setNewMessage('');
     setReplyTo(null);
@@ -796,28 +816,24 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       textareaRef.current.style.height = 'auto';
     }
 
+    // 2. Optimistic UI: Add temporary message to the list to show immediately
+    const optimisticMsgId = `temp-${Date.now()}`;
+    const optimisticMsg = {
+      id: optimisticMsgId,
+      text: messageToSend,
+      senderId: userData.uid,
+      senderNickname: userData.nickname,
+      senderPhotoURL: userData.profilePicUrl || userData.photoURL || null,
+      createdAt: { seconds: Math.floor(Date.now() / 1000) },
+      isNote: false,
+      replyTo: replyData,
+      isOptimistic: true
+    };
+
+    setMessages(prev => [...prev, optimisticMsg]);
+
     try {
       const idToken = await auth.currentUser.getIdToken();
-
-      // Determine replyTo data if existing
-      let replyData = null;
-      if (replyToData) {
-        let replyText;
-        if (replyToData.isNote || replyToData.isEntry) {
-          replyText = t('groupChat.studyNote');
-        } else if (replyToData.text) {
-          replyText = replyToData.text.substring(0, 50) + (replyToData.text.length > 50 ? '...' : '');
-        } else {
-          replyText = 'Image/Note';
-        }
-
-        replyData = {
-          id: replyToData.id,
-          senderNickname: replyToData.senderNickname,
-          text: replyText,
-          isNote: replyToData.isNote || replyToData.isEntry
-        };
-      }
 
       const response = await fetch(`${API_BASE}/api/post-message`, {
         method: 'POST',
@@ -836,12 +852,18 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         throw new Error(await response.text());
       }
 
+      // Remove the optimistic message once the API responds.
+      // The real message will be brought in by the Firestore snapshot listener almost simultaneously.
+      setMessages(prev => prev.filter(m => m.id !== optimisticMsgId));
+
       // Update local read count in background
       const newReadCount = (groupData?.messageCount || messages.length) + 1;
       setUserReadCount(newReadCount);
 
     } catch (e) {
       console.error("Error sending message:", e);
+      // Remove temp message if failed
+      setMessages(prev => prev.filter(m => m.id !== optimisticMsgId));
       // Restore the message in input so user doesn't lose it if it fails
       setNewMessage(messageToSend);
       toast.error(`${t('groupChat.errorSendMessage') || 'Failed to send message'}: ${e.message || e}`);

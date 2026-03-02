@@ -166,13 +166,14 @@ const MessageItem = ({
           <div
             className={`message ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}
             onClick={(e) => {
+              if (msg.isOptimistic) return;
               // Ignore clicks on links so they can navigate normally
               if (e.target.tagName !== 'A') {
                 e.stopPropagation();
                 handleMessageClick(msg, e);
               }
             }}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: msg.isOptimistic ? 'default' : 'pointer', opacity: msg.isOptimistic ? 0.7 : 1 }}
           >
             {/* Hover action buttons */}
             <div className={`message-hover-actions ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}>
