@@ -326,8 +326,6 @@ const MessageItem = ({
                               if (isOther) linkLabel = t('dashboard.readStudyMaterial');
                               else if (isBYU) linkLabel = t('dashboard.goToByuSpeech');
 
-
-
                               return (
                                 <a
                                   href={chapterValue}
@@ -344,7 +342,6 @@ const MessageItem = ({
                             // CASE B: Scripture reference or GC shortcode (handled by Mapper)
                             const url = getGospelLibraryUrl(scripture, chapterValue, language);
 
-
                             if (url) {
                               return (
                                 <a
@@ -357,7 +354,6 @@ const MessageItem = ({
                                   {isBYU ? t('dashboard.goToByuSpeech') : (isOther ? t('dashboard.readStudyMaterial') : t('dashboard.readInGospelLibrary'))}
                                 </a>
                               );
-
                             }
                           }
                           return null;

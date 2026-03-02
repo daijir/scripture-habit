@@ -1433,7 +1433,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
   const handleShareInstagram = async () => {
     if (groupData && groupData.inviteCode) {
-      const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}`;
+      const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}?openExternalBrowser=1`;
       const text = t('groupChat.inviteMessage')
         .replace('{groupName}', groupData.name)
         .replace('{inviteLink}', inviteLink);
