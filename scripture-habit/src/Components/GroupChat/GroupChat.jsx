@@ -2077,6 +2077,16 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
               </button>
             )}
 
+            <button style={{ display: 'flex', alignItems: 'center', gap: '14px', justifyContent: 'flex-start' }} onClick={() => {
+              handleTranslateMessage(contextMenu.message);
+              closeContextMenu();
+            }}>
+              <div style={{ width: '22px', fontSize: '18px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                {translatingIds.has(contextMenu.message.id) ? '⏳' : '✨'}
+              </div>
+              <span style={{ flex: 1 }}>{t('groupChat.translate') || "Translate"}</span>
+            </button>
+
             {contextMenu.message.senderId !== userData?.uid && (
               <button style={{ display: 'flex', alignItems: 'center', gap: '14px', justifyContent: 'flex-start' }} onClick={() => {
                 handleReportClick(contextMenu.message);
