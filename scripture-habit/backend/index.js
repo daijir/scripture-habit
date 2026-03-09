@@ -218,6 +218,95 @@ const languageNames = {
   'sw': 'Swahili'
 };
 
+// Handle User Reports and send to Discord Webhook
+app.post('/report', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  let idToken;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    idToken = authHeader.split('Bearer ')[1];
+  } else if (req.body.token) {
+    idToken = req.body.token;
+  } else {
+    return res.status(401).json({ error: 'Unauthorized: No token provided.' });
+  }
+
+  const {
+    messageId,
+    groupId,
+    reporterNickname,
+    reportedUserId,
+    reportedUserNickname,
+    messageText,
+    reason
+  } = req.body;
+
+  if (!messageId || !reportedUserId || !reason) {
+    return res.status(400).json({ error: 'Missing required report fields.' });
+  }
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const uid = decodedToken.uid;
+    const db = admin.firestore();
+
+    // 1. Save report to Firestore
+    const reportData = {
+      messageId,
+      groupId,
+      reporterId: uid,
+      reporterNickname: reporterNickname || 'Unknown',
+      reportedUserId,
+      reportedUserNickname: reportedUserNickname || 'Unknown',
+      messageText: messageText || '',
+      reason,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      status: 'pending'
+    };
+    
+    await db.collection('reports').add(reportData);
+
+    // 2. Send Discord Webhook Notification if URL is configured
+    const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL;
+    if (discordWebhookUrl) {
+      const discordPayload = {
+        content: `🚨 **New Report Submitted!** 🚨`,
+        embeds: [{
+          title: "Message Report Details",
+          color: 0xff0000, // Red
+          fields: [
+            { name: "Reason", value: reason, inline: true },
+            { name: "Status", value: "Pending", inline: true },
+            { name: "Reported User", value: `${reportedUserNickname} (${reportedUserId})`, inline: false },
+            { name: "Reporter", value: `${reportData.reporterNickname} (${uid})`, inline: false },
+            { name: "Group ID", value: groupId || "Unknown", inline: false },
+            { name: "Message ID", value: messageId, inline: false },
+            { name: "Message Content", value: messageText ? `\`\`\`${messageText.substring(0, 1000)}\`\`\`` : "*No text/Image only*", inline: false }
+          ],
+          timestamp: new Date().toISOString()
+        }]
+      };
+
+      try {
+        await fetch(discordWebhookUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(discordPayload)
+        });
+      } catch (webhookError) {
+        console.error("Failed to send Discord webhook:", webhookError.message);
+        // We don't fail the request if webhook fails, report is already saved
+      }
+    }
+
+    res.status(200).json({ message: 'Report submitted successfully' });
+  } catch (error) {
+    console.error('Error submitting report:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.post('/translate', async (req, res) => {
   const { text, targetLanguage } = req.body;
 
@@ -348,8 +437,8 @@ app.post('/join-group', async (req, res) => {
     return res.status(401).send('Unauthorized: No token provided.');
   }
 
-  const { groupId } = req.body;
-  if (!groupId) return res.status(400).send('Group ID is required.');
+  const { groupId, inviteCode } = req.body;
+  if (!groupId && !inviteCode) return res.status(400).send('Group ID or invite code is required.');
 
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
@@ -358,28 +447,38 @@ app.post('/join-group', async (req, res) => {
 
     await db.runTransaction(async (t) => {
       const userRef = db.collection('users').doc(uid);
-      const groupRef = db.collection('groups').doc(groupId);
+      let groupRef;
+      let targetGroupId = groupId;
+      let groupDoc;
+
+      if (inviteCode) {
+        const snapshot = await t.get(db.collection('groups').where('inviteCode', '==', inviteCode).limit(1));
+        if (snapshot.empty) throw new Error('Invalid invite code.');
+        groupDoc = snapshot.docs[0];
+        groupRef = groupDoc.ref;
+        targetGroupId = groupDoc.id;
+      } else {
+        groupRef = db.collection('groups').doc(targetGroupId);
+        groupDoc = await t.get(groupRef);
+        if (!groupDoc.exists) throw new Error('Group not found.');
+      }
 
       const userDoc = await t.get(userRef);
-      const groupDoc = await t.get(groupRef);
-
-      if (!groupDoc.exists) throw new Error('Group not found.');
-
-      const userData = userDoc.data();
+      const userData = userDoc.data() || {};
       const groupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
 
-      if (groupIds.includes(groupId)) throw new Error('User already in this group.');
-      if (groupIds.length >= 7) throw new Error('You can only join up to 12 groups.');
+      if (groupIds.includes(targetGroupId)) throw new Error('User already in this group.');
+      if (groupIds.length >= 12) throw new Error('You can only join up to 12 groups.');
 
       const groupData = groupDoc.data();
 
       // Check if user is already a member of the group
       if (groupData.members && groupData.members.includes(uid)) {
-        if (!groupIds.includes(groupId)) {
+        if (!groupIds.includes(targetGroupId)) {
           // Inconsistency detected: User is in group members but group is not in user's list.
           // Repair: Add to user's list
           t.update(userRef, {
-            groupIds: admin.firestore.FieldValue.arrayUnion(groupId)
+            groupIds: admin.firestore.FieldValue.arrayUnion(targetGroupId)
           });
           return; // Exit transaction successfully, skipping other updates
         } else {
@@ -398,15 +497,15 @@ app.post('/join-group', async (req, res) => {
       if (!userData.groupIds && userData.groupId) {
         // Migration: User has a group but no groupIds array yet.
         // Initialize array with both the old group and the new group.
-        const uniqueIds = [...new Set([userData.groupId, groupId])];
+        const uniqueIds = [...new Set([userData.groupId, targetGroupId])];
         t.update(userRef, {
           groupIds: uniqueIds,
-          groupId: groupId
+          groupId: targetGroupId
         });
       } else {
         t.update(userRef, {
-          groupIds: admin.firestore.FieldValue.arrayUnion(groupId),
-          groupId: groupId
+          groupIds: admin.firestore.FieldValue.arrayUnion(targetGroupId),
+          groupId: targetGroupId
         });
       }
 
@@ -421,7 +520,7 @@ app.post('/join-group', async (req, res) => {
       });
     });
 
-    res.status(200).send({ message: 'Successfully joined group.' });
+    res.status(200).send({ message: 'Successfully joined group.', groupId: targetGroupId });
   } catch (error) {
     console.error('Error joining group:', error);
     res.status(500).send(error.message || 'Internal Server Error');
@@ -640,6 +739,32 @@ app.post('/delete-group', async (req, res) => {
   }
 });
 
+
+app.get('/group-preview/:inviteCode', async (req, res) => {
+  const { inviteCode } = req.params;
+  if (!inviteCode) return res.status(400).send('Invite code is required');
+
+  try {
+    const db = admin.firestore();
+    const snapshot = await db.collection('groups').where('inviteCode', '==', inviteCode).limit(1).get();
+
+    if (snapshot.empty) {
+      return res.status(404).send('Group not found');
+    }
+
+    const groupData = snapshot.docs[0].data();
+    
+    // Only return safe public info
+    res.status(200).json({
+      name: groupData.name,
+      description: groupData.description,
+      isPublic: groupData.isPublic
+    });
+  } catch (error) {
+    console.error('Error fetching group preview:', error);
+    res.status(500).send('Error fetching group preview.');
+  }
+});
 
 app.post('/migrate-data', async (req, res) => {
 

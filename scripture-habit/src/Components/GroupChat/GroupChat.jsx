@@ -1333,18 +1333,27 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     if (!reportedMessage || !userData) return;
 
     try {
-      await addDoc(collection(db, 'reports'), {
-        messageId: reportedMessage.id,
-        groupId: groupId,
-        reporterId: userData.uid,
-        reporterNickname: userData.nickname || 'Unknown',
-        reportedUserId: reportedMessage.senderId,
-        reportedUserNickname: reportedMessage.senderNickname,
-        messageText: reportedMessage.text,
-        reason: reportReason,
-        createdAt: serverTimestamp(),
-        status: 'pending'
+      const idToken = await auth.currentUser.getIdToken();
+      const response = await fetch(`${API_BASE}/api/report`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({
+          messageId: reportedMessage.id,
+          groupId: groupId,
+          reporterNickname: userData.nickname || 'Unknown',
+          reportedUserId: reportedMessage.senderId,
+          reportedUserNickname: reportedMessage.senderNickname,
+          messageText: reportedMessage.text,
+          reason: reportReason
+        })
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit report');
+      }
 
       toast.success(t('groupChat.reportSuccess') || "Report sent successfully.");
       setShowReportModal(false);

@@ -182,28 +182,8 @@ export default function JoinGroup() {
       console.warn('Server join failed:', resp.status, errText);
       setError(`${t('joinGroup.errorJoinFailed')} ${errText}`);
     } catch (e) {
-      console.warn('Server join failed, falling back to client update:', e);
-      // Fallback logic
-      const groupRef = doc(db, "groups", groupId);
-      const userRef = doc(db, "users", user.uid);
-      const batch = writeBatch(db);
-
-      try {
-        batch.update(groupRef, {
-          members: arrayUnion(user.uid),
-          membersCount: increment(1)
-        });
-        batch.update(userRef, {
-          groupIds: arrayUnion(groupId),
-          groupId: groupId // Set as active
-        });
-        await batch.commit();
-        toast.success(`🎉 ${t('joinGroup.successJoined')} ${groupData.name}`);
-        navigate(`/${language}/dashboard`, { state: { initialGroupId: groupId, showWelcome: true, initialView: 2 } });
-      } catch (e) {
-        console.error("Error joining group:", e);
-        setError(t('joinGroup.errorJoinFailed'));
-      }
+      console.error('Server join failed with error:', e);
+      setError(t('joinGroup.errorJoinFailed'));
     }
   };
 

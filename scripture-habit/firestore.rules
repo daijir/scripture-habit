@@ -2,14 +2,23 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    
+    // Helper function to check if user is authenticated and email verified (if using password provider)
+    function isAuthenticated() {
+      return request.auth != null && (
+        request.auth.token.firebase.sign_in_provider != 'password' || 
+        request.auth.token.email_verified == true
+      );
+    }
 
     // Rules for the 'users' collection
     match /users/{userId} {
-      // A user can create their own document upon signup.
+      // A user can create their own document upon signup (before email verification)
       allow create: if request.auth != null && request.auth.uid == userId;
 
-      // A user can read any user document (needed for group members list).
-      allow read: if request.auth != null;
+      // A user can read a specific user document (needed for group members list), but cannot query the entire collection.
+      allow get: if request.auth != null;
+      allow list: if false;
 
       // A user can update or delete their own document.
       allow update, delete: if request.auth != null && request.auth.uid == userId;
@@ -19,12 +28,12 @@ service cloud.firestore {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
 
-      // Rules for the 'groupStates' subcollection (for tracking read message counts)
+      // Rules for the 'groupStates' subcollection
       match /groupStates/{groupId} {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
 
-      // Rules for the 'letters' subcollection (for weekly recaps)
+      // Rules for the 'letters' subcollection
       match /letters/{letterId} {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
@@ -32,63 +41,93 @@ service cloud.firestore {
     
     // Rules for the 'groups' collection
     match /groups/{groupId} {
-      // 読み取り: プレビュー表示などのためにパブリックに許可（メッセージは別で保護）
-      allow read: if true;
+      // GET: Allow reading a specific group if public, or if the user is a member/owner
+      allow get: if isAuthenticated() && (
+        resource.data.isPublic == true ||
+        request.auth.uid in resource.data.get('members', []) ||
+        resource.data.get('ownerUserId', '') == request.auth.uid
+      );
+      
+      // LIST: Only allow querying public groups, never all groups unconditionally
+      allow list: if request.auth != null && resource.data.isPublic == true;
 
       // A user can create a group, but they must set themselves as the owner.
-      allow create: if request.auth != null &&
+      allow create: if isAuthenticated() &&
                     request.auth.uid == request.resource.data.ownerUserId;
       
-      // 更新権限
-      allow update: if request.auth != null && (
-        // A. オーナーは何でも更新可能
+      // 更新権限 (Update rules)
+      allow update: if isAuthenticated() && (
+        // A. Owner can change anything
         resource.data.get('ownerUserId', '') == request.auth.uid ||
-        // B. メンバーは自身の脱退、または統計情報の更新が可能
+        // B. Members can only update their read access, stats, or leave
         (
           request.auth.uid in resource.data.get('members', []) &&
-          (
-            // 特例: メンバーリストから「自分のUIDのみ」が削除される操作を許可（脱退）
-            (
-              request.resource.data.diff(resource.data).affectedKeys().hasOnly(['members']) &&
-              !(request.auth.uid in request.resource.data.members)
-            ) ||
-            // または、重要な管理項目（オーナー、招待コード、メンバー）が変更されていない（統計更新）
-            !request.resource.data.diff(resource.data).affectedKeys().hasAny(['ownerUserId', 'inviteCode', 'members'])
-          )
+          // Updating stats / member activity (whitelisted fields only)
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'memberLastActive', 'memberLastReadAt', 'messageCount', 
+            'lastMessageAt', 'lastNoteAt', 'lastMessageByNickname', 
+            'lastMessageByUid', 'lastNoteByNickname', 'lastNoteByUid',
+            'noteCount', 'notes'
+          ])
         )
       );
       
       // Allow deletion if the user is the owner
-      allow delete: if request.auth != null && resource.data.get('ownerUserId', '') == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.get('ownerUserId', '') == request.auth.uid;
       
       // Rules for the 'messages' subcollection
       match /messages/{messageId} {
-        // Only group members or the owner can read or write messages.
-        allow read, write: if request.auth != null &&
-                           (
-                             request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.get('members', []) ||
-                             get(/databases/$(database)/documents/groups/$(groupId)).data.get('ownerUserId', '') == request.auth.uid
-                           );
+        // Members and owner can read messages
+        allow read: if isAuthenticated() &&
+                    (
+                      request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.get('members', []) ||
+                      get(/databases/$(database)/documents/groups/$(groupId)).data.get('ownerUserId', '') == request.auth.uid
+                    );
+                    
+        // Members and owner can create messages (but only for themselves!)
+        allow create: if isAuthenticated() &&
+                    (
+                      request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.get('members', []) ||
+                      get(/databases/$(database)/documents/groups/$(groupId)).data.get('ownerUserId', '') == request.auth.uid
+                    ) &&
+                    request.resource.data.senderId == request.auth.uid; // Must be sent by them!
+                    
+        // Only the sender (or owner) can update/delete messages
+        allow update: if isAuthenticated() &&
+                      (
+                        resource.data.senderId == request.auth.uid ||
+                        get(/databases/$(database)/documents/groups/$(groupId)).data.get('ownerUserId', '') == request.auth.uid
+                      ) &&
+                      // Prevent changing senderId and other metadata
+                      request.resource.data.senderId == resource.data.senderId;
+                      
+        allow delete: if isAuthenticated() &&
+                      (
+                        resource.data.senderId == request.auth.uid ||
+                        get(/databases/$(database)/documents/groups/$(groupId)).data.get('ownerUserId', '') == request.auth.uid
+                      );
       }
     }
 
     // Rules for the 'system' collection (Maintenance & Status)
     match /system/{docId} {
-      // Allow anyone to read the status to check for maintenance mode/quota issues
-      // This is necessary to show the maintenance page before the user logs in
       allow read: if true;
-      // No one can write via client
       allow write: if false;
     }
+
     // Rules for the 'cheers' collection
     match /cheers/{cheerId} {
-      // Users can read cheers where they are the sender
       allow read: if request.auth != null && (
         resource.data.senderUid == request.auth.uid || 
         resource.data.targetUid == request.auth.uid
       );
-      // Writes are exclusively handled by the backend API
       allow write: if false;
+    }
+
+    // Rules for the 'reports' collection
+    match /reports/{reportId} {
+      allow create: if request.auth != null && request.resource.data.reporterId == request.auth.uid;
+      allow read, update, delete: if false; // Only admins via backend can read/manage
     }
   }
 }

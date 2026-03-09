@@ -21,10 +21,13 @@ export default function InviteRedirect() {
             // Fetch group info to show the user where they are going
             const fetchGroupInfo = async () => {
                 try {
-                    const q = query(collection(db, 'groups'), where('inviteCode', '==', inviteCode.trim().toUpperCase()));
-                    const querySnapshot = await getDocs(q);
-                    if (!querySnapshot.empty) {
-                        setGroupInfo(querySnapshot.docs[0].data());
+                    const API_BASE = window.location.hostname === 'localhost' ? '' : 'https://scripturehabit.app';
+                    const res = await fetch(`${API_BASE}/api/group-preview/${encodeURIComponent(inviteCode.trim().toUpperCase())}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        setGroupInfo(data);
+                    } else {
+                        console.warn("Invite code invalid or group not found");
                     }
                 } catch (error) {
                     console.error("Error fetching group info:", error);

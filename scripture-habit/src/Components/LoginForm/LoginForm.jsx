@@ -3,7 +3,7 @@ import './LoginForm.css';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 import { auth, db } from '../../firebase';
-import { signInWithEmailAndPassword, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, sendEmailVerification, signInWithCredential } from 'firebase/auth';
+import { signInWithEmailAndPassword, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, sendEmailVerification, signInWithCredential, signOut } from 'firebase/auth';
 import { Capacitor } from '@capacitor/core';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
@@ -125,6 +125,7 @@ export default function LoginForm() {
 
       if (!userCredential.user.emailVerified) {
         setUnverifiedUser(userCredential.user);
+        await signOut(auth); // Sign out so the session isn't persisted for unverified user
         setError(t('login.emailNotVerified'));
         return;
       }

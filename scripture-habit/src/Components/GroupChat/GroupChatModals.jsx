@@ -658,6 +658,15 @@ const GroupChatModals = ({
                                     <span>{t('groupChat.reportOther')}</span>
                                 </label>
                             </div>
+
+                            <div style={{ marginTop: '1.5rem', padding: '1rem', background: '#FFF5F5', borderRadius: '8px', borderLeft: '4px solid #E53E3E' }}>
+                                <h4 style={{ color: '#C53030', margin: '0 0 8px 0', fontSize: '0.95rem' }}>
+                                    {t('groupChat.reportConfirmTitle') || "Confirm Report"}
+                                </h4>
+                                <p style={{ color: '#742A2A', fontSize: '0.85rem', margin: 0, lineHeight: '1.4' }}>
+                                    {t('groupChat.reportConfirmMessage') || "Are you sure you want to report this message? This report will be sent directly to the Scripture Habit administrators."}
+                                </p>
+                            </div>
                         </div>
 
                         <div className="leave-modal-actions">

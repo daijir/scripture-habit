@@ -1,10 +1,11 @@
-import { auth, db } from '../../firebase';
-import { doc, updateDoc, arrayRemove } from 'firebase/firestore';
+import { auth } from '../../firebase';
 import { toast } from 'react-toastify';
 import { useLanguage } from '../../Context/LanguageContext';
+import { Capacitor } from '@capacitor/core';
 
 export default function LeaveGroupButton({ groupId }) {
   const { t } = useLanguage();
+  const API_BASE = Capacitor.isNativePlatform() ? 'https://scripturehabit.app' : '';
 
   const handleLeave = async () => {
     const user = auth.currentUser;
@@ -13,15 +14,21 @@ export default function LeaveGroupButton({ groupId }) {
     if (!confirm(t('groupChat.leaveConfirmMessage') || "Are you sure you want to leave this group?")) return;
 
     try {
-      const groupRef = doc(db, 'groups', groupId);
-      await updateDoc(groupRef, {
-        members: arrayRemove(user.uid)
+      const idToken = await user.getIdToken();
+
+      const response = await fetch(`${API_BASE}/api/leave-group`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({ groupId })
       });
 
-      const userRef = doc(db, 'users', user.uid);
-      await updateDoc(userRef, {
-        groupId: null
-      });
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(errText || 'Failed to leave group');
+      }
 
       toast.success(t('groupChat.leftGroupSuccess') || "You have left the group");
       window.location.href = '/dashboard';

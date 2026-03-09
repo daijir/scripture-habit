@@ -470,34 +470,6 @@ const Dashboard = () => {
       console.log("Processing pending invite code:", inviteCode);
 
       try {
-        // 1. Find the group by invite code
-        const q = query(collection(db, 'groups'), where('inviteCode', '==', inviteCode));
-        const querySnapshot = await getDocs(q);
-
-        if (querySnapshot.empty) {
-          console.warn("Invite code invalid or group not found");
-          safeStorage.remove('pendingInviteCode');
-          setIsJoiningInvite(false);
-          return;
-        }
-
-        const groupDoc = querySnapshot.docs[0];
-        const groupId = groupDoc.id;
-        const groupData = groupDoc.data();
-
-        // 2. Check if already a member
-        const currentGroupIds = userData?.groupIds || (userData?.groupId ? [userData.groupId] : []);
-        if (currentGroupIds.includes(groupId)) {
-          console.log("User already in this group");
-          safeStorage.remove('pendingInviteCode');
-          setIsJoiningInvite(false);
-          // Just switch to this group
-          setActiveGroupId(groupId);
-          setSelectedView(2);
-          return;
-        }
-
-        // 3. Join the group
         const API_BASE = Capacitor.isNativePlatform() ? 'https://scripturehabit.app' : '';
         const idToken = await user.getIdToken();
         const resp = await fetch(`${API_BASE}/api/join-group`, {
@@ -506,22 +478,28 @@ const Dashboard = () => {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${idToken}`
           },
-          body: JSON.stringify({ groupId })
+          body: JSON.stringify({ inviteCode })
         });
 
         if (resp.ok) {
-          // Success!
+          const result = await resp.json();
+          const joinedGroupId = result.groupId;
           safeStorage.remove('pendingInviteCode');
-          // Allow some time for Firestore listeners to catch up
+          
           setTimeout(() => {
-            setActiveGroupId(groupId);
+            if (joinedGroupId) setActiveGroupId(joinedGroupId);
             setSelectedView(2);
             setIsJoiningInvite(false);
-            toast.success(`🎉 ${t('joinGroup.joiningFromInviteSuccess')} (${groupData.name})`);
+            toast.success(`🎉 ${t('joinGroup.joiningFromInviteSuccess')}`);
           }, 1000);
         } else {
           const errText = await resp.text();
-          console.error("Failed to join via invite link:", errText);
+          
+          if (errText.includes('already in this group')) {
+            console.log("User already in this group");
+          } else {
+            console.error("Failed to join via invite link:", errText);
+          }
           safeStorage.remove('pendingInviteCode');
           setIsJoiningInvite(false);
         }
