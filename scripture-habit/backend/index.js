@@ -37,6 +37,19 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 const messaging = admin.messaging(); // Initialize messaging
 
+async function getUserFcmTokens(uid) {
+  const tokens = [];
+  const userDoc = await db.collection('users').doc(uid).get();
+  if (userDoc.exists && userDoc.data().fcmTokens) {
+    tokens.push(...userDoc.data().fcmTokens);
+  }
+  const privateDoc = await db.collection('users').doc(uid).collection('private').doc('tokens').get();
+  if (privateDoc.exists && privateDoc.data().fcmTokens) {
+    tokens.push(...privateDoc.data().fcmTokens);
+  }
+  return [...new Set(tokens)];
+}
+
 /**
  * Sends a push notification to multiple FCM tokens
  */
@@ -89,12 +102,9 @@ async function notifyGroupMembers(groupId, senderUid, payload) {
 
     const tokens = [];
     for (const memberUid of membersToNotify) {
-      const userDoc = await db.collection('users').doc(memberUid).get();
-      if (userDoc.exists) {
-        const userData = userDoc.data();
-        if (userData.fcmTokens && Array.isArray(userData.fcmTokens)) {
-          tokens.push(...userData.fcmTokens);
-        }
+      const memberTokens = await getUserFcmTokens(memberUid);
+      if (memberTokens.length > 0) {
+        tokens.push(...memberTokens);
       }
     }
 
@@ -308,6 +318,17 @@ app.post('/report', async (req, res) => {
 });
 
 app.post('/translate', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized: No token provided.' });
+  }
+  const idToken = authHeader.split('Bearer ')[1];
+  try {
+    await admin.auth().verifyIdToken(idToken);
+  } catch (err) {
+    return res.status(401).json({ error: 'Unauthorized: Invalid token.' });
+  }
+
   const { text, targetLanguage } = req.body;
 
   if (!text || !targetLanguage) {
@@ -410,6 +431,12 @@ app.post('/verify-login', async (req, res) => {
 
   try {
     const decodedToken = await admin.auth().verifyIdToken(token);
+    
+    // Enforce Email Verification for password provider
+    if (decodedToken.firebase && decodedToken.firebase.sign_in_provider === 'password' && !decodedToken.email_verified) {
+      return res.status(403).send('Email not verified. Please check your email inbox.');
+    }
+
     const uid = decodedToken.uid;
     const email = decodedToken.email;
 
@@ -442,6 +469,12 @@ app.post('/join-group', async (req, res) => {
 
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
+    
+    // Enforce Email Verification for password provider
+    if (decodedToken.firebase && decodedToken.firebase.sign_in_provider === 'password' && !decodedToken.email_verified) {
+      return res.status(403).send('Email not verified. Please verify your email before joining a group.');
+    }
+
     const uid = decodedToken.uid;
     const db = admin.firestore();
 
@@ -1260,114 +1293,22 @@ app.post('/post-note', async (req, res) => {
 });
 
 
-// Scraping Endpoint for General Conference Metadata
-app.get('/fetch-gc-metadata', async (req, res) => {
-  console.log('DEBUG: GC Metadata Request received for URL:', req.query.url);
-  const { url, lang } = req.query;
 
-  if (!url) return res.status(400).send({ error: 'URL is required' });
-
-  try {
-    let targetUrl;
-    try {
-      targetUrl = new URL(url);
-    } catch (e) {
-      return res.status(400).json({ error: 'Invalid URL format' });
-    }
-
-    // Improve lang parameter handling: only set if provided and not empty
-    if (lang && lang.trim() !== '') {
-      targetUrl.searchParams.set('lang', lang.trim());
-    } else {
-      targetUrl.searchParams.delete('lang'); // Ensure no old lang param is present if not provided
-    }
-
-    let response;
-    try {
-      response = await axios.get(targetUrl.toString(), {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-        },
-        timeout: 10000
-      });
-    } catch (axiosError) {
-      // Fallback: If requested language fails (common for magazines), try without lang param
-      if (lang) {
-        try {
-          targetUrl.searchParams.delete('lang');
-          response = await axios.get(targetUrl.toString(), {
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
-            },
-            timeout: 10000
-          });
-        } catch (fallbackError) {
-          return res.json({ title: '', speaker: '' });
-        }
-      } else {
-        return res.json({ title: '', speaker: '' });
-      }
-    }
-
-    if (!response || !response.data) {
-      return res.json({ title: '', speaker: '' });
-    }
-
-    const $ = cheerio.load(response.data);
-
-    // Attempt to find title
-    // 1. Try Open Graph Title first (usually most accurate and clean)
-    let title = $('meta[property="og:title"]').attr('content');
-
-    // 2. If no OG title, try H1 but check length to avoid capturing full body text
-    if (!title) {
-      const h1Text = $('h1').first().text().trim();
-      // Only use H1 if it's a reasonable title length (e.g., < 200 chars)
-      if (h1Text && h1Text.length < 200) {
-        title = h1Text;
-      }
-    }
-
-    // 3. Fallback to HTML title tag
-    if (!title) {
-      title = $('title').text().trim();
-      // Remove common suffixes like " | The Church of Jesus Christ..."
-      if (title.includes('|')) {
-        title = title.split('|')[0].trim();
-      }
-    }
-
-    title = title || '';
-
-    // Attempt to find speaker
-    let speaker = '';
-    // Common selectors for GC talks
-    if ($('div.byline p.author-name').length) {
-      speaker = $('div.byline p.author-name').first().text().trim();
-    } else if ($('p.author-name').length) {
-      speaker = $('p.author-name').first().text().trim();
-    } else if ($('a.author-name').length) {
-      speaker = $('a.author-name').first().text().trim();
-    } else if ($('.speaker-name').length) {
-      speaker = $('.speaker-name').text().trim();
-    } else if ($('div.byline p').length) {
-      speaker = $('div.byline p').first().text().trim();
-    }
-
-    if (speaker) {
-      speaker = speaker.replace(/^(By|Par|De|Por)\s+/i, '').trim();
-    }
-
-    res.json({ title, speaker });
-  } catch (error) {
-    console.error('CRITICAL ERROR in /fetch-gc-metadata:', error);
-    res.json({ title: '', speaker: '' });
-  }
-});
 
 
 // AI Ponder Questions Endpoint
 app.post('/generate-ponder-questions', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized: No token provided.' });
+  }
+  const idToken = authHeader.split('Bearer ')[1];
+  try {
+    await admin.auth().verifyIdToken(idToken);
+  } catch (err) {
+    return res.status(401).json({ error: 'Unauthorized: Invalid token.' });
+  }
+
   const { scripture, chapter, language } = req.body;
 
   if (!process.env.GEMINI_API_KEY) {
@@ -1426,6 +1367,17 @@ Make it spiritually thought-provoking.`;
 
 // AI Discussion Starter Endpoint
 app.post('/generate-discussion-topic', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized: No token provided.' });
+  }
+  const idToken = authHeader.split('Bearer ')[1];
+  try {
+    await admin.auth().verifyIdToken(idToken);
+  } catch (err) {
+    return res.status(401).json({ error: 'Unauthorized: Invalid token.' });
+  }
+
   const { language } = req.body;
 
   if (!process.env.GEMINI_API_KEY) {
@@ -1475,6 +1427,19 @@ Do NOT use bullet points or markdown (*, -). Output only the question text.`;
 
 // AI Weekly Recap Endpoint
 app.post('/generate-weekly-recap', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized: No token provided.' });
+  }
+  const idToken = authHeader.split('Bearer ')[1];
+  let uid;
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    uid = decodedToken.uid;
+  } catch (err) {
+    return res.status(401).json({ error: 'Unauthorized: Invalid token.' });
+  }
+
   const { groupId, language } = req.body;
 
   if (!groupId) {
@@ -1518,7 +1483,18 @@ app.post('/generate-weekly-recap', async (req, res) => {
     // Check frequency limit (once per week)
     const groupRef = db.collection('groups').doc(groupId);
     const groupDoc = await groupRef.get();
+    
+    if (!groupDoc.exists) {
+      return res.status(404).json({ error: 'Group not found.' });
+    }
+
     const groupData = groupDoc.data();
+    
+    // Authorization Check: Must be a member of the group
+    const members = groupData.members || [];
+    if (!members.includes(uid) && groupData.ownerUserId !== uid) {
+      return res.status(403).json({ error: 'Forbidden: You are not a member of this group.' });
+    }
 
     if (groupData.lastRecapGeneratedAt) {
       const lastGenerated = groupData.lastRecapGeneratedAt.toDate();
@@ -1610,7 +1586,24 @@ ${notesText}`;
 });
 
 app.post('/generate-personal-weekly-recap', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ error: 'Unauthorized: No token provided.' });
+  }
+  const idToken = authHeader.split('Bearer ')[1];
+  let verifiedUid;
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    verifiedUid = decodedToken.uid;
+  } catch (err) {
+    return res.status(401).json({ error: 'Unauthorized: Invalid token.' });
+  }
+
   const { uid, language } = req.body;
+  
+  if (uid !== verifiedUid) {
+    return res.status(403).json({ error: 'Forbidden: Cannot access another user\'s private data.' });
+  }
 
   if (!uid) {
     return res.status(400).json({ error: 'User ID is required.' });
@@ -1948,15 +1941,31 @@ app.get('/test-inactive-check/:groupId', async (req, res) => {
 
 
 app.post('/test-push-notification', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).send('Unauthorized: No token provided.');
+  }
+  const idToken = authHeader.split('Bearer ')[1];
+  let verifiedUid;
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    verifiedUid = decodedToken.uid;
+  } catch (err) {
+    return res.status(401).send('Unauthorized: Invalid token.');
+  }
+
   const { userId, title, body } = req.body;
   if (!userId) return res.status(400).send('userId is required');
+
+  if (userId !== verifiedUid) {
+    return res.status(403).send('Forbidden: Cannot send push notification to another user.');
+  }
 
   try {
     const userDoc = await db.collection('users').doc(userId).get();
     if (!userDoc.exists) return res.status(404).send('User not found');
 
-    const userData = userDoc.data();
-    const tokens = userData.fcmTokens || [];
+    const tokens = await getUserFcmTokens(userId);
 
     if (tokens.length === 0) {
       return res.status(400).send('No FCM tokens found for this user');
@@ -2032,7 +2041,7 @@ app.post('/send-cheer', async (req, res) => {
     }
 
     const targetData = targetUserDoc.data();
-    const tokens = targetData.fcmTokens || [];
+    const tokens = await getUserFcmTokens(targetUid);
 
     // Random message templates
     const lang = language || targetData.language || 'en';
@@ -2175,7 +2184,23 @@ app.get('/url-preview', async (req, res) => {
 
   try {
     const parsedUrl = new URL(url);
-    const isChurchUrl = parsedUrl.hostname.includes('churchofjesuschrist.org') || parsedUrl.hostname.includes('general-conference');
+
+    // Basic SSRF protection
+    const hostname = parsedUrl.hostname.toLowerCase();
+    if (
+      hostname === 'localhost' ||
+      hostname.startsWith('127.') ||
+      hostname.startsWith('169.254.') ||
+      hostname.startsWith('10.') ||
+      hostname.match(/^172\.(1[6-9]|2[0-9]|3[0-1])\./) ||
+      hostname.startsWith('192.168.') ||
+      hostname.endsWith('.internal') ||
+      hostname.endsWith('.local')
+    ) {
+      return res.status(400).json({ error: 'URL is not allowed for security reasons.' });
+    }
+
+    const isChurchUrl = hostname.includes('churchofjesuschrist.org') || hostname.includes('general-conference');
 
     if (lang && isChurchUrl) {
       const currentLang = parsedUrl.searchParams.get('lang');

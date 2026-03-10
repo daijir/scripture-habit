@@ -233,6 +233,19 @@ const CHEER_NOTIFICATION_TEMPLATES = {
     ]
 };
 
+async function getUserFcmTokens(uid) {
+  const tokens = [];
+  const userDoc = await db.collection('users').doc(uid).get();
+  if (userDoc.exists && userDoc.data().fcmTokens) {
+    tokens.push(...userDoc.data().fcmTokens);
+  }
+  const privateDoc = await db.collection('users').doc(uid).collection('private').doc('tokens').get();
+  if (privateDoc.exists && privateDoc.data().fcmTokens) {
+    tokens.push(...privateDoc.data().fcmTokens);
+  }
+  return [...new Set(tokens)];
+}
+
 async function sendPushNotification(tokens, payload) {
     if (!tokens || tokens.length === 0) return { successCount: 0, failureCount: 0, failedTokens: [] };
 
@@ -303,19 +316,42 @@ async function notifyGroupMembers(groupId, senderUid, payload, memberIdsOverride
 
         // Optimized Read: Get all member documents in one call
         const memberRefs = membersToNotifyIds.map(uid => db.collection('users').doc(uid));
-        const memberDocs = await db.getAll(...memberRefs);
+        const privateRefs = membersToNotifyIds.map(uid => db.collection('users').doc(uid).collection('private').doc('tokens'));
+        const allDocs = await db.getAll(...memberRefs, ...privateRefs);
+        
+        const memberDocs = allDocs.slice(0, memberRefs.length);
+        const privateDocs = allDocs.slice(memberRefs.length);
 
         const tokens = [];
         const tokenToUserMap = new Map(); // To track which token belongs to which user for cleanup
+        const tokenSourceMap = new Map(); // Track if it originated from 'public' or 'private'
 
         memberDocs.forEach((uDoc, idx) => {
+            const uid = membersToNotifyIds[idx];
+            
+            // Check public doc
             if (uDoc.exists) {
                 const userData = uDoc.data();
-                const uid = membersToNotifyIds[idx];
                 if (userData.fcmTokens && Array.isArray(userData.fcmTokens)) {
                     userData.fcmTokens.forEach(t => {
                         tokens.push(t);
                         tokenToUserMap.set(t, uid);
+                        tokenSourceMap.set(t, 'public');
+                    });
+                }
+            }
+            
+            // Check private doc
+            const pDoc = privateDocs[idx];
+            if (pDoc.exists) {
+                const privateData = pDoc.data();
+                if (privateData.fcmTokens && Array.isArray(privateData.fcmTokens)) {
+                    privateData.fcmTokens.forEach(t => {
+                        if (!tokenToUserMap.has(t)) {
+                            tokens.push(t);
+                            tokenToUserMap.set(t, uid);
+                            tokenSourceMap.set(t, 'private');
+                        }
                     });
                 }
             }
@@ -332,9 +368,13 @@ async function notifyGroupMembers(groupId, senderUid, payload, memberIdsOverride
 
                 result.failedTokens.forEach(t => {
                     const uid = tokenToUserMap.get(t);
+                    const source = tokenSourceMap.get(t);
                     if (uid) {
-                        const userRef = db.collection('users').doc(uid);
-                        batch.update(userRef, {
+                        const targetRef = source === 'private' 
+                          ? db.collection('users').doc(uid).collection('private').doc('tokens')
+                          : db.collection('users').doc(uid);
+                          
+                        batch.update(targetRef, {
                             fcmTokens: admin.firestore.FieldValue.arrayRemove(t)
                         });
                         opCount++;
@@ -1239,7 +1279,7 @@ app.post('/api/send-cheer', async (req, res) => {
         }
 
         const targetData = targetUserDoc.data();
-        const tokens = targetData.fcmTokens || [];
+        const tokens = await getUserFcmTokens(targetUid);
 
         // Random message templates
         const lang = language || targetData.language || 'en';
@@ -1416,6 +1456,22 @@ app.get(['/api/url-preview', '/api/url-preview/'], async (req, res) => {
 
     try {
         const parsedUrl = new URL(url);
+
+        // Basic SSRF protection
+        const hostname = parsedUrl.hostname.toLowerCase();
+        if (
+            hostname === 'localhost' ||
+            hostname.startsWith('127.') ||
+            hostname.startsWith('169.254.') ||
+            hostname.startsWith('10.') ||
+            hostname.match(/^172\.(1[6-9]|2[0-9]|3[0-1])\./) ||
+            hostname.startsWith('192.168.') ||
+            hostname.endsWith('.internal') ||
+            hostname.endsWith('.local')
+        ) {
+            return res.status(400).json({ error: 'URL is not allowed for security reasons.' });
+        }
+
         previewData.title = parsedUrl.hostname;
         previewData.siteName = parsedUrl.hostname;
         previewData.favicon = `https://www.google.com/s2/favicons?domain=${parsedUrl.hostname}&sz=64`;
@@ -1504,6 +1560,17 @@ app.post('/api/generate-ponder-questions', async (req, res) => {
         return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
     }
     const { scripture, chapter, language } = validation.data;
+
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized: No token provided.' });
+    }
+    const idToken = authHeader.split('Bearer ')[1];
+    try {
+        await admin.auth().verifyIdToken(idToken);
+    } catch (err) {
+        return res.status(401).json({ error: 'Unauthorized: Invalid token.' });
+    }
 
     if (!process.env.GEMINI_API_KEY) {
         return res.status(500).json({ error: 'Gemini API Key is not configured.' });
@@ -1603,6 +1670,17 @@ app.post('/api/translate', async (req, res) => {
     }
     const { text, targetLanguage } = validation.data;
 
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized: No token provided.' });
+    }
+    const idToken = authHeader.split('Bearer ')[1];
+    try {
+        await admin.auth().verifyIdToken(idToken);
+    } catch (err) {
+        return res.status(401).json({ error: 'Unauthorized: Invalid token.' });
+    }
+
     if (!process.env.GEMINI_API_KEY) {
         return res.status(500).json({ error: 'Gemini API Key is not configured.' });
     }
@@ -1685,6 +1763,19 @@ app.post('/api/generate-weekly-recap', async (req, res) => {
     }
     const { groupId, language } = validation.data;
 
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized: No token provided.' });
+    }
+    const idToken = authHeader.split('Bearer ')[1];
+    let uid;
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        uid = decodedToken.uid;
+    } catch (err) {
+        return res.status(401).json({ error: 'Unauthorized: Invalid token.' });
+    }
+
     // GroupId check handled by Zod
 
     if (!process.env.GEMINI_API_KEY) {
@@ -1694,6 +1785,17 @@ app.post('/api/generate-weekly-recap', async (req, res) => {
     try {
         const db = admin.firestore();
         const groupRef = db.collection('groups').doc(groupId);
+        const groupDoc = await groupRef.get();
+        if (!groupDoc.exists) {
+            return res.status(404).json({ error: 'Group not found.' });
+        }
+        
+        const groupData = groupDoc.data();
+        const members = groupData.members || [];
+        if (!members.includes(uid) && groupData.ownerUserId !== uid) {
+            return res.status(403).json({ error: 'Forbidden: You are not a member of this group.' });
+        }
+
         const messagesRef = groupRef.collection('messages');
 
         // Calculate date 7 days ago
@@ -1897,6 +1999,23 @@ app.post('/api/generate-personal-weekly-recap', async (req, res) => {
         return res.status(400).json({ error: 'Invalid input', details: validation.error.format() });
     }
     const { uid, language } = validation.data;
+
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ error: 'Unauthorized: No token provided.' });
+    }
+    const idToken = authHeader.split('Bearer ')[1];
+    let verifiedUid;
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        verifiedUid = decodedToken.uid;
+    } catch (err) {
+        return res.status(401).json({ error: 'Unauthorized: Invalid token.' });
+    }
+
+    if (uid !== verifiedUid) {
+        return res.status(403).json({ error: 'Forbidden: Cannot access another user\'s private data.' });
+    }
 
     // Uid check handled by Zod
 

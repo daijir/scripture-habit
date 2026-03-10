@@ -16,12 +16,18 @@ service cloud.firestore {
       // A user can create their own document upon signup (before email verification)
       allow create: if request.auth != null && request.auth.uid == userId;
 
-      // A user can read a specific user document (needed for group members list), but cannot query the entire collection.
+      // A user can read a specific user document (needed for group members list).
+      // Sensitive data like fcmTokens is now stored in the 'private' subcollection.
       allow get: if request.auth != null;
       allow list: if false;
 
       // A user can update or delete their own document.
       allow update, delete: if request.auth != null && request.auth.uid == userId;
+
+      // Rules for private user data (e.g. fcmTokens)
+      match /private/{docId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
 
       // Rules for the 'notes' subcollection
       match /notes/{noteId} {

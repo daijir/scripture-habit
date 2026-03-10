@@ -82,10 +82,20 @@ export const requestNotificationPermission = async (userId, t) => {
                 if (token) {
                     console.log('FCM Token successfully obtained:', token);
                     if (userId) {
-                        const userRef = doc(db, 'users', userId);
-                        await updateDoc(userRef, {
+                        const privateRef = doc(db, 'users', userId, 'private', 'tokens');
+                        await setDoc(privateRef, {
                             fcmTokens: arrayUnion(token)
-                        });
+                        }, { merge: true });
+                        
+                        // Secure existing users by removing from public doc 
+                        try {
+                           const userRef = doc(db, 'users', userId);
+                           await updateDoc(userRef, {
+                               fcmTokens: arrayRemove(token)
+                           });
+                        } catch (e) {
+                           // Ignore if field doesn't exist
+                        }
                     }
                     toast.success(translate('notificationSetup.success', 'Notification settings complete! 🎉'));
                     return token;
@@ -140,10 +150,17 @@ export const disableNotifications = async (userId) => {
                 serviceWorkerRegistration: registration
             });
             if (token && userId) {
-                const userRef = doc(db, 'users', userId);
-                await updateDoc(userRef, {
-                    fcmTokens: arrayRemove(token)
-                });
+                const privateRef = doc(db, 'users', userId, 'private', 'tokens');
+                try {
+                    await setDoc(privateRef, {
+                        fcmTokens: arrayRemove(token)
+                    }, { merge: true });
+                    
+                    const userRef = doc(db, 'users', userId);
+                    await updateDoc(userRef, {
+                        fcmTokens: arrayRemove(token)
+                    });
+                } catch(e) {}
             }
         }
         // Also try to delete the token from local storage/FCM
