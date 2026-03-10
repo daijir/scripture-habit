@@ -60,7 +60,7 @@ export default function GroupForm() {
       });
 
       toast.success(`🎉 ${t('groupForm.successCreated')}`);
-      navigate(`/${language}/dashboard`, { state: { initialGroupId: newGroupId, showWelcome: true, initialView: 2 } });
+      navigate(`/${language}/dashboard`, { state: { initialGroupId: newGroupId, initialView: 2 } });
 
     } catch (e) {
       console.error("Error creating group or updating user:", e);

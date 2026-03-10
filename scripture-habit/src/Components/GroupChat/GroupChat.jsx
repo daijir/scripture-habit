@@ -52,7 +52,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
   const [isRecapLoading, setIsRecapLoading] = useState(false);
   const [showInactivityPolicyBanner, setShowInactivityPolicyBanner] = useState(false);
-  const [showWelcomeGuide, setShowWelcomeGuide] = useState(false);
   const [showEditNameModal, setShowEditNameModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
   const [newGroupDescription, setNewGroupDescription] = useState('');
@@ -236,12 +235,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [groupId, groupData?.name, groupData?.description, groupData?.translations, language]);
 
-  useEffect(() => {
-    // Check for welcome guide logic from navigation state
-    if (location.state?.showWelcome && location.state?.initialGroupId === groupId) {
-      setShowWelcomeGuide(true);
-    }
-  }, [location.state, groupId]);
+
 
   // Show tooltip every 6 visits
   useEffect(() => {
@@ -287,17 +281,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     return String(groupData.ownerUserId).trim() === String(userData.uid).trim();
   }, [groupData, userData]);
 
-
-  useEffect(() => {
-    // Check for welcome guide logic from navigation state
-    if (location.state?.showWelcome && location.state?.initialGroupId === groupId) {
-      setShowWelcomeGuide(true);
-    }
-  }, [location.state, groupId]);
-
-  const handleDismissWelcomeGuide = () => {
-    setShowWelcomeGuide(false);
-  };
 
   // Log whenever messages or groupData updates to see incoming data
 
@@ -1695,27 +1678,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
               </button>
             )}
             {groupData?.members && <span className="member-count-badge" style={{ flexShrink: 0 }}>({groupData.members.length})</span>}
-            {userData?.kickThreshold && (
-              <span 
-                className="habit-pace-header-badge" 
-                title={t('groupChat.habitPaceProfileTitle')}
-                onClick={() => navigate('/profile')}
-                style={{
-                  background: 'rgba(255, 145, 157, 0.1)',
-                  color: 'var(--pink)',
-                  padding: '2px 8px',
-                  borderRadius: '12px',
-                  fontSize: '0.7rem',
-                  fontWeight: '700',
-                  marginLeft: '8px',
-                  cursor: 'pointer',
-                  border: '1px solid rgba(255, 145, 157, 0.3)',
-                  flexShrink: 0
-                }}
-              >
-                {t('groupChat.myHabitPaceBadge').replace('{days}', userData.kickThreshold)}
-              </span>
-            )}
+
             {groupData && (
               <div className="unity-score-container">
                 <span
@@ -2176,9 +2139,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         setShowLeaveModal={setShowLeaveModal}
         isLeaving={isLeaving}
         handleLeaveGroup={handleLeaveGroup}
-
-        showWelcomeGuide={showWelcomeGuide}
-        handleDismissWelcomeGuide={handleDismissWelcomeGuide}
 
         showDeleteModal={showDeleteModal}
         setShowDeleteModal={setShowDeleteModal}

@@ -20,9 +20,6 @@ const GroupChatModals = ({
     isLeaving,
     handleLeaveGroup,
 
-    // Welcome Guide
-    showWelcomeGuide,
-    handleDismissWelcomeGuide,
 
     // Delete Group
     showDeleteModal,
@@ -124,26 +121,7 @@ const GroupChatModals = ({
                 </div>
             )}
 
-            {showWelcomeGuide && (
-                <div className="leave-modal-overlay guide-modal-overlay">
-                    <div className="leave-modal-content guide-modal-content">
-                        <div className="guide-image-container">
-                            <img src="/images/mascot.png" alt="Welcome Bird" className="guide-bird-image" />
-                        </div>
-                        <h3>{t('groupChat.welcomeGuideTitle')}</h3>
-                        <p className="guide-intro">{t('groupChat.welcomeGuideMessage')}</p>
 
-                        <div className="guide-rule-box">
-                            <h4 className="guide-rule-title">{t('groupChat.welcomeGuideRule')}</h4>
-                            <p className="guide-rule-detail">{t('groupChat.welcomeGuideRuleDetail')}</p>
-                        </div>
-
-                        <button className="modal-btn guide-btn" onClick={handleDismissWelcomeGuide}>
-                            {t('groupChat.welcomeGuideButton')}
-                        </button>
-                    </div>
-                </div>
-            )}
 
             {showDeleteModal && (
                 <div className="leave-modal-overlay">
