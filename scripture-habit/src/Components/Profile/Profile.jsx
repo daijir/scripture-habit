@@ -259,79 +259,24 @@ const Profile = ({ userData, stats }) => {
 
         setIsDeleting(true);
         try {
-            // --- STEP 1: Exit all groups first (for system stability) ---
-            const groupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
-
-            for (const gid of groupIds) {
-                try {
-                    const groupRef = doc(db, 'groups', gid);
-                    const groupSnap = await getDoc(groupRef);
-                    if (groupSnap.exists()) {
-                        const gData = groupSnap.data();
-                        const members = gData.members || [];
-                        const updatedMembers = members.filter(uid => uid !== user.uid);
-
-                        if (gData.ownerUserId === user.uid) {
-                            if (updatedMembers.length > 0) {
-                                // Transfer ownership
-                                await updateDoc(groupRef, {
-                                    ownerUserId: updatedMembers[0],
-                                    members: updatedMembers
-                                });
-                            } else {
-                                // Delete group
-                                await deleteDoc(groupRef);
-                            }
-                        } else {
-                            // Leave group
-                            await updateDoc(groupRef, {
-                                members: updatedMembers
-                            });
-                        }
-                    }
-                } catch (err) {
-                    console.error(`Group cleanup failed for ${gid}:`, err);
+            const idToken = await user.getIdToken();
+            const response = await fetch(`${API_BASE}/api/delete-account`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`
                 }
-            }
-
-            // --- STEP 2: Delete personal data in a batch ---
-            const batch = writeBatch(db);
-
-            // 1. Delete user notes
-            const notesRef = collection(db, 'users', user.uid, 'notes');
-            const notesSnapshot = await getDocs(notesRef);
-            notesSnapshot.forEach((doc) => {
-                batch.delete(doc.ref);
             });
 
-            // 2. Delete groupStates
-            const statesRef = collection(db, 'users', user.uid, 'groupStates');
-            const statesSnapshot = await getDocs(statesRef);
-            statesSnapshot.forEach((doc) => {
-                batch.delete(doc.ref);
-            });
-
-            // 3. Delete letters
-            const lettersRef = collection(db, 'users', user.uid, 'letters');
-            const lettersSnapshot = await getDocs(lettersRef);
-            lettersSnapshot.forEach((doc) => {
-                batch.delete(doc.ref);
-            });
-
-            // 4. Finally, delete the profile
-            const userRef = doc(db, 'users', user.uid);
-            batch.delete(userRef);
-
-            await batch.commit();
-
-            // --- STEP 3: Delete from Firebase Auth ---
-            try {
-                await deleteUser(user);
+            if (response.ok) {
                 toast.success(t('profile.deleteAccountSuccess'));
+                await auth.signOut();
                 navigate('/welcome');
-            } catch (authError) {
-                console.error("Auth deletion failed:", authError);
-                // Even if auth delete fails, the data is gone, so sign out is fine
+            } else {
+                const errorData = await response.json();
+                console.error("Server-side deletion failed:", errorData);
+                toast.error(t('profile.deleteAccountError') || "Error deleting account");
+                // If it failed but maybe partially deleted, we should still sign out to be safe
                 await auth.signOut();
                 navigate('/welcome');
             }
