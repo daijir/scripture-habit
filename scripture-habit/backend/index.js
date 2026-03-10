@@ -1925,12 +1925,13 @@ app.get('/test-inactive-check/:groupId', async (req, res) => {
           const diff = now - lastActiveDate;
           const daysDiff = Math.floor(diff / (24 * 60 * 60 * 1000));
           const kickThreshold = (groupData.memberKickThresholds && groupData.memberKickThresholds[memberId]) || 3;
+          const thresholdMs = kickThreshold * 24 * 60 * 60 * 1000;
 
           memberInfo.lastActive = lastActiveDate.toISOString();
           memberInfo.daysSinceActive = daysDiff;
           memberInfo.kickThreshold = kickThreshold;
-          memberInfo.status = daysDiff > kickThreshold ? '⚠️ Inactive' : '✅ Active';
-          memberInfo.action = daysDiff > kickThreshold ? 'would remove' : 'keep';
+          memberInfo.status = diff > thresholdMs ? '⚠️ Inactive' : '✅ Active';
+          memberInfo.action = diff > thresholdMs ? 'would remove' : 'keep';
         }
       }
 

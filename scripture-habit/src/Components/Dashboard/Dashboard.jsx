@@ -470,9 +470,10 @@ const Dashboard = () => {
         // diff in days
         const diffDays = diffMs / (1000 * 60 * 60 * 24);
 
-        // Warn if between 2 and 3 days (48h - 72h)
-        if (diffDays >= 2 && diffDays < 3) {
-          newWarnings.push(group.name || 'Group');
+        // Warn if within 1 day of threshold (or over it, in case cron hasn't run yet)
+        const threshold = (group.memberKickThresholds && group.memberKickThresholds[userData.uid]) || userData.kickThreshold || 3;
+        if (diffDays >= threshold - 1) {
+          newWarnings.push({ name: group.name || 'Group', days: Math.floor(diffDays) });
         }
       }
     });
@@ -769,10 +770,14 @@ const Dashboard = () => {
             </div>
 
             {warnings.length > 0 && (
-              <div className="warning-banner">
-                ⚠️ {language === 'ja'
-                  ? `【警告】${warnings.join(', ')}での活動が2日以上ありません。今日投稿しないと退出になります！`
-                  : `Warning: You have been inactive in ${warnings.join(', ')} for over 2 days. Post today to avoid removal!`}
+              <div className="warning-banner" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                {warnings.map((warn, i) => (
+                  <div key={i}>
+                    ⚠️ {language === 'ja'
+                      ? `【警告】${warn.name}での活動が${Math.max(1, warn.days)}日以上ありません。今日投稿しないと退出になります！`
+                      : `Warning: You have been inactive in ${warn.name} for over ${Math.max(1, warn.days)} days. Post today to avoid removal!`}
+                  </div>
+                ))}
               </div>
             )}
 
