@@ -84,9 +84,12 @@ const InstallPrompt = () => {
             }
         }
 
-        console.log('[PWA] Status:', { base, isDashboard, hasDismissed, isStandalone, platform });
+        // Check for active modals on dashboard
+        const isModalActive = document.body.getAttribute('data-dashboard-modal-open') === 'true';
 
-        if (!isDashboard || hasDismissed || isStandalone) {
+        console.log('[PWA] Status:', { base, isDashboard, hasDismissed, isStandalone, platform, isModalActive });
+
+        if (!isDashboard || hasDismissed || isStandalone || isModalActive) {
             setShowPrompt(false);
             return;
         }
@@ -96,12 +99,16 @@ const InstallPrompt = () => {
             setShowPrompt(true);
         }
 
-        // iOS logic: Show after a short delay
+        // iOS logic: Show after a longer delay (4s instead of 2s) to avoid overlapping with Cookie Consent or initial loads
         if (platform === 'ios') {
             const timer = setTimeout(() => {
-                setShowPrompt(true);
-                console.log('[PWA] Showing iOS Prompt');
-            }, 2000);
+                // Final check before showing
+                const finalModalCheck = document.body.getAttribute('data-dashboard-modal-open') === 'true';
+                if (!finalModalCheck) {
+                  setShowPrompt(true);
+                  console.log('[PWA] Showing iOS Prompt');
+                }
+            }, 4000);
             return () => clearTimeout(timer);
         }
     }, [location.pathname, platform, deferredPrompt]);

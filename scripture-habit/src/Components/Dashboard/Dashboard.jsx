@@ -108,8 +108,9 @@ const Dashboard = () => {
   }, [location.search, location.state, navigate]);
 
   useEffect(() => {
-    // Show notification prompt after 3 seconds on dashboard
-    if (selectedView === 0 && !loading && userData) {
+    // Show notification prompt after a delay on dashboard
+    // BUT only if no other onboarding modals are open
+    if (selectedView === 0 && !loading && userData && !showWelcomeStory && !showAutoKickModal && !isJoiningInvite) {
       const timer = setTimeout(() => {
         const isPermissionDefault = window.Notification && window.Notification.permission === 'default';
         const lastPrompt = safeStorage.get('lastNotifPrompt');
@@ -119,10 +120,10 @@ const Dashboard = () => {
         if (isPermissionDefault && (!lastPrompt || now - parseInt(lastPrompt) > oneWeek)) {
           setShowNotifPrompt(true);
         }
-      }, 3000);
+      }, 5000); // 5 seconds instead of 3 to give breathing room
       return () => clearTimeout(timer);
     }
-  }, [selectedView, loading, userData]);
+  }, [selectedView, loading, userData, showWelcomeStory, showAutoKickModal, isJoiningInvite]);
 
   const handleEnableNotifications = async () => {
     setShowNotifPrompt(false);
@@ -192,12 +193,23 @@ const Dashboard = () => {
     // 招待コードの処理中やウェルカムストーリー表示中はモーダルを出さない
     const inviteCode = safeStorage.get('pendingInviteCode');
     
+    // WelcomeStoryが表示されていない、かつ招待リンク処理中でない場合にのみチェック
     if (!loading && userData && userData.uid && 
         userData.hasSetKickThreshold !== true && 
         !showWelcomeStory && !inviteCode && !isJoiningInvite) {
       setShowAutoKickModal(true);
     }
   }, [userData, loading, showWelcomeStory, isJoiningInvite]);
+
+  // Handle global modal marker for App components (InstallPrompt, CookieConsent)
+  useEffect(() => {
+    const isAnyModalOpen = showWelcomeStory || showAutoKickModal || showNotifPrompt || isJoiningInvite || showEditProfileModal || isModalOpen;
+    if (isAnyModalOpen) {
+      document.body.setAttribute('data-dashboard-modal-open', 'true');
+    } else {
+      document.body.removeAttribute('data-dashboard-modal-open');
+    }
+  }, [showWelcomeStory, showAutoKickModal, showNotifPrompt, isJoiningInvite, showEditProfileModal, isModalOpen]);
 
   const handleAutoKickSubmit = async () => {
     const inputNum = parseInt(kickConfirmInput, 10);

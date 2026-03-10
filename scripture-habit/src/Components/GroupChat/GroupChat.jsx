@@ -68,12 +68,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   const [isSendingCheer, setIsSendingCheer] = useState(false);
   const [cheeredTodayUids, setCheeredTodayUids] = useState(new Set());
 
-  // Auto Kick Setup
-  const [showAutoKickModal, setShowAutoKickModal] = useState(false);
-  const [autoKickStep, setAutoKickStep] = useState(0);
-  const [selectedKickDays, setSelectedKickDays] = useState(3);
-  const [kickConfirmInput, setKickConfirmInput] = useState('');
-  const [autoKickError, setAutoKickError] = useState('');
+
 
   const containerRef = useRef(null);
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
@@ -129,13 +124,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     fetchCheers();
   }, [userData?.uid, userData?.timeZone]);
 
-  useEffect(() => {
-    // Reset auto-kick states on group switch
-    setShowAutoKickModal(false);
-    setAutoKickStep(0);
-    setKickConfirmInput('');
-    setAutoKickError('');
-  }, [groupId]);
+
 
   useEffect(() => {
     // Reset on group switch
@@ -299,74 +288,15 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   }, [groupData, userData]);
 
 
+  useEffect(() => {
+    // Check for welcome guide logic from navigation state
+    if (location.state?.showWelcome && location.state?.initialGroupId === groupId) {
+      setShowWelcomeGuide(true);
+    }
+  }, [location.state, groupId]);
+
   const handleDismissWelcomeGuide = () => {
     setShowWelcomeGuide(false);
-    // After dismissing welcome guide, check if they need to set global kick threshold
-    if (userData?.uid && !userData?.hasSetKickThreshold) {
-      setShowAutoKickModal(true);
-    }
-  };
-
-  useEffect(() => {
-    // Debugging values
-    if (userData?.uid) {
-      console.log('Habit Pace Check:', {
-        initialScrollDone,
-        loading, // useGroupMessages from useGroupMessages
-        showWelcomeGuide,
-        hasSet: userData?.hasSetKickThreshold
-      });
-    }
-
-    // Trigger logic: Simplified to not strictly wait for scroll if it's an empty group/loading finished
-    if (!loading && !showWelcomeGuide && userData?.uid && userData?.hasSetKickThreshold === undefined) {
-      setShowAutoKickModal(true);
-    } else if (initialScrollDone && !showWelcomeGuide && userData?.uid && !userData?.hasSetKickThreshold) {
-      setShowAutoKickModal(true);
-    }
-  }, [loading, initialScrollDone, showWelcomeGuide, userData?.uid, userData?.hasSetKickThreshold]);
-
-  const handleAutoKickSubmit = async () => {
-    const inputNum = parseInt(kickConfirmInput, 10);
-    if (inputNum !== selectedKickDays) {
-      setAutoKickError(t('groupChat.autoKickErrorMismatch'));
-      setKickConfirmInput('');
-      return;
-    }
-
-    setAutoKickError('');
-    if (autoKickStep === 1) {
-      setAutoKickStep(2);
-      setKickConfirmInput('');
-      return;
-    }
-
-    // Step 2 -> Submit
-    try {
-      const idToken = await auth.currentUser.getIdToken();
-      const response = await fetch(`${API_BASE}/api/update-kick-threshold`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`
-        },
-        body: JSON.stringify({
-          threshold: selectedKickDays
-        })
-      });
-
-      if (response.ok) {
-        toast.success(t('groupChat.autoKickSuccess'));
-        setShowAutoKickModal(false);
-        // Optimistically update local groupData if possible, 
-        // but onSnapshot will handle it anyway.
-      } else {
-        toast.error("Failed to update threshold");
-      }
-    } catch (error) {
-      console.error("Error updating kick threshold:", error);
-      toast.error("Error updating kick threshold");
-    }
   };
 
   // Log whenever messages or groupData updates to see incoming data
@@ -1582,7 +1512,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     handleGenerateWeeklyRecap();
   };
 
-  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit || showEditNameModal || showMembersModal || showUnityModal || showInviteModal || showReportModal || cheerTarget || isExternalModalOpen || showAutoKickModal;
+  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit || showEditNameModal || showMembersModal || showUnityModal || showInviteModal || showReportModal || cheerTarget || isExternalModalOpen;
 
   // Calculate Unity Score (Percentage of members who posted today)
   const unityPercentage = useMemo(() => {
@@ -2313,16 +2243,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         selectedMember={selectedMember}
         handleUserProfileClick={setSelectedMember}
 
-        // Auto Kick
-        showAutoKickModal={showAutoKickModal}
-        autoKickStep={autoKickStep}
-        setAutoKickStep={setAutoKickStep}
-        selectedKickDays={selectedKickDays}
-        setSelectedKickDays={setSelectedKickDays}
-        kickConfirmInput={kickConfirmInput}
-        setKickConfirmInput={setKickConfirmInput}
-        handleAutoKickSubmit={handleAutoKickSubmit}
-        autoKickError={autoKickError}
+
 
         showInviteModal={showInviteModal}
         setShowInviteModal={setShowInviteModal}

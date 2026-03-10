@@ -93,16 +93,6 @@ const GroupChatModals = ({
     setReportReason,
     confirmReport,
 
-    // Auto Kick Setup
-    showAutoKickModal,
-    autoKickStep,
-    setAutoKickStep,
-    selectedKickDays,
-    setSelectedKickDays,
-    kickConfirmInput,
-    setKickConfirmInput,
-    handleAutoKickSubmit,
-    autoKickError,
 
     // User Profile
     selectedMember,
@@ -692,85 +682,7 @@ const GroupChatModals = ({
                 </div>
             )}
 
-            {showAutoKickModal && (
-                <div className="leave-modal-overlay">
-                    <div className="leave-modal-content auto-kick-setup-modal" style={{ maxWidth: '400px' }}>
-                        <div className="guide-image-container" style={{ marginBottom: '1rem' }}>
-                            <img src="/images/mascot.png" alt="Mascot" className="guide-bird-image" style={{ width: '80px' }} />
-                        </div>
-                        <h3>{t('groupChat.autoKickSelectionTitle')}</h3>
 
-                        {autoKickStep === 0 && (
-                            <>
-                                <p style={{ fontSize: '0.95rem', lineHeight: '1.5', marginBottom: '1rem' }}>
-                                    {t('groupChat.autoKickSelectionMessage')}
-                                </p>
-                                <div className="kick-days-options" style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '1rem' }}>
-                                    {[3, 4, 5, 6, 7].map(days => (
-                                        <button
-                                            key={days}
-                                            className={`modal-btn ${selectedKickDays === days ? 'primary' : 'outline'}`}
-                                            onClick={() => setSelectedKickDays(days)}
-                                            style={{
-                                                justifyContent: 'center',
-                                                padding: '12px',
-                                                border: selectedKickDays === days ? 'none' : '2px solid var(--pink)',
-                                                background: selectedKickDays === days ? 'var(--pink)' : 'transparent',
-                                                color: selectedKickDays === days ? 'white' : 'var(--pink)'
-                                            }}
-                                        >
-                                            {t('groupChat.autoKickChoiceLabel').replace('{days}', days)}
-                                        </button>
-                                    ))}
-                                </div>
-                                <p style={{ fontSize: '0.8rem', color: 'var(--gray)', fontStyle: 'italic' }}>
-                                    {t('groupChat.autoKickSelectionDescription')}
-                                </p>
-                                <div className="leave-modal-actions">
-                                    <button
-                                        className="modal-btn primary"
-                                        disabled={!selectedKickDays}
-                                        onClick={() => setAutoKickStep(1)}
-                                        style={{ width: '100%', maxWidth: 'none' }}
-                                    >
-                                        {t('groupChat.welcomeGuideButton')}
-                                    </button>
-                                </div>
-                            </>
-                        )}
-
-                        {(autoKickStep === 1 || autoKickStep === 2) && (
-                            <>
-                                <p style={{ fontSize: '1rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-                                    {autoKickStep === 1 ? t('groupChat.autoKickConfirmTitle') : t('groupChat.autoKickReconfirmTitle')}
-                                </p>
-                                <p style={{ fontSize: '0.95rem', marginBottom: '1rem' }}>
-                                    {autoKickStep === 1 ? t('groupChat.autoKickConfirmMessage') : t('groupChat.autoKickReconfirmMessage')}
-                                </p>
-                                <input
-                                    type="number"
-                                    className="delete-confirmation-input"
-                                    value={kickConfirmInput}
-                                    onChange={(e) => setKickConfirmInput(e.target.value)}
-                                    placeholder="Enter days..."
-                                    style={{ textAlign: 'center', fontSize: '1.5rem', marginBottom: '1rem' }}
-                                    autoFocus
-                                />
-                                {autoKickError && <p style={{ color: 'red', fontSize: '0.85rem', marginBottom: '1rem' }}>{autoKickError}</p>}
-                                <div className="leave-modal-actions">
-                                    <button
-                                        className="modal-btn primary"
-                                        onClick={handleAutoKickSubmit}
-                                        style={{ width: '100%', maxWidth: 'none' }}
-                                    >
-                                        {t('groupChat.save')}
-                                    </button>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                </div>
-            )}
 
             {selectedMember && (
                 <UserProfileModal
@@ -822,83 +734,7 @@ const GroupChatModals = ({
                     </div>
                 </div>
             )}
-            {showAutoKickModal && (
-                <div className="leave-modal-overlay guide-modal-overlay">
-                    <div className="leave-modal-content guide-modal-content auto-kick-setup-modal">
-                        <div className="guide-image-container">
-                            <img src="/images/mascot.png" alt="Mascot" className="guide-bird-image" />
-                        </div>
-                        <h3>{t('groupChat.autoKickSelectionTitle')}</h3>
 
-                        {autoKickStep === 0 && (
-                            <div className="kick-setup-step">
-                                <p className="guide-intro">{t('groupChat.autoKickSelectionMessage')}</p>
-                                <div className="kick-days-options">
-                                    {[3, 4, 5, 6, 7].map(days => (
-                                        <button
-                                            key={days}
-                                            className={`modal-btn ${selectedKickDays === days ? 'primary' : 'outline'}`}
-                                            onClick={() => setSelectedKickDays(days)}
-                                        >
-                                            {t('groupChat.autoKickChoiceLabel').replace('{days}', days)}
-                                        </button>
-                                    ))}
-                                </div>
-                                <p className="guide-rule-detail" style={{ marginTop: '1rem', fontSize: '0.8rem', opacity: 0.8 }}>
-                                    {t('groupChat.autoKickSelectionDescription')}
-                                </p>
-                                <button className="modal-btn primary" onClick={() => setAutoKickStep(1)} style={{ marginTop: '1.5rem', width: '100%' }}>
-                                    {t('groupChat.confirm')}
-                                </button>
-                            </div>
-                        )}
-
-                        {autoKickStep === 1 && (
-                            <div className="kick-setup-step">
-                                <label className="input-label" style={{ textAlign: 'center', display: 'block' }}>
-                                    {t('groupChat.autoKickConfirmMessage')}
-                                </label>
-                                <input
-                                    type="number"
-                                    value={kickConfirmInput}
-                                    onChange={(e) => setKickConfirmInput(e.target.value)}
-                                    className="profile-input"
-                                    placeholder={selectedKickDays.toString()}
-                                    style={{ textAlign: 'center', fontSize: '1.5rem', marginTop: '1rem' }}
-                                    autoFocus
-                                />
-                                {autoKickError && <p style={{ color: 'var(--red)', fontSize: '0.8rem', marginTop: '0.5rem' }}>{autoKickError}</p>}
-                                <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-                                    <button className="modal-btn outline" onClick={() => setAutoKickStep(0)} style={{ flex: 1 }}>{t('groupChat.cancel')}</button>
-                                    <button className="modal-btn primary" onClick={handleAutoKickSubmit} style={{ flex: 1 }}>{t('groupChat.confirm')}</button>
-                                </div>
-                            </div>
-                        )}
-
-                        {autoKickStep === 2 && (
-                            <div className="kick-setup-step">
-                                <label className="input-label" style={{ textAlign: 'center', display: 'block' }}>
-                                    {t('groupChat.autoKickReconfirmMessage')}
-                                </label>
-                                <input
-                                    type="number"
-                                    value={kickConfirmInput}
-                                    onChange={(e) => setKickConfirmInput(e.target.value)}
-                                    className="profile-input"
-                                    placeholder={selectedKickDays.toString()}
-                                    style={{ textAlign: 'center', fontSize: '1.5rem', marginTop: '1rem' }}
-                                    autoFocus
-                                />
-                                {autoKickError && <p style={{ color: 'var(--red)', fontSize: '0.8rem', marginTop: '0.5rem' }}>{autoKickError}</p>}
-                                <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
-                                    <button className="modal-btn outline" onClick={() => setAutoKickStep(1)} style={{ flex: 1 }}>{t('groupChat.cancel')}</button>
-                                    <button className="modal-btn primary" onClick={handleAutoKickSubmit} style={{ flex: 1 }}>{t('groupChat.confirm')}</button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
-                </div>
-            )}
         </>
     );
 };
