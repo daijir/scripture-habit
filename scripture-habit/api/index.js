@@ -93,7 +93,8 @@ const languageNames = {
 const verifyLoginSchema = z.object({ token: z.string().min(1) });
 const joinGroupSchema = z.object({
     token: z.string().min(1).optional(),
-    groupId: z.string().min(1)
+    groupId: z.string().optional(),
+    inviteCode: z.string().optional()
 });
 const leaveGroupSchema = z.object({
     token: z.string().min(1).optional(),
@@ -406,12 +407,31 @@ app.post('/api/join-group', async (req, res) => {
 
     try {
         const decodedToken = await admin.auth().verifyIdToken(idToken);
+
+        // Enforce Email Verification for password provider (Tightened Security)
+        if (decodedToken.firebase.sign_in_provider === 'password' && !decodedToken.email_verified) {
+            return res.status(403).send('Email not verified. Please verify your email before joining a group.');
+        }
+
         const uid = decodedToken.uid;
         const db = admin.firestore();
 
         await db.runTransaction(async (t) => {
             const userRef = db.collection('users').doc(uid);
-            const groupRef = db.collection('groups').doc(groupId);
+            let targetGroupId = groupId;
+
+            // Handle inviteCode lookup
+            if (!targetGroupId && validation.data.inviteCode) {
+                const inviteSnapshot = await t.get(db.collection('groups').where('inviteCode', '==', validation.data.inviteCode).limit(1));
+                if (inviteSnapshot.empty) {
+                    throw new Error('Invalid invite code.');
+                }
+                targetGroupId = inviteSnapshot.docs[0].id;
+            }
+
+            if (!targetGroupId) throw new Error('Group ID or Invite Code is required.');
+
+            const groupRef = db.collection('groups').doc(targetGroupId);
 
             const userDoc = await t.get(userRef);
             const groupDoc = await t.get(groupRef);
@@ -421,7 +441,7 @@ app.post('/api/join-group', async (req, res) => {
             const userData = userDoc.data();
             const groupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
 
-            if (groupIds.includes(groupId)) throw new Error('User already in this group.');
+            if (groupIds.includes(targetGroupId)) throw new Error('User already in this group.');
             if (groupIds.length >= 7) throw new Error('You can only join up to 12 groups.');
 
             const groupData = groupDoc.data();
@@ -437,8 +457,8 @@ app.post('/api/join-group', async (req, res) => {
             // Update user's groupIds and set groupId to the new one (as "active" or "primary" for backward compatibility if needed, 
             // but ideally we rely on groupIds). We'll keep groupId as the "last joined" or "primary" for now to avoid breaking other things immediately.
             t.update(userRef, {
-                groupIds: admin.firestore.FieldValue.arrayUnion(groupId),
-                groupId: groupId
+                groupIds: admin.firestore.FieldValue.arrayUnion(targetGroupId),
+                groupId: targetGroupId
             });
 
             // Add system message
@@ -728,6 +748,36 @@ app.get('/api/groups', async (req, res) => {
     } catch (error) {
         console.error('Error fetching groups:', error);
         res.status(500).send('Error fetching groups.');
+    }
+});
+
+// GET group preview info for invite link
+app.get(['/api/group-preview/:inviteCode', '/api/group-preview/:inviteCode/'], async (req, res) => {
+    const { inviteCode } = req.params;
+    if (!inviteCode) return res.status(400).send('Invite code is required');
+
+    try {
+        const db = admin.firestore();
+        // Case-sensitive check to be safe, though most are uppercase
+        const snapshot = await db.collection('groups').where('inviteCode', '==', inviteCode).limit(1).get();
+
+        if (snapshot.empty) {
+            return res.status(404).send('Group not found');
+        }
+
+        const groupData = snapshot.docs[0].data();
+
+        // Only return safe public info
+        res.status(200).json({
+            id: snapshot.docs[0].id,
+            name: groupData.name,
+            description: groupData.description,
+            isPublic: groupData.isPublic,
+            membersCount: groupData.membersCount || 0
+        });
+    } catch (error) {
+        console.error('Error fetching group preview:', error);
+        res.status(500).send('Error fetching group preview.');
     }
 });
 
