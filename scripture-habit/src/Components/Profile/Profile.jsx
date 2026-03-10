@@ -4,10 +4,11 @@ import { useLanguage } from '../../Context/LanguageContext.jsx';
 import { useSettings } from '../../Context/SettingsContext.jsx';
 import { auth, db, storage } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
-import { UilSignOutAlt, UilCamera } from '@iconscout/react-unicons';
+import { UilSignOutAlt, UilCamera, UilCalendarAlt } from '@iconscout/react-unicons';
 import { doc, updateDoc, deleteDoc, collection, getDocs, writeBatch, getDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { deleteUser } from 'firebase/auth';
+import { Capacitor } from '@capacitor/core';
 import Button from '../Button/Button';
 import { toast } from 'react-toastify';
 import Footer from '../Footer/Footer';
@@ -16,6 +17,7 @@ import { requestNotificationPermission, disableNotifications } from '../../Utils
 const Profile = ({ userData, stats }) => {
     const { language, setLanguage, t } = useLanguage();
     const { fontSize, setFontSize } = useSettings();
+    const API_BASE = Capacitor.isNativePlatform() ? 'https://scripturehabit.app' : '';
     const navigate = useNavigate();
     const [nickname, setNickname] = useState('');
     const [stake, setStake] = useState('');
@@ -518,6 +520,51 @@ const Profile = ({ userData, stats }) => {
                         </div>
                     </div>
                 )}
+            </div>
+
+
+            <div className="profile-section">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.5rem' }}>
+                    <UilCalendarAlt size="20" color="var(--pink)" />
+                    <h2 style={{ margin: 0 }}>{t('groupChat.habitPaceProfileTitle')}</h2>
+                </div>
+                <p style={{ marginBottom: '1.2rem', fontSize: '0.9rem', color: 'var(--gray)' }}>
+                    {t('groupChat.habitPaceProfileDesc').replace('{days}', userData?.kickThreshold || 3)}
+                </p>
+                <div className="font-size-options" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
+                    {[3, 4, 5, 6, 7].map(days => (
+                        <div
+                            key={days}
+                            className={`font-option ${userData?.kickThreshold === days ? 'active' : ''}`}
+                            onClick={async () => {
+                                if (userData?.kickThreshold === days) return;
+                                try {
+                                    const idToken = await auth.currentUser.getIdToken();
+                                    const response = await fetch(`${API_BASE}/api/update-kick-threshold`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Authorization': `Bearer ${idToken}`
+                                        },
+                                        body: JSON.stringify({ threshold: days })
+                                    });
+                                    if (response.ok) {
+                                        toast.success(t('groupChat.autoKickSuccess'));
+                                    } else {
+                                        toast.error("Failed to update pace");
+                                    }
+                                } catch (error) {
+                                    console.error("Error updating pace:", error);
+                                    toast.error("Error updating pace");
+                                }
+                            }}
+                            style={{ padding: '10px 5px', minWidth: 0 }}
+                        >
+                            <span style={{ fontSize: '1.1rem', fontWeight: 'bold' }}>{days}</span>
+                            <span style={{ fontSize: '0.7rem' }}>{t('dashboard.days')}</span>
+                        </div>
+                    ))}
+                </div>
             </div>
 
 

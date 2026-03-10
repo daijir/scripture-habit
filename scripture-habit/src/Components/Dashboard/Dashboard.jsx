@@ -71,6 +71,14 @@ const Dashboard = () => {
   const [newNickname, setNewNickname] = useState('');
   const [isJoiningInvite, setIsJoiningInvite] = useState(false);
   const [showNotifPrompt, setShowNotifPrompt] = useState(false);
+  
+  // Auto Kick / Habit Pace
+  const [showAutoKickModal, setShowAutoKickModal] = useState(false);
+  const [autoKickStep, setAutoKickStep] = useState(0);
+  const [selectedKickDays, setSelectedKickDays] = useState(3);
+  const [kickConfirmInput, setKickConfirmInput] = useState('');
+  const [autoKickError, setAutoKickError] = useState('');
+  
   const { t, language } = useLanguage();
 
   const todayPlan = getTodayReadingPlan();
@@ -178,6 +186,61 @@ const Dashboard = () => {
 
     return () => unsubscribe();
   }, []);
+
+  // Habit Pace Modal Trigger
+  useEffect(() => {
+    // 招待コードの処理中やウェルカムストーリー表示中はモーダルを出さない
+    const inviteCode = safeStorage.get('pendingInviteCode');
+    
+    if (!loading && userData && userData.uid && 
+        userData.hasSetKickThreshold !== true && 
+        !showWelcomeStory && !inviteCode && !isJoiningInvite) {
+      setShowAutoKickModal(true);
+    }
+  }, [userData, loading, showWelcomeStory, isJoiningInvite]);
+
+  const handleAutoKickSubmit = async () => {
+    const inputNum = parseInt(kickConfirmInput, 10);
+    if (inputNum !== selectedKickDays) {
+      setAutoKickError(t('groupChat.autoKickErrorMismatch'));
+      setKickConfirmInput('');
+      return;
+    }
+
+    setAutoKickError('');
+    if (autoKickStep === 1) {
+      setAutoKickStep(2);
+      setKickConfirmInput('');
+      return;
+    }
+
+    // Step 2 -> Submit
+    try {
+      const idToken = await auth.currentUser.getIdToken();
+      // Using global API endpoint that updates user and all their groups
+      const API_BASE_URL = Capacitor.isNativePlatform() ? 'https://scripturehabit.app' : '';
+      const response = await fetch(`${API_BASE_URL}/api/update-kick-threshold`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({
+          threshold: selectedKickDays
+        })
+      });
+
+      if (response.ok) {
+        toast.success(t('groupChat.autoKickSuccess'));
+        setShowAutoKickModal(false);
+      } else {
+        toast.error("Failed to update pace.");
+      }
+    } catch (error) {
+      console.error('Error updating threshold:', error);
+      toast.error("An error occurred.");
+    }
+  };
 
   // --- Just-In-Time Data Migration (Level Initialization) ---
   useEffect(() => {
@@ -936,8 +999,87 @@ const Dashboard = () => {
           onConfirm={handleEnableNotifications}
           t={t}
         />
+
+        {/* Global Habit Pace Setup Modal */}
+        {showAutoKickModal && (
+          <div className="leave-modal-overlay guide-modal-overlay" style={{ zIndex: 3000 }}>
+            <div className="leave-modal-content guide-modal-content auto-kick-setup-modal">
+              <div className="guide-image-container">
+                <img src="/images/mascot.png" alt="Mascot" className="guide-bird-image" />
+              </div>
+              <h3>{t('groupChat.autoKickSelectionTitle')}</h3>
+
+              {autoKickStep === 0 && (
+                <div className="kick-setup-step">
+                  <p className="guide-intro">{t('groupChat.autoKickSelectionMessage')}</p>
+                  <div className="kick-days-options">
+                    {[3, 4, 5, 6, 7].map(days => (
+                      <button
+                        key={days}
+                        className={`modal-btn ${selectedKickDays === days ? 'primary' : 'outline'}`}
+                        onClick={() => setSelectedKickDays(days)}
+                      >
+                        {t('groupChat.autoKickChoiceLabel').replace('{days}', days)}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="guide-rule-detail" style={{ marginTop: '1rem', fontSize: '0.8rem', opacity: 0.8 }}>
+                    {t('groupChat.autoKickSelectionDescription')}
+                  </p>
+                  <button className="modal-btn primary" onClick={() => setAutoKickStep(1)} style={{ marginTop: '1.5rem', width: '100%' }}>
+                    {t('groupChat.confirm')}
+                  </button>
+                </div>
+              )}
+
+              {autoKickStep === 1 && (
+                <div className="kick-setup-step">
+                  <label className="input-label" style={{ textAlign: 'center', display: 'block' }}>
+                    {t('groupChat.autoKickConfirmMessage')}
+                  </label>
+                  <input
+                    type="number"
+                    value={kickConfirmInput}
+                    onChange={(e) => setKickConfirmInput(e.target.value)}
+                    className="profile-input"
+                    placeholder={selectedKickDays.toString()}
+                    style={{ textAlign: 'center', fontSize: '1.5rem', marginTop: '1rem', width: '100%' }}
+                    autoFocus
+                  />
+                  {autoKickError && <p style={{ color: 'var(--red)', fontSize: '0.8rem', marginTop: '0.5rem' }}>{autoKickError}</p>}
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                    <button className="modal-btn outline" onClick={() => setAutoKickStep(0)} style={{ flex: 1 }}>{t('groupChat.cancel')}</button>
+                    <button className="modal-btn primary" onClick={handleAutoKickSubmit} style={{ flex: 1 }}>{t('groupChat.confirm')}</button>
+                  </div>
+                </div>
+              )}
+
+              {autoKickStep === 2 && (
+                <div className="kick-setup-step">
+                  <label className="input-label" style={{ textAlign: 'center', display: 'block' }}>
+                    {t('groupChat.autoKickReconfirmMessage')}
+                  </label>
+                  <input
+                    type="number"
+                    value={kickConfirmInput}
+                    onChange={(e) => setKickConfirmInput(e.target.value)}
+                    className="profile-input"
+                    placeholder={selectedKickDays.toString()}
+                    style={{ textAlign: 'center', fontSize: '1.5rem', marginTop: '1rem', width: '100%' }}
+                    autoFocus
+                  />
+                  {autoKickError && <p style={{ color: 'var(--red)', fontSize: '0.8rem', marginTop: '0.5rem' }}>{autoKickError}</p>}
+                  <div style={{ display: 'flex', gap: '10px', marginTop: '20px' }}>
+                    <button className="modal-btn outline" onClick={() => setAutoKickStep(1)} style={{ flex: 1 }}>{t('groupChat.cancel')}</button>
+                    <button className="modal-btn primary" onClick={handleAutoKickSubmit} style={{ flex: 1 }}>{t('groupChat.confirm')}</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
-    </div >
+    </div>
   );
 };
 export default Dashboard;

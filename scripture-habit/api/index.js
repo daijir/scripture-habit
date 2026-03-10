@@ -454,11 +454,16 @@ app.post('/api/join-group', async (req, res) => {
                 [`memberLastActive.${uid}`]: admin.firestore.FieldValue.serverTimestamp()
             });
 
-            // Update user's groupIds and set groupId to the new one (as "active" or "primary" for backward compatibility if needed, 
-            // but ideally we rely on groupIds). We'll keep groupId as the "last joined" or "primary" for now to avoid breaking other things immediately.
+            // Update user's groupIds and set groupId to the new one
             t.update(userRef, {
                 groupIds: admin.firestore.FieldValue.arrayUnion(targetGroupId),
-                groupId: targetGroupId
+                groupId: targetGroupId,
+                [`memberKickThresholds.${targetGroupId}`]: userData.kickThreshold || 3
+            });
+
+            // Also update the group document's memberKickThresholds map
+            t.update(groupRef, {
+                [`memberKickThresholds.${uid}`]: userData.kickThreshold || 3
             });
 
             // Add system message
@@ -565,6 +570,55 @@ app.post('/api/leave-group', async (req, res) => {
         res.status(200).send({ message: 'Successfully left group.' });
     } catch (error) {
         console.error('Error leaving group:', error);
+        res.status(500).send(error.message || 'Internal Server Error');
+    }
+});
+
+app.post('/api/update-kick-threshold', async (req, res) => {
+    const authHeader = req.headers.authorization;
+    let idToken;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        idToken = authHeader.split('Bearer ')[1];
+    } else {
+        return res.status(401).send('Unauthorized');
+    }
+
+    const { threshold } = req.body;
+    if (threshold === undefined) return res.status(400).send('Missing threshold');
+
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        const uid = decodedToken.uid;
+        const db = admin.firestore();
+
+        // 1. Update user document
+        const userRef = db.collection('users').doc(uid);
+        const userDoc = await userRef.get();
+        if (!userDoc.exists) return res.status(404).send('User not found');
+
+        const userData = userDoc.data();
+        const groupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
+
+        await userRef.update({
+            kickThreshold: threshold,
+            hasSetKickThreshold: true
+        });
+
+        // 2. Propagation: Update all groups this user belongs to
+        if (groupIds.length > 0) {
+            const batch = db.batch();
+            groupIds.forEach(gid => {
+                const groupRef = db.collection('groups').doc(gid);
+                batch.update(groupRef, {
+                    [`memberKickThresholds.${uid}`]: threshold
+                });
+            });
+            await batch.commit();
+        }
+
+        res.status(200).send({ message: 'Threshold updated successfully across all groups.' });
+    } catch (error) {
+        console.error('Error updating threshold:', error);
         res.status(500).send(error.message || 'Internal Server Error');
     }
 });

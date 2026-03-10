@@ -490,7 +490,8 @@ app.post('/join-group', async (req, res) => {
 
       t.update(groupRef, {
         members: admin.firestore.FieldValue.arrayUnion(uid),
-        membersCount: admin.firestore.FieldValue.increment(1)
+        membersCount: admin.firestore.FieldValue.increment(1),
+        [`memberKickThresholds.${uid}`]: userData.kickThreshold || 3
       });
 
       // Update user's groupIds and set groupId to the new one (as "active" or "primary")
@@ -598,6 +599,78 @@ app.post('/leave-group', async (req, res) => {
   } catch (error) {
     console.error('Error leaving group:', error);
     res.status(500).send(error.message || 'Internal Server Error');
+  }
+});
+
+
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', message: 'Backend is running' });
+});
+
+app.post('/update-kick-threshold', async (req, res) => {
+  const authHeader = req.headers.authorization;
+  let idToken;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    idToken = authHeader.split('Bearer ')[1];
+  } else {
+    console.error('No Bearer token found in authorization header');
+    return res.status(401).send('Unauthorized');
+  }
+
+  const { threshold } = req.body;
+  if (threshold === undefined) {
+    console.error('Threshold is missing in request body');
+    return res.status(400).send('Missing threshold');
+  }
+
+  console.log(`Updating kick threshold to ${threshold} for user...`);
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const uid = decodedToken.uid;
+    console.log(`Verified UID: ${uid}`);
+    
+    const db = admin.firestore();
+    const userRef = db.collection('users').doc(uid);
+    const userSnap = await userRef.get();
+    
+    if (!userSnap.exists) {
+      console.error(`User document not found for UID: ${uid}`);
+      return res.status(404).send('User not found');
+    }
+    
+    const userData = userSnap.data();
+    const groupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
+    const thresholdNum = parseInt(threshold, 10);
+
+    console.log(`User is in ${groupIds.length} groups. Proceeding with batch update.`);
+
+    // Batch update
+    const batch = db.batch();
+    
+    // 1. Update User Doc
+    batch.update(userRef, { 
+      kickThreshold: thresholdNum,
+      hasSetKickThreshold: true 
+    });
+
+    // 2. Update all Groups
+    groupIds.forEach(gid => {
+      if (gid) {
+        const groupRef = db.collection('groups').doc(gid);
+        batch.update(groupRef, {
+          [`memberKickThresholds.${uid}`]: thresholdNum
+        });
+      }
+    });
+
+    await batch.commit();
+    console.log('Batch update successfully committed.');
+
+    res.status(200).json({ message: 'Threshold updated successfully across all groups' });
+  } catch (error) {
+    console.error('CRITICAL ERROR in /update-kick-threshold:', error);
+    res.status(500).send(`Server Error: ${error.message}`);
   }
 });
 
@@ -1692,6 +1765,8 @@ app.get('/check-inactive-users', async (req, res) => {
         }
 
         const lastActiveTimestamp = memberLastActive[memberId];
+        const kickThreshold = (groupData.memberKickThresholds && groupData.memberKickThresholds[memberId]) || 3;
+        const thresholdMs = kickThreshold * 24 * 60 * 60 * 1000;
 
         if (!lastActiveTimestamp) {
           // Initialize tracking if missing (giving them a fresh start)
@@ -1702,9 +1777,9 @@ app.get('/check-inactive-users', async (req, res) => {
           const diff = now - lastActiveDate;
           const daysDiff = Math.floor(diff / (24 * 60 * 60 * 1000));
 
-          console.log(`  Member ${memberId}: last active ${daysDiff} days ago (${lastActiveDate.toISOString()})`);
+          console.log(`  Member ${memberId}: last active ${daysDiff} days ago (${lastActiveDate.toISOString()}), threshold: ${kickThreshold} days`);
 
-          if (diff > THREE_DAYS_MS) {
+          if (diff > thresholdMs) {
             console.log(`    ⚠️ Member ${memberId} is inactive (${daysDiff} days), marking for removal`);
             membersToRemove.push(memberId);
           } else {
@@ -1742,7 +1817,7 @@ app.get('/check-inactive-users', async (req, res) => {
         // Add System Message
         const messageRef = groupsRef.doc(groupId).collection('messages').doc();
         batch.set(messageRef, {
-          text: `👋 **${removeUidList.length} member(s)** were removed due to inactivity (3+ days).`,
+          text: `👋 **${removeUidList.length} member(s)** were removed due to inactivity.`,
           createdAt: admin.firestore.FieldValue.serverTimestamp(),
           senderId: 'system',
           isSystemMessage: true,
@@ -1849,11 +1924,13 @@ app.get('/test-inactive-check/:groupId', async (req, res) => {
           const lastActiveDate = lastActiveTimestamp.toDate();
           const diff = now - lastActiveDate;
           const daysDiff = Math.floor(diff / (24 * 60 * 60 * 1000));
+          const kickThreshold = (groupData.memberKickThresholds && groupData.memberKickThresholds[memberId]) || 3;
 
           memberInfo.lastActive = lastActiveDate.toISOString();
           memberInfo.daysSinceActive = daysDiff;
-          memberInfo.status = daysDiff > 3 ? '⚠️ Inactive' : '✅ Active';
-          memberInfo.action = daysDiff > 3 ? 'would remove' : 'keep';
+          memberInfo.kickThreshold = kickThreshold;
+          memberInfo.status = daysDiff > kickThreshold ? '⚠️ Inactive' : '✅ Active';
+          memberInfo.action = daysDiff > kickThreshold ? 'would remove' : 'keep';
         }
       }
 

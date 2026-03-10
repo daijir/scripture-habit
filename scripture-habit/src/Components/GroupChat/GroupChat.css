@@ -320,6 +320,96 @@
     transform: none;
 }
 
+.modal-btn.outline {
+    background: transparent;
+    color: var(--pink);
+    border: 2px solid var(--pink);
+}
+
+.modal-btn.outline:hover {
+    background: rgba(255, 145, 157, 0.1);
+}
+
+.auto-kick-setup-modal {
+    padding: 1.5rem !important;
+    max-width: 320px !important;
+}
+
+.kick-days-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+    margin: 1rem 0;
+}
+
+.kick-days-options .modal-btn {
+    padding: 10px 5px !important;
+    font-size: 0.85rem !important;
+    margin: 0 !important;
+}
+
+.kick-days-options .modal-btn:last-child:nth-child(3n-1) {
+    grid-column: span 1;
+}
+
+/* Make 5 items look centered if 3 columns */
+.kick-days-options button:nth-child(4) {
+    grid-column: 2 / 3;
+}
+.kick-days-options button:nth-child(5) {
+    grid-column: 3 / 4;
+}
+/* Actually let's just use flex with wrap for 5 items */
+.kick-days-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.kick-days-options .modal-btn {
+    flex: 0 1 calc(33.33% - 8px);
+    min-width: 80px;
+}
+
+.auto-kick-setup-modal h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.8rem;
+    color: #4a5568;
+}
+
+.auto-kick-setup-modal .guide-intro {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin-bottom: 1rem;
+    color: #5e6a7e;
+}
+
+.auto-kick-setup-modal .input-label {
+    color: #5e6a7e;
+    font-size: 0.9rem;
+}
+
+.auto-kick-setup-modal .profile-input {
+    border: 2px solid #e2e8f0 !important;
+    color: #2d3748 !important;
+    background: #f8fafc !important;
+    transition: all 0.2s ease;
+}
+
+.auto-kick-setup-modal .profile-input:focus {
+    border-color: var(--pink) !important;
+    background: white !important;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(255, 145, 157, 0.2);
+}
+
+.auto-kick-setup-modal .modal-btn.outline {
+    border-color: #ffd1d6;
+    color: #ff8e9a;
+}
+
 .messages-container {
     flex: 1 1 auto;
     min-height: 0;
@@ -1086,9 +1176,9 @@ input:checked+.slider:before {
 }
 
 .guide-image-container {
-    width: 140px;
-    height: 140px;
-    margin: -1rem auto 1rem;
+    width: 100px;
+    height: 100px;
+    margin: -0.5rem auto 0.5rem;
     position: relative;
 }
 

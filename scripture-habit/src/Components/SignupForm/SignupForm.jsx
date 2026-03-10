@@ -98,6 +98,8 @@ export default function SignupForm() {
         streakCount: 0,
         totalNotes: 0,
         timeZone: timeZone,
+        kickThreshold: 3,
+        hasSetKickThreshold: false
       };
 
       await setDoc(doc(db, 'users', pendingGoogleUser.uid), userData);
@@ -137,6 +139,8 @@ export default function SignupForm() {
         streakCount: 0,
         totalNotes: 0,
         timeZone: timeZone,
+        kickThreshold: 3,
+        hasSetKickThreshold: false
       };
 
       try {

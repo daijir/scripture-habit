@@ -68,6 +68,13 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   const [isSendingCheer, setIsSendingCheer] = useState(false);
   const [cheeredTodayUids, setCheeredTodayUids] = useState(new Set());
 
+  // Auto Kick Setup
+  const [showAutoKickModal, setShowAutoKickModal] = useState(false);
+  const [autoKickStep, setAutoKickStep] = useState(0);
+  const [selectedKickDays, setSelectedKickDays] = useState(3);
+  const [kickConfirmInput, setKickConfirmInput] = useState('');
+  const [autoKickError, setAutoKickError] = useState('');
+
   const containerRef = useRef(null);
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
   const [showAddNoteTooltip, setShowAddNoteTooltip] = useState(false);
@@ -121,6 +128,14 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     };
     fetchCheers();
   }, [userData?.uid, userData?.timeZone]);
+
+  useEffect(() => {
+    // Reset auto-kick states on group switch
+    setShowAutoKickModal(false);
+    setAutoKickStep(0);
+    setKickConfirmInput('');
+    setAutoKickError('');
+  }, [groupId]);
 
   useEffect(() => {
     // Reset on group switch
@@ -286,6 +301,72 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
   const handleDismissWelcomeGuide = () => {
     setShowWelcomeGuide(false);
+    // After dismissing welcome guide, check if they need to set global kick threshold
+    if (userData?.uid && !userData?.hasSetKickThreshold) {
+      setShowAutoKickModal(true);
+    }
+  };
+
+  useEffect(() => {
+    // Debugging values
+    if (userData?.uid) {
+      console.log('Habit Pace Check:', {
+        initialScrollDone,
+        loading, // useGroupMessages from useGroupMessages
+        showWelcomeGuide,
+        hasSet: userData?.hasSetKickThreshold
+      });
+    }
+
+    // Trigger logic: Simplified to not strictly wait for scroll if it's an empty group/loading finished
+    if (!loading && !showWelcomeGuide && userData?.uid && userData?.hasSetKickThreshold === undefined) {
+      setShowAutoKickModal(true);
+    } else if (initialScrollDone && !showWelcomeGuide && userData?.uid && !userData?.hasSetKickThreshold) {
+      setShowAutoKickModal(true);
+    }
+  }, [loading, initialScrollDone, showWelcomeGuide, userData?.uid, userData?.hasSetKickThreshold]);
+
+  const handleAutoKickSubmit = async () => {
+    const inputNum = parseInt(kickConfirmInput, 10);
+    if (inputNum !== selectedKickDays) {
+      setAutoKickError(t('groupChat.autoKickErrorMismatch'));
+      setKickConfirmInput('');
+      return;
+    }
+
+    setAutoKickError('');
+    if (autoKickStep === 1) {
+      setAutoKickStep(2);
+      setKickConfirmInput('');
+      return;
+    }
+
+    // Step 2 -> Submit
+    try {
+      const idToken = await auth.currentUser.getIdToken();
+      const response = await fetch(`${API_BASE}/api/update-kick-threshold`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({
+          threshold: selectedKickDays
+        })
+      });
+
+      if (response.ok) {
+        toast.success(t('groupChat.autoKickSuccess'));
+        setShowAutoKickModal(false);
+        // Optimistically update local groupData if possible, 
+        // but onSnapshot will handle it anyway.
+      } else {
+        toast.error("Failed to update threshold");
+      }
+    } catch (error) {
+      console.error("Error updating kick threshold:", error);
+      toast.error("Error updating kick threshold");
+    }
   };
 
   // Log whenever messages or groupData updates to see incoming data
@@ -307,12 +388,13 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
     // Add other placeholders to the pool
     // In Japanese, these will be "diluted" by the many humorous options, appearing less frequently
-    candidates.push(t('groupChat.placeholderInactivity'));
+    const inactivityThreshold = userData?.kickThreshold || 3;
+    candidates.push(t('groupChat.placeholderInactivity').replace('3', inactivityThreshold));
     candidates.push(t('groupChat.placeholderShare'));
     candidates.push(t('groupChat.placeholderEncourage'));
 
     return candidates[Math.floor(Math.random() * candidates.length)];
-  }, [t]); // Re-roll when language changes
+  }, [t, userData?.kickThreshold]); // Re-roll when language or threshold changes
 
   // Fetch user's read count when entering the group
   useEffect(() => {
@@ -1500,7 +1582,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     handleGenerateWeeklyRecap();
   };
 
-  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit || showEditNameModal || showMembersModal || showUnityModal || showInviteModal || showReportModal || cheerTarget || isExternalModalOpen;
+  const isAnyModalOpen = showLeaveModal || showDeleteModal || showDeleteMessageModal || editingMessage || showReactionsModal || isNewNoteOpen || noteToEdit || showEditNameModal || showMembersModal || showUnityModal || showInviteModal || showReportModal || cheerTarget || isExternalModalOpen || showAutoKickModal;
 
   // Calculate Unity Score (Percentage of members who posted today)
   const unityPercentage = useMemo(() => {
@@ -1683,6 +1765,27 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
               </button>
             )}
             {groupData?.members && <span className="member-count-badge" style={{ flexShrink: 0 }}>({groupData.members.length})</span>}
+            {userData?.kickThreshold && (
+              <span 
+                className="habit-pace-header-badge" 
+                title={t('groupChat.habitPaceProfileTitle')}
+                onClick={() => navigate('/profile')}
+                style={{
+                  background: 'rgba(255, 145, 157, 0.1)',
+                  color: 'var(--pink)',
+                  padding: '2px 8px',
+                  borderRadius: '12px',
+                  fontSize: '0.7rem',
+                  fontWeight: '700',
+                  marginLeft: '8px',
+                  cursor: 'pointer',
+                  border: '1px solid rgba(255, 145, 157, 0.3)',
+                  flexShrink: 0
+                }}
+              >
+                {t('groupChat.myHabitPaceBadge').replace('{days}', userData.kickThreshold)}
+              </span>
+            )}
             {groupData && (
               <div className="unity-score-container">
                 <span
@@ -2209,6 +2312,17 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
         selectedMember={selectedMember}
         handleUserProfileClick={setSelectedMember}
+
+        // Auto Kick
+        showAutoKickModal={showAutoKickModal}
+        autoKickStep={autoKickStep}
+        setAutoKickStep={setAutoKickStep}
+        selectedKickDays={selectedKickDays}
+        setSelectedKickDays={setSelectedKickDays}
+        kickConfirmInput={kickConfirmInput}
+        setKickConfirmInput={setKickConfirmInput}
+        handleAutoKickSubmit={handleAutoKickSubmit}
+        autoKickError={autoKickError}
 
         showInviteModal={showInviteModal}
         setShowInviteModal={setShowInviteModal}
