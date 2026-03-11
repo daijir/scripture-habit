@@ -20,7 +20,7 @@ const Footer = () => {
                     </span>
                     <span className="footer-separator">•</span>
                     <span className="footer-link" onClick={() => navigate(`/${language}/legal`)}>
-                        {t('terms.officialDisclaimer')}
+                        {t('legalDisclosure.title')}
                     </span>
                 </div>
                 <div className="footer-copyright">

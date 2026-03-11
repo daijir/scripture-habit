@@ -231,10 +231,15 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 ? 'https://scripturehabit.app/api/generate-ponder-questions'
                 : '/api/generate-ponder-questions';
 
+            const idToken = await auth.currentUser.getIdToken(true);
             const response = await axios.post(apiUrl, {
                 scripture: selectedOption?.label || scripture,
                 chapter,
                 language
+            }, {
+                headers: {
+                    Authorization: `Bearer ${idToken}`
+                }
             });
 
             if (response.data.questions) {
