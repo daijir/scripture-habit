@@ -212,7 +212,7 @@ const STREAK_ANNOUNCEMENT_TEMPLATES = {
 };
 
 // API Model Configuration - Using exact name from your screenshot
-const GEMINI_MODEL = 'gemma-3-4b-it';
+const GEMINI_MODEL = 'gemini-2.5-flash';
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`;
 
 const languageNames = {

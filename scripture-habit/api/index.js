@@ -1633,7 +1633,7 @@ Do NOT use bullet points or symbols (*, -). Output only the question text as pla
 However, please write questions that are easy to understand even for investigators or new members who are not comfortable reading scriptures.`;
 
         const apiKey = (process.env.GEMINI_API_KEY || '').trim();
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-4b-it:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
@@ -1703,7 +1703,7 @@ Text:
 ${text}`;
 
         const apiKey = (process.env.GEMINI_API_KEY || '').trim();
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-4b-it:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
@@ -1943,7 +1943,7 @@ Notes Content:
 ${notesText}`;
 
         const apiKey = (process.env.GEMINI_API_KEY || '').trim();
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-4b-it:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
@@ -2193,7 +2193,7 @@ User's Notes:
 ${notesText}`;
 
         const apiKey = (process.env.GEMINI_API_KEY || '').trim();
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-4b-it:generateContent?key=${apiKey}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
@@ -2758,7 +2758,7 @@ Output only the translated text. No explanations.
 Text:
 ${text}`;
 
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemma-3-4b-it:generateContent?key=${process.env.GEMINI_API_KEY}`;
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`;
 
         const response = await axios.post(apiUrl, {
             contents: [{
