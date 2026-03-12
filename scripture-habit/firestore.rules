@@ -73,7 +73,7 @@ service cloud.firestore {
             'memberLastActive', 'memberLastReadAt', 'messageCount', 
             'lastMessageAt', 'lastNoteAt', 'lastMessageByNickname', 
             'lastMessageByUid', 'lastNoteByNickname', 'lastNoteByUid',
-            'noteCount', 'notes'
+            'noteCount', 'notes', 'lastUnityAnnouncementDate'
           ])
         )
       );
@@ -90,22 +90,36 @@ service cloud.firestore {
                       get(/databases/$(database)/documents/groups/$(groupId)).data.get('ownerUserId', '') == request.auth.uid
                     );
                     
-        // Members and owner can create messages (but only for themselves!)
+        // Members and owner can create messages
         allow create: if isAuthenticated() &&
                     (
                       request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.get('members', []) ||
                       get(/databases/$(database)/documents/groups/$(groupId)).data.get('ownerUserId', '') == request.auth.uid
                     ) &&
-                    request.resource.data.senderId == request.auth.uid; // Must be sent by them!
+                    (
+                      request.resource.data.senderId == request.auth.uid || 
+                      (request.resource.data.senderId == 'system' && request.resource.data.isSystemMessage == true)
+                    );
                     
-        // Only the sender (or owner) can update/delete messages
+        // Only the sender (or owner) can update/delete messages, 
+        // EXCEPT for reactions which any member can update.
         allow update: if isAuthenticated() &&
                       (
-                        resource.data.senderId == request.auth.uid ||
+                        request.auth.uid in get(/databases/$(database)/documents/groups/$(groupId)).data.get('members', []) ||
                         get(/databases/$(database)/documents/groups/$(groupId)).data.get('ownerUserId', '') == request.auth.uid
                       ) &&
-                      // Prevent changing senderId and other metadata
-                      request.resource.data.senderId == resource.data.senderId;
+                      (
+                        // Case 1: Sender or Owner updating the message content/metadata
+                        (
+                          (resource.data.senderId == request.auth.uid || get(/databases/$(database)/documents/groups/$(groupId)).data.get('ownerUserId', '') == request.auth.uid) &&
+                          // Prevent changing senderId
+                          request.resource.data.senderId == resource.data.senderId
+                        ) ||
+                        // Case 2: Any member updating ONLY reactions
+                        (
+                          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['reactions'])
+                        )
+                      );
                       
         allow delete: if isAuthenticated() &&
                       (
