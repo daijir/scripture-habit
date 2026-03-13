@@ -1,7 +1,7 @@
 // Book name translations: English -> Other languages
 // Used to translate book names in notes for display
 
-export const bookNameTranslations = {
+export const bookNameTranslations: Record<string, Record<string, string>> = {
     en: {
         // Book of Mormon
         "1 Nephi": "1 Nephi",
@@ -945,7 +945,7 @@ export const bookNameTranslations = {
 };
 
 // Function to translate a book name from English to the user's language
-export const translateBookName = (bookName, language) => {
+export const translateBookName = (bookName: string | null | undefined, language: string): string | null | undefined => {
     if (!bookName || !language) return bookName;
 
     const translations = bookNameTranslations[language];
@@ -968,7 +968,7 @@ export const translateBookName = (bookName, language) => {
 };
 
 // Function to translate chapter field (e.g., "Alma 7" -> "アルマ書 7")
-export const translateChapterField = (chapterText, language) => {
+export const translateChapterField = (chapterText: string | null | undefined, language: string): string | null | undefined => {
     if (!chapterText || !language) return chapterText;
 
     // Special handling for General Conference URLs/Shortcodes
@@ -1019,14 +1019,14 @@ export const translateChapterField = (chapterText, language) => {
             const speakerSlug = byuMatch[1];
             const titleSlug = byuMatch[2];
 
-            const formatSlug = (slug) => {
-                return slug.split('-').map(word => {
+            const formatSlug = (slug: string): string => {
+                return slug.split('-').map((word: string) => {
                     return word.charAt(0).toUpperCase() + word.slice(1);
                 }).join(' ');
             };
 
-            const formatSpeaker = (slug) => {
-                return slug.split('-').map(word => {
+            const formatSpeaker = (slug: string): string => {
+                return slug.split('-').map((word: string) => {
                     if (word.length === 1) return word.toUpperCase() + '.';
                     return word.charAt(0).toUpperCase() + word.slice(1);
                 }).join(' ');

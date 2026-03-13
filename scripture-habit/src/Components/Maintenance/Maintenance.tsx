@@ -1,8 +1,12 @@
-import React from 'react';
+import { FC } from 'react';
 import { useLanguage } from '../../Context/LanguageContext';
 import './Maintenance.css';
 
-const Maintenance = ({ isQuota }) => {
+interface MaintenanceProps {
+    isQuota: boolean;
+}
+
+const Maintenance: FC<MaintenanceProps> = ({ isQuota }) => {
     const { t } = useLanguage();
 
     return (
@@ -26,24 +30,22 @@ const Maintenance = ({ isQuota }) => {
                     </div>
                 )}
 
-                {(isQuota || !isQuota) && (
-                    <button
-                        onClick={() => window.location.reload()}
-                        style={{
-                            padding: '0.8rem 1.5rem',
-                            background: 'linear-gradient(135deg, #6b46c1 0%, #4a90e2 100%)',
-                            color: 'white',
-                            border: 'none',
-                            borderRadius: '12px',
-                            fontWeight: 'bold',
-                            cursor: 'pointer',
-                            transition: 'transform 0.2s',
-                            marginBottom: '1rem'
-                        }}
-                    >
-                        Retry
-                    </button>
-                )}
+                <button
+                    onClick={() => window.location.reload()}
+                    style={{
+                        padding: '0.8rem 1.5rem',
+                        background: 'linear-gradient(135deg, #6b46c1 0%, #4a90e2 100%)',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '12px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'transform 0.2s',
+                        marginBottom: '1rem'
+                    }}
+                >
+                    Retry
+                </button>
 
                 <div className="maintenance-footer">
                     Scripture Habit

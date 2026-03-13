@@ -31,19 +31,20 @@ import BrowserWarningModal from './Components/BrowserWarningModal/BrowserWarning
 import PrivacyPolicy from './Components/PrivacyPolicy/PrivacyPolicy';
 import TermsOfService from './Components/TermsOfService/TermsOfService';
 import LegalDisclosure from './Components/LegalDisclosure/LegalDisclosure';
-import { LanguageProvider, useLanguage, SUPPORTED_LANGUAGES } from './Context/LanguageContext.jsx';
-import { SettingsProvider } from './Context/SettingsContext.jsx';
+import { LanguageProvider, useLanguage, SUPPORTED_LANGUAGES } from './Context/LanguageContext';
+import { SettingsProvider } from './Context/SettingsContext';
 
-const SEOManager = () => {
+const SEOManager: React.FC = () => {
   const { t, language } = useLanguage();
   const location = useLocation();
 
   useEffect(() => {
     // Determine route type
     const path = location.pathname;
-    const pathParts = path.split('/').filter(p => p !== '');
+    const normalizedPath = path.startsWith('/') ? path : '/' + path;
+    const pathParts = normalizedPath.split('/').filter((p: string) => p !== '');
     // Check if there's a language prefix
-    const hasLangPrefix = SUPPORTED_LANGUAGES.includes(pathParts[0]);
+    const hasLangPrefix = (SUPPORTED_LANGUAGES as string[]).includes(pathParts[0]);
     const baseIndex = hasLangPrefix ? 1 : 0;
     const route = pathParts[baseIndex] || '';
 
@@ -123,7 +124,7 @@ const SEOManager = () => {
 
     // Update Canonical Tag
     // Extract base path (without language prefix if present)
-    const baseContentPath = SUPPORTED_LANGUAGES.includes(pathParts[0])
+    const baseContentPath = (SUPPORTED_LANGUAGES as string[]).includes(pathParts[0])
       ? '/' + pathParts.slice(1).join('/')
       : path;
 
@@ -150,7 +151,7 @@ const SEOManager = () => {
     document.querySelector('meta[property="twitter:url"]')?.setAttribute('content', canonicalUrl);
 
     // Update HTML lang attribute
-    const langMap = {
+    const langMap: Record<string, string> = {
       'zho': 'zh-Hant',
     };
     const currentLang = langMap[language] || language || 'en';
@@ -197,7 +198,7 @@ const SEOManager = () => {
     xDefault.setAttribute('href', `https://scripturehabit.app${xDefaultPath}`);
 
     // Update JSON-LD Structured Data
-    let jsonLdScript = document.getElementById('json-ld-schema');
+    let jsonLdScript = document.getElementById('json-ld-schema') as HTMLScriptElement | null;
     if (!jsonLdScript) {
       jsonLdScript = document.createElement('script');
       jsonLdScript.id = 'json-ld-schema';
@@ -240,11 +241,11 @@ const SEOManager = () => {
   return null;
 };
 
-const PWAUpdateHandler = () => {
+const PWAUpdateHandler: React.FC = () => {
   const { t } = useLanguage();
 
   useEffect(() => {
-    const handleUpdateAvailable = (event) => {
+    const handleUpdateAvailable = (event: any) => {
       const registration = event.detail;
       const updateMessage = t('installPrompt.updateAvailable');
       const updateButtonText = t('installPrompt.updateButton');
@@ -309,11 +310,21 @@ const PWAUpdateHandler = () => {
   return null;
 };
 
-const App = () => {
+interface SystemStatus {
+  loading: boolean;
+  error: string | null;
+  maintenance?: boolean;
+}
+
+const App: React.FC = () => {
   const [authLoading, setAuthLoading] = useState(true);
   const [showBrowserWarning, setShowBrowserWarning] = useState(false);
 
   useEffect(() => {
+    if (!auth) {
+      setAuthLoading(false);
+      return;
+    }
     const unsubscribe = onAuthStateChanged(auth, () => {
       setAuthLoading(false);
     });
@@ -327,7 +338,7 @@ const App = () => {
     }
   }, []);
 
-  const [systemStatus, setSystemStatus] = useEffectSpecialState(() => {
+  const [systemStatus, setSystemStatus] = useEffectSpecialState<SystemStatus>(() => {
     // Probe Firestore for status/quota
     const statusRef = doc(db, 'system', 'status');
     const unsubscribe = onSnapshot(statusRef, (docSnap) => {
@@ -351,8 +362,8 @@ const App = () => {
   });
 
   // Helper because we need actual state here
-  function useEffectSpecialState(effect) {
-    const [state, setState] = useState({ loading: true, error: null });
+  function useEffectSpecialState<T>(effect: () => any): [T, React.Dispatch<React.SetStateAction<T>>] {
+    const [state, setState] = useState<T>({ loading: true, error: null } as any);
     useEffect(() => {
       return effect();
     }, [effect]);
@@ -378,7 +389,7 @@ const App = () => {
 
     // Determine the base path regardless of language prefix
     let base = path;
-    if (SUPPORTED_LANGUAGES.includes(firstPart)) {
+    if ((SUPPORTED_LANGUAGES as string[]).includes(firstPart)) {
       base = '/' + pathParts.slice(2).join('/');
     }
 
@@ -395,7 +406,7 @@ const App = () => {
     return 'App';
   };
 
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
 
   const renderContent = () => {
     if (authLoading) {
@@ -447,7 +458,7 @@ const App = () => {
               <Route path="join-group" element={<JoinGroup />} />
 
               <Route path="group-options" element={<GroupOptions />} />
-              <Route path="group/:id" element={<GroupDetails />} />
+              <Route path="group/:id" element={<GroupDetails group={null} />} />
               <Route path="forgot-password" element={<ForgotPassword />} />
               <Route path="join/:inviteCode" element={<InviteRedirect />} />
               <Route path="privacy" element={<PrivacyPolicy />} />
@@ -484,7 +495,11 @@ const App = () => {
   );
 };
 
-const LanguageRedirect = ({ location }) => {
+interface LanguageRedirectProps {
+  location: any;
+}
+
+const LanguageRedirect: React.FC<LanguageRedirectProps> = ({ location }) => {
   const { language } = useLanguage();
   const path = location.pathname;
   const pathParts = path.split('/');
@@ -510,7 +525,12 @@ const LanguageRedirect = ({ location }) => {
   return <Navigate to={newPath} replace state={location.state} />;
 };
 
-const BrowserWarningWrapper = ({ isOpen, onClose }) => {
+interface BrowserWarningWrapperProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const BrowserWarningWrapper: React.FC<BrowserWarningWrapperProps> = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
   return (
     <BrowserWarningModal
@@ -569,7 +589,7 @@ export default Sentry.withErrorBoundary(App, {
           overflow: 'auto',
           border: '1px solid #e2e8f0'
         }}>
-          {error.toString()}
+          {(error as Error).toString()}
         </pre>
       )}
     </div>

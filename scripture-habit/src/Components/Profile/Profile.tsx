@@ -1,20 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, FC, useRef, ChangeEvent } from 'react';
 import './Profile.css';
-import { useLanguage } from '../../Context/LanguageContext.jsx';
-import { useSettings } from '../../Context/SettingsContext.jsx';
+import { useLanguage } from '../../Context/LanguageContext';
+import { useSettings } from '../../Context/SettingsContext';
 import { auth, db, storage } from '../../firebase';
 import { useNavigate } from 'react-router-dom';
 import { UilSignOutAlt, UilCamera, UilCalendarAlt } from '@iconscout/react-unicons';
-import { doc, updateDoc, deleteDoc, collection, getDocs, writeBatch, getDoc } from 'firebase/firestore';
+import { doc, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { deleteUser } from 'firebase/auth';
 import { Capacitor } from '@capacitor/core';
 import Button from '../Button/Button';
 import { toast } from 'react-toastify';
 import Footer from '../Footer/Footer';
 import { requestNotificationPermission, disableNotifications } from '../../Utils/notificationHelper';
+import { UserData } from '../../types/user';
 
-const Profile = ({ userData, stats }) => {
+interface ProfileStats {
+    streak: number;
+    totalNotes: number;
+    daysStudied: number;
+}
+
+interface ProfileProps {
+    userData: UserData;
+    stats: ProfileStats;
+}
+
+const Profile: FC<ProfileProps> = ({ userData, stats }) => {
     const { language, setLanguage, t } = useLanguage();
     const { fontSize, setFontSize } = useSettings();
     const API_BASE = Capacitor.isNativePlatform() ? 'https://scripturehabit.app' : '';
@@ -33,11 +44,11 @@ const Profile = ({ userData, stats }) => {
     const [isNotifLoading, setIsNotifLoading] = useState(false);
     const [photoURL, setPhotoURL] = useState('');
     const [isUploading, setIsUploading] = useState(false);
-    const fileInputRef = React.useRef(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
 
     // PWA Install properties
-    const [platform, setPlatform] = useState(null);
-    const [deferredPrompt, setDeferredPrompt] = useState(null);
+    const [platform, setPlatform] = useState<'ios' | 'android' | null>(null);
+    const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
     const [isStandalone, setIsStandalone] = useState(false);
 
     useEffect(() => {
@@ -47,7 +58,7 @@ const Profile = ({ userData, stats }) => {
             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         const isAndroid = /Android/i.test(ua);
 
-        const standaloneCheck = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        const standaloneCheck = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
         setIsStandalone(standaloneCheck);
 
         if (!standaloneCheck) {
@@ -55,7 +66,7 @@ const Profile = ({ userData, stats }) => {
             else if (isAndroid) setPlatform('android');
         }
 
-        const handleBeforeInstallPrompt = (e) => {
+        const handleBeforeInstallPrompt = (e: any) => {
             e.preventDefault();
             setDeferredPrompt(e);
             setPlatform('android');
@@ -63,8 +74,8 @@ const Profile = ({ userData, stats }) => {
 
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
-        if (window.deferredPWAPrompt) {
-            setDeferredPrompt(window.deferredPWAPrompt);
+        if ((window as any).deferredPWAPrompt) {
+            setDeferredPrompt((window as any).deferredPWAPrompt);
         }
 
         return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -95,9 +106,9 @@ const Profile = ({ userData, stats }) => {
             }
         } else {
             try {
-                await requestNotificationPermission(userData.uid, t);
+                await requestNotificationPermission(userData.uid, (key, defaultText) => t(key) || defaultText);
                 setNotifPermission(window.Notification.permission);
-            } catch (err) {
+            } catch (err: any) {
                 console.error("Toggle error:", err);
             }
         }
@@ -122,16 +133,20 @@ const Profile = ({ userData, stats }) => {
         }
     }, [userData]);
 
-    const resizeImage = (file, targetSize = 400) => {
-        return new Promise((resolve) => {
+    const resizeImage = (file: File, targetSize = 400): Promise<Blob> => {
+        return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = (event) => {
                 const img = new Image();
-                img.src = event.target.result;
+                img.src = event.target?.result as string;
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
+                    if (!ctx) {
+                        reject(new Error("Could not get canvas context"));
+                        return;
+                    }
 
                     // Center Crop to Square
                     let sourceX, sourceY, sourceWidth, sourceHeight;
@@ -161,10 +176,12 @@ const Profile = ({ userData, stats }) => {
                     );
 
                     canvas.toBlob((blob) => {
-                        resolve(blob);
+                        if (blob) resolve(blob);
+                        else reject(new Error("Canvas toBlob failed"));
                     }, 'image/jpeg', 0.85); // Compress quality
                 };
             };
+            reader.onerror = (error) => reject(error);
         });
     };
 
@@ -172,8 +189,8 @@ const Profile = ({ userData, stats }) => {
         fileInputRef.current?.click();
     };
 
-    const handleFileChange = async (e) => {
-        const file = e.target.files[0];
+    const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
         if (!file || !userData?.uid) return;
 
         // Increased limit to 20MB for modern smartphone photos
@@ -200,7 +217,7 @@ const Profile = ({ userData, stats }) => {
 
             setPhotoURL(url);
             toast.success(t('profile.imageUploadSuccess') || "Profile picture updated!");
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error uploading image:", error);
             toast.error(t('profile.imageUploadError') || "Failed to update profile picture.");
         } finally {
@@ -235,7 +252,7 @@ const Profile = ({ userData, stats }) => {
             setTimeout(() => {
                 setMessage({ type: '', text: '' });
             }, 3000);
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error updating profile:", error);
             setMessage({ type: 'error', text: t('profile.errorUpdate') });
         } finally {
@@ -248,13 +265,13 @@ const Profile = ({ userData, stats }) => {
     };
 
     const confirmSignOut = () => {
-        auth.signOut();
+        auth?.signOut();
         navigate('/welcome');
         setShowSignOutModal(false);
     };
 
     const handleDeleteAccount = async () => {
-        const user = auth.currentUser;
+        const user = auth?.currentUser;
         if (!user) return;
 
         setIsDeleting(true);
@@ -270,20 +287,20 @@ const Profile = ({ userData, stats }) => {
 
             if (response.ok) {
                 toast.success(t('profile.deleteAccountSuccess'));
-                await auth.signOut();
+                await auth?.signOut();
                 navigate('/welcome');
             } else {
                 const errorData = await response.json();
                 console.error("Server-side deletion failed:", errorData);
                 toast.error(t('profile.deleteAccountError') || "Error deleting account");
                 // If it failed but maybe partially deleted, we should still sign out to be safe
-                await auth.signOut();
+                await auth?.signOut();
                 navigate('/welcome');
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Error during account deletion process:", error);
             toast.error(t('profile.deleteAccountError') || "Error deleting account");
-            await auth.signOut();
+            await auth?.signOut();
             navigate('/welcome');
         } finally {
             setIsDeleting(false);
@@ -382,7 +399,7 @@ const Profile = ({ userData, stats }) => {
                         type="text"
                         value={nickname}
                         onChange={(e) => setNickname(e.target.value)}
-                        placeholder={t('groupChat.enterNewNickname')}
+                        placeholder={t('groupChat.enterNewNickname') || ''}
                         className="profile-input"
                     />
                 </div>
@@ -392,7 +409,7 @@ const Profile = ({ userData, stats }) => {
                         type="text"
                         value={stake}
                         onChange={(e) => setStake(e.target.value)}
-                        placeholder={t('profile.enterStake')}
+                        placeholder={t('profile.enterStake') || ''}
                         className="profile-input"
                     />
                 </div>
@@ -402,7 +419,7 @@ const Profile = ({ userData, stats }) => {
                         type="text"
                         value={ward}
                         onChange={(e) => setWard(e.target.value)}
-                        placeholder={t('profile.enterWard')}
+                        placeholder={t('profile.enterWard') || ''}
                         className="profile-input"
                     />
                 </div>
@@ -412,7 +429,7 @@ const Profile = ({ userData, stats }) => {
                         type="text"
                         value={bio}
                         onChange={(e) => setBio(e.target.value)}
-                        placeholder={t('profile.enterBio')}
+                        placeholder={t('profile.enterBio') || ''}
                         className="profile-input"
                     />
                 </div>
@@ -474,7 +491,7 @@ const Profile = ({ userData, stats }) => {
                     <h2 style={{ margin: 0 }}>{t('groupChat.habitPaceProfileTitle')}</h2>
                 </div>
                 <p style={{ marginBottom: '1.2rem', fontSize: '0.9rem', color: 'var(--gray)' }}>
-                    {t('groupChat.habitPaceProfileDesc').replace('{days}', userData?.kickThreshold || 3)}
+                    {t('groupChat.habitPaceProfileDesc').replace('{days}', (userData?.kickThreshold || 3).toString())}
                 </p>
                 <div className="font-size-options" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
                     {[3, 4, 5, 6, 7].map(days => (
@@ -484,7 +501,8 @@ const Profile = ({ userData, stats }) => {
                             onClick={async () => {
                                 if (userData?.kickThreshold === days) return;
                                 try {
-                                    const idToken = await auth.currentUser.getIdToken();
+                                    const idToken = await auth?.currentUser?.getIdToken();
+                                    if (!idToken) throw new Error("No idToken");
                                     const response = await fetch(`${API_BASE}/api/update-kick-threshold`, {
                                         method: 'POST',
                                         headers: {
@@ -511,11 +529,6 @@ const Profile = ({ userData, stats }) => {
                     ))}
                 </div>
             </div>
-
-
-
-
-
 
             <div className="profile-section">
                 <h2>{t('profile.fontSize.title')}</h2>
@@ -700,7 +713,7 @@ const Profile = ({ userData, stats }) => {
 
                         <div style={{ marginBottom: '1.5rem', textAlign: 'left' }}>
                             <p style={{ fontSize: '0.9rem', color: '#666', marginBottom: '0.5rem' }}>
-                                {t('profile.typeToConfirmNickname').replace('{nickname}', userData.nickname)}
+                                {t('profile.typeToConfirmNickname').replace('{nickname}', userData.nickname || '')}
                             </p>
                             <input
                                 type="text"
@@ -719,9 +732,9 @@ const Profile = ({ userData, stats }) => {
 
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                             <button
-                                className={`close-modal-btn ${confirmNickname.trim() === userData.nickname.trim() ? 'delete-btn-active' : 'delete-btn-disabled'}`}
+                                className={`close-modal-btn ${confirmNickname.trim() === (userData.nickname || '').trim() ? 'delete-btn-active' : 'delete-btn-disabled'}`}
                                 onClick={handleDeleteAccount}
-                                disabled={isDeleting || confirmNickname.trim() !== userData.nickname.trim()}
+                                disabled={isDeleting || confirmNickname.trim() !== (userData.nickname || '').trim()}
                                 style={{ marginTop: 0 }}
                             >
                                 {isDeleting ? '...' : t('profile.confirmDeleteAccount')}

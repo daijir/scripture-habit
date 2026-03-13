@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo, FC } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { useLanguage } from '../../Context/LanguageContext';
 import { useGCMetadata } from '../../hooks/useGCMetadata';
@@ -9,20 +9,20 @@ import LinkPreview from '../LinkPreview/LinkPreview';
 /**
  * Checks if a string is a URL or a GC-style shortcode.
  */
-const isGCUrl = (str) => {
+const isGCUrl = (str: string | undefined): boolean => {
     if (!str) return false;
     const clean = str.trim();
     if (clean.toLowerCase().startsWith('http')) return true;
     return /^\d{4}\/\d{2}\/.+$/.test(clean);
 };
 
-const extractUrls = (text) => {
+const extractUrls = (text: string | undefined): string[] => {
     if (!text) return [];
     const urlPattern = /https?:\/\/[^\s"']+/gi;
     const matches = text.match(urlPattern);
     if (!matches) return [];
 
-    const seen = new Set();
+    const seen = new Set<string>();
     return matches.map(url => url.replace(/[.,:;"')\]]+$/, '')).filter(url => {
         if (seen.has(url)) return false;
         seen.add(url);
@@ -31,9 +31,9 @@ const extractUrls = (text) => {
 };
 
 // Map scripture names to translation keys
-const translateScriptureName = (name, t) => {
+const translateScriptureName = (name: string, t: (key: string) => string): string => {
     if (!name) return '';
-    const map = {
+    const map: Record<string, string> = {
         'Old Testament': 'scriptures.oldTestament',
         'New Testament': 'scriptures.newTestament',
         'Book of Mormon': 'scriptures.bookOfMormon',
@@ -52,7 +52,18 @@ const translateScriptureName = (name, t) => {
 /**
  * Renders rich content (Titles, Labels)
  */
-const GCNoteRenderer = ({ scriptureValue, comment, url, language, t, isSent, linkColor, translatedText }) => {
+interface GCNoteRendererProps {
+    scriptureValue: string;
+    comment: string;
+    url: string;
+    language: string;
+    t: (key: string) => string;
+    isSent: boolean;
+    linkColor?: string;
+    translatedText?: string;
+}
+
+const GCNoteRenderer: FC<GCNoteRendererProps> = ({ scriptureValue, comment, url, language, t, isSent, linkColor, translatedText }) => {
     const { data, loading } = useGCMetadata(url, language);
 
     const scripLower = (scriptureValue || '').toLowerCase();
@@ -102,22 +113,29 @@ const GCNoteRenderer = ({ scriptureValue, comment, url, language, t, isSent, lin
     return (
         <div style={{ textAlign: 'left' }}>
             <ReactMarkdown components={{
-                a: p => <a {...p} target="_blank" rel="noopener noreferrer" style={{ color: linkColor || (isSent ? 'white' : 'var(--purple)'), textDecoration: 'underline' }} onClick={(e) => e.stopPropagation()} />,
-                p: p => <p {...p} style={{ margin: '0.6rem 0', lineHeight: '1.5' }} />
+                a: ({node, ...p}) => <a {...p} target="_blank" rel="noopener noreferrer" style={{ color: linkColor || (isSent ? 'white' : 'var(--purple)'), textDecoration: 'underline' }} onClick={(e) => e.stopPropagation()} />,
+                p: ({node, ...p}) => <p {...p} style={{ margin: '0.6rem 0', lineHeight: '1.5' }} />
             }}>
                 {constructedMd}
             </ReactMarkdown>
             {translatedText && (
                 <div style={{ marginTop: '0.8rem', borderTop: '1px dashed #ccc', paddingTop: '0.6rem' }}>
                     <div style={{ fontSize: '0.75rem', opacity: 0.8, fontWeight: 'bold' }}>✨ AI {t('groupChat.translated')}</div>
-                    <ReactMarkdown components={{ p: p => <p {...p} style={{ margin: '0.3rem 0' }} /> }}>{translatedText}</ReactMarkdown>
+                    <ReactMarkdown components={{ p: ({node, ...p}) => <p {...p} style={{ margin: '0.3rem 0' }} /> }}>{translatedText}</ReactMarkdown>
                 </div>
             )}
         </div>
     );
 };
 
-const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
+interface NoteDisplayProps {
+    text: string;
+    isSent: boolean;
+    linkColor?: string;
+    translatedText?: string;
+}
+
+const NoteDisplay: FC<NoteDisplayProps> = ({ text, isSent, linkColor, translatedText }) => {
     const { language, t } = useLanguage();
 
     // 1. Structure Check
@@ -133,19 +151,19 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
         return (
             <div style={{ textAlign: 'left' }}>
                 <ReactMarkdown components={{
-                    a: p => <a {...p} target="_blank" rel="noopener noreferrer" style={{ color: linkColor || (isSent ? 'white' : 'var(--purple)'), textDecoration: 'underline' }} onClick={e => e.stopPropagation()} />,
-                    p: p => <p {...p} style={{ margin: '0.2rem 0', whiteSpace: 'pre-wrap' }} />
+                    a: ({node, ...p}) => <a {...p} target="_blank" rel="noopener noreferrer" style={{ color: linkColor || (isSent ? 'white' : 'var(--purple)'), textDecoration: 'underline' }} onClick={e => e.stopPropagation()} />,
+                    p: ({node, ...p}) => <p {...p} style={{ margin: '0.2rem 0', whiteSpace: 'pre-wrap' }} />
                 }}>
                     {processedText}
                 </ReactMarkdown>
                 {translatedText && (
                     <div style={{ marginTop: '0.4rem', borderTop: '1px dashed #ccc', paddingTop: '0.4rem' }}>
                         <div style={{ fontSize: '0.75rem', opacity: 0.8, fontWeight: 'bold' }}>✨ AI {t('groupChat.translated')}</div>
-                        <ReactMarkdown components={{ p: p => <p {...p} style={{ margin: '0.2rem 0', whiteSpace: 'pre-wrap' }} /> }}>{translatedText}</ReactMarkdown>
+                        <ReactMarkdown components={{ p: ({node, ...p}) => <p {...p} style={{ margin: '0.2rem 0', whiteSpace: 'pre-wrap' }} /> }}>{translatedText}</ReactMarkdown>
                     </div>
                 )}
                 {simpleUrls.length > 0 && (
-                    <div style={{ marginTop: '0.5rem' }}>{simpleUrls.map((u, i) => <LinkPreview key={i} url={u} isSent={isSent} language={language} t={t} />)}</div>
+                    <div style={{ marginTop: '0.5rem' }}>{simpleUrls.map((u, i) => <LinkPreview key={i} url={u} isSent={isSent} language={language || 'en'} t={t} />)}</div>
                 )}
             </div>
         );
@@ -155,7 +173,7 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
     const contentBody = headerMatch ? removeNoteHeader(text) : text;
     // Split by newlines initially
     const initialLines = contentBody.split('\n');
-    const lines = [];
+    const lines: string[] = [];
 
     // Further split lines if they contain multiple labels on the same line
     const labelMarkers = ['カテゴリ:', 'カテゴリ：', '章:', '章：', 'Title:', 'Title：', 'Url:', 'Url：', 'Comment:', 'Comment：', 'コメント:', 'コメント：'];
@@ -163,7 +181,7 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
     initialLines.forEach(line => {
         const currentLine = line;
         // Check for subsequent labels on the same line
-        const foundPos = [];
+        const foundPos: { pos: number; marker: string }[] = [];
         labelMarkers.forEach(marker => {
             const pos = currentLine.indexOf(marker);
             // Ignore if it's at the very beginning (already handled by split)
@@ -188,7 +206,7 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
 
     let scriptureValue = '';
     let chapterValue = '';
-    const commentLines = [];
+    const commentLines: string[] = [];
 
     lines.forEach(line => {
         const trimmed = line.trim();
@@ -244,7 +262,6 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
     if (primaryUrl && (isGC || isOther || isBYU)) {
         return (
             <GCNoteRenderer
-                header={headerMatch ? headerMatch[0].trim() : ''}
                 scriptureValue={scriptureValue}
                 comment={comment}
                 url={primaryUrl}
@@ -272,15 +289,15 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
     return (
         <div style={{ textAlign: 'left' }}>
             <ReactMarkdown components={{
-                a: p => <a {...p} target="_blank" rel="noopener noreferrer" style={{ color: linkColor || (isSent ? 'white' : 'var(--purple)'), textDecoration: 'underline' }} onClick={e => e.stopPropagation()} />,
-                p: p => <p {...p} style={{ margin: '0.4rem 0', whiteSpace: 'pre-wrap' }} />
+                a: ({node, ...p}) => <a {...p} target="_blank" rel="noopener noreferrer" style={{ color: linkColor || (isSent ? 'white' : 'var(--purple)'), textDecoration: 'underline' }} onClick={e => e.stopPropagation()} />,
+                p: ({node, ...p}) => <p {...p} style={{ margin: '0.4rem 0', whiteSpace: 'pre-wrap' }} />
             }}>
                 {finalMd}
             </ReactMarkdown>
             {translatedText && (
                 <div style={{ marginTop: '0.6rem', borderTop: '1px dashed #ccc', paddingTop: '0.4rem' }}>
                     <div style={{ fontSize: '0.75rem', opacity: 0.8, fontWeight: 'bold' }}>✨ AI {t('groupChat.translated')}</div>
-                    <ReactMarkdown components={{ p: p => <p {...p} style={{ margin: '0.2rem 0', whiteSpace: 'pre-wrap' }} /> }}>{translatedText}</ReactMarkdown>
+                    <ReactMarkdown components={{ p: ({node, ...p}) => <p {...p} style={{ margin: '0.2rem 0', whiteSpace: 'pre-wrap' }} /> }}>{translatedText}</ReactMarkdown>
                 </div>
             )}
         </div>

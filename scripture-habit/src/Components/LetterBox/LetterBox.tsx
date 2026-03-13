@@ -1,16 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FC } from 'react';
 import { db } from '../../firebase';
-import { collection, query, orderBy, onSnapshot, doc, deleteDoc } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, doc, deleteDoc, Timestamp } from 'firebase/firestore';
 import { UilEnvelope, UilTrashAlt, UilTimes } from '@iconscout/react-unicons';
 import ReactMarkdown from 'react-markdown';
 import './LetterBox.css';
 import { useLanguage } from '../../Context/LanguageContext';
+import { UserData } from '../../types/user';
 
-const LetterBox = ({ isOpen, onClose, userData }) => {
+interface Letter {
+    id: string;
+    title?: string;
+    content?: string;
+    createdAt?: Timestamp | any;
+}
+
+interface LetterBoxProps {
+    isOpen: boolean;
+    onClose: () => void;
+    userData: UserData | null;
+}
+
+const LetterBox: FC<LetterBoxProps> = ({ isOpen, onClose, userData }) => {
     const { t } = useLanguage();
-    const [letters, setLetters] = useState([]);
+    const [letters, setLetters] = useState<Letter[]>([]);
     const [loading, setLoading] = useState(true);
-    const [selectedLetter, setSelectedLetter] = useState(null);
+    const [selectedLetter, setSelectedLetter] = useState<Letter | null>(null);
 
     useEffect(() => {
         if (!userData || !userData.uid || !isOpen) return;
@@ -22,7 +36,7 @@ const LetterBox = ({ isOpen, onClose, userData }) => {
             const fetchedLetters = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
-            }));
+            } as Letter));
             setLetters(fetchedLetters);
             setLoading(false);
         });
@@ -30,9 +44,9 @@ const LetterBox = ({ isOpen, onClose, userData }) => {
         return () => unsubscribe();
     }, [userData, isOpen]);
 
-    const handleDelete = async (e, letterId) => {
+    const handleDelete = async (e: React.MouseEvent, letterId: string) => {
         e.stopPropagation();
-        if (window.confirm(t('letterBox.deleteConfirm'))) {
+        if (userData?.uid && window.confirm(t('letterBox.deleteConfirm'))) {
             try {
                 await deleteDoc(doc(db, 'users', userData.uid, 'letters', letterId));
             } catch (error) {
@@ -48,7 +62,7 @@ const LetterBox = ({ isOpen, onClose, userData }) => {
             <div className="LetterBoxContent" onClick={(e) => e.stopPropagation()}>
                 <div className="letterbox-header">
                     <h2><UilEnvelope /> {t('letterBox.title')}</h2>
-                    <button className="close-btn" onClick={onClose}><UilTimes color="#ffffff" /></button>
+                    <button className="close-btn" onClick={onClose} aria-label="Close"><UilTimes color="#ffffff" /></button>
                 </div>
 
                 <div className="letterbox-body">
@@ -63,7 +77,7 @@ const LetterBox = ({ isOpen, onClose, userData }) => {
                                         selectedLetter.createdAt.toDate().toLocaleDateString() :
                                         new Date().toLocaleDateString()}
                                 </div>
-                                <ReactMarkdown>{selectedLetter.content}</ReactMarkdown>
+                                <ReactMarkdown>{selectedLetter.content || ""}</ReactMarkdown>
                             </div>
                         </div>
                     ) : (
@@ -96,6 +110,7 @@ const LetterBox = ({ isOpen, onClose, userData }) => {
                                         <button
                                             className="delete-letter-btn"
                                             onClick={(e) => handleDelete(e, letter.id)}
+                                            aria-label="Delete letter"
                                         >
                                             <UilTrashAlt size="18" />
                                         </button>

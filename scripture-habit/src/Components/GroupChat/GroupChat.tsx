@@ -1,53 +1,70 @@
-import React, { useState, useEffect, useRef, useLayoutEffect, useMemo } from 'react';
-import * as Sentry from "@sentry/react";
+import { useState, useEffect, useRef, useLayoutEffect, useMemo, FC, FormEvent, Fragment } from 'react';
 import { safeStorage } from '../../Utils/storage';
 import { Capacitor } from '@capacitor/core';
 import { db, auth } from '../../firebase';
-import { UilPlus, UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle, UilUsersAlt, UilPen, UilWhatsapp, UilCommentAlt, UilFacebookMessenger, UilInstagram } from '@iconscout/react-unicons';
-import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, where, getDocs, increment, setDoc, getDoc, limit, startAfter, startAt, runTransaction } from 'firebase/firestore';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { UilSignOutAlt, UilCopy, UilTrashAlt, UilTimes, UilArrowLeft, UilPlusCircle, UilUsersAlt, UilPen, UilCommentAlt } from '@iconscout/react-unicons';
+import { collection, query, orderBy, serverTimestamp, doc, updateDoc, deleteDoc, arrayRemove, arrayUnion, getDoc, getDocs, limit, startAfter, increment, runTransaction, where, setDoc } from 'firebase/firestore';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { ChatSkeleton } from '../Skeleton/Skeleton';
-import ReactMarkdown from 'react-markdown';
 import NewNote from '../NewNote/NewNote';
-import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
 import { NOTE_HEADER_REGEX, removeNoteHeader } from '../../Utils/noteUtils';
 import './GroupChat.css';
-import { useLanguage } from '../../Context/LanguageContext.jsx';
-import NoteDisplay from '../NoteDisplay/NoteDisplay';
+import { useLanguage } from '../../Context/LanguageContext';
 import confetti from 'canvas-confetti';
-import UserProfileModal from '../UserProfileModal/UserProfileModal';
-import Mascot from '../Mascot/Mascot';
 import MessageItem from './MessageItem';
 import MessageInput from './MessageInput';
 import GroupChatModals from './GroupChatModals';
 import { useGroupMessages } from './useGroupMessages';
-import { UilExclamationTriangle } from '@iconscout/react-unicons';
 import GroupMenuItem from './GroupMenuItem';
+import { UserData } from '../../types/user';
+import { Group, Message, UserProfile } from '../../types/chat';
 
-const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInputFocusChange, onBack, onGroupSelect, isExternalModalOpen = false }) => {
+interface GroupChatProps {
+  groupId: string;
+  userData: UserData;
+  userGroups?: Group[];
+  isActive?: boolean;
+  onInputFocusChange?: (focused: boolean) => void;
+  onBack?: () => void;
+  onGroupSelect?: (groupId: string) => void;
+  isExternalModalOpen?: boolean;
+}
+
+interface ContextMenu {
+  show: boolean;
+  x: number;
+  y: number;
+  messageId: string | null;
+  message?: Message | null;
+}
+
+interface UnityModalData {
+  posted: { id: string; nickname: string }[];
+  notPosted: { id: string; nickname: string }[];
+}
+
+const GroupChat: FC<GroupChatProps> = ({ groupId, userData, userGroups = [], isActive = false, onInputFocusChange, onBack, onGroupSelect, isExternalModalOpen = false }) => {
   const { language, t } = useLanguage();
   const API_BASE = Capacitor.isNativePlatform() ? 'https://scripturehabit.app' : '';
   const navigate = useNavigate();
-  const location = useLocation();
   const [newMessage, setNewMessage] = useState('');
-  const [replyTo, setReplyTo] = useState(null);
+  const [replyTo, setReplyTo] = useState<Message | null>(null);
   const [isNewNoteOpen, setIsNewNoteOpen] = useState(false);
   const [showLeaveModal, setShowLeaveModal] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showMembersModal, setShowMembersModal] = useState(false);
-  const [membersList, setMembersList] = useState([]);
+  const [membersList, setMembersList] = useState<UserProfile[]>([]);
   const [membersLoading, setMembersLoading] = useState(false);
   const [deleteConfirmationName, setDeleteConfirmationName] = useState('');
-  const [contextMenu, setContextMenu] = useState({ show: false, x: 0, y: 0, messageId: null });
-  const [editingMessage, setEditingMessage] = useState(null);
+  const [contextMenu, setContextMenu] = useState<ContextMenu>({ show: false, x: 0, y: 0, messageId: null });
+  const [editingMessage, setEditingMessage] = useState<Message | null>(null);
   const [editText, setEditText] = useState('');
   const [showDeleteMessageModal, setShowDeleteMessageModal] = useState(false);
-  const [messageToDelete, setMessageToDelete] = useState(null);
-  const [noteToEdit, setNoteToEdit] = useState(null);
+  const [messageToDelete, setMessageToDelete] = useState<Message | null>(null);
+  const [noteToEdit, setNoteToEdit] = useState<any>(null);
   const [showReactionsModal, setShowReactionsModal] = useState(false);
-  const [reactionsToShow, setReactionsToShow] = useState([]);
+  const [reactionsToShow, setReactionsToShow] = useState<any[]>([]);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const [isRecapLoading, setIsRecapLoading] = useState(false);
@@ -57,47 +74,44 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   const [newGroupDescription, setNewGroupDescription] = useState('');
   const [newTranslatedName, setNewTranslatedName] = useState('');
   const [newTranslatedDesc, setNewTranslatedDesc] = useState('');
-  const [selectedMember, setSelectedMember] = useState(null);
+  const [selectedMember, setSelectedMember] = useState<UserProfile | null>(null);
   const [showUnityModal, setShowUnityModal] = useState(false);
-  const [unityModalData, setUnityModalData] = useState({ posted: [], notPosted: [] });
+  const [unityModalData, setUnityModalData] = useState<UnityModalData>({ posted: [], notPosted: [] });
   const [showReportModal, setShowReportModal] = useState(false);
-  const [reportedMessage, setReportedMessage] = useState(null);
+  const [reportedMessage, setReportedMessage] = useState<Message | null>(null);
   const [reportReason, setReportReason] = useState('inappropriate');
-  const [cheerTarget, setCheerTarget] = useState(null);
+  const [cheerTarget, setCheerTarget] = useState<UserProfile | null>(null);
   const [isSendingCheer, setIsSendingCheer] = useState(false);
-  const [cheeredTodayUids, setCheeredTodayUids] = useState(new Set());
+  const [cheeredTodayUids, setCheeredTodayUids] = useState<Set<string>>(new Set());
 
-
-
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isLoadingOlder, setIsLoadingOlder] = useState(false);
   const [showAddNoteTooltip, setShowAddNoteTooltip] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
-  const [translatedTexts, setTranslatedTexts] = useState({});
-  const [translatingIds, setTranslatingIds] = useState(new Set());
+  const [translatedTexts, setTranslatedTexts] = useState<Record<string, string>>({});
+  const [translatingIds, setTranslatingIds] = useState<Set<string>>(new Set());
   const [translatedGroupName, setTranslatedGroupName] = useState('');
   const [translatedGroupDesc, setTranslatedGroupDesc] = useState('');
 
-  const textareaRef = useRef(null);
-  const messagesEndRef = useRef(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   const previousScrollHeightRef = useRef(0);
-  const scrollDebounceRef = useRef(null);
+  const scrollDebounceRef = useRef<any>(null);
   const {
     messages, setMessages,
-    groupData, setGroupData,
-    loading, setLoading,
-    error, setError,
+    groupData,
+    loading,
     userReadCount, setUserReadCount,
     initialScrollDone, setInitialScrollDone,
     hasMoreOlder, setHasMoreOlder,
-    membersMap, setMembersMap,
+    membersMap,
     currentGroupIdRef,
     prevMessageCountRef,
     latestMessageRef
   } = useGroupMessages(groupId, userData, t);
 
-  const groupNameTranslateRef = useRef({ id: null, lang: null });
-  const groupDescTranslateRef = useRef({ id: null, lang: null });
+  const groupNameTranslateRef = useRef<{ id: string | null; lang: string | null; textHash?: number }>({ id: null, lang: null });
+  const groupDescTranslateRef = useRef<{ id: string | null; lang: string | null; textHash?: number }>({ id: null, lang: null });
 
   useEffect(() => {
     const fetchCheers = async () => {
@@ -111,7 +125,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
           where('date', '==', todayStr)
         );
         const snapshot = await getDocs(q);
-        const uids = new Set();
+        const uids = new Set<string>();
         snapshot.forEach(doc => {
           uids.add(doc.data().targetUid);
         });
@@ -159,7 +173,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       if (nameToSet) setTranslatedGroupName(nameToSet);
       if (descToSet) setTranslatedGroupDesc(descToSet);
 
-      const translateText = async (text, type) => {
+      const translateText = async (text: string, type: string) => {
         if (!text) return '';
 
         // Ref check
@@ -180,7 +194,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         currentRef.current = { id: groupId, lang: language, textHash: text.length };
 
         try {
-          const idToken = await auth.currentUser.getIdToken();
+          if (!auth) return '';
+          const idToken = await auth.currentUser?.getIdToken();
+          if (!idToken) return '';
           const response = await fetch(`${API_BASE}/api/translate`, {
             method: 'POST',
             headers: {
@@ -208,7 +224,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
       // Perform necessary translations
       const namePromise = needsName ? translateText(groupData.name, 'group_name') : Promise.resolve(null);
-      const descPromise = needsDesc ? translateText(groupData.description, 'group_desc') : Promise.resolve(null);
+      const descPromise = needsDesc ? translateText(groupData.description || '', 'group_desc') : Promise.resolve(null);
 
       const [newName, newDesc] = await Promise.all([namePromise, descPromise]);
 
@@ -218,7 +234,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       // Save to Firestore if we got new data
       if (newName || newDesc) {
         try {
-          const updatePayload = {};
+          const updatePayload: any = {};
           if (newName) updatePayload[`translations.${language}.name`] = newName;
           if (newDesc) updatePayload[`translations.${language}.description`] = newDesc;
 
@@ -432,12 +448,12 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   };
 
   // Scroll to first unread message
-  const scrollToFirstUnread = (firstUnreadIndex) => {
+  const scrollToFirstUnread = (firstUnreadIndex: number) => {
     if (!containerRef.current) return false;
     const messageElements = containerRef.current.querySelectorAll('.message-wrapper, .message.system-message');
 
     if (messageElements[firstUnreadIndex]) {
-      const element = messageElements[firstUnreadIndex];
+      const element = messageElements[firstUnreadIndex] as HTMLElement;
       // Calculate position relative to container
       const container = containerRef.current;
       const elementTop = element.offsetTop;
@@ -469,8 +485,8 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       if (userData?.uid) {
         const lastViewedMsgId = safeStorage.get(`last_viewed_msg_${groupId}_${userData.uid}`);
         if (lastViewedMsgId) {
-          const targetEl = containerRef.current?.querySelector(`#message-${lastViewedMsgId}`);
-          if (targetEl) {
+          const targetEl = containerRef.current?.querySelector(`#message-${lastViewedMsgId}`) as HTMLElement | null;
+          if (targetEl && containerRef.current) {
             // Scroll to this element with a slight offset for context. 
             // We use 'auto' behavior for instant jump on load.
             const offset = 20;
@@ -565,7 +581,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     today.setHours(0, 0, 0, 0);
     const todayTime = today.getTime();
 
-    const uniquePosters = new Set();
+    const uniquePosters = new Set<string>();
 
     // SOURCE 1: dailyActivity
     if (groupData.dailyActivity?.activeMembers && (groupData.dailyActivity.date === todayStr || groupData.dailyActivity.date === new Date().toDateString())) {
@@ -574,7 +590,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
     // SOURCE 2: memberLastActive
     if (groupData.memberLastActive) {
-      Object.entries(groupData.memberLastActive).forEach(([uid, ts]) => {
+      Object.entries(groupData.memberLastActive).forEach(([uid, ts]: [string, any]) => {
         let activeTime = 0;
         if (ts?.toDate) activeTime = ts.toDate().getTime();
         else if (ts?.seconds) activeTime = ts.seconds * 1000;
@@ -588,7 +604,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       if (msg.createdAt?.toDate) msgTime = msg.createdAt.toDate().getTime();
       else if (msg.createdAt?.seconds) msgTime = msg.createdAt.seconds * 1000;
       if (msgTime >= todayTime && msg.senderId !== 'system' && !msg.isSystemMessage && msg.isNote) {
-        uniquePosters.add(msg.senderId);
+        uniquePosters.add(msg.senderId!);
       }
     });
 
@@ -605,7 +621,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       if (missingUids.length > 0) {
         const memberPromises = missingUids.map(uid => getDoc(doc(db, 'users', uid)));
         const memberSnapshots = await Promise.all(memberPromises);
-        const newMembers = memberSnapshots.map(snap => snap.exists() ? { id: snap.id, ...snap.data() } : { id: snap.id, nickname: 'Unknown' });
+        const newMembers = memberSnapshots.map(snap => snap.exists() ? { id: snap.id, ...snap.data() } as UserProfile : { id: snap.id, nickname: 'Unknown' } as UserProfile);
         updatedMembersList = [...membersList, ...newMembers];
         setMembersList(updatedMembersList);
       }
@@ -621,7 +637,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     }
   };
 
-  const handleCheerClick = (member) => {
+  const handleCheerClick = (member: UserProfile) => {
     if (member.id === userData?.uid) return;
     setCheerTarget(member);
   };
@@ -630,7 +646,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     if (!cheerTarget) return;
     setIsSendingCheer(true);
     try {
-      const idToken = await auth.currentUser.getIdToken();
+      if (!auth) throw new Error("Firebase Auth not initialized");
+      const idToken = await auth.currentUser?.getIdToken();
+      if (!idToken) throw new Error("No auth token");
       const response = await fetch(`${API_BASE}/api/send-cheer`, {
         method: 'POST',
         headers: {
@@ -645,9 +663,13 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         })
       });
 
-      if (response.ok) {
+      if (response.ok && cheerTarget.id) {
         toast.success(t('groupChat.cheerSent') || "Cheer sent!");
-        setCheeredTodayUids(prev => new Set([...prev, cheerTarget.id]));
+        setCheeredTodayUids(prev => {
+          const next = new Set<string>(prev);
+          if (cheerTarget.id) next.add(cheerTarget.id);
+          return next;
+        });
       } else {
         const data = await response.json();
         if (data.error === 'alreadySent') {
@@ -665,7 +687,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     }
   };
 
-  const handleUserProfileClick = async (userId) => {
+  const handleUserProfileClick = async (userId: string | null) => {
     if (!userId || userId === 'system') return;
 
     // Check if we already have this user in our membersList
@@ -712,10 +734,11 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
       // We want to find the first message that is essentially "at the top" of the view
       // A message is at the top if its offsetTop is >= scrollTop
-      for (const el of messageElements) {
+      for (const el of Array.from(messageElements)) {
+        const htmlEl = el as HTMLElement;
         // 50px buffer to allow for partially scrolled messages
-        if (el.offsetTop >= scrollTop - 50) {
-          topMessageId = el.id.replace('message-', '');
+        if (htmlEl.offsetTop >= scrollTop - 50) {
+          topMessageId = htmlEl.id.replace('message-', '');
           break;
         }
       }
@@ -723,7 +746,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       if (topMessageId) {
         safeStorage.set(`last_viewed_msg_${groupId}_${userData.uid}`, topMessageId);
       }
-    }, 200); // 200ms debounce
+    }, 200) as any; // 200ms debounce
   };
 
   useLayoutEffect(() => {
@@ -765,7 +788,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         setHasMoreOlder(false);
         previousScrollHeightRef.current = 0;
       } else {
-        const newOlderMsgs = snaps.docs.map(d => ({ id: d.id, ...d.data() })).reverse();
+        const newOlderMsgs = snaps.docs.map(d => ({ id: d.id, ...d.data() } as Message)).reverse();
         setMessages(prev => [...newOlderMsgs, ...prev]);
       }
     } catch (e) {
@@ -776,7 +799,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     }
   };
 
-  const handleSendMessage = async (e) => {
+  const handleSendMessage = async (e?: FormEvent) => {
     if (e) e.preventDefault();
     if (newMessage.trim() === '' || !userData) return;
 
@@ -785,7 +808,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     const replyToData = replyTo;
 
     // Optimistically prepare reply data
-    let replyData = null;
+    let replyData: any = null;
     if (replyToData) {
       let replyText;
       if (replyToData.isNote || replyToData.isEntry) {
@@ -798,9 +821,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
       replyData = {
         id: replyToData.id,
-        senderNickname: replyToData.senderNickname,
+        senderNickname: replyToData.senderNickname || '',
         text: replyText,
-        isNote: replyToData.isNote || replyToData.isEntry
+        isNote: !!(replyToData.isNote || replyToData.isEntry)
       };
     }
 
@@ -813,7 +836,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
     // 2. Optimistic UI: Add temporary message to the list to show immediately
     const optimisticMsgId = `temp-${Date.now()}`;
-    const optimisticMsg = {
+    const optimisticMsg: Message = {
       id: optimisticMsgId,
       text: messageToSend,
       senderId: userData.uid,
@@ -828,7 +851,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     setMessages(prev => [...prev, optimisticMsg]);
 
     try {
-      const idToken = await auth.currentUser.getIdToken();
+      if (!auth) throw new Error("Firebase Auth not initialized");
+      const idToken = await auth.currentUser?.getIdToken();
+      if (!idToken) throw new Error("No auth token");
 
       const response = await fetch(`${API_BASE}/api/post-message`, {
         method: 'POST',
@@ -855,7 +880,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       const newReadCount = (groupData?.messageCount || messages.length) + 1;
       setUserReadCount(newReadCount);
 
-    } catch (e) {
+    } catch (e: any) {
       console.error("Error sending message:", e);
       // Remove temp message if failed
       setMessages(prev => prev.filter(m => m.id !== optimisticMsgId));
@@ -865,7 +890,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     }
   };
 
-  const handleReply = (msg) => {
+  const handleReply = (msg: Message) => {
     setReplyTo(msg);
     if (textareaRef.current) {
       textareaRef.current.focus();
@@ -879,7 +904,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     setIsLeaving(true);
 
     try {
-      const idToken = await auth.currentUser.getIdToken();
+      if (!auth) throw new Error("Firebase Auth not initialized");
+      const idToken = await auth.currentUser?.getIdToken();
+      if (!idToken) throw new Error("No auth token");
 
       const response = await fetch(`${API_BASE}/api/leave-group`, {
         method: 'POST',
@@ -897,7 +924,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
       toast.success(t('groupChat.leftGroupSuccess') || "You have left the group.");
       navigate('/dashboard');
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error leaving group:", error);
       toast.error(`${t('groupChat.errorLeaveGroup') || 'Failed to leave group'}: ${error.message}`);
     } finally {
@@ -921,7 +948,9 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     }
 
     try {
-      const idToken = await auth.currentUser.getIdToken();
+      if (!auth) throw new Error("Firebase Auth not initialized");
+      const idToken = await auth.currentUser?.getIdToken();
+      if (!idToken) throw new Error("No auth token");
 
       const response = await fetch(`${API_BASE}/api/delete-group`, {
         method: 'POST',
@@ -945,7 +974,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
       toast.success(t('groupChat.groupDeletedSuccess') || "Group deleted successfully.");
       navigate('/dashboard');
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting group:", error);
       toast.error(`${t('groupChat.errorDeleteGroup') || 'Failed to delete group'}: ${error.message}`);
     } finally {
@@ -962,7 +991,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     }
 
     try {
-      const updatePayload = {
+      const updatePayload: any = {
         name: newGroupName.trim(),
         description: newGroupDescription.trim()
       };
@@ -1048,7 +1077,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     }
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter') {
       // Allow default behavior (newline)
       e.stopPropagation();
@@ -1056,21 +1085,21 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   };
 
   useEffect(() => {
-    window.logTouch = (msg) => {
+    (window as any).logTouch = (msg: string) => {
       const el = document.getElementById('touch-debug');
       if (el) {
         const time = new Date().toISOString().split('T')[1].slice(0, 12);
         el.innerHTML += `<div>[${time}] ${msg}</div>`;
-        if (el.children.length > 8) el.firstChild.remove();
+        if (el.children.length > 8) el.firstChild?.remove();
       }
     };
     return () => {
-      delete window.logTouch;
+      delete (window as any).logTouch;
     };
   }, []);
 
   // Context menu handler (triggered instantly on click now)
-  const handleMessageClick = (msg, e) => {
+  const handleMessageClick = (msg: Message, e: any) => {
     // Get click coordinates (or touch if it was a tap translated to click)
     let x, y;
     if (e.clientX !== undefined) {
@@ -1108,7 +1137,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     return () => document.removeEventListener('click', handleClickOutside);
   }, [contextMenu.show]);
 
-  const handleEditMessage = (msg) => {
+  const handleEditMessage = (msg: Message) => {
     if (msg.isNote || msg.isEntry) {
       // For notes/entries, open NewNote modal in edit mode
       // We need to convert the message to a note-like object for NewNote
@@ -1142,7 +1171,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
       setMessages(prev => prev.map(m =>
         m.id === editingMessage.id
-          ? { ...m, text: editText, isEdited: true, editedAt: { seconds: Date.now() / 1000 } }
+          ? { ...m, text: editText, isEdited: true, editedAt: { seconds: Date.now() / 1000 } as any }
           : m
       ));
 
@@ -1160,7 +1189,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     setEditText('');
   };
 
-  const handleDeleteMessageClick = (msg) => {
+  const handleDeleteMessageClick = (msg: Message) => {
     setMessageToDelete(msg);
     setShowDeleteMessageModal(true);
     closeContextMenu();
@@ -1195,7 +1224,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   };
 
   // Handle adding/removing reaction
-  const handleToggleReaction = async (msg) => {
+  const handleToggleReaction = async (msg: Message) => {
     if (!userData || !groupId) return;
     closeContextMenu();
 
@@ -1222,7 +1251,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         await updateDoc(messageRef, {
           reactions: arrayUnion({
             odU: userData.uid,
-            nickname: userData.nickname,
+            nickname: userData.nickname || 'Unknown',
             emoji: '👍'
           })
         });
@@ -1233,7 +1262,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
             const currentReactions = m.reactions || [];
             // If already present (e.g. from onSnapshot), don't add again
             if (currentReactions.some(r => r.odU === userData.uid)) return m;
-            return { ...m, reactions: [...currentReactions, { odU: userData.uid, nickname: userData.nickname, emoji: '👍' }] };
+            return { ...m, reactions: [...currentReactions, { odU: userData.uid, nickname: userData.nickname || 'Unknown', emoji: '👍' }] };
           }
           return m;
         }));
@@ -1244,12 +1273,12 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
   };
 
   // Show reactions modal
-  const handleShowReactions = (reactions) => {
+  const handleShowReactions = (reactions: any[]) => {
     setReactionsToShow(reactions || []);
     setShowReactionsModal(true);
   };
 
-  const handleTranslateMessage = async (msg) => {
+  const handleTranslateMessage = async (msg: Message) => {
     if (translatingIds.has(msg.id)) return;
 
     // If already translated, clear it (toggle)
@@ -1263,26 +1292,28 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     }
 
     setTranslatingIds(prev => {
-      const next = new Set(prev);
+      const next = new Set<string>(prev);
       next.add(msg.id);
       return next;
     });
 
     try {
-      const idToken = await auth.currentUser.getIdToken();
+      if (!auth) throw new Error("Firebase Auth not initialized");
+      const idToken = await auth.currentUser?.getIdToken();
+      if (!idToken) throw new Error("No auth token");
 
-      let textToTranslate = msg.text;
+      let textToTranslate = msg.text || '';
       const isNote = msg.isNote || msg.isEntry || msg.text?.match(NOTE_HEADER_REGEX);
 
       if (isNote) {
         // Extract only the comment for translation
-        const body = removeNoteHeader(msg.text);
+        const body = removeNoteHeader(msg.text || '');
         const chapterMatch = body.match(/\*\*(?:Chapter|Title|Speech|Talk):\*\* (.*?)(?:\n|$)/);
         const scriptureMatch = body.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);
 
-        if (chapterMatch) {
+        if (chapterMatch && chapterMatch.index !== undefined) {
           textToTranslate = body.substring(chapterMatch.index + chapterMatch[0].length).trim();
-        } else if (scriptureMatch) {
+        } else if (scriptureMatch && scriptureMatch.index !== undefined) {
           textToTranslate = body.substring(scriptureMatch.index + scriptureMatch[0].length).trim();
         } else {
           textToTranslate = body;
@@ -1310,14 +1341,14 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       toast.error(t('groupChat.errorTranslation') || "Failed to translate message");
     } finally {
       setTranslatingIds(prev => {
-        const next = new Set(prev);
+        const next = new Set<string>(prev);
         next.delete(msg.id);
         return next;
       });
     }
   };
 
-  const handleReportClick = (msg) => {
+  const handleReportClick = (msg: Message) => {
     setReportedMessage(msg);
     setReportReason('inappropriate');
     setShowReportModal(true);
@@ -1328,7 +1359,10 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     if (!reportedMessage || !userData) return;
 
     try {
-      const idToken = await auth.currentUser.getIdToken();
+      if (!auth) throw new Error("Firebase Auth not initialized");
+      const idToken = await auth.currentUser?.getIdToken();
+      if (!idToken) throw new Error("No auth token");
+
       const response = await fetch(`${API_BASE}/api/report`, {
         method: 'POST',
         headers: {
@@ -1409,7 +1443,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     if (groupData && groupData.inviteCode) {
       const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}?openExternalBrowser=1`;
       const text = t('groupChat.inviteMessage')
-        .replace('{groupName}', groupData.name)
+        .replace('{groupName}', groupData.name || '')
         .replace('{inviteLink}', inviteLink);
 
       // 1. Try Native Web Share API (Best for Mobile)
@@ -1421,7 +1455,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
             url: inviteLink,
           });
           return;
-        } catch (err) {
+        } catch (err: any) {
           console.log("Native share failed", err);
           // If user cancelled, don't fall back
           if (err.name === 'AbortError') return;
@@ -1439,7 +1473,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     if (groupData && groupData.inviteCode) {
       const inviteLink = `${window.location.origin}/join/${groupData.inviteCode}?openExternalBrowser=1`;
       const text = t('groupChat.inviteMessage')
-        .replace('{groupName}', groupData.name)
+        .replace('{groupName}', groupData.name || '')
         .replace('{inviteLink}', inviteLink);
 
       // 1. Try Native Web Share API (Best for Mobile)
@@ -1451,7 +1485,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
             url: inviteLink,
           });
           return;
-        } catch (err) {
+        } catch (err: any) {
           console.log("Native share failed", err);
           if (err.name === 'AbortError') return;
         }
@@ -1480,12 +1514,12 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
   const lastRecapDate = getLastRecapDate();
   const daysSinceLastRecap = lastRecapDate
-    ? (new Date() - lastRecapDate) / (1000 * 60 * 60 * 24)
+    ? (new Date().getTime() - lastRecapDate.getTime()) / (1000 * 60 * 60 * 24)
     : 100; // if never generated, treat as long time ago
 
   const isRecapAvailable = daysSinceLastRecap >= 7;
 
-  const handleRecapClick = (e) => {
+  const handleRecapClick = (e: React.MouseEvent) => {
     if (isRecapLoading) return;
     if (!isRecapAvailable) {
       e.stopPropagation();
@@ -1508,7 +1542,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
     today.setHours(0, 0, 0, 0);
     const todayTime = today.getTime();
 
-    const uniquePosters = new Set();
+    const uniquePosters = new Set<string>();
 
     // SOURCE 1: dailyActivity (Current day metadata)
     if (groupData.dailyActivity?.activeMembers && (groupData.dailyActivity.date === todayStr || groupData.dailyActivity.date === new Date().toDateString())) {
@@ -1517,7 +1551,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
     // SOURCE 2: memberLastActive (Per-member note tracking)
     if (groupData.memberLastActive) {
-      Object.entries(groupData.memberLastActive).forEach(([uid, ts]) => {
+      Object.entries(groupData.memberLastActive).forEach(([uid, ts]: [string, any]) => {
         let activeTime = 0;
         if (ts?.toDate) activeTime = ts.toDate().getTime();
         else if (ts?.seconds) activeTime = ts.seconds * 1000;
@@ -1535,7 +1569,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
       else if (msg.createdAt?.seconds) msgTime = msg.createdAt.seconds * 1000;
 
       if (msgTime >= todayTime && msg.senderId !== 'system' && !msg.isSystemMessage && msg.isNote) {
-        uniquePosters.add(msg.senderId);
+        uniquePosters.add(msg.senderId!);
       }
     });
 
@@ -1563,7 +1597,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         const animationEnd = Date.now() + duration;
         const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10000 };
 
-        const randomInRange = (min, max) => Math.random() * (max - min) + min;
+        const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
         const interval = setInterval(function () {
           const timeLeft = animationEnd - Date.now();
@@ -1760,7 +1794,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
             {/* Mobile hamburger menu button */}
             <div className="hamburger-container mobile-only">
-              {groupData.members.length === 1 && (
+              {groupData.members && groupData.members.length === 1 && (
                 <div className="header-invite-btn-mobile" onClick={() => setShowInviteModal(true)} title={t('groupChat.inviteLink')}>
                   <span style={{ fontSize: '1.2rem' }}>🎁</span>
                 </div>
@@ -1877,7 +1911,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                     {!isRecapAvailable && !isRecapLoading && (
                       <span style={{ fontSize: '0.7rem', color: 'var(--red)' }}>
                         {Math.ceil(7 - daysSinceLastRecap) > 0
-                          ? (t('groupChat.daysLeft') || "{days} days left").replace('{days}', Math.ceil(7 - daysSinceLastRecap))
+                          ? (t('groupChat.daysLeft') || "{days} days left").replace('{days}', String(Math.ceil(7 - daysSinceLastRecap)))
                           : (t('groupChat.availableSoon') || "Available soon")}
                       </span>
                     )}
@@ -1926,7 +1960,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                       if (onGroupSelect) onGroupSelect(group.id);
                       setShowMobileMenu(false);
                     }}
-                    t={t}
                     timeZone={userData?.timeZone}
                   />
                 ))}
@@ -1991,7 +2024,6 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         )}
 
         {messages.map((msg, index) => {
-          const isLastMessage = index === messages.length - 1;
           const showDateDivider = index === 0 ||
             new Date(messages[index - 1].createdAt?.toDate?.() || messages[index - 1].createdAt?.seconds * 1000).toDateString() !==
             new Date(msg.createdAt?.toDate?.() || msg.createdAt?.seconds * 1000).toDateString();
@@ -1999,7 +2031,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
           const messageDate = new Date(msg.createdAt?.toDate?.() || msg.createdAt?.seconds * 1000 || Date.now());
 
           return (
-            <React.Fragment key={msg.id}>
+            <Fragment key={msg.id}>
               {showDateDivider && (
                 <div className="date-separator">
                   <span>
@@ -2036,7 +2068,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
                   <span>{t('groupChat.newMessages')}</span>
                 </div>
               )}
-            </React.Fragment>
+            </Fragment>
           );
         })}
         <div ref={messagesEndRef} />
@@ -2058,7 +2090,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
             }}
           >
             <button style={{ display: 'flex', alignItems: 'center', gap: '14px', justifyContent: 'flex-start' }} onClick={() => {
-              handleReply(contextMenu.message);
+              handleReply(contextMenu.message!);
               closeContextMenu();
             }}>
               <div style={{ width: '22px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -2069,19 +2101,19 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
             {contextMenu.message.senderId !== userData?.uid && (
               <button style={{ display: 'flex', alignItems: 'center', gap: '14px', justifyContent: 'flex-start' }} onClick={() => {
-                handleToggleReaction(contextMenu.message);
+                handleToggleReaction(contextMenu.message!);
                 closeContextMenu();
               }}>
                 <div style={{ width: '22px', fontSize: '18px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                   👍
                 </div>
-                <span style={{ flex: 1 }}>{contextMenu.message.reactions?.find(r => r.odU === userData?.uid) ? t('groupChat.unlike') : t('groupChat.like')}</span>
+                <span style={{ flex: 1 }}>{contextMenu.message?.reactions?.find(r => r.odU === userData?.uid) ? t('groupChat.unlike') : t('groupChat.like')}</span>
               </button>
             )}
 
             {contextMenu.message.senderId === userData?.uid && (
               <button style={{ display: 'flex', alignItems: 'center', gap: '14px', justifyContent: 'flex-start' }} onClick={() => {
-                handleEditMessage(contextMenu.message);
+                handleEditMessage(contextMenu.message!);
                 closeContextMenu();
               }}>
                 <div style={{ width: '22px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -2094,7 +2126,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
             {/* ONLY show delete for YOUR OWN messages, as requested. (Owners can moderator-delete from elsewhere or we hide it here per user's specific request) */}
             {contextMenu.message.senderId === userData?.uid && (
               <button className="delete-option" style={{ display: 'flex', alignItems: 'center', gap: '14px', justifyContent: 'flex-start' }} onClick={() => {
-                handleDeleteMessageClick(contextMenu.message);
+                handleDeleteMessageClick(contextMenu.message!);
                 closeContextMenu();
               }}>
                 <div style={{ width: '22px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -2105,18 +2137,18 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
             )}
 
             <button style={{ display: 'flex', alignItems: 'center', gap: '14px', justifyContent: 'flex-start' }} onClick={() => {
-              handleTranslateMessage(contextMenu.message);
+              handleTranslateMessage(contextMenu.message!);
               closeContextMenu();
             }}>
               <div style={{ width: '22px', fontSize: '18px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                {translatingIds.has(contextMenu.message.id) ? '⏳' : '✨'}
+                {translatingIds.has(contextMenu.message!.id) ? '⏳' : '✨'}
               </div>
               <span style={{ flex: 1 }}>{t('groupChat.translate') || "Translate"}</span>
             </button>
 
             {contextMenu.message.senderId !== userData?.uid && (
               <button style={{ display: 'flex', alignItems: 'center', gap: '14px', justifyContent: 'flex-start' }} onClick={() => {
-                handleReportClick(contextMenu.message);
+                handleReportClick(contextMenu.message!);
                 closeContextMenu();
               }}>
                 <div style={{ width: '22px', fontSize: '18px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -2190,7 +2222,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         handleCheerClick={handleCheerClick}
 
         cheerTarget={cheerTarget}
-        setCheerTarget={setCheerTarget}
+        setCheerTarget={setCheerTarget as (target: UserProfile | null) => void}
         isSendingCheer={isSendingCheer}
         handleSendCheer={handleSendCheer}
 
@@ -2201,7 +2233,7 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
         confirmReport={confirmReport}
 
         selectedMember={selectedMember}
-        handleUserProfileClick={setSelectedMember}
+        handleUserProfileClick={handleUserProfileClick}
 
 
 

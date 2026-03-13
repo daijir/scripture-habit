@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../Button/Button';
 import Mascot from '../Mascot/Mascot';
@@ -8,13 +8,13 @@ import { isInAppBrowser } from '../../Utils/browserDetection';
 import './Welcome.css';
 import Footer from '../Footer/Footer';
 
-const Welcome = () => {
+const Welcome: FC = () => {
     const { t, setLanguage, language } = useLanguage();
     const navigate = useNavigate();
     const [showWarning, setShowWarning] = useState(false);
-    const [pendingPath, setPendingPath] = useState(null);
+    const [pendingPath, setPendingPath] = useState<string | null>(null);
 
-    const handleAuthClick = (path) => {
+    const handleAuthClick = (path: string) => {
         const fullPath = `/${language}${path}`;
         if (isInAppBrowser()) {
             setPendingPath(fullPath);

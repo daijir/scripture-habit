@@ -1,4 +1,6 @@
-export const MasteryScriptures = [
+import { ScriptureQuote } from '../types/scriptures';
+
+export const MasteryScriptures: ScriptureQuote[] = [
     // Old Testament
     { scripture: "Old Testament", chapter: "Genesis 1:26-27" },
     { scripture: "Old Testament", chapter: "Genesis 2:24" },

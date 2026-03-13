@@ -1,10 +1,17 @@
-
 import React from 'react';
 import './Toggle.css';
 
-const Toggle = ({ label, id, checked, onChange }) => {
+interface ToggleProps {
+    label?: string;
+    id: string;
+    checked: boolean;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    className?: string;
+}
+
+const Toggle: React.FC<ToggleProps> = ({ label, id, checked, onChange, className = '' }) => {
     return (
-        <div className="toggle-container">
+        <div className={`toggle-container ${className}`}>
             {label && <label className="toggle-label" htmlFor={id}>{label}</label>}
             <div className="toggle-switch">
                 <input

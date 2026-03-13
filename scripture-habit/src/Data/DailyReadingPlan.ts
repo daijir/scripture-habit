@@ -1,8 +1,9 @@
+import { ReadingPlanItem } from '../types/scriptures';
 import { DailyReadingPlan2025 } from './DailyReadingPlan2025';
 import { DailyReadingPlan2026 } from './DailyReadingPlan2026';
 
 // Function to retrieve today's reading plan
-export const getTodayReadingPlan = () => {
+export const getTodayReadingPlan = (): ReadingPlanItem | undefined => {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Tokyo';
     const now = new Date();
     // Format to YYYY-MM-DD in local time

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../Context/LanguageContext';
 import './Footer.css';
 
-const Footer = () => {
+const Footer: React.FC = () => {
     const navigate = useNavigate();
     const { t, language } = useLanguage();
 

@@ -1,10 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, FC } from 'react';
 import './WelcomeStoryModal.css';
 import { useLanguage } from '../../Context/LanguageContext';
 import { UilTimes, UilCheck } from '@iconscout/react-unicons';
 import confetti from 'canvas-confetti';
+import { UserData } from '../../types/user';
 
-const WelcomeStoryModal = ({ isOpen, onClose, userData }) => {
+interface WelcomeStoryModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    userData: UserData | null;
+}
+
+const WelcomeStoryModal: FC<WelcomeStoryModalProps> = ({ isOpen, onClose, userData }) => {
     const { t } = useLanguage();
     const [page, setPage] = useState(0);
 
@@ -31,7 +38,7 @@ const WelcomeStoryModal = ({ isOpen, onClose, userData }) => {
 
     const username = userData?.nickname || 'Friend';
 
-    const replaceUsername = (text) => text.replace('{username}', username);
+    const replaceUsername = (text: string) => text.replace('{username}', username);
 
     const pages = [
         // Page 1: Welcome
@@ -113,7 +120,7 @@ const WelcomeStoryModal = ({ isOpen, onClose, userData }) => {
     return (
         <div className="welcome-story-overlay">
             <div className="welcome-story-content">
-                <button className="welcome-story-close" onClick={onClose}>
+                <button className="welcome-story-close" onClick={onClose} aria-label="Close story">
                     <UilTimes size="24" />
                 </button>
 

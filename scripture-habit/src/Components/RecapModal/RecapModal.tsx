@@ -1,10 +1,17 @@
-import React from 'react';
+import { FC } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { UilEnvelopeAlt, UilSave, UilTimes } from '@iconscout/react-unicons';
 import './RecapModal.css';
 import { useLanguage } from '../../Context/LanguageContext';
 
-const RecapModal = ({ isOpen, onClose, recapText, onSave }) => {
+interface RecapModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    recapText: string;
+    onSave: () => void;
+}
+
+const RecapModal: FC<RecapModalProps> = ({ isOpen, onClose, recapText, onSave }) => {
     const { t } = useLanguage();
 
     if (!isOpen) return null;

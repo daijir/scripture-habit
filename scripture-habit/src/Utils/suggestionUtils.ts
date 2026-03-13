@@ -1,5 +1,5 @@
 
-export const volumeBooks = {
+export const volumeBooks: Record<string, string[]> = {
     "Book of Mormon": [
         "1 Nephi", "2 Nephi", "Jacob", "Enos", "Jarom", "Omni", "Words of Mormon",
         "Mosiah", "Alma", "Helaman", "3 Nephi", "4 Nephi", "Mormon", "Ether", "Moroni"
@@ -30,13 +30,25 @@ export const volumeBooks = {
     ]
 };
 
-export const getBookSuggestions = (volume, input, language, bookNameTranslations) => {
+export interface BookSuggestion {
+    english: string;
+    translated: string;
+    normalizedTranslated: string;
+    normalizedEnglish: string;
+}
+
+export const getBookSuggestions = (
+    volume: string | null | undefined,
+    input: string | null | undefined,
+    language: string,
+    bookNameTranslations: Record<string, Record<string, string>>
+): BookSuggestion[] => {
     if (!volume || !input || !bookNameTranslations || !bookNameTranslations[language]) return [];
 
     const volumeList = volumeBooks[volume];
     if (!volumeList) return [];
 
-    const normalize = (str) => {
+    const normalize = (str: string | null | undefined): string => {
         if (!str) return '';
         let res = str.toLowerCase().normalize('NFKC');
         if (language === 'ja') {

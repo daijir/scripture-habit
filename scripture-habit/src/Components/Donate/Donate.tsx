@@ -3,8 +3,13 @@ import './Donate.css';
 import { useLanguage } from '../../Context/LanguageContext';
 import Mascot from '../Mascot/Mascot';
 import Footer from '../Footer/Footer';
+import { UserData } from '../../types/user';
 
-const Donate = ({ userData }) => {
+interface DonateProps {
+    userData: UserData | null;
+}
+
+const Donate: React.FC<DonateProps> = ({ userData }) => {
     const { t } = useLanguage();
 
     return (

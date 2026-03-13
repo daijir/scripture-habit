@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { safeStorage } from '../../Utils/storage';
 import { useLanguage } from '../../Context/LanguageContext';
 import './CookieConsent.css';
 
-const CookieConsent = () => {
+const CookieConsent: FC = () => {
     const { t } = useLanguage();
     const [isVisible, setIsVisible] = useState(false);
 

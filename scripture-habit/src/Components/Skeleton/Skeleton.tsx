@@ -1,21 +1,38 @@
 import React from 'react';
 import './Skeleton.css';
 
-export const Skeleton = ({ width, height, variant = 'rectangle', className = '' }) => {
-    const style = {
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
+    width?: string | number;
+    height?: string | number;
+    variant?: 'rectangle' | 'circle' | 'text';
+    className?: string;
+    style?: React.CSSProperties;
+}
+
+export const Skeleton: React.FC<SkeletonProps> = ({ 
+    width, 
+    height, 
+    variant = 'rectangle', 
+    className = '',
+    style,
+    ...props 
+}) => {
+    const combinedStyle: React.CSSProperties = {
         width: width,
         height: height,
+        ...style
     };
 
     return (
         <div
             className={`skeleton skeleton-${variant} ${className}`}
-            style={style}
+            style={combinedStyle}
+            {...props}
         />
     );
 };
 
-export const DashboardSkeleton = () => {
+export const DashboardSkeleton: React.FC = () => {
     return (
         <div className="dashboard-skeleton">
             <div className="skeleton-header">
@@ -45,7 +62,7 @@ export const DashboardSkeleton = () => {
     );
 };
 
-export const OptionsSkeleton = () => {
+export const OptionsSkeleton: React.FC = () => {
     return (
         <div className="options-skeleton" style={{ padding: '2rem', textAlign: 'center' }}>
             <Skeleton width="60%" height="40px" style={{ margin: '0 auto 2rem auto' }} />
@@ -57,7 +74,7 @@ export const OptionsSkeleton = () => {
     );
 };
 
-export const ChatSkeleton = () => {
+export const ChatSkeleton: React.FC = () => {
     return (
         <div className="chat-skeleton" style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div style={{ alignSelf: 'flex-start', display: 'flex', gap: '8px' }}>
@@ -78,7 +95,7 @@ export const ChatSkeleton = () => {
     );
 };
 
-export const NoteCardSkeleton = () => {
+export const NoteCardSkeleton: React.FC = () => {
     return (
         <div className="skeleton-note-card" style={{ padding: '1rem', background: '#fff', border: '1px solid #eee' }}>
             <Skeleton width="40px" height="40px" variant="circle" style={{ marginBottom: '1rem' }} />
@@ -89,7 +106,7 @@ export const NoteCardSkeleton = () => {
     );
 };
 
-export const NoteGridSkeleton = () => {
+export const NoteGridSkeleton: React.FC = () => {
     return (
         <div className="skeleton-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}>
             <NoteCardSkeleton />

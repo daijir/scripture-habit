@@ -1,17 +1,27 @@
-import React, { useState } from 'react';
+import { useState, FC } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '../../Context/LanguageContext';
+import { useLanguage, Language } from '../../Context/LanguageContext';
 import Button from '../Button/Button';
 import './LandingPage.css';
 import Footer from '../Footer/Footer';
 import { UilGlobe } from '@iconscout/react-unicons';
 
-const LandingPage = () => {
+interface LanguageOption {
+    code: Language;
+    name: string;
+    flag: string;
+}
+
+interface FeatureOption {
+    key: string;
+}
+
+const LandingPage: FC = () => {
     const { t, language, setLanguage } = useLanguage();
     const navigate = useNavigate();
     const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
 
-    const languages = [
+    const languages: LanguageOption[] = [
         { code: 'en', name: 'English', flag: '🇺🇸' },
         { code: 'ja', name: '日本語', flag: '🇯🇵' },
         { code: 'pt', name: 'Português', flag: '🇧🇷' },
@@ -26,7 +36,7 @@ const LandingPage = () => {
 
     const currentLang = languages.find(l => l.code === language) || languages[0];
 
-    const features = [
+    const features: FeatureOption[] = [
         { key: 'sharing' },
         { key: 'rule' },
         { key: 'ai' },
@@ -45,13 +55,15 @@ const LandingPage = () => {
                     <button
                         className="lang-selector-btn"
                         onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+                        aria-expanded={isLangMenuOpen}
+                        aria-haspopup="true"
                     >
                         <UilGlobe size="20" />
                         <span>{currentLang.flag} {currentLang.name}</span>
                     </button>
 
                     {isLangMenuOpen && (
-                        <div className="lang-dropdown">
+                        <div className="lang-dropdown" role="menu">
                             {languages.map((lang) => (
                                 <div
                                     key={lang.code}
@@ -60,6 +72,7 @@ const LandingPage = () => {
                                         setLanguage(lang.code);
                                         setIsLangMenuOpen(false);
                                     }}
+                                    role="menuitem"
                                 >
                                     <span className="lang-flag">{lang.flag}</span>
                                     <span className="lang-name">{lang.name}</span>

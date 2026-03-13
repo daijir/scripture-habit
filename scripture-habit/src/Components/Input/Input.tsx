@@ -1,7 +1,18 @@
 import React from 'react';
 import './Input.css';
 
-const Input = ({
+interface InputBaseProps {
+  id?: string;
+  label?: string;
+  as?: 'input' | 'textarea';
+  className?: string;
+}
+
+type InputProps = InputBaseProps & 
+  React.InputHTMLAttributes<HTMLInputElement> & 
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>;
+
+const Input: React.FC<InputProps> = ({
   id,
   label,
   type = 'text',
@@ -11,6 +22,7 @@ const Input = ({
   as = 'input',
   placeholder = '',
   min,
+  className = '',
   ...rest
 }) => {
   const generatedId = React.useId();
@@ -19,19 +31,20 @@ const Input = ({
   const Component = as === 'textarea' ? 'textarea' : 'input';
 
   return (
-    <div className="GlassInputContainer">
+    <div className={`GlassInputContainer ${className}`}>
       {label && <label htmlFor={inputId}>{label}</label>}
 
       <Component
         id={inputId}
-        type={as === 'textarea' ? undefined : type}
+        // textarea の場合は type 属性を渡さないようにします
+        {...(as === 'input' ? { type } : {})}
         value={value}
         onChange={onChange}
         required={required}
         className="GlassInput"
         placeholder={placeholder}
         min={min}
-        {...rest}
+        {...(rest as any)}
       />
     </div>
   );

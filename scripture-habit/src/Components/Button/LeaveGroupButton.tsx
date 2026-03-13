@@ -3,12 +3,16 @@ import { toast } from 'react-toastify';
 import { useLanguage } from '../../Context/LanguageContext';
 import { Capacitor } from '@capacitor/core';
 
-export default function LeaveGroupButton({ groupId }) {
+interface LeaveGroupButtonProps {
+  groupId: string;
+}
+
+export default function LeaveGroupButton({ groupId }: LeaveGroupButtonProps) {
   const { t } = useLanguage();
   const API_BASE = Capacitor.isNativePlatform() ? 'https://scripturehabit.app' : '';
 
   const handleLeave = async () => {
-    const user = auth.currentUser;
+    const user = auth?.currentUser;
     if (!user) return toast.info(t('login.emailLabel') || "Not logged in");
 
     if (!confirm(t('groupChat.leaveConfirmMessage') || "Are you sure you want to leave this group?")) return;
@@ -32,7 +36,7 @@ export default function LeaveGroupButton({ groupId }) {
 
       toast.success(t('groupChat.leftGroupSuccess') || "You have left the group");
       window.location.href = '/dashboard';
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
       toast.error(t('groupChat.errorLeaveGroup') || "Failed to leave group");
     }

@@ -1,5 +1,5 @@
 // Helper to detect volume from input
-const detectVolume = (volume, chapterInput) => {
+const detectVolume = (volume: string | null | undefined, chapterInput: string | null | undefined): string => {
     let volumeUrlPart = "";
     const lowerVolume = volume ? volume.toLowerCase() : "";
 
@@ -38,7 +38,7 @@ const detectVolume = (volume, chapterInput) => {
     return volumeUrlPart;
 };
 
-export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
+export const getGospelLibraryUrl = (volume: string | null | undefined, chapterInput: string | null | undefined, language: string = 'en'): string | null => {
     if (!chapterInput) return null;
 
     const baseUrl = "https://www.churchofjesuschrist.org/study/scriptures";
@@ -172,7 +172,7 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
 
     // Mapping for other volumes
      
-    const bookMappings = {
+    const bookMappings: Record<string, string> = {
         // Book of Mormon
         "1 nephi": "1-ne", "1 ne": "1-ne",
         "2 nephi": "2-ne", "2 ne": "2-ne",
@@ -208,21 +208,17 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         "モロナイ書": "moro", "モロナイ": "moro",
 
         // Portuguese Book of Mormon
-        "1 néfi": "1-ne", "1 nefi": "1-ne", "1 ne": "1-ne",
-        "2 néfi": "2-ne", "2 nefi": "2-ne", "2 ne": "2-ne",
+        "1 néfi": "1-ne", "1 nefi": "1-ne",
         "jacó": "jacob", "jaco": "jacob",
-        "enos": "enos",
-        "jarom": "jarom",
-        "ômni": "omni", "omni": "omni",
+        "ômni": "omni",
         "palavras de mórmon": "w-of-m", "palavras de mormon": "w-of-m",
         "mosias": "mosiah",
-        "alma": "alma",
         "helamã": "hel", "helama": "hel",
-        "3 néfi": "3-ne", "3 nefi": "3-ne", "3 ne": "3-ne",
-        "4 néfi": "4-ne", "4 nefi": "4-ne", "4 ne": "4-ne",
-        "mórmon": "morm", "mormon": "morm",
+        "3 néfi": "3-ne", "3 nefi": "3-ne",
+        "4 néfi": "4-ne", "4 nefi": "4-ne",
+        "mórmon": "morm",
         "éter": "eth", "eter": "eth",
-        "morôni": "moro", "moroni": "moro",
+        "morôni": "moro",
 
         // Traditional Chinese Book of Mormon
         "尼腓一書": "1-ne", "1尼腓": "1-ne",
@@ -242,21 +238,8 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         "摩羅乃書": "moro",
 
         // Spanish Book of Mormon
-        "1 nefi": "1-ne", "1 ne": "1-ne",
-        "2 nefi": "2-ne", "2 ne": "2-ne",
-        "jacob": "jacob",
-        "enos": "enos",
-        "jarom": "jarom",
-        "omni": "omni",
-        "palabras de mormon": "w-of-m",
-        "mosiah": "mosiah",
-        "alma": "alma",
-        "helaman": "hel",
-        "3 nefi": "3-ne", "3 ne": "3-ne",
-        "4 nefi": "4-ne", "4 ne": "4-ne",
-        "mormon": "morm",
-        "eter": "eth",
-        "moroni": "moro",
+
+        "2 nefi": "2-ne",
 
         // Vietnamese Book of Mormon
         "1 nê phi": "1-ne", "1 ne phi": "1-ne",
@@ -328,7 +311,7 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         "ゼカリヤ書": "zech", "マラキ書": "mal",
 
         // Portuguese Old Testament
-        "gênesis": "gen", "genesis": "gen",
+        "gênesis": "gen",
         "êxodo": "ex", "exodo": "ex",
         "levítico": "lev", "levitico": "lev",
         "números": "num", "numeros": "num",
@@ -336,8 +319,6 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         "josué": "josh", "josue": "josh",
         "juízes": "judg", "juizes": "judg",
         "rute": "ruth",
-        "1 samuel": "1-sam",
-        "2 samuel": "2-sam",
         "1 reis": "1-kgs",
         "2 reis": "2-kgs",
         "1 crônicas": "1-chr", "1 cronicas": "1-chr",
@@ -354,10 +335,8 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         "jeremias": "jer",
         "lamentações": "lam", "lamentacoes": "lam",
         "ezequiel": "ezek",
-        "daniel": "dan",
         "oseias": "hosea",
-        "joel": "joel",
-        "amós": "amos", "amos": "amos",
+        "amós": "amos",
         "obadias": "obad",
         "jonas": "jonah",
         "miqueias": "micah",
@@ -369,56 +348,40 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         "malaquias": "mal",
 
         // Traditional Chinese Old Testament
-        "創世記": "gen", "出埃及記": "ex", "利未記": "lev", "民數記": "num", "申命記": "deut",
-        "約書亞記": "josh", "士師記": "judg", "路得記": "ruth",
+ "出埃及記": "ex", "利未記": "lev", "民數記": "num",
+        "約書亞記": "josh", "路得記": "ruth",
         "撒母耳記上": "1-sam", "撒母耳記下": "2-sam", "列王紀上": "1-kgs", "列王紀下": "2-kgs",
         "歷代志上": "1-chr", "歷代志下": "2-chr", "以斯拉記": "ezra", "尼希米記": "neh", "以斯帖記": "esth",
-        "約伯記": "job", "詩篇": "ps", "箴言": "prov", "傳道書": "eccl", "雅歌": "song",
+        "約伯記": "job", "傳道書": "eccl",
         "以賽亞書": "isa", "耶利米書": "jer", "耶利米哀歌": "lam", "以西結書": "ezek", "但以理書": "dan",
         "何西阿書": "hosea", "約珥書": "joel", "阿摩司書": "amos", "俄巴底亞書": "obad", "約拿書": "jonah",
         "彌迦書": "micah", "那鴻書": "nahum", "哈巴谷書": "hab", "西番雅書": "zeph", "哈該書": "hag",
         "撒迦利亞書": "zech", "瑪拉基書": "mal",
 
         // Spanish Old Testament
-        "génesis": "gen", "genesis": "gen",
-        "éxodo": "ex", "exodo": "ex",
-        "levítico": "lev", "levitico": "lev",
-        "números": "num", "numeros": "num",
-        "deuteronomio": "deut",
-        "josué": "josh", "josue": "josh",
+        "génesis": "gen",
+        "éxodo": "ex",
         "jueces": "judg",
         "rut": "ruth",
-        "1 samuel": "1-sam",
-        "2 samuel": "2-sam",
         "1 reyes": "1-kgs",
         "2 reyes": "2-kgs",
-        "1 crónicas": "1-chr", "1 cronicas": "1-chr",
-        "2 crónicas": "2-chr", "2 cronicas": "2-chr",
-        "esdras": "ezra",
+        "1 crónicas": "1-chr",
+        "2 crónicas": "2-chr",
         "nehemías": "neh", "nehemias": "neh",
-        "ester": "esth",
-        "job": "job",
-        "salmos": "ps",
-        "proverbios": "prov",
-        "eclesiastés": "eccl", "eclesiastes": "eccl",
+        "eclesiastés": "eccl",
         "cantares": "song",
-        "isaías": "isa", "isaias": "isa",
-        "jeremías": "jer", "jeremias": "jer",
+        "jeremías": "jer",
         "lamentaciones": "lam",
-        "ezequiel": "ezek",
-        "daniel": "dan",
         "oseas": "hosea",
-        "joel": "joel",
-        "amós": "amos", "amos": "amos",
         "abdías": "obad", "abdias": "obad",
-        "jonás": "jonah", "jonas": "jonah",
+        "jonás": "jonah",
         "miqueas": "micah",
-        "nahúm": "nahum", "nahum": "nahum",
+        "nahúm": "nahum",
         "habacuc": "hab",
-        "sofonías": "zeph", "sofonias": "zeph",
+        "sofonías": "zeph",
         "hageo": "hag",
-        "zacarías": "zech", "zacarias": "zech",
-        "malaquías": "mal", "malaquias": "mal",
+        "zacarías": "zech",
+        "malaquías": "mal",
 
         // New Testament
         "matthew": "matt", "matt": "matt",
@@ -475,7 +438,7 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         "テトスへの手紙": "titus", "テトス": "titus",
         "ピレモンへの手紙": "philem", "ピレモン": "philem",
         "ヘブル人への手紙": "heb", "ヘブル": "heb",
-        "ヤコブの手紙": "jas", "ヤコブ": "jas",
+        "ヤコブの手紙": "jas",
         "ペテロの手紙第一": "1-pet", "第一ペテロ": "1-pet",
         "ペテロの第一の手紙": "1-pet",
         "ペテロの手紙第二": "2-pet", "第二ペテロ": "2-pet",
@@ -538,7 +501,7 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         "提多書": "titus",
         "腓利門書": "philem",
         "希伯來書": "heb",
-        "雅各書": "jas",
+
         "彼得前書": "1-pet",
         "彼得後書": "2-pet",
         "約翰一書": "1-jn",
@@ -549,31 +512,17 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
 
         // Spanish New Testament
         "mateo": "matt",
-        "marcos": "mark",
-        "lucas": "luke",
         "juan": "john",
         "hechos": "acts",
-        "romanos": "rom",
-        "1 corintios": "1-cor",
-        "2 corintios": "2-cor",
-        "gálatas": "gal", "galatas": "gal",
-        "efesios": "eph",
-        "filipenses": "philip",
         "colosenses": "col",
         "1 tesalonicenses": "1-thes",
         "2 tesalonicenses": "2-thes",
-        "1 timoteo": "1-tim",
-        "2 timoteo": "2-tim",
-        "tito": "titus",
         "filemón": "philem", "filemon": "philem",
         "hebreos": "heb",
         "santiago": "jas",
-        "1 pedro": "1-pet",
-        "2 pedro": "2-pet",
         "1 juan": "1-jn",
         "2 juan": "2-jn",
         "3 juan": "3-jn",
-        "judas": "jude",
         "apocalipsis": "rev",
 
         // Pearl of Great Price
@@ -608,8 +557,6 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         "信條": "a-of-f",
 
         // Spanish Pearl of Great Price
-        "moisés": "moses", "moises": "moses",
-        "abraham": "abr",
         "josé smith—mateo": "js-m", "jose smith mateo": "js-m",
         "josé smith—historia": "js-h", "jose smith historia": "js-h",
         "artículos de fe": "a-of-f", "articulos de fe": "a-of-f",
@@ -899,97 +846,6 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
         "Joseph Smith-Matthew": "Joseph Smith—Mateo",
         "Joseph Smith-History": "Joseph Smith—Kasaysayan",
         "Articles of Faith": "Mga Saligan ng Pananampalataya",
-        // Swahili
-        // Book of Mormon
-        "1 Nephi": "1 Nefi",
-        "2 Nephi": "2 Nefi",
-        "Jacob": "Yakobo",
-        "Enos": "Enoshi",
-        "Jarom": "Yaromu",
-        "Omni": "Omni",
-        "Words of Mormon": "Maneno ya Mormoni",
-        "Mosiah": "Mosia",
-        "Alma": "Alma",
-        "Helaman": "Helamani",
-        "3 Nephi": "3 Nefi",
-        "4 Nephi": "4 Nefi",
-        "Mormon": "Mormoni",
-        "Ether": "Etheri",
-        "Moroni": "Moroni",
-        // Old Testament
-        "Genesis": "Mwanzo",
-        "Exodus": "Kutoka",
-        "Leviticus": "Mambo ya Walawi",
-        "Numbers": "Hesabu",
-        "Deuteronomy": "Kumbukumbu la Torati",
-        "Joshua": "Yoshua",
-        "Judges": "Waamuzi",
-        "Ruth": "Ruthi",
-        "1 Samuel": "1 Samweli",
-        "2 Samuel": "2 Samweli",
-        "1 Kings": "1 Wafalme",
-        "2 Kings": "2 Wafalme",
-        "1 Chronicles": "1 Mambo ya Nyakati",
-        "2 Chronicles": "2 Mambo ya Nyakati",
-        "Ezra": "Ezra",
-        "Nehemiah": "Nehemia",
-        "Esther": "Esta",
-        "Job": "Ayubu",
-        "Psalms": "Zaburi",
-        "Proverbs": "Mithali",
-        "Ecclesiastes": "Mhubiri",
-        "Song of Solomon": "Wimbo Ulio Bora",
-        "Isaiah": "Isaya",
-        "Jeremiah": "Yeremia",
-        "Lamentations": "Maombolezo",
-        "Ezekiel": "Ezekieli",
-        "Daniel": "Danieli",
-        "Hosea": "Hosea",
-        "Joel": "Yoeli",
-        "Amos": "Amosi",
-        "Obadiah": "Obadia",
-        "Jonah": "Yona",
-        "Micah": "Mika",
-        "Nahum": "Nahumu",
-        "Habakkuk": "Habakuki",
-        "Zephaniah": "Sefania",
-        "Haggai": "Hagai",
-        "Zechariah": "Zekaria",
-        "Malachi": "Malaki",
-        // New Testament
-        "Matthew": "Mathayo",
-        "Mark": "Marko",
-        "Luke": "Luka",
-        "John": "Yohana",
-        "Acts": "Matendo ya Mitume",
-        "Romans": "Warumi",
-        "1 Corinthians": "1 Wakorintho",
-        "2 Corinthians": "2 Wakorintho",
-        "Galatians": "Wagalatia",
-        "Ephesians": "Waefeso",
-        "Philippians": "Wafilipi",
-        "Colossians": "Wakolosai",
-        "1 Thessalonians": "1 Wathesalonike",
-        "2 Thessalonians": "2 Wathesalonike",
-        "1 Timothy": "1 Timotheo",
-        "2 Timothy": "2 Timotheo",
-        "Titus": "Tito",
-        "Philemon": "Filemoni",
-        "Hebrews": "Waebrania",
-        "James": "Yakobo",
-        "1 Peter": "1 Petro",
-        "2 Peter": "2 Petro",
-        "1 John": "1 Yohana",
-        "2 John": "2 Yohana",
-        "3 John": "3 Yohana",
-        "Jude": "Yuda",
-        "Revelation": "Ufunuo",
-        // Pearl of Great Price
-        "Moses": "Musa",
-        "Abraham": "Ibrahimu",
-        "Joseph Smith-Matthew": "Joseph Smith—Mathayo",
-        "Joseph Smith-History": "Joseph Smith—Historia",
-        "Articles of Faith": "Makala ya Imani",
     };
 
     const bookUrlPart = bookMappings[bookName];
@@ -998,7 +854,7 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
 
     // --- Post-Mapping Smart Volume Detection ---
     if (!volumeUrlPart) {
-        const slugToVolume = {
+        const slugToVolume: Record<string, string> = {
             // Old Testament
             'gen': 'ot', 'ex': 'ot', 'lev': 'ot', 'num': 'ot', 'deut': 'ot', 'josh': 'ot', 'judg': 'ot', 'ruth': 'ot',
             '1-sam': 'ot', '2-sam': 'ot', '1-kgs': 'ot', '2-kgs': 'ot', '1-chr': 'ot', '2-chr': 'ot', 'ezra': 'ot',
@@ -1032,7 +888,7 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
     return `${baseUrl}/${volumeUrlPart}/${bookUrlPart}/${chapterNum}${urlSuffix}`;
 };
 
-export const getCategoryFromScripture = (scriptureText) => {
+export const getCategoryFromScripture = (scriptureText: string | null | undefined): string => {
     // Try to get a URL to see where it leads (this uses the full smart mapping logic)
     const url = getGospelLibraryUrl(null, scriptureText);
 
@@ -1056,7 +912,7 @@ export const getCategoryFromScripture = (scriptureText) => {
         volumeUrlPart = detectVolume(null, scriptureText);
     }
 
-    const mapping = {
+    const mapping: Record<string, string> = {
         'ot': 'Old Testament',
         'nt': 'New Testament',
         'bofm': 'Book of Mormon',
@@ -1074,7 +930,7 @@ export const getCategoryFromScripture = (scriptureText) => {
     return mapping[volumeUrlPart] || 'Other';
 };
 
-export const getScriptureInfoFromText = (text) => {
+export const getScriptureInfoFromText = (text: string | null | undefined): string | null => {
     if (!text) return null;
     const chapterMatch = text.match(/\*\*(?:Chapter|Title):\*\* (.*?)(?:\n|$)/);
     const scriptureMatch = text.match(/\*\*Scripture:\*\* (.*?)(?:\n|$)/);

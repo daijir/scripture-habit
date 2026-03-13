@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, FC, ChangeEvent } from 'react';
 import * as Sentry from "@sentry/react";
 import axios from 'axios';
 import { Capacitor } from '@capacitor/core';
 import { auth, db } from '../../firebase';
-import { collection, serverTimestamp, doc, getDoc, query, where, getDocs, writeBatch } from 'firebase/firestore';
+import { collection, serverTimestamp, doc, getDoc, query, where, getDocs, writeBatch, Timestamp } from 'firebase/firestore';
 import { UilTrashAlt, UilShuffle } from '@iconscout/react-unicons';
 import { toast } from 'react-toastify';
-import Select from 'react-select';
+import Select, { SingleValue } from 'react-select';
 import { ScripturesOptions } from '../../Data/Data';
 import { MasteryScriptures } from '../../Data/MasteryScriptures';
 import { PeaceScriptures } from '../../Data/PeaceScriptures';
@@ -15,7 +15,7 @@ import { RelationshipScriptures } from '../../Data/RelationshipScriptures';
 import { JoyScriptures } from '../../Data/JoyScriptures';
 import Input from '../Input/Input';
 import './NewNote.css';
-import { useLanguage } from '../../Context/LanguageContext.jsx';
+import { useLanguage } from '../../Context/LanguageContext';
 import { removeNoteHeader } from '../../Utils/noteUtils';
 import { translateChapterField } from '../../Utils/bookNameTranslations';
 import { getGospelLibraryUrl, getCategoryFromScripture } from '../../Utils/gospelLibraryMapper';
@@ -25,14 +25,40 @@ import { useGCMetadata } from '../../hooks/useGCMetadata';
 import confetti from 'canvas-confetti';
 import { getBookSuggestions } from '../../Utils/suggestionUtils';
 import { bookNameTranslations } from '../../Utils/bookNameTranslations';
+import { Note } from '../../types/note';
+import { UserData } from '../../types/user';
+import { Group } from '../../types/chat';
 
-const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups = [], isGroupContext = false, currentGroupId = null, initialData = null }) => {
+interface NoteToEdit extends Note {
+    groupMessageId?: string;
+    groupId?: string;
+    originalNoteId?: string;
+}
+
+interface NewNoteProps {
+    isOpen: boolean;
+    onClose: () => void;
+    userData: UserData;
+    noteToEdit?: NoteToEdit | null;
+    onDelete?: () => void;
+    userGroups?: Group[];
+    isGroupContext?: boolean;
+    currentGroupId?: string | null;
+    initialData?: { chapter?: string; scripture?: string; comment?: string } | null;
+}
+
+interface ScriptureOption {
+    value: string;
+    label: string;
+}
+
+const NewNote: FC<NewNoteProps> = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups = [], isGroupContext = false, currentGroupId = null, initialData = null }) => {
     const { t, language } = useLanguage();
     const API_BASE = Capacitor.isNativePlatform() ? 'https://scripturehabit.app' : '';
 
     const [chapter, setChapter] = useState('');
     const [scripture, setScripture] = useState('');
-    const [selectedOption, setSelectedOption] = useState(null);
+    const [selectedOption, setSelectedOption] = useState<SingleValue<ScriptureOption>>(null);
     const [comment, setComment] = useState('');
     const [aiQuestion, setAiQuestion] = useState('');
     const [showCloseConfirm, setShowCloseConfirm] = useState(false);
@@ -40,33 +66,33 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
     // New sharing states
     const [shareOption, setShareOption] = useState('all'); // 'all', 'specific', 'none', 'current'
-    const [selectedShareGroups, setSelectedShareGroups] = useState([]);
+    const [selectedShareGroups, setSelectedShareGroups] = useState<string[]>([]);
 
     // Fetch metadata for GC/Other URLs
     const isUrl = chapter && (chapter.startsWith('http') || chapter.includes('churchofjesuschrist.org'));
     const { data: gcMeta, loading: gcLoading } = useGCMetadata(isUrl ? chapter : null, language);
 
     // Randomized placeholders
-    const currentChapterPlaceholder = React.useMemo(() => {
+    const currentChapterPlaceholder = useMemo(() => {
         const raw = t('newNote.chapterPlaceholder');
         return Array.isArray(raw) ? raw[Math.floor(Math.random() * raw.length)] : raw;
     }, [t]);
 
-    const currentCommentPlaceholder = React.useMemo(() => {
+    const currentCommentPlaceholder = useMemo(() => {
         const raw = t('newNote.commentPlaceholder');
         return Array.isArray(raw) ? raw[Math.floor(Math.random() * raw.length)] : raw;
     }, [t]);
 
     const [loading, setLoading] = useState(false);
     const [aiLoading, setAiLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error, setError] = useState<string | null>(null);
     const [showScriptureSelectionModal, setShowScriptureSelectionModal] = useState(false);
     const [showRandomMenu, setShowRandomMenu] = useState(false);
-    const [availableReadingPlanScripts, setAvailableReadingPlanScripts] = useState([]);
-    const [suggestions, setSuggestions] = useState([]);
+    const [availableReadingPlanScripts, setAvailableReadingPlanScripts] = useState<string[]>([]);
+    const [suggestions, setSuggestions] = useState<any[]>([]);
     const [showSuggestions, setShowSuggestions] = useState(false);
 
-    const getTranslatedScriptureLabel = (value) => {
+    const getTranslatedScriptureLabel = (value: string) => {
         switch (value) {
             case "Old Testament": return t('scriptures.oldTestament');
             case "New Testament": return t('scriptures.newTestament');
@@ -81,7 +107,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
         }
     };
 
-    const translatedScripturesOptions = ScripturesOptions.map(option => ({
+    const translatedScripturesOptions: ScriptureOption[] = ScripturesOptions.map(option => ({
         ...option,
         label: getTranslatedScriptureLabel(option.value)
     }));
@@ -100,11 +126,13 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             let maxIndex = 0;
 
             if (scriptureMatch) {
-                const end = scriptureMatch.index + scriptureMatch[0].length;
+                const start = scriptureMatch.index || 0;
+                const end = start + scriptureMatch[0].length;
                 if (end > maxIndex) maxIndex = end;
             }
             if (chapterMatch) {
-                const end = chapterMatch.index + chapterMatch[0].length;
+                const start = chapterMatch.index || 0;
+                const end = start + chapterMatch[0].length;
                 if (end > maxIndex) maxIndex = end;
             }
 
@@ -132,7 +160,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 setInitialValues({ chapter: initialData.chapter || '', scripture: initialData.scripture || '', comment: initialData.comment || '' });
 
                 if (initialData.scripture) {
-                    const option = translatedScripturesOptions.find(opt => opt.value.toLowerCase() === initialData.scripture.toLowerCase());
+                    const option = translatedScripturesOptions.find(opt => opt.value.toLowerCase() === (initialData.scripture || '').toLowerCase());
                     setSelectedOption(option || null);
                 } else {
                     setSelectedOption(null);
@@ -183,7 +211,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
         }
     }, [chapter, scripture, isOpen, t, error]);
 
-    const handleGroupSelection = (groupId) => {
+    const handleGroupSelection = (groupId: string) => {
         setSelectedShareGroups(prev => {
             if (prev.includes(groupId)) {
                 return prev.filter(id => id !== groupId);
@@ -208,8 +236,6 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
     if (!isOpen) return null;
 
-    if (!isOpen) return null;
-
     const handleGenerateQuestions = async () => {
         if (!scripture || !chapter) {
             toast.warning(t('newNote.errorMissingFields'));
@@ -218,20 +244,14 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
         setAiLoading(true);
         try {
-            // Determine API URL based on environment (Vercel vs Local)
-            // Vite proxy should handle /api/ requests if configured, or if served from same origin.
-            // In dev, usually http://localhost:5000/api/... but we rely on relative path if proxy is set.
-            // If running via `vite` and `npm run server` separately without proxy, this might fail on CORS or 404.
-            // Existing app likely uses direct Firebase calls mostly. 
-            // The user added backend/index.js recently.
-            // Let's assume relative path works (Vercel convention).
-
-
             const apiUrl = Capacitor.isNativePlatform()
                 ? 'https://scripturehabit.app/api/generate-ponder-questions'
                 : '/api/generate-ponder-questions';
 
-            const idToken = await auth.currentUser.getIdToken(true);
+            const user = auth?.currentUser;
+            if (!auth || !user) throw new Error("No user logged in");
+            
+            const idToken = await user.getIdToken(true);
             const response = await axios.post(apiUrl, {
                 scripture: selectedOption?.label || scripture,
                 chapter,
@@ -247,15 +267,13 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 setAiQuestion(newContent);
                 toast.success(t('newNote.aiQuestionsGenerated') || 'AI Ponder Questions generated!');
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
             toast.error(t('newNote.aiQuestionsError') || 'Failed to generate questions. Gemini API key might be missing.');
         } finally {
             setAiLoading(false);
         }
     };
-
-
 
     const handleSurpriseMe = () => {
         setShowRandomMenu(true);
@@ -296,7 +314,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
         setShowRandomMenu(false);
     };
 
-    const pickAndFillRandom = (randomScripture) => {
+    const pickAndFillRandom = (randomScripture: any) => {
         // Find the option that matches the category
         const option = translatedScripturesOptions.find(opt => opt.value === randomScripture.scripture);
 
@@ -318,9 +336,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
         }
     };
 
-
-
-    const fillScriptureData = (script) => {
+    const fillScriptureData = (script: string) => {
         const category = getCategoryFromScripture(script);
         let chapterVal = translateChapterField(script, language);
 
@@ -336,11 +352,11 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
         if (option) {
             setSelectedOption(option);
             setScripture(category);
-            setChapter(chapterVal);
+            setChapter(chapterVal || "");
         } else {
             setScripture('Other');
-            setChapter(chapterVal);
-            setSelectedOption(translatedScripturesOptions.find(opt => opt.value === 'Other'));
+            setChapter(chapterVal || "");
+            setSelectedOption(translatedScripturesOptions.find(opt => opt.value === 'Other') || null);
         }
     };
 
@@ -385,7 +401,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
         setError(null);
 
         try {
-            let messageText;
+            let messageText: string;
             // Improved detection for Other/GC/BYU to ensure URL inclusion
             const sLower = (scripture || "").toLowerCase();
             const isOther = sLower.includes("other") || sLower.includes("その他") || scripture === "";
@@ -443,23 +459,25 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 } else if (isGroupContext) {
                     // Editing an existing note (which is a message in a specific group)
                     const targetGroupId = currentGroupId || userData.groupId;
-                    const messageRef = doc(db, 'groups', targetGroupId, 'messages', noteToEdit.id);
-                    batch.update(messageRef, {
-                        text: messageText,
-                    });
+                    if (targetGroupId) {
+                        const messageRef = doc(db, 'groups', targetGroupId, 'messages', noteToEdit.id);
+                        batch.update(messageRef, {
+                            text: messageText,
+                        });
 
-                    // Try to sync back to personal note if linked
-                    if (noteToEdit.originalNoteId) {
-                        try {
-                            const noteRef = doc(db, 'users', userData.uid, 'notes', noteToEdit.originalNoteId);
-                            batch.update(noteRef, {
-                                text: messageText,
-                                scripture: scripture,
-                                chapter: chapter,
-                                comment: comment
-                            });
-                        } catch (err) {
-                            console.log("Could not sync back to personal note:", err);
+                        // Try to sync back to personal note if linked
+                        if (noteToEdit.originalNoteId) {
+                            try {
+                                const noteRef = doc(db, 'users', userData.uid, 'notes', noteToEdit.originalNoteId);
+                                batch.update(noteRef, {
+                                    text: messageText,
+                                    scripture: scripture,
+                                    chapter: chapter,
+                                    comment: comment
+                                });
+                            } catch (err) {
+                                console.log("Could not sync back to personal note:", err);
+                            }
                         }
                     }
                 } else {
@@ -476,7 +494,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
                     // SYNC TO GROUPS
                     // 1. Get the list of groups this note was shared with
-                    const sharedMessageIds = { ...(noteToEdit.sharedMessageIds || {}) };
+                    const sharedMessageIds: Record<string, string> = { ...(noteToEdit.sharedMessageIds || {}) };
                     const groupsToCheck = noteToEdit.sharedWithGroups || [];
                     let idsUpdated = false;
 
@@ -511,7 +529,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                                     } else {
                                         // Strategy C: Check by Timestamp (approximate match)
                                         if (noteToEdit.createdAt) {
-                                            const noteTime = noteToEdit.createdAt.toDate ? noteToEdit.createdAt.toDate() : new Date(noteToEdit.createdAt.seconds * 1000);
+                                            const noteTime = (noteToEdit.createdAt as Timestamp).toDate ? (noteToEdit.createdAt as Timestamp).toDate() : new Date((noteToEdit.createdAt as any).seconds * 1000);
                                             const startTime = new Date(noteTime.getTime() - 60000); // -1 minute
                                             const endTime = new Date(noteTime.getTime() + 60000); // +1 minute
 
@@ -559,7 +577,10 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                 toast.success(t('newNote.successUpdate'));
             } else {
                 // Creating a new note via Backend (Cloud Function style)
-                const idToken = await auth.currentUser.getIdToken(true);
+                const user = auth?.currentUser;
+                if (!auth || !user) throw new Error("No user logged in");
+
+                const idToken = await user.getIdToken(true);
                 const response = await axios.post(`${API_BASE}/api/post-note`, {
                     chapter,
                     scripture,
@@ -600,7 +621,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     const duration = 5 * 1000;
                     const animationEnd = Date.now() + duration;
                     const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-                    const randomInRange = (min, max) => Math.random() * (max - min) + min;
+                    const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
 
                     const interval = setInterval(function () {
                         const timeLeft = animationEnd - Date.now();
@@ -625,7 +646,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
             setScripture('');
             setComment('');
 
-        } catch (e) {
+        } catch (e: any) {
             console.error("Error saving note:", e);
             if (e.response && e.response.data) {
                 console.error("Server Error Details:", e.response.data);
@@ -971,11 +992,12 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
                             <label htmlFor="scripture-select" className="modal-label" style={{ marginBottom: 0 }}>{t('newNote.chooseScriptureLabel')}</label>
                         </div>
-                        <Select
+                        <Select<ScriptureOption>
+                            id="scripture-select"
                             options={translatedScripturesOptions}
                             onChange={(option) => {
                                 setSelectedOption(option);
-                                setScripture(option?.value);
+                                setScripture(option?.value || '');
                             }}
                             value={selectedOption}
                             placeholder={t('newNote.chooseScripturePlaceholder')}
@@ -1029,7 +1051,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                             label={scripture === "General Conference" ? t('newNote.urlLabel') : (scripture === "BYU Speeches" ? t('newNote.byuUrlLabel') : (scripture === "Other" ? t('newNote.otherUrlLabel') : t('newNote.chapterLabel')))}
                             type="text"
                             value={chapter}
-                            onChange={(e) => {
+                            onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
                                 const val = e.target.value;
                                 setChapter(val);
 
@@ -1125,7 +1147,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                     {scripture && chapter && (['Old Testament', 'New Testament', 'Book of Mormon', 'Doctrine and Covenants', 'Pearl of Great Price', 'Ordinances and Proclamations'].includes(scripture) || (typeof chapter === 'string' && chapter.startsWith('http'))) && (
                         <div className="gospel-link-container">
                             <a
-                                href={typeof chapter === 'string' && chapter.startsWith('http') ? localizeLdsUrl(chapter, language) : getGospelLibraryUrl(scripture, chapter, language)}
+                                href={((typeof chapter === 'string' && chapter.startsWith('http') ? localizeLdsUrl(chapter, language) : getGospelLibraryUrl(scripture, chapter, language)) || "#") as string}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="gospel-library-link"
@@ -1198,7 +1220,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                         label={t('newNote.commentLabel')}
                         as="textarea"
                         value={comment}
-                        onChange={(e) => setComment(e.target.value)}
+                        onChange={(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setComment(e.target.value)}
                         required
                         placeholder={currentCommentPlaceholder}
                     />

@@ -1,45 +1,58 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { translations } from '../Data/Translations.js';
 import { safeStorage } from '../Utils/storage';
 
-const LanguageContext = createContext();
+export type Language = 'en' | 'ja' | 'pt' | 'zho' | 'es' | 'vi' | 'th' | 'ko' | 'tl' | 'sw';
 
-export const SUPPORTED_LANGUAGES = ['en', 'ja', 'pt', 'zho', 'es', 'vi', 'th', 'ko', 'tl', 'sw'];
+interface LanguageContextType {
+    language: Language;
+    setLanguage: (newLanguage: Language) => void;
+    t: (key: string, replacements?: Record<string, string | number>) => string;
+}
 
-export const LanguageProvider = ({ children }) => {
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
+
+export const SUPPORTED_LANGUAGES: Language[] = ['en', 'ja', 'pt', 'zho', 'es', 'vi', 'th', 'ko', 'tl', 'sw'];
+
+interface LanguageProviderProps {
+    children: ReactNode;
+}
+
+export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
     const navigate = useNavigate();
+    
     // Helper to get initial language
-    const getInitialLanguage = () => {
+    const getInitialLanguage = (): Language => {
         // 1. Check URL path
         const pathParts = window.location.pathname.split('/');
-        const urlLang = pathParts[1];
+        const urlLang = pathParts[1] as Language;
         if (SUPPORTED_LANGUAGES.includes(urlLang)) {
             return urlLang;
         }
 
         // 2. Check localStorage
-        const saved = safeStorage.get('language');
+        const saved = safeStorage.get('language') as Language;
         if (saved && SUPPORTED_LANGUAGES.includes(saved)) return saved;
 
         // 3. Auto-detect browser language
-        const browserLang = navigator.language || navigator.userLanguage;
+        const browserLang = navigator.language;
         const shortLang = browserLang ? browserLang.split('-')[0].toLowerCase() : 'en';
 
         if (shortLang === 'zh') return 'zho'; // Map Chinese
-        if (SUPPORTED_LANGUAGES.includes(shortLang)) return shortLang;
+        if (SUPPORTED_LANGUAGES.includes(shortLang as Language)) return shortLang as Language;
 
         return 'en';
     };
 
-    const [language, setLanguageState] = useState(getInitialLanguage);
+    const [language, setLanguageState] = useState<Language>(getInitialLanguage);
 
     // Sync language with URL if it changes via something other than setLanguage (e.g. back button)
     useEffect(() => {
         const handlePathChange = () => {
             const pathParts = window.location.pathname.split('/');
-            const urlLang = pathParts[1];
+            const urlLang = pathParts[1] as Language;
             if (SUPPORTED_LANGUAGES.includes(urlLang) && urlLang !== language) {
                 setLanguageState(urlLang);
             }
@@ -50,7 +63,7 @@ export const LanguageProvider = ({ children }) => {
     }, [language]);
 
     // Wrapper to save to localStorage and optionally update URL
-    const setLanguage = React.useCallback((newLanguage) => {
+    const setLanguage = React.useCallback((newLanguage: Language) => {
         if (!SUPPORTED_LANGUAGES.includes(newLanguage)) return;
 
         safeStorage.set('language', newLanguage);
@@ -58,7 +71,7 @@ export const LanguageProvider = ({ children }) => {
 
         // Update URL to include language prefix if not already there
         const pathParts = window.location.pathname.split('/');
-        const currentPrefix = pathParts[1];
+        const currentPrefix = pathParts[1] as Language;
 
         if (SUPPORTED_LANGUAGES.includes(currentPrefix)) {
             pathParts[1] = newLanguage;
@@ -73,9 +86,9 @@ export const LanguageProvider = ({ children }) => {
         navigate(newPath + window.location.search);
     }, [navigate]);
 
-    const t = React.useCallback((key, replacements = {}) => {
+    const t = React.useCallback((key: string, replacements: Record<string, string | number> = {}) => {
         const keys = key.split('.');
-        let value = translations[language];
+        let value = (translations as any)[language];
         for (const k of keys) {
             if (value && value[k]) {
                 value = value[k];
@@ -86,12 +99,14 @@ export const LanguageProvider = ({ children }) => {
 
         // Handle variable replacement
         if (typeof value === 'string' && replacements) {
+            let result = value;
             Object.keys(replacements).forEach(replaceKey => {
-                value = value.replace(`{${replaceKey}}`, replacements[replaceKey]);
+                result = result.replace(`{${replaceKey}}`, replacements[replaceKey].toString());
             });
+            return result;
         }
 
-        return value;
+        return typeof value === 'string' ? value : key;
     }, [language]);
 
     const contextValue = React.useMemo(() => ({
@@ -107,4 +122,10 @@ export const LanguageProvider = ({ children }) => {
     );
 };
 
-export const useLanguage = () => useContext(LanguageContext);
+export const useLanguage = () => {
+    const context = useContext(LanguageContext);
+    if (context === undefined) {
+        throw new Error('useLanguage must be used within a LanguageProvider');
+    }
+    return context;
+};

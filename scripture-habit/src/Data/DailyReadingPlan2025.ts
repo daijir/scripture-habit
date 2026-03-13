@@ -1,4 +1,6 @@
-export const DailyReadingPlan2025 = [
+import { ReadingPlanItem } from '../types/scriptures';
+
+export const DailyReadingPlan2025: ReadingPlanItem[] = [
     // ... (January - November data will be populated here)
 
     // December (End of year data provided)
@@ -22,7 +24,7 @@ export const DailyReadingPlan2025 = [
 ];
 
 // Function to retrieve today's reading plan
-export const getTodayReadingPlan = () => {
+export const getTodayReadingPlan = (): ReadingPlanItem | undefined => {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Tokyo';
     const now = new Date();
     // Format to YYYY-MM-DD in local time

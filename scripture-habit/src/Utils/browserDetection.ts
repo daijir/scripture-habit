@@ -1,10 +1,12 @@
-export const detectInAppBrowser = () => {
+export type InAppBrowserType = 'line' | 'instagram' | 'messenger' | 'facebook' | 'whatsapp' | string;
+
+export const detectInAppBrowser = (): InAppBrowserType | null => {
     // For testing: allow overriding via URL parameter ?debugBrowser=instagram
     const urlParams = new URLSearchParams(window.location.search);
     const debugBrowser = urlParams.get('debugBrowser');
     if (debugBrowser) return debugBrowser;
 
-    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    const ua = navigator.userAgent || navigator.vendor || (window as any).opera;
     if (/Line\//i.test(ua)) return 'line';
     if (/Instagram/i.test(ua)) return 'instagram';
 
@@ -24,24 +26,24 @@ export const detectInAppBrowser = () => {
     return null;
 };
 
-export const isInAppBrowser = () => {
+export const isInAppBrowser = (): boolean => {
     return !!detectInAppBrowser();
 };
 
-export const handleInAppBrowserRedirect = () => {
+export const handleInAppBrowserRedirect = (): boolean => {
     // We disable automatic redirects because they often cause white screens or hang-ups
     // especially in the LINE in-app browser on iOS.
     // Instead, we show a BrowserWarningModal.
     return false;
 };
 
-export const getLineExternalUrl = () => {
+export const getLineExternalUrl = (): string => {
     const url = new URL(window.location.href);
     url.searchParams.set('openExternalBrowser', '1');
     return url.toString();
 };
 
-export const getAndroidIntentUrl = () => {
+export const getAndroidIntentUrl = (): string => {
     const url = window.location.href.replace(/^https?:\/\//, '');
     return `intent://${url}#Intent;scheme=https;action=android.intent.action.VIEW;end`;
 };

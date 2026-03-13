@@ -1,14 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, FC } from 'react';
 import { UilTimes, UilPen, UilTrashAlt, UilComment, UilThumbsUp } from '@iconscout/react-unicons';
 import { db } from '../../firebase';
-import { doc, collection, query, where, onSnapshot } from 'firebase/firestore';
+import { doc, collection, query, where, onSnapshot, Timestamp } from 'firebase/firestore';
 import NoteDisplay from '../NoteDisplay/NoteDisplay';
 import { useLanguage } from '../../Context/LanguageContext';
 import './NoteDetailModal.css';
+import { Note } from '../../types/note';
+import { Group } from '../../types/chat';
+import { UserData } from '../../types/user';
 
-const NoteDetailModal = ({ isOpen, onClose, note, userGroups, onEdit, onDelete }) => {
+interface NoteDetailModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    note: Note | null;
+    userGroups: Group[];
+    userData: UserData;
+    onEdit: (note: Note) => void;
+    onDelete: (note: Note) => void;
+}
+
+interface SharedDetail {
+    groupId: string;
+    messageId: string;
+    groupName: string;
+    isMember: boolean;
+}
+
+const NoteDetailModal: FC<NoteDetailModalProps> = ({ isOpen, onClose, note, userGroups, onEdit, onDelete }) => {
     const { t, language } = useLanguage();
-    const [sharedDetails, setSharedDetails] = useState([]);
+    const [sharedDetails, setSharedDetails] = useState<SharedDetail[]>([]);
     const [loadingDetails, setLoadingDetails] = useState(false);
 
     useEffect(() => {
@@ -24,7 +44,7 @@ const NoteDetailModal = ({ isOpen, onClose, note, userGroups, onEdit, onDelete }
             }
 
             setLoadingDetails(true);
-            const details = [];
+            const details: SharedDetail[] = [];
 
             // Iterate through each group where the note is shared
             for (const [groupId, messageId] of Object.entries(note.sharedMessageIds)) {
@@ -85,11 +105,11 @@ const NoteDetailModal = ({ isOpen, onClose, note, userGroups, onEdit, onDelete }
                     </div>
 
                     <div className="note-body">
-                        <NoteDisplay text={note.text} isSent={false} linkColor="#1E88E5" />
+                        <NoteDisplay text={note.text || ''} isSent={false} linkColor="#1E88E5" />
                         {/* Show Scripture Reference/Link if acceptable, maybe modify NoteDisplay or add here */}
                         <div className="note-scripture-ref">
                             {note.scripture !== 'Other' && (
-                                <span className="scripture-tag">{t(`scriptures.${getScriptureKey(note.scripture)}`) || note.scripture} {note.chapter}</span>
+                                <span className="scripture-tag">{t(`scriptures.${getScriptureKey(note.scripture || '')}`) || note.scripture} {note.chapter}</span>
                             )}
                             {note.scripture === 'Other' && note.chapter && (
                                 <span className="scripture-tag">{note.chapter}</span>
@@ -124,8 +144,8 @@ const NoteDetailModal = ({ isOpen, onClose, note, userGroups, onEdit, onDelete }
     );
 };
 
-const getScriptureKey = (scriptureName) => {
-    const map = {
+const getScriptureKey = (scriptureName: string) => {
+    const map: Record<string, string> = {
         'Old Testament': 'oldTestament',
         'New Testament': 'newTestament',
         'Book of Mormon': 'bookOfMormon',
@@ -138,10 +158,19 @@ const getScriptureKey = (scriptureName) => {
     return map[scriptureName] || 'other';
 };
 
-const SharedGroupSection = ({ groupId, messageId, groupName, t, isMember, language }) => {
-    const [reactions, setReactions] = useState([]);
-    const [replies, setReplies] = useState([]);
-    const [error, setError] = useState(null);
+interface SharedGroupSectionProps {
+    groupId: string;
+    messageId: string;
+    groupName: string;
+    t: (key: string) => string;
+    isMember: boolean;
+    language: string;
+}
+
+const SharedGroupSection: FC<SharedGroupSectionProps> = ({ groupId, messageId, groupName, t, isMember, language }) => {
+    const [reactions, setReactions] = useState<any[]>([]);
+    const [replies, setReplies] = useState<any[]>([]);
+    const [error, setError] = useState<boolean | null>(null);
 
     useEffect(() => {
         if (!isMember) {
@@ -156,7 +185,7 @@ const SharedGroupSection = ({ groupId, messageId, groupName, t, isMember, langua
                 const data = docSnap.data();
                 setReactions(data.reactions || []);
             }
-        }, (err) => {
+        }, (err: any) => {
             console.warn("Could not fetch message details (likely permission):", err);
             // If permission denied, likely user is not in group anymore
             if (err.code === 'permission-denied') {
@@ -169,19 +198,19 @@ const SharedGroupSection = ({ groupId, messageId, groupName, t, isMember, langua
         const q = query(messagesRef, where('replyTo.id', '==', messageId));
 
         const unsubReplies = onSnapshot(q, (snapshot) => {
-            const fetchedReplies = [];
-            snapshot.forEach(doc => {
-                fetchedReplies.push({ id: doc.id, ...doc.data() });
+            const fetchedReplies: any[] = [];
+            snapshot.forEach(docSnap => {
+                fetchedReplies.push({ id: docSnap.id, ...docSnap.data() });
             });
             // Client-side sort
             fetchedReplies.sort((a, b) => {
-                const tA = a.createdAt?.toDate ? a.createdAt.toDate() : new Date(0);
-                const tB = b.createdAt?.toDate ? b.createdAt.toDate() : new Date(0);
+                const tA = (a.createdAt as Timestamp)?.toDate ? (a.createdAt as Timestamp).toDate().getTime() : 0;
+                const tB = (b.createdAt as Timestamp)?.toDate ? (b.createdAt as Timestamp).toDate().getTime() : 0;
                 return tA - tB;
             });
 
             setReplies(fetchedReplies);
-        }, (error) => {
+        }, (error: any) => {
             console.log("Error fetching replies:", error);
             if (error.code === 'permission-denied') {
                 setError(true);

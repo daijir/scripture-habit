@@ -1,7 +1,26 @@
-import React from 'react';
+import { FC, RefObject, KeyboardEvent, FormEvent } from 'react';
 import { UilPlus, UilTimes } from '@iconscout/react-unicons';
+import { Message } from '../../types/chat';
 
-const MessageInput = ({
+interface MessageInputProps {
+    handleSendMessage: (e: FormEvent) => void;
+    isAnyModalOpen: boolean;
+    replyTo: Message | null;
+    setReplyTo: (msg: Message | null) => void;
+    t: (key: string) => string;
+    textareaRef: RefObject<HTMLTextAreaElement | null>;
+    newMessage: string;
+    setNewMessage: (msg: string) => void;
+    handleKeyDown: (e: KeyboardEvent<HTMLTextAreaElement>) => void;
+    onInputFocusChange?: (focused: boolean) => void;
+    containerRef: RefObject<HTMLElement | null>;
+    inputPlaceholder: string;
+    showAddNoteTooltip: boolean;
+    handleDismissTooltip: () => void;
+    setIsNewNoteOpen: (open: boolean) => void;
+}
+
+const MessageInput: FC<MessageInputProps> = ({
     handleSendMessage,
     isAnyModalOpen,
     replyTo,
@@ -50,8 +69,9 @@ const MessageInput = ({
                         if (onInputFocusChange) onInputFocusChange(true);
                         // Scroll to bottom when keyboard appears on mobile
                         if (containerRef.current && window.innerWidth <= 768) {
+                            const container = containerRef.current;
                             setTimeout(() => {
-                                containerRef.current.scrollTop = containerRef.current.scrollHeight;
+                                container.scrollTop = container.scrollHeight;
                             }, 300);
                         }
                     }}

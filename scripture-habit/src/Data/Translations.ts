@@ -1,4 +1,4 @@
-export const translations = {
+export const translations: Record<string, any> = {
     en: {
         seo: {
             title: "Scripture Habit | Daily LDS Scripture Study & Community Tool",
@@ -336,7 +336,6 @@ export const translations = {
             habitPaceProfileTitle: "My Habit Pace",
             habitPaceProfileDesc: "Post once every {days} days to stay active in groups.",
             confirm: "Confirm",
-            cancel: "Cancel",
         },
         newNote: {
             editTitle: "Edit Note",
@@ -1063,7 +1062,6 @@ export const translations = {
             habitPaceProfileTitle: "習慣化の目標ペース",
             habitPaceProfileDesc: "各グループで{days}日おきに1回以上投稿して継続しましょう。",
             confirm: "確定する",
-            cancel: "キャンセル",
         },
         myNotes: {
             description: "ノートコレクション",

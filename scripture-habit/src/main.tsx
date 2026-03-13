@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter, useLocation, useNavigationType, createRoutesFromChildren, matchRoutes } from 'react-router-dom';
 import * as Sentry from "@sentry/react";
 import './index.css'
-import App from './App.jsx'
+import App from './App'
 import VConsole from 'vconsole';
 
 // Only initialize vConsole if ?vconsole=true is in the URL
@@ -48,13 +48,16 @@ Sentry.init({
   replaysOnErrorSampleRate: 1.0, // Only record when an error occurs
 });
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </StrictMode>,
-)
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  createRoot(rootElement).render(
+    <StrictMode>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </StrictMode>,
+  )
+}
 
 // Register Service Worker for PWA
 if ('serviceWorker' in navigator) {

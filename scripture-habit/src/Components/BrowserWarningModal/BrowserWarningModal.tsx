@@ -1,12 +1,19 @@
-import React, { useMemo } from 'react';
+import { useMemo, FC } from 'react';
 import { detectInAppBrowser, getAndroidIntentUrl, getLineExternalUrl } from '../../Utils/browserDetection';
 import './BrowserWarningModal.css';
-import { UilCheckCircle, UilInfoCircle, UilCopyAlt, UilExternalLinkAlt } from '@iconscout/react-unicons';
+import { UilCheckCircle, UilInfoCircle, UilCopyAlt, UilExternalLinkAlt, UilTimes } from '@iconscout/react-unicons';
 import { toast } from 'react-toastify';
 
-const BrowserWarningModal = ({ isOpen, onContinue, t }) => {
+interface BrowserWarningModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    onContinue: () => void;
+    t: (key: string, options?: any) => string;
+}
+
+const BrowserWarningModal: FC<BrowserWarningModalProps> = ({ isOpen, onClose, onContinue, t }) => {
     const { detectedApp, isAndroid, isIos } = useMemo(() => {
-        const ua = navigator.userAgent || navigator.vendor || window.opera;
+        const ua = navigator.userAgent || navigator.vendor || (window as any).opera || '';
         return {
             detectedApp: detectInAppBrowser(),
             isAndroid: /Android/i.test(ua),
@@ -14,7 +21,7 @@ const BrowserWarningModal = ({ isOpen, onContinue, t }) => {
         };
     }, []);
 
-    const getCopyButtonText = () => {
+    const getCopyButtonText = (): string => {
         if (isIos && detectedApp === 'line') return t('browserWarning.openInSafari') || 'Safariで開く';
         if (isIos) return t('browserWarning.copyLinkIos');
         if (isAndroid) return t('browserWarning.copyLinkAndroid');
@@ -52,6 +59,9 @@ const BrowserWarningModal = ({ isOpen, onContinue, t }) => {
             <div className="browser-warning-modal">
                 <div className="modal-header">
                     <h2>{t('browserWarning.modalTitle')}</h2>
+                    <button className="modal-close-btn" onClick={onClose} aria-label="Close">
+                        <UilTimes size="24" />
+                    </button>
                 </div>
 
                 <p className="browser-warning-description">

@@ -1,4 +1,6 @@
-export const AdversityScriptures = [
+import { ScriptureQuote } from '../types/scriptures';
+
+export const AdversityScriptures: ScriptureQuote[] = [
     // Old Testament (旧約聖書)
     { scripture: "Old Testament", chapter: "Proverbs 3:5-6" },
     { scripture: "Old Testament", chapter: "Isaiah 41:10" },

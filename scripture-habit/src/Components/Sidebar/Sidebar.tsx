@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './Sidebar.css';
 import { SidebarData } from '../../Data/Data';
 import {
@@ -9,11 +9,23 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../../firebase';
 import { doc, updateDoc } from 'firebase/firestore';
-import { useLanguage } from '../../Context/LanguageContext.jsx';
+import { useLanguage } from '../../Context/LanguageContext';
+import { Group } from '../../types/chat';
+import { UserData } from '../../types/user';
 
-const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEmoji, getUnityPercentage, isModal = false }) => {
+interface SidebarGroupItemProps {
+  group: Group;
+  language: string;
+  isActive: boolean;
+  onClick: () => void;
+  getGroupStatusEmoji: (group: Group) => string;
+  getUnityPercentage: (group: Group) => number;
+  isModal?: boolean;
+}
+
+const SidebarGroupItem: React.FC<SidebarGroupItemProps> = ({ group, language, isActive, onClick, getGroupStatusEmoji, getUnityPercentage, isModal = false }) => {
   const [translatedName, setTranslatedName] = useState('');
-  const translationAttemptedRef = React.useRef(false);
+  const translationAttemptedRef = useRef(false);
 
   useEffect(() => {
     // 1. Check Firestore Data (Real-time sync makes this fast)
@@ -26,13 +38,11 @@ const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEm
     if (translationAttemptedRef.current) return;
 
     // Firestore update helper
-    const saveTranslationToFirestore = async (translatedText) => {
+    const saveTranslationToFirestore = async (translatedText: string) => {
       try {
-
-
         const groupRef = doc(db, 'groups', group.id);
         // Construct the update object strictly for this language's name to merge
-        const updateData = {};
+        const updateData: Record<string, string> = {};
         updateData[`translations.${language}.name`] = translatedText;
 
         await updateDoc(groupRef, updateData);
@@ -50,9 +60,6 @@ const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEm
 
       if (cached) {
         setTranslatedName(cached);
-        // Even if in session storage, if it's not in Firestore (missing in step 1), 
-        // we might want to opportunisticly save it? 
-        // But for now, let's assume session storage is transitory.
         translationAttemptedRef.current = true;
         return;
       }
@@ -60,7 +67,7 @@ const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEm
       translationAttemptedRef.current = true;
 
       try {
-        const idToken = await auth.currentUser?.getIdToken();
+        const idToken = await auth?.currentUser?.getIdToken();
         const API_BASE = window.location.hostname === 'localhost' ? '' : 'https://scripturehabit.app';
 
         const res = await fetch(`${API_BASE}/api/translate`, {
@@ -111,8 +118,8 @@ const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEm
           {displayName}
           {group.members && <span style={{ fontSize: '0.85em', color: 'var(--gray)', fontWeight: 'normal', marginLeft: '4px' }}>({group.members.length})</span>}
         </span>
-        {group.unreadCount > 0 && (
-          <span className="unread-badge" style={{ marginLeft: 'auto' }}>{group.unreadCount > 99 ? '99+' : group.unreadCount}</span>
+        {(group.unreadCount ?? 0) > 0 && (
+          <span className="unread-badge" style={{ marginLeft: 'auto' }}>{(group.unreadCount ?? 0) > 99 ? '99+' : group.unreadCount}</span>
         )}
       </div>
     );
@@ -128,14 +135,24 @@ const SidebarGroupItem = ({ group, language, isActive, onClick, getGroupStatusEm
         {getUnityPercentage(group)}%
       </span>
       <span className="group-name-sidebar">{displayName}</span>
-      {group.unreadCount > 0 && (
-        <span className="unread-badge">{group.unreadCount > 99 ? '99+' : group.unreadCount}</span>
+      {(group.unreadCount ?? 0) > 0 && (
+        <span className="unread-badge">{(group.unreadCount ?? 0) > 99 ? '99+' : group.unreadCount}</span>
       )}
     </div>
   );
 };
 
-const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setActiveGroupId, hideMobile = false, userData }) => {
+interface SidebarProps {
+  selected: number;
+  setSelected: (val: number) => void;
+  userGroups?: Group[];
+  activeGroupId: string | null;
+  setActiveGroupId: (id: string | null) => void;
+  hideMobile?: boolean;
+  userData: UserData | null;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ selected, setSelected, userGroups = [], activeGroupId, setActiveGroupId, hideMobile = false, userData }) => {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
   const [showGroupModal, setShowGroupModal] = useState(false);
@@ -144,13 +161,13 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
   const NotesIcon = SidebarData[1].icon;
   const ProfileIcon = SidebarData[2].icon;
 
-  const handleGroupClick = (groupId) => {
+  const handleGroupClick = (groupId: string) => {
     setActiveGroupId(groupId);
     setSelected(2); // Switch to GroupChat view
     setShowGroupModal(false);
   };
 
-  const getGroupStatusEmoji = (group) => {
+  const getGroupStatusEmoji = (group: Group): string => {
     const percentage = getUnityPercentage(group);
 
     if (percentage === 100) return '☀️';
@@ -159,7 +176,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
     return '🌑';
   };
 
-  const getUnityPercentage = (group) => {
+  const getUnityPercentage = (group: Group): number => {
     if (!group || !group.members || group.members.length === 0) return 0;
 
     const timeZone = userData?.timeZone || 'UTC';
@@ -168,7 +185,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
     today.setHours(0, 0, 0, 0);
     const todayTime = today.getTime();
 
-    const uniquePosters = new Set();
+    const uniquePosters = new Set<string>();
 
     // SOURCE 1: dailyActivity
     if (group.dailyActivity?.activeMembers && (group.dailyActivity.date === todayStr || group.dailyActivity.date === new Date().toDateString())) {
@@ -251,7 +268,7 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
             onClick={() => setShowGroupModal(true)}
           >
             <UilUsersAlt />
-            {userGroups.some(g => g.unreadCount > 0) && (
+            {userGroups.some(g => (g.unreadCount ?? 0) > 0) && (
               <span className="unread-dot"></span>
             )}
           </div>
@@ -300,4 +317,4 @@ const Sidebar = ({ selected, setSelected, userGroups = [], activeGroupId, setAct
   );
 };
 
-export default Sidebar;
+export default Sidebar;

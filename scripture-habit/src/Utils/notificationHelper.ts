@@ -1,13 +1,13 @@
 import { messaging, db } from '../firebase';
-import { getToken, onMessage, deleteToken } from 'firebase/messaging';
-import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { getToken, onMessage, deleteToken, MessagePayload } from 'firebase/messaging';
+import { doc, updateDoc, arrayUnion, arrayRemove, setDoc } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 
 // VAPID Key from Firebase Console (Messaging -> Web Push certificates)
 const VAPID_KEY = "BM2Y3WcLC7cH5CHND3nzDh2eoNvsIxc7X2aRTaQj0TXENvee9klPqLrJvb8x2DfQ-yMgMHlXMhkal0tt6czIaKM";
 
-const isInAppBrowser = () => {
-    const ua = window.navigator.userAgent || window.navigator.vendor || window.opera;
+const isInAppBrowser = (): boolean => {
+    const ua = window.navigator.userAgent || window.navigator.vendor || (window as any).opera;
     return (ua.indexOf('FBAN') > -1) || (ua.indexOf('FBAV') > -1) || // Facebook
         (ua.indexOf('Instagram') > -1) || // Instagram
         (ua.indexOf('Line') > -1) || // LINE
@@ -15,9 +15,12 @@ const isInAppBrowser = () => {
         (ua.indexOf('Telegram') > -1); // Telegram
 };
 
-export const requestNotificationPermission = async (userId, t) => {
+export const requestNotificationPermission = async (
+    userId: string | null | undefined, 
+    t: (key: string, defaultText: string) => string
+): Promise<string | null | undefined> => {
     // Fallback helper if t is not provided (though it should be)
-    const translate = (key, defaultText) => (t ? t(key) : defaultText);
+    const translate = (key: string, defaultText: string) => (t ? t(key, defaultText) : defaultText);
 
     // 1. Check basic support
     if (!('serviceWorker' in navigator) || !('Notification' in window) || !('PushManager' in window)) {
@@ -42,7 +45,7 @@ export const requestNotificationPermission = async (userId, t) => {
 
             try {
                 // 4. Register or Get Service Worker
-                let registration;
+                let registration: ServiceWorkerRegistration;
 
                 const existingRegs = await navigator.serviceWorker.getRegistrations();
                 const ourReg = existingRegs.find(r => r.scope.includes(window.location.host));
@@ -103,7 +106,7 @@ export const requestNotificationPermission = async (userId, t) => {
                     console.log('No FCM token received.');
                     throw new Error('No registration token available');
                 }
-            } catch (innerError) {
+            } catch (innerError: any) {
                 console.error('Detailed error during SW/Token process:', innerError);
 
                 // Specific messaging for known errors
@@ -121,7 +124,7 @@ export const requestNotificationPermission = async (userId, t) => {
             console.warn('Notification permission denied by user.');
             toast.info(translate('notificationSetup.permissionDenied', 'Notifications are blocked. Please enable them in your browser settings (icon to the left of the URL).'));
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error('An error occurred during notification setup flow:', error);
         if (error.name === 'NotAllowedError') {
             toast.error(translate('notificationSetup.notAllowedError', 'Notification settings are restricted in your browser (possibly due to Incognito mode or settings).'));
@@ -129,19 +132,23 @@ export const requestNotificationPermission = async (userId, t) => {
             toast.error(translate('notificationSetup.setupFailed', 'Notification setup failed. Please try again later.'));
         }
     }
+    return null;
 };
 
 
 // Handle foreground messages
-export const onMessageListener = () =>
+export const onMessageListener = (): Promise<MessagePayload | undefined> =>
     new Promise((resolve) => {
-        if (!messaging) return;
+        if (!messaging) {
+            resolve(undefined);
+            return;
+        }
         onMessage(messaging, (payload) => {
             resolve(payload);
         });
     });
 
-export const disableNotifications = async (userId) => {
+export const disableNotifications = async (userId: string | null | undefined): Promise<boolean> => {
     try {
         const registration = await navigator.serviceWorker.getRegistration();
         if (registration && messaging) {

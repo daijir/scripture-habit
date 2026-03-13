@@ -1,19 +1,30 @@
 /* eslint-disable react-refresh/only-export-components */
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, ReactNode } from 'react';
 import { safeStorage } from '../Utils/storage';
 
-const SettingsContext = createContext();
+export type FontSize = 'small' | 'medium' | 'large' | 'extraLarge';
 
-export const SettingsProvider = ({ children }) => {
-    const [fontSize, setFontSizeState] = useState(() => {
-        const saved = safeStorage.get('fontSize');
+interface SettingsContextType {
+    fontSize: FontSize;
+    setFontSize: (size: FontSize) => void;
+}
+
+const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
+
+interface SettingsProviderProps {
+    children: ReactNode;
+}
+
+export const SettingsProvider: React.FC<SettingsProviderProps> = ({ children }) => {
+    const [fontSize, setFontSizeState] = useState<FontSize>(() => {
+        const saved = safeStorage.get('fontSize') as FontSize;
         return saved || 'medium';
     });
 
     useEffect(() => {
         safeStorage.set('fontSize', fontSize);
         // Apply font size to document root
-        const fontSizeMap = {
+        const fontSizeMap: Record<FontSize, string> = {
             'small': '14px',
             'medium': '16px',
             'large': '18px',
@@ -22,7 +33,7 @@ export const SettingsProvider = ({ children }) => {
         document.documentElement.style.fontSize = fontSizeMap[fontSize] || '16px';
     }, [fontSize]);
 
-    const setFontSize = React.useCallback((size) => {
+    const setFontSize = React.useCallback((size: FontSize) => {
         setFontSizeState(size);
     }, []);
 
@@ -38,4 +49,10 @@ export const SettingsProvider = ({ children }) => {
     );
 };
 
-export const useSettings = () => useContext(SettingsContext);
+export const useSettings = () => {
+    const context = useContext(SettingsContext);
+    if (context === undefined) {
+        throw new Error('useSettings must be used within a SettingsProvider');
+    }
+    return context;
+};

@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Button from '../Button/Button';
 import { auth, db } from '../../firebase';
-import { createUserWithEmailAndPassword, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, sendEmailVerification, signOut, signInWithCredential } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, sendEmailVerification, signOut, signInWithCredential, AuthProvider, User } from 'firebase/auth';
 import { Capacitor } from '@capacitor/core';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, Timestamp } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import Input from '../Input/Input';
 import './SignupForm.css'
@@ -18,13 +18,13 @@ export default function SignupForm() {
   const [nickname, setNickname] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
-  const [pendingGoogleUser, setPendingGoogleUser] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [pendingGoogleUser, setPendingGoogleUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
-  const handleSocialSignup = async (provider) => {
+  const handleSocialSignup = async (provider: AuthProvider) => {
     try {
-      let result;
+      let result: any;
       // Check if this is a Google login request
       if (provider instanceof GoogleAuthProvider) {
         try {
@@ -37,19 +37,19 @@ export default function SignupForm() {
             });
             const googleUser = await GoogleAuth.signIn();
             const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
-            result = await signInWithCredential(auth, credential);
+            result = await signInWithCredential(auth!, credential);
           } else {
             // For Web
-            result = await signInWithPopup(auth, provider);
+            result = await signInWithPopup(auth!, provider);
           }
         } catch (e) {
           console.error("Native Google Auth failed, falling back to web popup:", e);
           // Fallback to web popup if native fails
-          result = await signInWithPopup(auth, provider);
+          result = await signInWithPopup(auth!, provider);
         }
       } else {
         // Fallback for Github etc 
-        result = await signInWithPopup(auth, provider);
+        result = await signInWithPopup(auth!, provider);
       }
 
       const user = result.user;
@@ -67,7 +67,7 @@ export default function SignupForm() {
         navigate(`/${language}/dashboard`);
       }
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error signing in with provider:", error);
       if (error.code === 'auth/account-exists-with-different-credential') {
         setError(t('signup.errorAccountExistsWithDifferentCredential'));
@@ -79,12 +79,12 @@ export default function SignupForm() {
     }
   };
 
-  const handleCompleteGoogleSignup = async (e) => {
+  const handleCompleteGoogleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!pendingGoogleUser) return;
 
     try {
-      const now = new Date();
+      const now = Timestamp.now();
       const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       const userData = {
@@ -113,19 +113,17 @@ export default function SignupForm() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-
-
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth!, email, password);
       const user = userCredential.user;
 
       // Send verification email
       await sendEmailVerification(user);
-      const now = new Date();
+      const now = Timestamp.now();
       const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       const userData = {
@@ -151,11 +149,11 @@ export default function SignupForm() {
         return;
       }
 
-      await signOut(auth);
+      await signOut(auth!);
       toast.info(t('signup.verificationSent'));
       navigate(`/${language}/login`);
 
-    } catch (authError) {
+    } catch (authError: any) {
       console.error("Error creating user in Authentication:", authError);
       if (authError.code === 'auth/email-already-in-use') {
         setError(t('signup.errorEmailInUse'));
@@ -177,7 +175,7 @@ export default function SignupForm() {
               label={t('signup.nicknameLabel')}
               type="text"
               value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
+              onChange={(e: any) => setNickname(e.target.value)}
               required
             />
             <Button type="submit">
@@ -226,20 +224,20 @@ export default function SignupForm() {
             label={t('signup.nicknameLabel')}
             type="text"
             value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
+            onChange={(e: any) => setNickname(e.target.value)}
             required
           />
           <Input
             label={t('signup.emailLabel')}
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e: any) => setEmail(e.target.value)}
             required />
           <Input
             label={t('signup.passwordLabel')}
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e: any) => setPassword(e.target.value)}
             required
           />
           <p className="form-note">{t('signup.spamWarning')}</p>

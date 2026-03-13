@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import "./ForgotPassword.css";
 import Button from "../Button/Button";
 import Input from "../Input/Input";
@@ -9,20 +9,21 @@ import { useLanguage } from "../../Context/LanguageContext";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
-  const [message, setMessage] = useState(null);
-  const [error, setError] = useState(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const { t } = useLanguage();
 
-  const handleReset = async (e) => {
+  const handleReset = async (e: FormEvent) => {
     e.preventDefault();
     setMessage(null);
     setError(null);
 
     try {
+      if (!auth) throw new Error("Authentication service is not available.");
       await sendPasswordResetEmail(auth, email);
       setMessage(t('forgotPasswordPage.successMessage'));
-    } catch (err) {
-      setError(err.message);
+    } catch (err: any) {
+      setError(err?.message || "An error occurred");
     }
   };
 

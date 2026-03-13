@@ -1,17 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, FC } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { safeStorage } from '../../Utils/storage';
-import { auth, db } from '../../firebase';
-import { collection, query, where, getDocs } from 'firebase/firestore';
+import { auth } from '../../firebase';
 import { useLanguage } from '../../Context/LanguageContext';
 import Button from '../Button/Button';
 import './InviteRedirect.css';
 
-export default function InviteRedirect() {
-    const { inviteCode } = useParams();
+interface InviteGroupInfo {
+    name: string;
+    description?: string;
+}
+
+const InviteRedirect: FC = () => {
+    const { inviteCode } = useParams<{ inviteCode: string }>();
     const navigate = useNavigate();
     const { t, language } = useLanguage();
-    const [groupInfo, setGroupInfo] = useState(null);
+    const [groupInfo, setGroupInfo] = useState<InviteGroupInfo | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -40,7 +44,7 @@ export default function InviteRedirect() {
             setLoading(false);
         }
 
-        const unsubscribe = auth.onAuthStateChanged((user) => {
+        const unsubscribe = auth!.onAuthStateChanged((user) => {
             if (user && !loading) {
                 // If logged in, go to dashboard where the join logic will trigger
                 navigate(`/${language}/dashboard`, { replace: true });
@@ -51,10 +55,10 @@ export default function InviteRedirect() {
     }, [inviteCode, navigate, loading, language]);
 
     const handleJoin = () => {
-        if (auth.currentUser) {
+        if (auth!.currentUser) {
             navigate(`/${language}/dashboard`, { replace: true });
         } else {
-            navigate('/welcome', { replace: true });
+            navigate(`/${language}/welcome`, { replace: true });
         }
     };
 
@@ -86,7 +90,7 @@ export default function InviteRedirect() {
                             )}
                         </div>
                         <Button className="join-btn" onClick={handleJoin}>
-                            {auth.currentUser ? t('joinGroup.confirmJoin') : `${t('welcome.login')} / ${t('welcome.signup')}`}
+                            {auth!.currentUser ? t('joinGroup.confirmJoin') : `${t('welcome.login')} / ${t('welcome.signup')}`}
                         </Button>
                         {!isStandalone() && /iPhone|iPad|iPod/.test(navigator.userAgent) && (
                             <p className="pwa-hint">
@@ -97,15 +101,21 @@ export default function InviteRedirect() {
                 ) : (
                     <div className="error-state">
                         <p>{t('joinGroup.invalidInvite')}</p>
-                        <Button onClick={() => navigate('/')}>{t('joinGroup.goBackHome')}</Button>
+                        <Button onClick={() => navigate(`/${language}/`)}>{t('joinGroup.goBackHome')}</Button>
                     </div>
                 )}
             </div>
         </div>
     );
+};
+
+export default InviteRedirect;
+
+interface NavigatorWithStandalone extends Navigator {
+    standalone?: boolean;
 }
 
 function isStandalone() {
-    return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    return window.matchMedia('(display-mode: standalone)').matches || (navigator as NavigatorWithStandalone).standalone;
 }
 

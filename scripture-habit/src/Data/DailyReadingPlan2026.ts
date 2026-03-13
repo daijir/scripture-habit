@@ -1,4 +1,6 @@
-export const DailyReadingPlan2026 = [
+import { ReadingPlanItem } from '../types/scriptures';
+
+export const DailyReadingPlan2026: ReadingPlanItem[] = [
     { day: 1, scripts: ["Moses 6:63", "Exodus 16:4", "Exodus 16:11-15", "John 6:35"], date: "2025-12-29" },
     { day: 2, scripts: ["Exodus 12:3-5", "John 1:29"], date: "2025-12-30" },
     { day: 3, scripts: ["Numbers 21:4-10", "John 3:14"], date: "2025-12-31" },
@@ -125,7 +127,7 @@ export const DailyReadingPlan2026 = [
     { day: 124, scripts: ["Exodus 40:1-38"], date: "2026-05-01" }
 ];
 
-export const getTodayReadingPlan = () => {
+export const getTodayReadingPlan = (): ReadingPlanItem | undefined => {
     const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone || 'Asia/Tokyo';
     const now = new Date();
     const localDate = now.toLocaleDateString('en-CA', { timeZone });

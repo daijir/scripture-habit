@@ -1,4 +1,6 @@
-export const PeaceScriptures = [
+import { ScriptureQuote } from '../types/scriptures';
+
+export const PeaceScriptures: ScriptureQuote[] = [
     // Old Testament (旧約聖書)
     { scripture: "Old Testament", chapter: "Isaiah 26:3" },
     { scripture: "Old Testament", chapter: "Isaiah 9:6" },

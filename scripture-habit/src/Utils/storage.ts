@@ -1,5 +1,5 @@
 export const safeStorage = {
-    get: (key, defaultValue = null) => {
+    get: (key: string, defaultValue: string | null = null): string | null => {
         try {
             const item = window.localStorage.getItem(key);
             return item !== null ? item : defaultValue;
@@ -8,7 +8,7 @@ export const safeStorage = {
             return defaultValue;
         }
     },
-    set: (key, value) => {
+    set: (key: string, value: string): boolean => {
         try {
             window.localStorage.setItem(key, value);
             return true;
@@ -17,7 +17,7 @@ export const safeStorage = {
             return false;
         }
     },
-    remove: (key) => {
+    remove: (key: string): boolean => {
         try {
             window.localStorage.removeItem(key);
             return true;

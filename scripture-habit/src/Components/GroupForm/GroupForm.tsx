@@ -1,7 +1,7 @@
 import './GroupForm.css';
-import { useState } from "react";
+import React, { useState } from "react";
 import { auth, db } from '../../firebase';
-import { collection, addDoc, doc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { collection, addDoc, doc, updateDoc, arrayUnion, Timestamp } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import Input from '../Input/Input';
 import Button from '../Button/Button';
@@ -15,21 +15,21 @@ export default function GroupForm() {
   const [groupName, setGroupName] = useState("");
   const [description, setDescription] = useState("");
   const [isPublic, setIsPublic] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
-  async function handleSubmit(e) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
 
-    const user = auth.currentUser;
-    if (!user) {
+    const user = auth?.currentUser;
+    if (!auth || !user) {
       setError(t('groupForm.errorLoggedIn'));
       return;
     }
 
     try {
-      const now = new Date();
+      const now = Timestamp.now();
 
       const inviteCode = Math.random().toString(36).substring(2, 8).toUpperCase();
 
@@ -62,7 +62,7 @@ export default function GroupForm() {
       toast.success(`🎉 ${t('groupForm.successCreated')}`);
       navigate(`/${language}/dashboard`, { state: { initialGroupId: newGroupId, initialView: 2 } });
 
-    } catch (e) {
+    } catch (e: any) {
       console.error("Error creating group or updating user:", e);
       setError(t('groupForm.errorCreateFailed'));
     }
@@ -83,14 +83,14 @@ export default function GroupForm() {
             type="text"
             placeholder={t('groupForm.groupNamePlaceholder')}
             value={groupName}
-            onChange={(e) => setGroupName(e.target.value)}
+            onChange={(e: any) => setGroupName(e.target.value)}
             required
           />
           <Input
             label={t('groupForm.descriptionLabel')}
             as="textarea"
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e: any) => setDescription(e.target.value)}
           />
 
           {/* Max members input removed for unlimited members */}
@@ -100,7 +100,7 @@ export default function GroupForm() {
               label={isPublic ? t('groupForm.publicLabel') : t('groupForm.privateLabel')}
               id="isPublic"
               checked={isPublic}
-              onChange={(e) => setIsPublic(e.target.checked)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setIsPublic(e.target.checked)}
             />
             <div className="setting-description">
               <p className="description-text">

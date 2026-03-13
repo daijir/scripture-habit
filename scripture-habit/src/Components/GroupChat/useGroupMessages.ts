@@ -1,26 +1,25 @@
 import { useState, useEffect, useRef } from 'react';
 import { db } from '../../firebase';
-import { collection, query, orderBy, onSnapshot, doc, getDoc, getDocs, limit, startAfter, startAt } from 'firebase/firestore';
+import { collection, query, orderBy, onSnapshot, doc, getDoc, getDocs, limit, startAfter, startAt, DocumentSnapshot } from 'firebase/firestore';
 import { safeStorage } from '../../Utils/storage';
 import confetti from 'canvas-confetti';
 import * as Sentry from "@sentry/react";
+import { Message, GroupData, MembersMap, UserProfile } from '../../types/chat';
 
-export const useGroupMessages = (groupId, userData, t) => {
-  const [messages, setMessages] = useState([]);
-  const [groupData, setGroupData] = useState(null);
+export const useGroupMessages = (groupId: string | null, userData: any, t: (key: string) => string) => {
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [groupData, setGroupData] = useState<GroupData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [userReadCount, setUserReadCount] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [userReadCount, setUserReadCount] = useState<number | null>(null);
   const [initialScrollDone, setInitialScrollDone] = useState(false);
   const [hasMoreOlder, setHasMoreOlder] = useState(true);
-  const [membersMap, setMembersMap] = useState({});
+  const [membersMap, setMembersMap] = useState<MembersMap>({});
 
-  const currentGroupIdRef = useRef(groupId);
+  const currentGroupIdRef = useRef<string | null>(groupId);
 
-  const scrollDebounceRef = useRef(null);
-  const previousScrollHeightRef = useRef(0);
   const prevMessageCountRef = useRef(0);
-  const latestMessageRef = useRef(null);
+  const latestMessageRef = useRef<Message | null>(null);
 
 
   useEffect(() => {
@@ -46,7 +45,7 @@ export const useGroupMessages = (groupId, userData, t) => {
     unsubscribeGroup = onSnapshot(groupRef, (docSnap) => {
       if (docSnap.exists()) {
         // Include groupId with the data so we can validate it later
-        setGroupData({ ...docSnap.data(), _groupId: groupId });
+        setGroupData({ ...docSnap.data(), _groupId: groupId } as GroupData);
       }
     }, (err) => {
       if (err.code === 'permission-denied') {
@@ -63,7 +62,7 @@ export const useGroupMessages = (groupId, userData, t) => {
     });
 
     // Fetch members detail whenever group context changes
-    const fetchMembersDetails = async (membersArray) => {
+    const fetchMembersDetails = async (membersArray: string[]) => {
       if (!membersArray || membersArray.length === 0) return;
 
       const newMap = { ...membersMap };
@@ -75,7 +74,7 @@ export const useGroupMessages = (groupId, userData, t) => {
         const memberSnapshots = await Promise.all(uidsToFetch.map(uid => getDoc(doc(db, 'users', uid))));
         memberSnapshots.forEach(snap => {
           if (snap.exists()) {
-            newMap[snap.id] = snap.data();
+            newMap[snap.id] = snap.data() as UserProfile;
           }
         });
         setMembersMap(newMap);
@@ -97,8 +96,8 @@ export const useGroupMessages = (groupId, userData, t) => {
         const messagesRef = collection(db, 'groups', groupId, 'messages');
         const lastViewedMsgId = userData?.uid ? safeStorage.get(`last_viewed_msg_${groupId}_${userData.uid}`) : null;
 
-        let initialMsgs = [];
-        let anchorSnapshot = null;
+        let initialMsgs: Message[] = [];
+        let anchorSnapshot: DocumentSnapshot | null = null;
 
         // Strategy: 
         // 1. Try to fetch the 'last viewed' message to establish an anchor.
@@ -120,13 +119,13 @@ export const useGroupMessages = (groupId, userData, t) => {
           // Newer context (including anchor) - "startAt" includes the anchor
           const nextQuery = query(messagesRef, orderBy('createdAt', 'asc'), startAt(anchorSnapshot), limit(15));
           const nextSnaps = await getDocs(nextQuery);
-          const nextMsgs = nextSnaps.docs.map(d => ({ id: d.id, ...d.data() }));
+          const nextMsgs = nextSnaps.docs.map(d => ({ id: d.id, ...d.data() } as Message));
 
           // Older context - "startAfter" excludes anchor (going backwards, so older than anchor)
           // We use 'desc' to get the immediately preceding messages
           const prevQuery = query(messagesRef, orderBy('createdAt', 'desc'), startAfter(anchorSnapshot), limit(5));
           const prevSnaps = await getDocs(prevQuery);
-          const prevMsgs = prevSnaps.docs.map(d => ({ id: d.id, ...d.data() })).reverse();
+          const prevMsgs = prevSnaps.docs.map(d => ({ id: d.id, ...d.data() } as Message)).reverse();
 
           initialMsgs = [...prevMsgs, ...nextMsgs];
         } else {
@@ -134,7 +133,7 @@ export const useGroupMessages = (groupId, userData, t) => {
           // We query descending to get the newest, then reverse to display chronologically
           const latestQuery = query(messagesRef, orderBy('createdAt', 'desc'), limit(20));
           const latestSnaps = await getDocs(latestQuery);
-          initialMsgs = latestSnaps.docs.map(d => ({ id: d.id, ...d.data() })).reverse();
+          initialMsgs = latestSnaps.docs.map(d => ({ id: d.id, ...d.data() } as Message)).reverse();
         }
 
         setMessages(initialMsgs);
@@ -154,7 +153,7 @@ export const useGroupMessages = (groupId, userData, t) => {
             );
 
             unsubscribeNewMessages = onSnapshot(newMsgsQuery, (snapshot) => {
-              const newIncoming = [];
+              const newIncoming: Message[] = [];
               snapshot.docChanges().forEach((change) => {
                 if (change.type === "added") {
                   const data = change.doc.data();
@@ -172,10 +171,10 @@ export const useGroupMessages = (groupId, userData, t) => {
                     });
                   }
 
-                  newIncoming.push({ id: change.doc.id, ...data });
+                  newIncoming.push({ id: change.doc.id, ...data } as Message);
                 }
                 if (change.type === "modified") {
-                  setMessages(prev => prev.map(m => m.id === change.doc.id ? { id: change.doc.id, ...change.doc.data() } : m));
+                  setMessages(prev => prev.map(m => m.id === change.doc.id ? { id: change.doc.id, ...change.doc.data() } as Message : m));
                 }
                 if (change.type === "removed") {
                   setMessages(prev => prev.filter(m => m.id !== change.doc.id));
@@ -222,11 +221,11 @@ export const useGroupMessages = (groupId, userData, t) => {
 
                 setMessages(prev => {
                   if (prev.some(m => m.id === change.doc.id)) return prev;
-                  return [...prev, { id: change.doc.id, ...data }];
+                  return [...prev, { id: change.doc.id, ...data } as Message];
                 });
               }
               if (change.type === "modified") {
-                setMessages(prev => prev.map(m => m.id === change.doc.id ? { id: change.doc.id, ...change.doc.data() } : m));
+                setMessages(prev => prev.map(m => m.id === change.doc.id ? { id: change.doc.id, ...change.doc.data() } as Message : m));
               }
               if (change.type === "removed") {
                 setMessages(prev => prev.filter(m => m.id !== change.doc.id));
@@ -244,7 +243,7 @@ export const useGroupMessages = (groupId, userData, t) => {
           });
         }
 
-      } catch (err) {
+      } catch (err: any) {
         if (err.code !== 'permission-denied') {
           console.error("Error fetching messages:", err);
           setError("Failed to load messages.");

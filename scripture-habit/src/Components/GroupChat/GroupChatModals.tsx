@@ -1,14 +1,113 @@
-import React from 'react';
+import { FC } from 'react';
 import ReactMarkdown from 'react-markdown';
 import Mascot from '../Mascot/Mascot';
 import UserProfileModal from '../UserProfileModal/UserProfileModal';
 import {
-    UilTimes, UilPen, UilUsersAlt, UilCopy, UilSignOutAlt,
-    UilTrashAlt, UilExclamationTriangle, UilCommentAlt,
+    UilTimes, UilCopy,
+    UilExclamationTriangle, UilCommentAlt,
     UilWhatsapp, UilFacebookMessenger, UilInstagram
 } from '@iconscout/react-unicons';
+import { Group, Message, UserProfile } from '../../types/chat';
 
-const GroupChatModals = ({
+interface GroupChatModalsProps {
+    t: (key: string, replacements?: any) => string;
+    language: string | null;
+    userData: UserProfile | null;
+    groupData: Group | null;
+
+    // Leave Group Modal
+    showLeaveModal: boolean;
+    setShowLeaveModal: (show: boolean) => void;
+    isLeaving: boolean;
+    handleLeaveGroup: () => Promise<void>;
+
+    // Delete Group
+    showDeleteModal: boolean;
+    setShowDeleteModal: (show: boolean) => void;
+    deleteConfirmationName: string;
+    setDeleteConfirmationName: (name: string) => void;
+    handleDeleteGroup: () => Promise<void>;
+
+    // Edit Group Name
+    showEditNameModal: boolean;
+    setShowEditNameModal: (show: boolean) => void;
+    newGroupName: string;
+    setNewGroupName: (name: string) => void;
+    newGroupDescription: string;
+    setNewGroupDescription: (desc: string) => void;
+    newTranslatedName: string;
+    setNewTranslatedName: (name: string) => void;
+    newTranslatedDesc: string;
+    setNewTranslatedDesc: (desc: string) => void;
+    handleUpdateGroupName: () => Promise<void>;
+    translatedGroupName: string | null;
+    translatedGroupDesc: string | null;
+
+    // Delete Message
+    showDeleteMessageModal: boolean;
+    setShowDeleteMessageModal: (show: boolean) => void;
+    messageToDelete: Message | null;
+    setMessageToDelete: (msg: Message | null) => void;
+    handleConfirmDeleteMessage: () => Promise<void>;
+
+    // Edit Message
+    editingMessage: Message | null;
+    editText: string;
+    setEditText: (text: string) => void;
+    handleCancelEdit: () => void;
+    handleSaveEdit: () => Promise<void>;
+
+    // Reactions
+    showReactionsModal: boolean;
+    setShowReactionsModal: (show: boolean) => void;
+    reactionsToShow: any[];
+
+    // Members
+    showMembersModal: boolean;
+    setShowMembersModal: (show: boolean) => void;
+    membersList: UserProfile[];
+    membersLoading: boolean;
+    setSelectedMember: (member: UserProfile | null) => void;
+
+    // Unity
+    showUnityModal: boolean;
+    setShowUnityModal: (show: boolean) => void;
+    unityPercentage: number;
+    unityModalData: {
+        posted: { id: string; nickname: string }[];
+        notPosted: { id: string; nickname: string }[];
+    };
+    cheeredTodayUids: Set<string>;
+    handleCheerClick: (member: UserProfile) => void;
+
+    // Cheer Confirm
+    cheerTarget: UserProfile | null;
+    setCheerTarget: (target: UserProfile | null) => void;
+    isSendingCheer: boolean;
+    handleSendCheer: () => Promise<void>;
+
+    // Report User/Message
+    showReportModal: boolean;
+    setShowReportModal: (show: boolean) => void;
+    reportReason: string;
+    setReportReason: (reason: string) => void;
+    confirmReport: () => Promise<void>;
+
+    // User Profile
+    selectedMember: UserProfile | null;
+    handleUserProfileClick: (userId: string | null) => Promise<void>;
+
+    // Invite Links
+    showInviteModal: boolean;
+    setShowInviteModal: (show: boolean) => void;
+    handleCopyInviteLink: () => void;
+    handleShareLine: () => void;
+    handleShareWhatsApp: () => void;
+    handleShareMessenger: () => void;
+    handleShareInstagram: () => void;
+}
+
+const GroupChatModals: FC<GroupChatModalsProps> = ({
     t,
     language,
     userData,
@@ -130,7 +229,7 @@ const GroupChatModals = ({
                         <p>{t('groupChat.deleteConfirmMessage')}</p>
                         <div style={{ marginBottom: '1rem' }}>
                             {groupData && (
-                                <ReactMarkdown components={{ p: 'span' }}>
+                                <ReactMarkdown components={{ p: ({ children }) => <span>{children}</span> }}>
                                     {t('groupChat.typeToConfirm').replace('{groupName}', groupData.name)}
                                 </ReactMarkdown>
                             )}
@@ -236,8 +335,8 @@ const GroupChatModals = ({
                                     (
                                         (newGroupName === groupData?.name) &&
                                         (newGroupDescription === (groupData?.description || '')) &&
-                                        (newTranslatedName === (translatedGroupName || groupData?.translations?.[language]?.name || '')) &&
-                                        (newTranslatedDesc === (translatedGroupDesc || groupData?.translations?.[language]?.description || ''))
+                                        (newTranslatedName === (translatedGroupName || (language ? groupData?.translations?.[language]?.name : '') || '')) &&
+                                        (newTranslatedDesc === (translatedGroupDesc || (language ? groupData?.translations?.[language]?.description : '') || ''))
                                     )
                                 }
                             >
@@ -360,7 +459,7 @@ const GroupChatModals = ({
                                             </span>
                                             <span style={{ fontSize: '0.75rem', color: 'var(--gray)' }}>
                                                 {(() => {
-                                                    const lastActive = (groupData?.memberLastActive && groupData.memberLastActive[member.id]) || member.lastPostDate;
+                                                    const lastActive = (groupData?.memberLastActive && member.id && groupData.memberLastActive[member.id]) || member.lastPostDate;
                                                     if (!lastActive) return t('groupChat.noActivity') || "No recent activity";
 
                                                     let dateObj;
@@ -369,13 +468,13 @@ const GroupChatModals = ({
                                                     else dateObj = new Date(lastActive);
 
                                                     const now = new Date();
-                                                    const diffDays = Math.floor((now - dateObj) / (1000 * 60 * 60 * 24));
+                                                    const diffDays = Math.floor((now.getTime() - dateObj.getTime()) / (1000 * 60 * 60 * 24));
 
                                                     if (diffDays <= 0) return t('groupChat.activeToday') || "Active today";
                                                     if (diffDays === 1) return t('groupChat.activeYesterday') || "Active yesterday";
-                                                    if (diffDays < 30) return (t('groupChat.activeDaysAgo') || "Active {days} days ago").replace('{days}', diffDays);
+                                                    if (diffDays < 30) return (t('groupChat.activeDaysAgo') || "Active {days} days ago").replace('{days}', String(diffDays));
                                                     const diffMonths = Math.floor(diffDays / 30);
-                                                    return (t('groupChat.activeMonthsAgo') || "Active > {months} months ago").replace('{months}', diffMonths);
+                                                    return (t('groupChat.activeMonthsAgo') || "Active > {months} months ago").replace('{months}', String(diffMonths));
                                                 })()}
                                             </span>
                                         </div>
@@ -531,7 +630,7 @@ const GroupChatModals = ({
                         <div style={{ marginBottom: '1rem', textAlign: 'center' }}></div>
                         <h3 style={{ textAlign: 'center', marginBottom: '1rem', color: 'var(--black)' }}>{t('groupChat.cheerConfirmTitle') || "Send a Cheer"}</h3>
                         <p style={{ textAlign: 'center', color: 'var(--gray)', marginBottom: '2rem', lineHeight: '1.4', fontSize: '1rem' }}>
-                            {t('groupChat.cheerConfirmMessage')?.replace('{nickname}', cheerTarget.nickname) || `Would you like to send a cheer to ${cheerTarget.nickname}?`}
+                            {t('groupChat.cheerConfirmMessage')?.replace('{nickname}', cheerTarget.nickname || '') || `Would you like to send a cheer to ${cheerTarget.nickname || ''}?`}
                         </p>
                         <div className="leave-modal-actions" style={{ display: 'flex', flexDirection: 'column', gap: '12px', alignItems: 'center' }}>
                             <button
@@ -679,7 +778,7 @@ const GroupChatModals = ({
                             </button>
                         </div>
                         <div className="invite-modal-body">
-                            <Mascot customMessage={t('groupChat.inviteFriendsPrompt')} userData={userData} />
+                            <Mascot customMessage={t('groupChat.inviteFriendsPrompt')} userData={userData as any} />
                             <div className="invite-link-card" onClick={handleCopyInviteLink}>
                                 <div className="invite-link-content">
                                     <span className="invite-link-url">{window.location.origin}/join/{groupData?.inviteCode}</span>

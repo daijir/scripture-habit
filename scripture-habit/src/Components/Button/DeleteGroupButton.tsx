@@ -2,11 +2,16 @@ import { auth } from '../../firebase';
 import { toast } from 'react-toastify';
 import { useLanguage } from '../../Context/LanguageContext';
 
-export default function DeleteGroupButton({ groupId, ownerUserId }) {
+interface DeleteGroupButtonProps {
+  groupId: string;
+  ownerUserId: string;
+}
+
+export default function DeleteGroupButton({ groupId, ownerUserId }: DeleteGroupButtonProps) {
   const { t } = useLanguage();
 
   const handleDelete = async () => {
-    const user = auth.currentUser;
+    const user = auth?.currentUser;
     if (!user || user.uid !== ownerUserId) {
       return toast.error(t('groupChat.errorOnlyOwnerDelete') || "Only the group owner can delete this group");
     }
@@ -31,7 +36,7 @@ export default function DeleteGroupButton({ groupId, ownerUserId }) {
       toast.success(t('groupChat.groupDeletedSuccess') || "Group deleted successfully");
       window.location.href = '/dashboard';
 
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
       toast.error(`${t('groupChat.errorDeleteGroup') || "Failed to delete group"}: ${err.message}`);
     }

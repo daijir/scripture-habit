@@ -1,8 +1,16 @@
 import React, { useMemo } from 'react';
 import './Mascot.css';
 import { useLanguage } from '../../Context/LanguageContext';
+import { UserData } from '../../types/user';
 
-const Mascot = ({ userData, onClick, customMessage = null, reversed = false }) => {
+interface MascotProps {
+  userData?: UserData | null;
+  onClick?: () => void;
+  customMessage?: string | null;
+  reversed?: boolean;
+}
+
+const Mascot: React.FC<MascotProps> = ({ userData, onClick, customMessage = null, reversed = false }) => {
   const { t } = useLanguage();
   const mascotImg = '/images/mascot.png';
 
@@ -19,7 +27,7 @@ const Mascot = ({ userData, onClick, customMessage = null, reversed = false }) =
     const now = new Date();
     const todayStr = now.toLocaleDateString('en-CA', { timeZone });
 
-    let lastPostDate;
+    let lastPostDate: Date;
     if (userData.lastPostDate && typeof userData.lastPostDate.toDate === 'function') {
       lastPostDate = userData.lastPostDate.toDate();
     } else {
@@ -34,12 +42,12 @@ const Mascot = ({ userData, onClick, customMessage = null, reversed = false }) =
 
   const streak = userData?.streakCount || 0;
 
-  const getMessage = () => {
+  const getMessage = (): string => {
     if (customMessage) return customMessage;
 
     if (isDoneToday) {
       if (streak >= 7) {
-        return t('mascot.streakCelebration', { streak });
+        return t('mascot.streakCelebration', { streak: streak.toString() });
       }
       return t('mascot.doneToday');
     } else {

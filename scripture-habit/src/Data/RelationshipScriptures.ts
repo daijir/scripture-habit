@@ -1,4 +1,6 @@
-export const RelationshipScriptures = [
+import { ScriptureQuote } from '../types/scriptures';
+
+export const RelationshipScriptures: ScriptureQuote[] = [
     // Old Testament (旧約聖書)
     { scripture: "Old Testament", chapter: "Proverbs 15:1" },
     { scripture: "Old Testament", chapter: "Leviticus 19:18" },

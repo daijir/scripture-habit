@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import { useEffect, FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../Context/LanguageContext';
 import './PrivacyPolicy.css';
 
-const PrivacyPolicy = () => {
+const PrivacyPolicy: FC = () => {
     const { t } = useLanguage();
     const navigate = useNavigate();
 

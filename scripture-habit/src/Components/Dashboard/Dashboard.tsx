@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, FC } from 'react';
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { safeStorage } from '../../Utils/storage';
 import { auth, db } from '../../firebase';
-import { doc, onSnapshot, collection, query, where, updateDoc, getDocs } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
+import { doc, onSnapshot, collection, updateDoc, getDocs, setDoc, serverTimestamp } from 'firebase/firestore';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import { UilPlus, UilPen } from '@iconscout/react-unicons';
 import Sidebar from '../Sidebar/Sidebar';
 import GroupChat from '../GroupChat/GroupChat';
@@ -17,7 +17,7 @@ import MyNotes from '../MyNotes/MyNotes';
 import Profile from '../Profile/Profile';
 import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
 import { translateChapterField } from '../../Utils/bookNameTranslations';
-import { useLanguage } from '../../Context/LanguageContext.jsx';
+import { useLanguage } from '../../Context/LanguageContext';
 import { getTodayReadingPlan } from '../../Data/DailyReadingPlan';
 import WelcomeStoryModal from '../WelcomeStoryModal/WelcomeStoryModal';
 import Donate from '../Donate/Donate';
@@ -26,12 +26,25 @@ import Footer from '../Footer/Footer';
 import { DashboardSkeleton } from '../Skeleton/Skeleton';
 import { requestNotificationPermission } from '../../Utils/notificationHelper';
 import NotificationPromptModal from './NotificationPromptModal';
+import { UserData } from '../../types/user';
+import { Group } from '../../types/chat';
 
+interface NotificationInfo {
+  type: 'note' | 'message';
+  nickname: string;
+  time: number;
+  groupId: string;
+  groupName: string;
+  totalMessages: number;
+}
 
+interface WarningInfo {
+  name: string;
+  days: number;
+}
 
-
-const Dashboard = () => {
-  const [user, setUser] = useState(null);
+const Dashboard: FC = () => {
+  const [user, setUser] = useState<User | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -43,47 +56,47 @@ const Dashboard = () => {
     const openNewNote = searchParams.get('openNewNote');
 
     return {
-      activeGroupId: gid || location.state?.initialGroupId || null,
+      activeGroupId: gid || location.state?.initialGroupId || null as string | null,
       selectedView: gid ? 2 : (viewParam ? parseInt(viewParam) : (location.state?.initialView !== undefined ? location.state.initialView : 0)),
       isModalOpen: openNewNote === 'true'
     };
   };
 
   const initialState = getInitialState();
-  const [selectedView, setSelectedView] = useState(initialState.selectedView);
-  const [activeGroupId, setActiveGroupId] = useState(initialState.activeGroupId);
-  const [isModalOpen, setIsModalOpen] = useState(initialState.isModalOpen);
+  const [selectedView, setSelectedView] = useState<number>(initialState.selectedView);
+  const [activeGroupId, setActiveGroupId] = useState<string | null>(initialState.activeGroupId);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(initialState.isModalOpen);
 
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [personalNotesCount, setPersonalNotesCount] = useState(null);
-  const [userGroups, setUserGroups] = useState([]);
-  const [rawUserGroups, setRawUserGroups] = useState([]);
-  const [groupStates, setGroupStates] = useState({});
-  const [loadingGroupStates, setLoadingGroupStates] = useState(true);
-  const [latestNoteNotification, setLatestNoteNotification] = useState(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [personalNotesCount, setPersonalNotesCount] = useState<number | null>(null);
+  const [userGroups, setUserGroups] = useState<Group[]>([]);
+  const [rawUserGroups, setRawUserGroups] = useState<Group[]>([]);
+  const [groupStates, setGroupStates] = useState<Record<string, any>>({});
+  const [loadingGroupStates, setLoadingGroupStates] = useState<boolean>(true);
+  const [latestNoteNotification, setLatestNoteNotification] = useState<NotificationInfo | null>(null);
 
-  const [showWelcomeStory, setShowWelcomeStory] = useState(false);
-  const [isInputFocused, setIsInputFocused] = useState(false);
-  const [warnings, setWarnings] = useState([]);
-  const [showEditProfileModal, setShowEditProfileModal] = useState(false);
-  const [newNickname, setNewNickname] = useState('');
-  const [isJoiningInvite, setIsJoiningInvite] = useState(false);
-  const [showNotifPrompt, setShowNotifPrompt] = useState(false);
+  const [showWelcomeStory, setShowWelcomeStory] = useState<boolean>(false);
+  const [isInputFocused, setIsInputFocused] = useState<boolean>(false);
+  const [warnings, setWarnings] = useState<WarningInfo[]>([]);
+  const [showEditProfileModal, setShowEditProfileModal] = useState<boolean>(false);
+  const [newNickname, setNewNickname] = useState<string>('');
+  const [isJoiningInvite, setIsJoiningInvite] = useState<boolean>(false);
+  const [showNotifPrompt, setShowNotifPrompt] = useState<boolean>(false);
   
   // Auto Kick / Habit Pace
-  const [showAutoKickModal, setShowAutoKickModal] = useState(false);
-  const [autoKickStep, setAutoKickStep] = useState(0);
-  const [selectedKickDays, setSelectedKickDays] = useState(3);
-  const [kickConfirmInput, setKickConfirmInput] = useState('');
-  const [autoKickError, setAutoKickError] = useState('');
+  const [showAutoKickModal, setShowAutoKickModal] = useState<boolean>(false);
+  const [autoKickStep, setAutoKickStep] = useState<number>(0);
+  const [selectedKickDays, setSelectedKickDays] = useState<number>(3);
+  const [kickConfirmInput, setKickConfirmInput] = useState<string>('');
+  const [autoKickError, setAutoKickError] = useState<string>('');
   
   const { t, language } = useLanguage();
 
   const todayPlan = getTodayReadingPlan();
 
-  const getReadingPlanUrl = (script) => {
+  const getReadingPlanUrl = (script: string) => {
     // Simply call the smart mapper without an explicit volume.
     // gospelLibraryMapper.js now handles the detection.
     return getGospelLibraryUrl(null, script, language);
@@ -112,7 +125,7 @@ const Dashboard = () => {
     // BUT only if no other onboarding modals are open
     if (selectedView === 0 && !loading && userData && !showWelcomeStory && !showAutoKickModal && !isJoiningInvite) {
       const timer = setTimeout(() => {
-        const isPermissionDefault = window.Notification && window.Notification.permission === 'default';
+        const isPermissionDefault = (window as any).Notification && (window as any).Notification.permission === 'default';
         const lastPrompt = safeStorage.get('lastNotifPrompt');
         const now = Date.now();
         const oneWeek = 7 * 24 * 60 * 60 * 1000;
@@ -129,7 +142,7 @@ const Dashboard = () => {
     setShowNotifPrompt(false);
     safeStorage.set('lastNotifPrompt', Date.now().toString());
     if (userData?.uid) {
-      await requestNotificationPermission(userData.uid, t);
+      await requestNotificationPermission(userData.uid, (key, defaultText) => t(key) || defaultText);
     }
   };
 
@@ -139,7 +152,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth!, async (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
         // Notification permission is now requested manually via the bell icon
@@ -148,7 +161,7 @@ const Dashboard = () => {
           // Use onSnapshot for real-time updates to user profile
           const unsubUser = onSnapshot(userDocRef, (docSnap) => {
             if (docSnap.exists()) {
-              const data = docSnap.data();
+              const data = docSnap.data() as any;
               setUserData({ uid: currentUser.uid, ...data });
 
               // Show welcome story if not seen yet
@@ -162,7 +175,7 @@ const Dashboard = () => {
               console.log("User profile document no longer exists (might be deleting account).");
               setLoading(false);
             }
-          }, (err) => {
+          }, (err: any) => {
             // Silence "permission-denied" errors during account deletion or logout
             if (err.code === 'permission-denied') {
               console.log("Silenced permission error during possible logout/deletion.");
@@ -174,7 +187,7 @@ const Dashboard = () => {
             setLoading(false);
           });
           return () => unsubUser();
-        } catch (err) {
+        } catch (err: any) {
           console.error("Error setting up user listener:", err);
           setError(err.message);
           setLoading(false);
@@ -228,7 +241,9 @@ const Dashboard = () => {
 
     // Step 2 -> Submit
     try {
-      const idToken = await auth.currentUser.getIdToken();
+      const idToken = await auth?.currentUser?.getIdToken();
+      if (!idToken) throw new Error("No idToken");
+
       // Using global API endpoint that updates user and all their groups
       const API_BASE_URL = Capacitor.isNativePlatform() ? 'https://scripturehabit.app' : '';
       const response = await fetch(`${API_BASE_URL}/api/update-kick-threshold`, {
@@ -248,7 +263,7 @@ const Dashboard = () => {
       } else {
         toast.error("Failed to update pace.");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating threshold:', error);
       toast.error("An error occurred.");
     }
@@ -270,7 +285,7 @@ const Dashboard = () => {
         const notesRef = collection(db, 'users', user.uid, 'notes');
         const notesSnapshot = await getDocs(notesRef);
 
-        const studyDays = new Set();
+        const studyDays = new Set<string>();
         notesSnapshot.forEach(docSnap => {
           const data = docSnap.data();
           if (data.createdAt) {
@@ -302,8 +317,6 @@ const Dashboard = () => {
   }, [user, userData?.daysStudiedCount, userData?.streakCount, userData?.uid]);
   // -----------------------------------------------------------
 
-
-
   const handleCloseWelcomeStory = async () => {
     setShowWelcomeStory(false);
     if (user && userData && userData.hasSeenWelcomeStory === undefined) {
@@ -321,7 +334,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (!userData) return;
 
-    const groupIds = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
+    const groupIds: string[] = userData.groupIds || (userData.groupId ? [userData.groupId] : []);
 
     if (groupIds.length === 0) {
       setRawUserGroups([]);
@@ -334,8 +347,8 @@ const Dashboard = () => {
     }
 
     const fetchGroups = async () => {
-      const unsubscribers = [];
-      const groupsData = {};
+      const unsubscribers: (() => void)[] = [];
+      const groupsData: Record<string, any> = {};
 
       groupIds.forEach(gid => {
         const unsub = onSnapshot(doc(db, 'groups', gid), (docSnap) => {
@@ -350,7 +363,7 @@ const Dashboard = () => {
               return newGroups;
             });
           }
-        }, (err) => {
+        }, (err: any) => {
           if (err.code !== 'permission-denied') {
             console.error(`Error fetching group ${gid}:`, err);
           }
@@ -377,13 +390,13 @@ const Dashboard = () => {
     setLoadingGroupStates(true);
     const groupStatesRef = collection(db, 'users', userData.uid, 'groupStates');
     const unsubscribe = onSnapshot(groupStatesRef, (snapshot) => {
-      const states = {};
+      const states: Record<string, any> = {};
       snapshot.forEach(doc => {
         states[doc.id] = doc.data();
       });
       setGroupStates(states);
       setLoadingGroupStates(false);
-    }, (err) => {
+    }, (err: any) => {
       if (err.code !== 'permission-denied') {
         console.error("Error fetching group states:", err);
       }
@@ -409,7 +422,7 @@ const Dashboard = () => {
         unreadCount
       };
     });
-    setUserGroups(combinedGroups);
+    setUserGroups(combinedGroups as Group[]);
 
   }, [rawUserGroups, groupStates, loadingGroupStates]);
 
@@ -456,7 +469,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (!userData || userGroups.length === 0) return;
 
-    const newWarnings = [];
+    const newWarnings: WarningInfo[] = [];
     const now = new Date();
 
     userGroups.forEach(group => {
@@ -464,9 +477,9 @@ const Dashboard = () => {
       const lastActiveTimestamp = memberLastActive[userData.uid];
 
       if (lastActiveTimestamp) {
-        const lastActiveDate = lastActiveTimestamp.toDate();
+        const lastActiveDate = (lastActiveTimestamp as any).toDate ? (lastActiveTimestamp as any).toDate() : new Date((lastActiveTimestamp as any).seconds * 1000);
         // diff in ms
-        const diffMs = now - lastActiveDate;
+        const diffMs = now.getTime() - lastActiveDate.getTime();
         // diff in days
         const diffDays = diffMs / (1000 * 60 * 60 * 24);
 
@@ -491,14 +504,14 @@ const Dashboard = () => {
     today.setHours(0, 0, 0, 0);
     const todayTime = today.getTime();
 
-    let mostRecent = null;
+    let mostRecent: NotificationInfo | null = null;
 
     userGroups.forEach(group => {
       const noteTime = group.lastNoteAt ? (group.lastNoteAt.toMillis ? group.lastNoteAt.toMillis() : (group.lastNoteAt.seconds * 1000)) : 0;
       const messageTime = group.lastMessageAt ? (group.lastMessageAt.toMillis ? group.lastMessageAt.toMillis() : (group.lastMessageAt.seconds * 1000)) : 0;
 
       // Determine which one is newer and should be considered
-      let currentType = '';
+      let currentType: 'note' | 'message' | '' = '';
       let currentTime = 0;
       let currentNickname = '';
       let currentUid = '';
@@ -506,13 +519,13 @@ const Dashboard = () => {
       if (noteTime >= messageTime && noteTime > 0) {
         currentType = 'note';
         currentTime = noteTime;
-        currentNickname = group.lastNoteByNickname;
-        currentUid = group.lastNoteByUid;
+        currentNickname = group.lastNoteByNickname || '';
+        currentUid = group.lastNoteByUid || '';
       } else if (messageTime > noteTime && messageTime > 0) {
         currentType = 'message';
         currentTime = messageTime;
-        currentNickname = group.lastMessageByNickname;
-        currentUid = group.lastMessageByUid;
+        currentNickname = group.lastMessageByNickname || '';
+        currentUid = group.lastMessageByUid || '';
       }
 
       if (currentTime > 0 && currentUid !== userData.uid) {
@@ -520,11 +533,11 @@ const Dashboard = () => {
         if (currentTime >= todayTime && (group.unreadCount || 0) > 0) {
           if (!mostRecent || currentTime > mostRecent.time) {
             mostRecent = {
-              type: currentType,
+              type: currentType as 'note' | 'message',
               nickname: currentNickname || 'Someone',
               time: currentTime,
               groupId: group.id,
-              groupName: group.name,
+              groupName: group.name || '',
               totalMessages: group.messageCount || 0
             };
           }
@@ -597,7 +610,14 @@ const Dashboard = () => {
     return (
       <div className='App Dashboard'>
         <div className='AppGlass Grid'>
-          <Sidebar selected={selectedView} setSelected={setSelectedView} userGroups={[]} />
+          <Sidebar
+            selected={selectedView}
+            setSelected={setSelectedView}
+            userGroups={[]}
+            activeGroupId={activeGroupId}
+            setActiveGroupId={setActiveGroupId}
+            userData={userData}
+          />
           <DashboardSkeleton />
         </div>
       </div>
@@ -656,8 +676,8 @@ const Dashboard = () => {
                 cursor: 'pointer',
                 transition: 'transform 0.2s',
               }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+              onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.05)')}
+              onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
             >
               Retry
             </button>
@@ -669,7 +689,7 @@ const Dashboard = () => {
   }
 
   if (!user) {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
     return <Navigate to={isStandalone ? "/welcome" : "/"} replace />;
   }
 
@@ -701,7 +721,7 @@ const Dashboard = () => {
       toast.success(t('groupChat.nicknameChanged'));
       setShowEditProfileModal(false);
       setNewNickname('');
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating nickname:", error);
       // toast.error(t('groupChat.errorChangeNickname'));
     }
@@ -837,7 +857,6 @@ const Dashboard = () => {
                     // Update read status in background
                     if (userData?.uid) {
                       try {
-                        const { doc, setDoc, updateDoc, serverTimestamp } = await import('firebase/firestore');
                         const userGroupStateRef = doc(db, 'users', userData.uid, 'groupStates', gid);
                         const groupRef = doc(db, 'groups', gid);
 
@@ -850,7 +869,7 @@ const Dashboard = () => {
                             [`memberLastReadAt.${userData.uid}`]: serverTimestamp()
                           })
                         ]);
-                      } catch (err) {
+                      } catch (err: any) {
                         console.error("Background read status update failed:", err);
                       }
                     }
@@ -941,12 +960,12 @@ const Dashboard = () => {
           </div>
         )}
 
-        {selectedView === 1 && (
-          <MyNotes userData={userData} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} userGroups={userGroups} />
+        {selectedView === 1 && userData && (
+          <MyNotes userData={userData} isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} userGroups={userGroups as any} />
         )}
         {selectedView === 2 && (
           <GroupChat
-            groupId={activeGroupId}
+            groupId={activeGroupId || ""}
             userData={userData}
             userGroups={userGroups}
             isActive={true}
@@ -956,13 +975,13 @@ const Dashboard = () => {
             isExternalModalOpen={isModalOpen || showEditProfileModal || showWelcomeStory || showNotifPrompt || isJoiningInvite}
           />
         )}
-        {selectedView === 3 && (
+        {selectedView === 3 && userData && (
           <Profile
             userData={userData}
             stats={{
-              streak: userData?.streakCount || 0,
+              streak: userData.streakCount || 0,
               totalNotes: personalNotesCount !== null ? personalNotesCount : 0,
-              daysStudied: userData?.daysStudiedCount || 0
+              daysStudied: userData.daysStudiedCount || 0
             }}
           />
         )}
@@ -970,7 +989,7 @@ const Dashboard = () => {
           <Donate userData={userData} />
         )}
 
-        <NewNote isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} userGroups={userGroups} currentGroupId={activeGroupId} />
+        {userData && <NewNote isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} userData={userData} userGroups={userGroups as any} currentGroupId={activeGroupId} />}
 
         <WelcomeStoryModal
           isOpen={showWelcomeStory}
@@ -988,7 +1007,7 @@ const Dashboard = () => {
                 className="delete-confirmation-input"
                 value={newNickname}
                 onChange={(e) => setNewNickname(e.target.value)}
-                placeholder={t('groupChat.enterNewNickname')}
+                placeholder={t('groupChat.enterNewNickname') || ''}
                 style={{ marginTop: '1rem', marginBottom: '1rem' }}
               />
               <div className="leave-modal-actions">
@@ -1001,7 +1020,7 @@ const Dashboard = () => {
                 <button
                   className="modal-btn primary"
                   onClick={handleUpdateProfile}
-                  disabled={!newNickname.trim() || newNickname === userData?.nickname}
+                  disabled={!newNickname.trim() || newNickname === userData.nickname}
                 >
                   {t('groupChat.save')}
                 </button>
@@ -1014,7 +1033,7 @@ const Dashboard = () => {
           isOpen={showNotifPrompt}
           onClose={handleCloseNotifPrompt}
           onConfirm={handleEnableNotifications}
-          t={t}
+          t={t as any}
         />
 
         {/* Global Habit Pace Setup Modal */}
@@ -1036,7 +1055,7 @@ const Dashboard = () => {
                         className={`modal-btn ${selectedKickDays === days ? 'primary' : 'outline'}`}
                         onClick={() => setSelectedKickDays(days)}
                       >
-                        {t('groupChat.autoKickChoiceLabel').replace('{days}', days)}
+                        {t('groupChat.autoKickChoiceLabel').replace('{days}', days.toString())}
                       </button>
                     ))}
                   </div>

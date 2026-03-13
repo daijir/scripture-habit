@@ -1,10 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, FC } from 'react';
 import './LinkPreview.css';
-
 import { Capacitor } from '@capacitor/core';
 
-const LinkPreview = ({ url, isSent, language }) => {
-    const [preview, setPreview] = useState(null);
+interface PreviewData {
+    title?: string;
+    description?: string;
+    image?: string;
+    favicon?: string;
+    siteName?: string;
+}
+
+interface LinkPreviewProps {
+    url: string;
+    isSent: boolean;
+    language: string | null;
+    t?: (key: string) => string;
+}
+
+const LinkPreview: FC<LinkPreviewProps> = ({ url, isSent, language }) => {
+    const [preview, setPreview] = useState<PreviewData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
@@ -73,7 +87,7 @@ const LinkPreview = ({ url, isSent, language }) => {
                         src={preview.image}
                         alt=""
                         onError={(e) => {
-                            e.target.style.display = 'none';
+                            (e.target as HTMLImageElement).style.display = 'none';
                         }}
                     />
                 </div>
@@ -86,7 +100,7 @@ const LinkPreview = ({ url, isSent, language }) => {
                             alt=""
                             className="link-preview-favicon"
                             onError={(e) => {
-                                e.target.style.display = 'none';
+                                (e.target as HTMLImageElement).style.display = 'none';
                             }}
                         />
                     )}

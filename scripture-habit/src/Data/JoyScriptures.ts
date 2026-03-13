@@ -1,4 +1,6 @@
-export const JoyScriptures = [
+import { ScriptureQuote } from '../types/scriptures';
+
+export const JoyScriptures: ScriptureQuote[] = [
     { scripture: "Book of Mormon", chapter: "2 Nephi 2:25" },
     { scripture: "Book of Mormon", chapter: "Mosiah 2:41" },
     { scripture: "Book of Mormon", chapter: "Alma 36:24-25" },

@@ -1,31 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, FC } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './GroupOptions.css';
 import { useLanguage } from '../../Context/LanguageContext';
 import { auth, db } from '../../firebase';
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, User } from 'firebase/auth';
 import WelcomeStoryModal from '../WelcomeStoryModal/WelcomeStoryModal';
 import Mascot from '../Mascot/Mascot';
 import { OptionsSkeleton } from '../Skeleton/Skeleton';
+import { UserData } from '../../types/user';
 
-const GroupOptions = () => {
+const GroupOptions: FC = () => {
     const { t } = useLanguage();
-    const [user, setUser] = useState(null);
-    const [userData, setUserData] = useState(null);
+    const [user, setUser] = useState<User | null>(null);
+    const [userData, setUserData] = useState<UserData | null>(null);
     const [showWelcomeStory, setShowWelcomeStory] = useState(false);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth!, async (currentUser) => {
             setUser(currentUser);
             if (currentUser) {
                 const userDocRef = doc(db, 'users', currentUser.uid);
                 const unsubUser = onSnapshot(userDocRef, (docSnap) => {
                     if (docSnap.exists()) {
                         const data = docSnap.data();
-                        setUserData({ uid: currentUser.uid, ...data });
+                        setUserData({ uid: currentUser.uid, ...data } as UserData);
 
                         // Show welcome story if not seen yet
                         if (data.hasSeenWelcomeStory === undefined) {

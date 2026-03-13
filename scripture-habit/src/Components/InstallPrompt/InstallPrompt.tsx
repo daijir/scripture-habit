@@ -1,24 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, FC } from 'react';
 import { UilMultiply, UilShare, UilPlusSquare, UilApps } from '@iconscout/react-unicons';
 import { useLocation } from 'react-router-dom';
 import { useLanguage, SUPPORTED_LANGUAGES } from '../../Context/LanguageContext';
 import './InstallPrompt.css';
 
-const InstallPrompt = () => {
+// Extend Navigator for iOS standalone check
+interface NavigatorWithStandalone extends Navigator {
+    standalone?: boolean;
+}
+
+const InstallPrompt: FC = () => {
     const { t } = useLanguage();
     const location = useLocation();
     const [showPrompt, setShowPrompt] = useState(false);
-    const [deferredPrompt, setDeferredPrompt] = useState(null);
-    const [platform, setPlatform] = useState(null);
+    const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+    const [platform, setPlatform] = useState<'ios' | 'android' | null>(null);
 
     // Capture beforeinstallprompt event and detect platform
     useEffect(() => {
-        const handleBeforeInstallPrompt = (e) => {
+        const handleBeforeInstallPrompt = (e: Event) => {
+            const installEvent = e as BeforeInstallPromptEvent;
             console.log('[PWA] beforeinstallprompt event fired');
             // Prevent Chrome 76 and later from automatically showing the prompt
-            e.preventDefault();
+            installEvent.preventDefault();
             // Stash the event so it can be triggered later.
-            setDeferredPrompt(e);
+            setDeferredPrompt(installEvent);
             setPlatform('android');
         };
 
@@ -37,7 +43,7 @@ const InstallPrompt = () => {
             (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         const isAndroid = /Android/i.test(ua);
 
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (navigator as NavigatorWithStandalone).standalone;
 
         console.log('[PWA] Detection:', { isIOS, isAndroid, isStandalone, ua });
 
@@ -57,7 +63,7 @@ const InstallPrompt = () => {
         // Determine the base path regardless of language prefix
         let base = path;
         const firstPart = pathParts[0];
-        if (SUPPORTED_LANGUAGES.includes(firstPart)) {
+        if (SUPPORTED_LANGUAGES.includes(firstPart as any)) {
             base = '/' + pathParts.slice(1).join('/');
         }
 
@@ -67,7 +73,7 @@ const InstallPrompt = () => {
         }
 
         const isDashboard = base === '/dashboard';
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (navigator as NavigatorWithStandalone).standalone;
 
         // Check for 7-day cooldown in localStorage
         let hasDismissed = false;
@@ -75,7 +81,7 @@ const InstallPrompt = () => {
         if (dismissedAt) {
             const dismissedDate = new Date(dismissedAt);
             const now = new Date();
-            const daysSinceDismissed = (now - dismissedDate) / (1000 * 60 * 60 * 24);
+            const daysSinceDismissed = (now.getTime() - dismissedDate.getTime()) / (1000 * 60 * 60 * 24);
             if (daysSinceDismissed < 7) {
                 hasDismissed = true;
             } else {
@@ -168,7 +174,7 @@ const InstallPrompt = () => {
                     </p>
                     <button className="pwa-install-button" onClick={handleInstallClick}>
                         <UilApps size="20" />
-                        {t('installPrompt.title')} {/* Fallback to title or adding a specific key if needed, using Title "Install App" as button text is common */}
+                        {t('installPrompt.title')}
                     </button>
                 </div>
             )}

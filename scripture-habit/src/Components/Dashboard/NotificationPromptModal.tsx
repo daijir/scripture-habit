@@ -1,7 +1,14 @@
-import React from 'react';
+import { FC } from 'react';
 import './NotificationPromptModal.css';
 
-const NotificationPromptModal = ({ isOpen, onClose, onConfirm, t }) => {
+interface NotificationPromptModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    onConfirm: () => void;
+    t: (key: string) => string;
+}
+
+const NotificationPromptModal: FC<NotificationPromptModalProps> = ({ isOpen, onClose, onConfirm, t }) => {
     if (!isOpen) return null;
 
     return (

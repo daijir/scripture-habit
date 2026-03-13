@@ -1,12 +1,17 @@
 import React from 'react';
 import './Checkbox.css';
 
-const Checkbox = ({
+interface CheckboxProps extends React.InputHTMLAttributes<HTMLInputElement> {
+    label?: string;
+}
+
+const Checkbox: React.FC<CheckboxProps> = ({
     label,
     type = 'checkbox',
     id,
     checked,
-    onChange
+    onChange,
+    ...props
 }) => {
   return (
           <div className="Checkbox">
@@ -15,6 +20,7 @@ const Checkbox = ({
                 id={id}
                 checked={checked}
                 onChange={onChange}
+                {...props}
             />
              {label && <label htmlFor={id}>{label}</label>}
           </div>

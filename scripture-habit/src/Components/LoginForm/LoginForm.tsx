@@ -1,32 +1,32 @@
-import { useState } from 'react';
+import React, { useState, FC } from 'react';
 import './LoginForm.css';
 import Button from '../Button/Button';
 import Input from '../Input/Input';
 import { auth, db } from '../../firebase';
-import { signInWithEmailAndPassword, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, sendEmailVerification, signInWithCredential, signOut } from 'firebase/auth';
+import { signInWithEmailAndPassword, GoogleAuthProvider, GithubAuthProvider, signInWithPopup, sendEmailVerification, signInWithCredential, signOut, User, AuthProvider } from 'firebase/auth';
 import { Capacitor } from '@capacitor/core';
 import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import { useLanguage } from '../../Context/LanguageContext';
 import { UilGoogle, UilGithub } from '@iconscout/react-unicons';
 import { toast } from 'react-toastify';
 import Footer from '../Footer/Footer';
 
-export default function LoginForm() {
+const LoginForm: FC = () => {
   const { t, language } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nickname, setNickname] = useState('');
-  const [error, setError] = useState(null);
-  const [pendingGoogleUser, setPendingGoogleUser] = useState(null);
-  const [unverifiedUser, setUnverifiedUser] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [pendingGoogleUser, setPendingGoogleUser] = useState<User | null>(null);
+  const [unverifiedUser, setUnverifiedUser] = useState<User | null>(null);
   const navigate = useNavigate();
 
 
-  const handleSocialLogin = async (provider) => {
+  const handleSocialLogin = async (provider: AuthProvider) => {
     try {
-      let result;
+      let result: any;
       // Check if this is a Google login request
       if (provider instanceof GoogleAuthProvider) {
         try {
@@ -39,22 +39,22 @@ export default function LoginForm() {
             });
             const googleUser = await GoogleAuth.signIn();
             const credential = GoogleAuthProvider.credential(googleUser.authentication.idToken);
-            result = await signInWithCredential(auth, credential);
+            result = await signInWithCredential(auth!, credential);
           } else {
             // For Web
-            result = await signInWithPopup(auth, provider);
+            result = await signInWithPopup(auth!, provider);
           }
         } catch (e) {
           console.error("Native Google Auth failed, falling back to web popup:", e);
           // Fallback to web popup if native fails
-          result = await signInWithPopup(auth, provider);
+          result = await signInWithPopup(auth!, provider);
         }
       } else {
         // Fallback for Github etc (which still might need special handling on native, but standard for now)
-        result = await signInWithPopup(auth, provider);
+        result = await signInWithPopup(auth!, provider);
       }
 
-      const user = result.user;
+      const user = result.user as User;
 
       // Check if user doc exists
       const userDocRef = doc(db, 'users', user.uid);
@@ -68,7 +68,7 @@ export default function LoginForm() {
         navigate(`/${language}/dashboard`);
       }
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error signing in with provider:", error);
       if (error.code === 'auth/account-exists-with-different-credential') {
         setError(t('signup.errorAccountExistsWithDifferentCredential'));
@@ -82,12 +82,12 @@ export default function LoginForm() {
     }
   };
 
-  const handleCompleteGoogleSignup = async (e) => {
+  const handleCompleteGoogleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!pendingGoogleUser) return;
 
     try {
-      const now = new Date();
+      const now = Timestamp.now();
       const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       const userData = {
@@ -115,23 +115,23 @@ export default function LoginForm() {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setUnverifiedUser(null);
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth!, email, password);
 
       if (!userCredential.user.emailVerified) {
         setUnverifiedUser(userCredential.user);
-        await signOut(auth); // Sign out so the session isn't persisted for unverified user
+        await signOut(auth!); // Sign out so the session isn't persisted for unverified user
         setError(t('login.emailNotVerified'));
         return;
       }
 
       navigate(`/${language}/dashboard`);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error signing in with email/password:", error);
       if (error.code === 'auth/invalid-credential' ||
         error.code === 'auth/user-not-found' ||
@@ -150,7 +150,7 @@ export default function LoginForm() {
       try {
         await sendEmailVerification(unverifiedUser);
         toast.info(t('login.verificationResent'));
-      } catch (error) {
+      } catch (error: any) {
         console.error("Error resending verification email:", error);
         setError("Error: " + error.message);
       }
@@ -167,7 +167,7 @@ export default function LoginForm() {
               label={t('signup.nicknameLabel')}
               type="text"
               value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
+              onChange={(e: any) => setNickname(e.target.value)}
               required
             />
             <Button type="submit">
@@ -221,7 +221,7 @@ export default function LoginForm() {
             label={t('login.emailLabel')}
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e: any) => setEmail(e.target.value)}
             required
           />
 
@@ -229,7 +229,7 @@ export default function LoginForm() {
             label={t('login.passwordLabel')}
             type='password'
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e: any) => setPassword(e.target.value)}
             required
           />
 
@@ -276,3 +276,5 @@ export default function LoginForm() {
     </div>
   );
 }
+
+export default LoginForm;

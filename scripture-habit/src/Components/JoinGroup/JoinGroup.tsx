@@ -1,32 +1,34 @@
 import './JoinGroup.css';
 import { useState, useEffect, useCallback } from "react";
 import { auth, db } from '../../firebase';
-import { doc, getDoc, writeBatch, onSnapshot, increment, arrayUnion, collection, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot, collection, query, where, getDocs } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, User } from "firebase/auth";
 import '../GroupForm/GroupForm.css';
 import GroupCard from '../../groups/GroupCard';
 import { useLanguage } from '../../Context/LanguageContext';
 import UserProfileModal from '../UserProfileModal/UserProfileModal';
 import Mascot from '../Mascot/Mascot';
 import { toast } from 'react-toastify';
+import { Group } from '../../types/chat';
+import { UserData } from '../../types/user';
 
 export default function JoinGroup() {
   const { t, language } = useLanguage();
   const API_BASE = window.location.hostname === 'localhost' ? '' : 'https://scripturehabit.app';
   const [error, setError] = useState("");
-  const [user, setUser] = useState(null);
-  const [userData, setUserData] = useState(null);
-  const [publicGroups, setPublicGroups] = useState([]);
+  const [user, setUser] = useState<User | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [publicGroups, setPublicGroups] = useState<Group[]>([]);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [selectedGroup, setSelectedGroup] = useState(null);
-  const [selectedMemberForProfile, setSelectedMemberForProfile] = useState(null);
-  const [translatedNames, setTranslatedNames] = useState({});
-  const [translatedDescs, setTranslatedDescs] = useState({});
-  const [translatingIds, setTranslatingIds] = useState(new Set());
+  const [selectedGroup, setSelectedGroup] = useState<Group | null>(null);
+  const [selectedMemberForProfile, setSelectedMemberForProfile] = useState<UserData | null>(null);
+  const [translatedNames, setTranslatedNames] = useState<Record<string, string>>({});
+  const [translatedDescs, setTranslatedDescs] = useState<Record<string, string>>({});
+  const [translatingIds, setTranslatingIds] = useState<Set<string>>(new Set());
   const navigate = useNavigate();
 
-  const handleTranslateGroup = useCallback(async (groupId, name, description) => {
+  const handleTranslateGroup = useCallback(async (groupId: string, name: string, description?: string) => {
     if (translatingIds.has(groupId)) return;
 
     // Toggle if already translated
@@ -52,10 +54,10 @@ export default function JoinGroup() {
 
     try {
       const idToken = await (user?.getIdToken() || Promise.resolve(null));
-      const headers = { 'Content-Type': 'application/json' };
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (idToken) headers['Authorization'] = `Bearer ${idToken}`;
 
-      const translate = async (text) => {
+      const translate = async (text: string) => {
         if (!text) return null;
         const res = await fetch(`${API_BASE}/api/translate`, {
           method: 'POST',
@@ -89,13 +91,13 @@ export default function JoinGroup() {
 
   useEffect(() => {
     let userDocUnsubscribe = () => { };
-    const authUnsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const authUnsubscribe = onAuthStateChanged(auth!, (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
         const userRef = doc(db, 'users', currentUser.uid);
         userDocUnsubscribe = onSnapshot(userRef, (docSnap) => {
           if (docSnap.exists()) {
-            setUserData(docSnap.data());
+            setUserData(docSnap.data() as UserData);
           }
         });
       }
@@ -120,9 +122,9 @@ export default function JoinGroup() {
           where('isPublic', '==', true)
         );
         const querySnapshot = await getDocs(q);
-        const groups = [];
+        const groups: Group[] = [];
         querySnapshot.forEach((doc) => {
-          groups.push({ id: doc.id, ...doc.data() });
+          groups.push({ id: doc.id, ...doc.data() } as Group);
         });
         setPublicGroups(groups);
       } catch (e) {
@@ -135,7 +137,7 @@ export default function JoinGroup() {
     return () => { authUnsubscribe(); userDocUnsubscribe(); };
   }, [API_BASE]);
 
-  const joinGroup = async (groupId, groupData) => {
+  const joinGroup = async (groupId: string, groupData: Group) => {
     if (!user) {
       setError(t('joinGroup.errorLoggedIn'));
       return;
@@ -158,7 +160,7 @@ export default function JoinGroup() {
       return;
     }
 
-    if (groupData.membersCount >= groupData.maxMembers) {
+    if (groupData.membersCount && groupData.maxMembers && groupData.membersCount >= groupData.maxMembers) {
       setError(t('joinGroup.errorFull'));
       return;
     }
@@ -187,12 +189,12 @@ export default function JoinGroup() {
     }
   };
 
-  const [memberNames, setMemberNames] = useState([]);
+  const [memberNames, setMemberNames] = useState<UserData[]>([]);
   const [loadingMembers, setLoadingMembers] = useState(false);
   const [groupNoteCount, setGroupNoteCount] = useState(0);
 
-  const handleJoinClick = async (groupId, groupData) => {
-    setSelectedGroup({ id: groupId, ...groupData });
+  const handleJoinClick = async (groupId: string, groupData: Group) => {
+    setSelectedGroup({ ...groupData, id: groupId });
     setShowConfirmModal(true);
     setMemberNames([]); // Reset
     setLoadingMembers(true);
@@ -206,14 +208,14 @@ export default function JoinGroup() {
           try {
             const uSnap = await getDoc(doc(db, 'users', uid));
             if (uSnap.exists()) {
-              return { uid, ...uSnap.data() };
+              return { uid, ...uSnap.data() } as UserData;
             }
           } catch {
             console.warn("Failed to fetch user", uid);
           }
           return null;
         }));
-        setMemberNames(names.filter(n => n));
+        setMemberNames(names.filter((n): n is UserData => n !== null));
       } catch (e) {
         console.error("Error fetching member names:", e);
       }
@@ -223,7 +225,7 @@ export default function JoinGroup() {
 
   useEffect(() => {
     if (selectedGroup && !translatedNames[selectedGroup.id] && !translatingIds.has(selectedGroup.id)) {
-      handleTranslateGroup(selectedGroup.id, selectedGroup.name, selectedGroup.description);
+      handleTranslateGroup(selectedGroup.id, selectedGroup.name || "", selectedGroup.description);
     }
   }, [selectedGroup, language, handleTranslateGroup, translatedNames, translatingIds]);
 
@@ -238,11 +240,9 @@ export default function JoinGroup() {
     }
   };
 
-  const handleOpenGroup = (groupId) => {
+  const handleOpenGroup = (groupId: string) => {
     navigate(`/${language}/dashboard`, { state: { initialGroupId: groupId, initialView: 2 } });
   };
-
-
 
   return (
     <div className="App">
@@ -269,7 +269,7 @@ export default function JoinGroup() {
                 <GroupCard
                   key={group.id}
                   group={group}
-                  currentUser={user}
+                  currentUser={user as any}
                   onJoin={() => handleJoinClick(group.id, group)}
                   onOpen={() => handleJoinClick(group.id, group)}
                 />
@@ -324,8 +324,8 @@ export default function JoinGroup() {
             {selectedGroup.createdAt && (
               <p style={{ fontSize: '0.8rem', color: '#a0aec0', marginBottom: '1rem' }}>
                 {t('joinGroup.createdAt')}: {(() => {
-                  let date;
-                  const c = selectedGroup.createdAt;
+                  let date: Date;
+                  const c = selectedGroup.createdAt as any;
                   if (c?.toDate) date = c.toDate();
                   else if (c?.seconds) date = new Date(c.seconds * 1000);
                   else if (c?._seconds) date = new Date(c._seconds * 1000);
@@ -366,11 +366,7 @@ export default function JoinGroup() {
                           borderRadius: '9999px',
                           fontSize: '0.8rem',
                           cursor: 'pointer',
-                          transition: 'background-color 0.2s',
-                          border: '1px solid transparent'
                         }}
-                        onMouseOver={(e) => e.target.style.borderColor = '#cbd5e0'}
-                        onMouseOut={(e) => e.target.style.borderColor = 'transparent'}
                       >
                         {userObj.nickname || 'Unknown'}
                       </span>

@@ -1,9 +1,30 @@
-import React from 'react';
+import { FC, MouseEvent } from 'react';
 import ReactMarkdown from 'react-markdown';
 import NoteDisplay from '../NoteDisplay/NoteDisplay';
 import { getGospelLibraryUrl } from '../../Utils/gospelLibraryMapper';
+import { Message, Group, UserProfile, MembersMap } from '../../types/chat';
 
-const MessageItem = ({
+interface MessageItemProps {
+  msg: Message;
+  userData: UserProfile | null;
+  t: (key: string, replacements?: any) => string;
+  handleMessageClick: (msg: Message, e: MouseEvent) => void;
+  handleEditMessage: (msg: Message) => void;
+  handleDeleteMessageClick: (msg: Message) => void;
+  handleReply: (msg: Message) => void;
+  handleTranslateMessage: (msg: Message) => Promise<void>;
+  translatingIds: Set<string>;
+  handleToggleReaction: (msg: Message) => Promise<void>;
+  handleReportClick: (msg: Message) => void;
+  handleUserProfileClick: (userId: string | null) => Promise<void>;
+  groupData: Group | null;
+  translatedTexts: Record<string, string>;
+  language: string;
+  handleShowReactions: (reactions: any[]) => void;
+  membersMap: MembersMap;
+}
+
+const MessageItem: FC<MessageItemProps> = ({
   msg,
   userData,
   t,
@@ -34,6 +55,7 @@ const MessageItem = ({
             )}
             <ReactMarkdown>
               {(() => {
+                const text = msg.text || '';
                 // New format: has messageType and messageData
                 if (msg.messageType === 'streakAnnouncement' && msg.messageData) {
                   return t('groupChat.streakAnnouncement', {
@@ -61,7 +83,7 @@ const MessageItem = ({
                 if (msg.messageType === 'weeklyRecap') {
                   // Just return text, maybe bold the title if we want, but markdown handles it.
                   // The text comes with "Weekly Reflection: ..." or similar
-                  return msg.text;
+                  return text;
                 }
 
                 // Legacy format: parse from text
@@ -80,7 +102,7 @@ const MessageItem = ({
                 ];
 
                 for (const pattern of streakPatterns) {
-                  const match = msg.text?.match(pattern);
+                  const match = text.match(pattern);
                   if (match) {
                     const nickname = match[1];
                     const streak = match[2];
@@ -96,14 +118,14 @@ const MessageItem = ({
                   /\*\*(.+?)\*\* 加入了群組/,            // Chinese
                   /\*\*(.+?)\*\* se unió al grupo/,      // Spanish
                   /\*\*(.+?)\*\* đã tham gia nhóm/,      // Vietnamese
-                  /\*\*(.+?)\*\* เข้าร่วมกลุ่มแล้ว/,         // Thai
+                  /\*\*(.+?)\*\* เข้าร่วมグループแล้ว/,         // Thai
                   /\*\*(.+?)\*\*님이 그룹에 참여/,        // Korean
                   /\*\*(.+?)\*\* sumali sa grupo/,       // Tagalog
                   /\*\*(.+?)\*\* amejiunga na kikundi/,  // Swahili
                 ];
 
                 for (const pattern of joinPatterns) {
-                  const match = msg.text?.match(pattern);
+                  const match = text.match(pattern);
                   if (match) {
                     return t('groupChat.userJoined', { nickname: match[1] });
                   }
@@ -124,7 +146,7 @@ const MessageItem = ({
                 ];
 
                 for (const pattern of leavePatterns) {
-                  const match = msg.text?.match(pattern);
+                  const match = text.match(pattern);
                   if (match) {
                     return t('groupChat.userLeft', { nickname: match[1] });
                   }
@@ -132,13 +154,13 @@ const MessageItem = ({
 
                 // Inactivity Removal Pattern
                 const inactivityPattern = /👋 \*\*(\d+) member\(s\)\*\* were removed due to inactivity \(3\+ days\)\./;
-                const inactivityMatch = msg.text?.match(inactivityPattern);
+                const inactivityMatch = text.match(inactivityPattern);
                 if (inactivityMatch) {
                   return t('groupChat.inactivityRemoval', { count: inactivityMatch[1] });
                 }
 
                 // No match found, return original text
-                return msg.text;
+                return text;
               })()}
             </ReactMarkdown>
           </div>
@@ -148,12 +170,12 @@ const MessageItem = ({
           {msg.senderId !== userData?.uid && (
             <div
               className="message-avatar"
-              onClick={(e) => { e.stopPropagation(); handleUserProfileClick(msg.senderId); }}
+              onClick={(e) => { e.stopPropagation(); if (msg.senderId) handleUserProfileClick(msg.senderId); }}
               style={{ cursor: 'pointer', overflow: 'hidden' }}
             >
-              {(msg.senderPhotoURL || membersMap?.[msg.senderId]?.photoURL) ? (
+              {(msg.senderPhotoURL || (msg.senderId && membersMap?.[msg.senderId]?.photoURL)) ? (
                 <img
-                  src={msg.senderPhotoURL || membersMap?.[msg.senderId]?.photoURL}
+                  src={msg.senderPhotoURL || (msg.senderId ? membersMap?.[msg.senderId]?.photoURL : undefined)}
                   alt=""
                   className="profile-avatar-img"
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
@@ -168,7 +190,7 @@ const MessageItem = ({
             onClick={(e) => {
               if (msg.isOptimistic) return;
               // Ignore clicks on links so they can navigate normally
-              if (e.target.tagName !== 'A') {
+              if ((e.target as HTMLElement).tagName !== 'A') {
                 e.stopPropagation();
                 handleMessageClick(msg, e);
               }
@@ -243,7 +265,7 @@ const MessageItem = ({
             </div>
             <span
               className="sender-name"
-              onClick={(e) => { e.stopPropagation(); handleUserProfileClick(msg.senderId); }}
+              onClick={(e) => { e.stopPropagation(); if (msg.senderId) handleUserProfileClick(msg.senderId); }}
               style={{ cursor: 'pointer' }}
             >
               {msg.senderNickname}{msg.isEdited && <span className="edited-indicator"> ({t('groupChat.messageEdited')})</span>}
@@ -252,12 +274,13 @@ const MessageItem = ({
               {msg.senderId === userData?.uid && (
                 <div className="message-status-column" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '2px' }}>
                   {(() => {
-                    if (!groupData?.memberLastReadAt || !msg.createdAt) return null;
+                    const memberLastReadAt = groupData?.memberLastReadAt;
+                    if (!memberLastReadAt || !msg.createdAt) return null;
                     const msgTime = msg.createdAt.toMillis ? msg.createdAt.toMillis() : (msg.createdAt.seconds * 1000);
                     let readCount = 0;
-                    Object.keys(groupData.memberLastReadAt).forEach(uid => {
+                    Object.keys(memberLastReadAt).forEach(uid => {
                       if (uid === msg.senderId) return;
-                      const readAt = groupData.memberLastReadAt[uid];
+                      const readAt = memberLastReadAt[uid];
                       if (!readAt) return;
                       const readTime = readAt.toMillis ? readAt.toMillis() : (readAt.seconds * 1000);
                       if (readTime >= msgTime) readCount++;
@@ -275,15 +298,15 @@ const MessageItem = ({
                 </div>
               )}
               <div className="message-bubble-column" style={{ display: 'flex', flexDirection: 'column', maxWidth: '100%', alignItems: msg.senderId === userData?.uid ? 'flex-end' : 'flex-start' }}>
-                {msg.replyTo && (
+                {msg.replyTo && typeof msg.replyTo === 'object' && (
                   <div className="reply-context-label">
                     <span className="reply-context-prefix">{t('groupChat.replyTo')} </span>
-                    <span className="reply-context-name">{msg.replyTo.senderNickname}</span>
+                    <span className="reply-context-name">{(msg.replyTo as any).senderNickname}</span>
                     <span className="reply-context-separator">: </span>
                     <span className="reply-context-text">
-                      {msg.replyTo.isNote || msg.replyTo.text?.startsWith('📖 **New Study') || msg.replyTo.text?.startsWith('**New Study')
+                      {(msg.replyTo as any).isNote || (msg.replyTo as any).text?.startsWith('📖 **New Study') || (msg.replyTo as any).text?.startsWith('**New Study')
                         ? t('groupChat.studyNote')
-                        : msg.replyTo.text
+                        : (msg.replyTo as any).text
                       }
                     </span>
                   </div>
@@ -381,7 +404,7 @@ const MessageItem = ({
                 className={`message-reactions ${msg.senderId === userData?.uid ? 'sent' : 'received'}`}
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleShowReactions(msg.reactions);
+                  if (msg.reactions) handleShowReactions(msg.reactions);
                 }}
               >
                 <span className="reaction-emoji">👍</span>

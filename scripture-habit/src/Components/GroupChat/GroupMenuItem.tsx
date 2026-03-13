@@ -1,8 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, FC } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db, auth } from '../../firebase';
+import { Group } from '../../types/chat';
 
-const GroupMenuItem = ({ group, currentGroupId, language, onSelect, timeZone = 'UTC' }) => {
+interface GroupMenuItemProps {
+    group: Group;
+    currentGroupId: string | null;
+    language: string;
+    onSelect: () => void;
+    timeZone?: string;
+}
+
+const GroupMenuItem: FC<GroupMenuItemProps> = ({ group, currentGroupId, language, onSelect, timeZone = 'UTC' }) => {
     const [translatedName, setTranslatedName] = useState('');
     const translationAttemptedRef = useRef(false);
 
@@ -12,7 +21,7 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, timeZone = '
     useEffect(() => {
         // 1. Check Firestore
         if (group.translations && group.translations[language] && group.translations[language].name) {
-            setTranslatedName(group.translations[language].name);
+            setTranslatedName(group.translations[language].name || "");
             return;
         }
 
@@ -34,7 +43,8 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, timeZone = '
             translationAttemptedRef.current = true;
 
             try {
-                const idToken = await auth.currentUser?.getIdToken();
+                const user = auth?.currentUser;
+                const idToken = await user?.getIdToken();
                 const API_BASE = window.location.hostname === 'localhost' ? '' : 'https://scripturehabit.app';
 
                 const response = await fetch(`${API_BASE}/api/translate`, {
@@ -74,7 +84,7 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, timeZone = '
         autoTranslate();
     }, [group.id, group.name, group.translations, language]);
 
-    const getEmoji = (g) => {
+    const getEmoji = (g: Group) => {
         if (!g || !g.members || g.members.length === 0) return '🌑';
 
         const todayStr = new Date().toLocaleDateString('en-CA', { timeZone });
@@ -82,7 +92,7 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, timeZone = '
         today.setHours(0, 0, 0, 0);
         const todayTime = today.getTime();
 
-        const uniquePosters = new Set();
+        const uniquePosters = new Set<string>();
 
         // SOURCE 1: dailyActivity
         if (g.dailyActivity?.activeMembers && (g.dailyActivity.date === todayStr || g.dailyActivity.date === new Date().toDateString())) {
@@ -91,7 +101,7 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, timeZone = '
 
         // SOURCE 2: memberLastActive
         if (g.memberLastActive) {
-            Object.entries(g.memberLastActive).forEach(([uid, ts]) => {
+            Object.entries(g.memberLastActive).forEach(([uid, ts]: [string, any]) => {
                 let activeTime = 0;
                 if (ts?.toDate) activeTime = ts.toDate().getTime();
                 else if (ts?.seconds) activeTime = ts.seconds * 1000;
@@ -109,6 +119,7 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, timeZone = '
 
     const isActive = group.id === currentGroupId;
     const displayName = translatedName || group.name;
+    const unreadCount = group.unreadCount || 0;
 
     return (
         <div
@@ -122,7 +133,7 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, timeZone = '
             <span className="menu-item-label" style={isActive ? { fontWeight: 'bold' } : {}}>
                 {displayName} {group.members && <span style={{ fontSize: '0.85em', color: isActive ? 'var(--pink)' : 'var(--gray)', opacity: 0.8, fontWeight: 'normal', marginLeft: '4px' }}>({group.members.length})</span>}
             </span>
-            {group.unreadCount > 0 && (
+            {unreadCount > 0 && (
                 <span style={{
                     background: 'var(--pink)',
                     color: 'white',
@@ -134,7 +145,7 @@ const GroupMenuItem = ({ group, currentGroupId, language, onSelect, timeZone = '
                     minWidth: '20px',
                     textAlign: 'center'
                 }}>
-                    {group.unreadCount > 99 ? '99+' : group.unreadCount}
+                    {unreadCount > 99 ? '99+' : unreadCount}
                 </span>
             )}
         </div>

@@ -4,12 +4,14 @@ import {
     UilUsersAlt,
     UilUser,
 } from "@iconscout/react-unicons";
+import React from 'react';
 
-import scripture1 from '../assets/images/scrip1.jpg'
-import scripture2 from '../assets/images/scrip2.jpg'
-import scripture3 from '../assets/images/scrip3.jpg'
+export interface SidebarItem {
+    icon: React.ElementType;
+    heading: string;
+}
 
-export const SidebarData = [
+export const SidebarData: SidebarItem[] = [
     {
         icon: UilEstate,
         heading: "Dashboard",
@@ -28,19 +30,12 @@ export const SidebarData = [
     },
 ]
 
-export const ScripturesGallery = [
-    {
-        src: scripture1, title: 'My Study 1', description: 'Greice Study'
-    },
-    {
-        src: scripture2, title: 'My Study 2', description: 'Greice Study'
-    },
-    {
-        src: scripture3, title: 'My Study 3', description: 'Greice Study'
-    },
-]
+export interface ScriptureOption {
+    value: string;
+    label: string;
+}
 
-export const ScripturesOptions = [
+export const ScripturesOptions: ScriptureOption[] = [
     {
         value: "Old Testament",
         label: "Old Testament"

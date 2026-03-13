@@ -1,7 +1,9 @@
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getAuth } from "firebase/auth";
-import { getMessaging, isSupported } from "firebase/messaging";
+import { initializeApp, FirebaseApp } from "firebase/app";
+import { getAnalytics, Analytics } from "firebase/analytics";
+import { getAuth, Auth } from "firebase/auth";
+import { getMessaging, Messaging, isSupported } from "firebase/messaging";
+import { getStorage, FirebaseStorage } from "firebase/storage";
+import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager, Firestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -13,54 +15,47 @@ const firebaseConfig = {
   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
-import { initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
+const app: FirebaseApp = initializeApp(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
-
-/** @type {import("firebase/analytics").Analytics | null} */
-let analytics = null;
+let analytics: Analytics | null = null;
 try {
   analytics = getAnalytics(app);
 } catch {
   console.log("Firebase Analytics not supported in this environment");
 }
 
-/** @type {import("firebase/auth").Auth | null} */
-let auth = null;
+let auth: Auth | null = null;
 try {
   auth = getAuth(app);
 } catch {
   console.log("Firebase Auth failed to initialize");
 }
 
-/** @type {import("firebase/messaging").Messaging | null} */
-let messaging = null;
+let messaging: Messaging | null = null;
 if (typeof window !== 'undefined') {
   isSupported()
     .then((supported) => {
       if (supported) {
         try {
           messaging = getMessaging(app);
-        } catch (e) {
+        } catch (e: any) {
           console.log("getMessaging failed:", e.message);
         }
       }
     })
-    .catch((err) => {
+    .catch((err: any) => {
       console.log("Firebase Messaging check failed:", err.message);
     });
 }
 
-import { getStorage } from "firebase/storage";
-
 // Initialize Firestore with persistent cache (modern way)
-const db = initializeFirestore(app, {
+const db: Firestore = initializeFirestore(app, {
   localCache: persistentLocalCache({
     tabManager: persistentMultipleTabManager()
   })
 });
 
-const storage = getStorage(app);
+const storage: FirebaseStorage = getStorage(app);
 
 export { app, analytics, auth, db, messaging, storage };
 

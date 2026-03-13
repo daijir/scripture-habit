@@ -1,27 +1,37 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, FC } from 'react';
 import * as Sentry from "@sentry/react";
 import axios from 'axios';
 import { Capacitor } from '@capacitor/core';
-import { db } from '../../firebase';
-import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc, updateDoc, increment, addDoc, serverTimestamp, limit, startAfter } from 'firebase/firestore';
+import { db, auth } from '../../firebase';
+import { collection, query, where, orderBy, onSnapshot, doc, deleteDoc, updateDoc, increment, addDoc, serverTimestamp, limit, startAfter, DocumentSnapshot } from 'firebase/firestore';
 import { UilBookOpen, UilSearchAlt, UilAnalysis, UilEnvelope, UilAngleLeft, UilAngleRight } from '@iconscout/react-unicons';
 import NewNote from '../NewNote/NewNote';
 import NoteCard from '../NoteCard/NoteCard';
-import RecapModal from '../RecapModal/RecapModal'; // Import RecapModal
-import LetterBox from '../LetterBox/LetterBox'; // Import LetterBox
+import RecapModal from '../RecapModal/RecapModal';
+import LetterBox from '../LetterBox/LetterBox';
 import { toast } from 'react-toastify';
 import './MyNotes.css';
-import { useLanguage } from '../../Context/LanguageContext.jsx';
+import { useLanguage } from '../../Context/LanguageContext';
 import NoteDetailModal from './NoteDetailModal';
 import Mascot from '../Mascot/Mascot';
 import { NoteGridSkeleton } from '../Skeleton/Skeleton';
 import Footer from '../Footer/Footer';
+import { UserData } from '../../types/user';
+import { Group } from '../../types/chat';
+import { Note } from '../../types/note';
 
-const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
+interface MyNotesProps {
+  userData: UserData;
+  isModalOpen: boolean;
+  setIsModalOpen: (isOpen: boolean) => void;
+  userGroups: Group[];
+}
+
+const MyNotes: FC<MyNotesProps> = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
   const { language, t } = useLanguage();
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedNote, setSelectedNote] = useState(null);
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -31,11 +41,11 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
   const NOTES_PER_PAGE = 7;
 
   const [recapLoading, setRecapLoading] = useState(false);
-  const [newNoteInitialData, setNewNoteInitialData] = useState(null);
+  const [newNoteInitialData, setNewNoteInitialData] = useState<any>(null);
 
   // Pagination State for Server-Side
-  const [lastDocsStack, setLastDocsStack] = useState([]); // Stack of document snapshots for cursors
-  const [latestSnapshotDocs, setLatestSnapshotDocs] = useState([]); // Snapshots of current view
+  const [lastDocsStack, setLastDocsStack] = useState<DocumentSnapshot[]>([]); // Stack of document snapshots for cursors
+  const [latestSnapshotDocs, setLatestSnapshotDocs] = useState<DocumentSnapshot[]>([]); // Snapshots of current view
   const [isLastPage, setIsLastPage] = useState(false);
 
   // New state for RecapModal
@@ -46,7 +56,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
   const [isLetterBoxOpen, setIsLetterBoxOpen] = useState(false);
 
   // State to hold real-time user data
-  const [currentUserData, setCurrentUserData] = useState(userData);
+  const [currentUserData, setCurrentUserData] = useState<UserData>(userData);
 
   useEffect(() => {
     if (!userData || !userData.uid) return;
@@ -55,7 +65,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
     const userDocRef = doc(db, 'users', userData.uid);
     const unsubscribeUser = onSnapshot(userDocRef, (docSnap) => {
       if (docSnap.exists()) {
-        setCurrentUserData({ ...userData, ...docSnap.data() });
+        setCurrentUserData({ ...userData, ...docSnap.data() as UserData });
       }
     }, (err) => {
       console.error("Error listening to user doc in MyNotes:", err);
@@ -79,7 +89,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
       );
     } else {
       // BROWSE MODE: Server-side pagination (Optimized for reads)
-      const constraints = [orderBy('createdAt', 'desc')];
+      const constraints: any[] = [orderBy('createdAt', 'desc')];
 
       // Apply Category Filter in DB (requires index)
       if (selectedCategory !== 'All') {
@@ -101,9 +111,10 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
     }
 
     const unsubscribeNotes = onSnapshot(q, (querySnapshot) => {
-      const fetchedNotes = [];
-      querySnapshot.forEach((doc) => {
-        fetchedNotes.push({ id: doc.id, ...doc.data() });
+      const fetchedNotes: Note[] = [];
+      querySnapshot.forEach((docSnap) => {
+        const data = docSnap.data() as Note;
+        fetchedNotes.push({ ...data, id: docSnap.id });
       });
 
       setLatestSnapshotDocs(querySnapshot.docs);
@@ -118,7 +129,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
       }
 
       setLoading(false);
-    }, (error) => {
+    }, (error: any) => {
       console.error("Error fetching notes:", error);
       const isQuota = error.code === 'resource-exhausted' || error.message.toLowerCase().includes('quota exceeded');
       const isIndexError = error.code === 'failed-precondition'; // Missing index
@@ -141,7 +152,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
     };
   }, [userData, currentPage, selectedCategory, searchTerm, lastDocsStack, t]); // Depend on cursor stack indirectly via currentPage, but stack needed for construction
 
-  const handleNoteClick = (note) => {
+  const handleNoteClick = (note: Note) => {
     setSelectedNote(note);
     setNewNoteInitialData(null);
     setIsDetailModalOpen(true);
@@ -152,7 +163,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
     if (currentUserData?.lastRecapGeneratedAt) {
       const lastGenerated = currentUserData.lastRecapGeneratedAt.toDate();
       const now = new Date();
-      const diffTime = Math.abs(now - lastGenerated);
+      const diffTime = Math.abs(now.getTime() - lastGenerated.getTime());
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
       if (diffDays < 6) {
@@ -169,9 +180,17 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
         ? 'https://scripturehabit.app/api/generate-personal-weekly-recap'
         : '/api/generate-personal-weekly-recap';
 
+      if (!auth?.currentUser) {
+        toast.error(t('systemErrors.notLoggedIn') || 'Not logged in');
+        return;
+      }
+      const idToken = await auth.currentUser.getIdToken();
+
       const response = await axios.post(apiUrl, {
         uid: userData.uid,
         language: language
+      }, {
+        headers: { Authorization: `Bearer ${idToken}` }
       });
 
       if (response.data.recap) {
@@ -181,7 +200,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
       } else {
         toast.info(response.data.message || t('myNotes.noNotesForRecap'));
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error generating recap:", error);
       toast.error(t('myNotes.recapError'));
     } finally {
@@ -219,7 +238,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
       setIsRecapModalOpen(false);
       toast.success(t('newNote.successPost') || "Saved to Letter Box!");
       setIsLetterBoxOpen(true); // Open the box to show the new item
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving to letter box:", error);
       toast.error(t('myNotes.letterSaveError') || "Failed to save letter.");
     }
@@ -242,7 +261,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
               messageCount: increment(-1),
               noteCount: increment(-1) // Decrement note count since shared notes are always notes
             });
-          } catch (err) {
+          } catch (err: any) {
             console.log(`Could not delete message ${messageId} from group ${groupId}:`, err);
           }
         }
@@ -261,7 +280,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
       setIsDeleteModalOpen(false);
       setIsEditModalOpen(false);
       setSelectedNote(null);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error deleting note:", error);
       toast.error(t('myNotes.noteDeletedError') || "Failed to delete note");
     }
@@ -330,7 +349,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
     }
   };
 
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
     const container = document.querySelector('.MyNotes');
     if (container) {
@@ -345,7 +364,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
   if (currentUserData?.lastRecapGeneratedAt) {
     const lastGenerated = currentUserData.lastRecapGeneratedAt.toDate();
     const now = new Date();
-    const diffTime = Math.abs(now - lastGenerated);
+    const diffTime = Math.abs(now.getTime() - lastGenerated.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     if (diffDays < 6) {
@@ -368,7 +387,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
 
       <Mascot
         userData={userData}
-        customMessage={t('mascot.weeklyRecapPrompt')}
+        customMessage={t('mascot.weeklyRecapPrompt') || ''}
         reversed={true}
       />
       <div className="my-notes-action-center">
@@ -417,7 +436,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
           <input
             type="text"
             className="search-input"
-            placeholder={t('myNotes.searchPlaceholder')}
+            placeholder={t('myNotes.searchPlaceholder') || ''}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -430,7 +449,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
             {t('dashboard.seeAll')}
           </button>
           {['Old Testament', 'New Testament', 'Book of Mormon', 'Doctrine and Covenants', 'Pearl of Great Price', 'Ordinances and Proclamations', 'General Conference', 'BYU Speeches', 'Other'].map(key => {
-            const translationKeyMap = {
+            const translationKeyMap: Record<string, string> = {
               'Old Testament': 'scriptures.oldTestament',
               'New Testament': 'scriptures.newTestament',
               'Book of Mormon': 'scriptures.bookOfMormon',
@@ -597,7 +616,7 @@ const MyNotes = ({ userData, isModalOpen, setIsModalOpen, userGroups }) => {
           setNewNoteInitialData(null);
         }}
         userData={userData}
-        noteToEdit={selectedNote}
+        noteToEdit={selectedNote || undefined}
         initialData={newNoteInitialData}
         onDelete={() => setIsDeleteModalOpen(true)}
       />

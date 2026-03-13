@@ -1,14 +1,19 @@
-import React from 'react';
+import { FC } from 'react';
 import { useLanguage } from '../../Context/LanguageContext';
 import { UilArrowLeft } from '@iconscout/react-unicons';
 import { useNavigate } from 'react-router-dom';
 import './LegalDisclosure.css';
 
-const LegalDisclosure = () => {
+interface LegalInfoItem {
+    label: string;
+    value: string;
+}
+
+const LegalDisclosure: FC = () => {
     const { t } = useLanguage();
     const navigate = useNavigate();
 
-    const legalInfo = [
+    const legalInfo: LegalInfoItem[] = [
         { label: t('legalDisclosure.provider'), value: 'Scripture Habit' },
         { label: t('legalDisclosure.representative'), value: '相根 大治郎' },
         { label: t('legalDisclosure.address'), value: t('legalDisclosure.requestDisclosure') },
@@ -20,7 +25,7 @@ const LegalDisclosure = () => {
     return (
         <div className="LegalDisclosure">
             <div className="legal-header">
-                <button className="back-btn" onClick={() => navigate(-1)}>
+                <button className="back-btn" onClick={() => navigate(-1)} aria-label="Go back">
                     <UilArrowLeft size="24" />
                 </button>
                 <h1>{t('legalDisclosure.title')}</h1>

@@ -1,12 +1,19 @@
-import React from 'react';
+import { FC, useState } from 'react';
 import './UserProfileModal.css';
 import { UilTimes, UilFire, UilFileAlt } from '@iconscout/react-unicons';
 import { useLanguage } from '../../Context/LanguageContext';
+import { UserData } from '../../types/user';
+import { UserProfile } from '../../types/chat';
 
-const UserProfileModal = ({ user, onClose }) => {
+interface UserProfileModalProps {
+    user: UserData | UserProfile | null;
+    onClose: () => void;
+}
+
+const UserProfileModal: FC<UserProfileModalProps> = ({ user, onClose }) => {
     const { t } = useLanguage();
 
-    const [showFullImage, setShowFullImage] = React.useState(false);
+    const [showFullImage, setShowFullImage] = useState(false);
 
     if (!user) return null;
 

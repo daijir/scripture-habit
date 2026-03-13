@@ -1,21 +1,30 @@
 import { useState, useEffect } from 'react';
 import { safeStorage } from '../Utils/storage';
+import type { Language } from '../Context/LanguageContext';
+
+export interface GCMetadata {
+    title: string;
+    speaker: string;
+}
+
+interface useGCMetadataResult {
+    data: GCMetadata | null;
+    loading: boolean;
+    error: Error | null;
+}
 
 // Cache in memory as well to avoid reading localStorage constantly for the same session
-const memoryCache = {};
+const memoryCache: Record<string, GCMetadata> = {};
 
-export const useGCMetadata = (urlOrSlug, language) => {
-    const [data, setData] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+export const useGCMetadata = (urlOrSlug: string | null | undefined, language: Language | string): useGCMetadataResult => {
+    const [data, setData] = useState<GCMetadata | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
         if (!urlOrSlug || !language) return;
 
         // Determine if it is a fetchable GC item
-        // It must look like a URL or a specific slug structure
-        // If it's just "Alma 7", we don't fetch.
-        // We look for "churchofjesuschrist.org" or "general-conference"
         const isUrlStr = urlOrSlug.startsWith('http');
         const isChurchUrl = urlOrSlug.includes('churchofjesuschrist.org') || urlOrSlug.includes('general-conference');
 
@@ -36,7 +45,7 @@ export const useGCMetadata = (urlOrSlug, language) => {
         const localCached = safeStorage.get(cacheKey);
         if (localCached) {
             try {
-                const parsed = JSON.parse(localCached);
+                const parsed = JSON.parse(localCached) as GCMetadata;
                 memoryCache[cacheKey] = parsed;
                 setData(parsed);
                 return;
@@ -52,17 +61,13 @@ export const useGCMetadata = (urlOrSlug, language) => {
                 // Determine the URL to fetch
                 let fetchUrl = urlOrSlug;
 
-                // If it's a partial path (e.g. /study/general-conference...), prepend domain?
-                // The API expects a full URL usually, or we can handle it.
-                // If the user pasted a relative path, we might need to fix it.
                 if (!fetchUrl.startsWith('http')) {
                     fetchUrl = `https://www.churchofjesuschrist.org${fetchUrl.startsWith('/') ? '' : '/'}${fetchUrl}`;
                 }
 
                 const API_BASE = window.location.hostname === 'localhost' ? '' : 'https://scripturehabit.app';
-                // Logic for mapping languages to Church website language codes
-
-                const langMap = {
+                
+                const langMap: Record<string, string> = {
                     'en': 'eng',
                     'ja': 'jpn',
                     'pt': 'por',
@@ -75,9 +80,7 @@ export const useGCMetadata = (urlOrSlug, language) => {
                     'sw': 'swa'
                 };
 
-                // Override target lang if mapped
                 const apiLang = langMap[language] || 'eng';
-                // For Chinese, Church often uses ?lang=zho for Traditional.
 
                 const endpoint = isChurchUrl ? '/api/fetch-gc-metadata' : '/api/url-preview';
                 const finalApiUrl = `${API_BASE}${endpoint}?url=${encodeURIComponent(fetchUrl)}&lang=${apiLang}`;
@@ -90,7 +93,7 @@ export const useGCMetadata = (urlOrSlug, language) => {
                 const result = await response.json();
 
                 // Update Cache
-                const meta = {
+                const meta: GCMetadata = {
                     title: result.title || '',
                     speaker: result.speaker || ''
                 };
@@ -99,9 +102,9 @@ export const useGCMetadata = (urlOrSlug, language) => {
                 memoryCache[cacheKey] = meta;
 
                 setData(meta);
-            } catch (err) {
+            } catch (err: any) {
                 console.error("Error fetching metadata:", err);
-                setError(err);
+                setError(err instanceof Error ? err : new Error(String(err)));
             } finally {
                 setLoading(false);
             }
