@@ -91,14 +91,20 @@ async function sendPushNotification(tokens, payload) {
 /**
  * Utility to notify all members of a group except the sender
  */
-async function notifyGroupMembers(groupId, senderUid, payload) {
+async function notifyGroupMembers(groupId, senderUid, payload, memberIdsOverride = null) {
   try {
-    const groupDoc = await db.collection('groups').doc(groupId).get();
-    if (!groupDoc.exists) return;
+    let membersToNotify;
 
-    const groupData = groupDoc.data();
-    const members = groupData.members || [];
-    const membersToNotify = members.filter(uid => uid !== senderUid);
+    if (memberIdsOverride) {
+      membersToNotify = memberIdsOverride.filter(uid => uid !== senderUid);
+    } else {
+      const groupDoc = await db.collection('groups').doc(groupId).get();
+      if (!groupDoc.exists) return;
+
+      const groupData = groupDoc.data();
+      const members = groupData.members || [];
+      membersToNotify = members.filter(uid => uid !== senderUid);
+    }
 
     const tokens = [];
     for (const memberUid of membersToNotify) {
@@ -1139,10 +1145,19 @@ app.post('/post-note', async (req, res) => {
       // 5. Post to groups and update metadata
       console.log(`Processing ${groupsToPostTo.length} group posts`);
 
+      const userToGroupMap = new Map();
+
       groupDocs.forEach((groupDoc, idx) => {
         if (!groupDoc.exists) return;
         const gid = groupDoc.id;
         const gData = groupDoc.data();
+        
+        const members = gData.members || [];
+        members.forEach(memberUid => {
+          if (memberUid !== uid && !userToGroupMap.has(memberUid)) {
+            userToGroupMap.set(memberUid, gid);
+          }
+        });
         const msgRef = db.collection('groups').doc(gid).collection('messages').doc();
         sharedMessageIds[gid] = msgRef.id;
 
@@ -1223,7 +1238,7 @@ app.post('/post-note', async (req, res) => {
         });
       }
 
-      return { personalNoteId: personalNoteRef.id, newStreak, streakUpdated };
+      return { personalNoteId: personalNoteRef.id, newStreak, streakUpdated, userToGroupMapEntries: Array.from(userToGroupMap.entries()) };
     });
 
     console.log('Post note successful');
@@ -1263,7 +1278,17 @@ app.post('/post-note', async (req, res) => {
         const nickname = userData.nickname || (lang === 'ja' ? 'メンバー' : 'Member');
         const body = bodyTemplate.replace('{nickname}', nickname);
 
-        for (const gid of groupsToPostTo) {
+        // Group the unique users by the group ID we assigned them
+        const groupsToNotifyMap = new Map();
+        for (const [memberUid, gid] of result.userToGroupMapEntries) {
+          if (!groupsToNotifyMap.has(gid)) {
+            groupsToNotifyMap.set(gid, []);
+          }
+          groupsToNotifyMap.get(gid).push(memberUid);
+        }
+
+        // Send notifications per group
+        for (const [gid, membersList] of groupsToNotifyMap.entries()) {
           await notifyGroupMembers(gid, uid, {
             title,
             body,
@@ -1271,7 +1296,7 @@ app.post('/post-note', async (req, res) => {
               type: 'note',
               groupId: gid
             }
-          });
+          }, membersList);
         }
       } catch (e) {
         console.error('Error sending push notifications for note:', e);

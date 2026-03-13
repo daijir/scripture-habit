@@ -983,6 +983,19 @@ app.post('/api/post-note', async (req, res) => {
             // 4. NOW START WRITES
             transaction.update(userRef, userUpdate);
 
+            // Create member to group mapping for notifications (deduplication)
+            const userToGroupMap = new Map();
+            groupDocs.forEach(groupDoc => {
+                if (!groupDoc.exists) return;
+                const gid = groupDoc.id;
+                const members = groupDoc.data().members || [];
+                members.forEach(memberUid => {
+                    if (memberUid !== uid && !userToGroupMap.has(memberUid)) {
+                        userToGroupMap.set(memberUid, gid);
+                    }
+                });
+            });
+
             // 3. Create Personal Note
             const personalNoteRef = userRef.collection('notes').doc();
             const noteTimestamp = admin.firestore.Timestamp.now();
@@ -1072,7 +1085,7 @@ app.post('/api/post-note', async (req, res) => {
                 });
             }
 
-            return { personalNoteId: personalNoteRef.id, newStreak, streakUpdated };
+            return { personalNoteId: personalNoteRef.id, newStreak, streakUpdated, userToGroupMapEntries: Array.from(userToGroupMap.entries()) };
         });
 
         // Send push notifications after successful transaction
@@ -1114,17 +1127,30 @@ app.post('/api/post-note', async (req, res) => {
                 .replace('{scripture}', scripture)
                 .replace('{chapter}', chapter);
 
-            // Send to all relevant groups in parallel
-            await Promise.all(groupsToPostTo.map(gid =>
-                notifyGroupMembers(gid, uid, {
-                    title,
-                    body,
-                    data: {
-                        type: 'note',
-                        groupId: gid
+            // Group the unique users by the group ID we assigned them
+            const groupsToNotifyMap = new Map();
+            if (result.userToGroupMapEntries) {
+                for (const [memberUid, gid] of result.userToGroupMapEntries) {
+                    if (!groupsToNotifyMap.has(gid)) {
+                        groupsToNotifyMap.set(gid, []);
                     }
-                })
-            ));
+                    groupsToNotifyMap.get(gid).push(memberUid);
+                }
+            }
+
+            // Send notifications per group
+            await Promise.all(
+                Array.from(groupsToNotifyMap.entries()).map(([gid, membersList]) => 
+                    notifyGroupMembers(gid, uid, {
+                        title,
+                        body,
+                        data: {
+                            type: 'note',
+                            groupId: gid
+                        }
+                    }, membersList)
+                )
+            );
         } catch (notifyErr) {
             console.error('Error sending push notifications for note:', notifyErr);
         }
