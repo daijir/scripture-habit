@@ -141,8 +141,8 @@ const GroupChat = ({ groupId, userData, userGroups = [], isActive = false, onInp
 
       // 1. Check Firestore first
       const savedTrans = groupData.translations?.[language];
-      let nameToSet = savedTrans?.name;
-      let descToSet = savedTrans?.description;
+      const nameToSet = savedTrans?.name;
+      const descToSet = savedTrans?.description;
 
       // If we have both (or appropriate partials), set and done.
       // Note: If description is empty string in original, we don't need translation for it.

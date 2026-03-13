@@ -154,18 +154,18 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
     // 2. Parse Structured Note
     const contentBody = headerMatch ? removeNoteHeader(text) : text;
     // Split by newlines initially
-    let initialLines = contentBody.split('\n');
-    let lines = [];
+    const initialLines = contentBody.split('\n');
+    const lines = [];
 
     // Further split lines if they contain multiple labels on the same line
     const labelMarkers = ['カテゴリ:', 'カテゴリ：', '章:', '章：', 'Title:', 'Title：', 'Url:', 'Url：', 'Comment:', 'Comment：', 'コメント:', 'コメント：'];
 
     initialLines.forEach(line => {
-        let currentLine = line;
+        const currentLine = line;
         // Check for subsequent labels on the same line
-        let foundPos = [];
+        const foundPos = [];
         labelMarkers.forEach(marker => {
-            let pos = currentLine.indexOf(marker);
+            const pos = currentLine.indexOf(marker);
             // Ignore if it's at the very beginning (already handled by split)
             if (pos > 5) {
                 foundPos.push({ pos, marker });
@@ -188,7 +188,7 @@ const NoteDisplay = ({ text, isSent, linkColor, translatedText }) => {
 
     let scriptureValue = '';
     let chapterValue = '';
-    let commentLines = [];
+    const commentLines = [];
 
     lines.forEach(line => {
         const trimmed = line.trim();

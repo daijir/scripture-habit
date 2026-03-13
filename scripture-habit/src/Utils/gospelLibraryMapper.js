@@ -151,7 +151,7 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
 
     if (!match) return null; // Could not find a chapter number
 
-    let bookName = match[1].trim().toLowerCase().replace(/[.]/g, ''); // Remove dots, lowercase
+    const bookName = match[1].trim().toLowerCase().replace(/[.]/g, ''); // Remove dots, lowercase
     const chapterNum = match[2];
     const verses = match[3]; // This will be "11", "11-13", "11,14" etc.
 
@@ -171,7 +171,7 @@ export const getGospelLibraryUrl = (volume, chapterInput, language = 'en') => {
     }
 
     // Mapping for other volumes
-    /* eslint-disable no-dupe-keys */
+     
     const bookMappings = {
         // Book of Mormon
         "1 nephi": "1-ne", "1 ne": "1-ne",

@@ -88,7 +88,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
     useEffect(() => {
         if (isOpen && noteToEdit) {
-            let text = removeNoteHeader(noteToEdit.text || '');
+            const text = removeNoteHeader(noteToEdit.text || '');
 
             const chapterMatch = text.match(/\*\*(?:Chapter|Title|Speech):\*\* (.*?)(?:\n|$)/);
             const chap = chapterMatch ? chapterMatch[1].trim() : '';
@@ -476,7 +476,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
 
                     // SYNC TO GROUPS
                     // 1. Get the list of groups this note was shared with
-                    let sharedMessageIds = { ...(noteToEdit.sharedMessageIds || {}) };
+                    const sharedMessageIds = { ...(noteToEdit.sharedMessageIds || {}) };
                     const groupsToCheck = noteToEdit.sharedWithGroups || [];
                     let idsUpdated = false;
 
@@ -1030,7 +1030,7 @@ const NewNote = ({ isOpen, onClose, userData, noteToEdit, onDelete, userGroups =
                             type="text"
                             value={chapter}
                             onChange={(e) => {
-                                let val = e.target.value;
+                                const val = e.target.value;
                                 setChapter(val);
 
                                 if (val.length > 0 && scripture && scripture !== 'Other' && scripture !== 'General Conference' && scripture !== 'BYU Speeches') {

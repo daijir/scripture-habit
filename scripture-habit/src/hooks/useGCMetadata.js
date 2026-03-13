@@ -76,7 +76,7 @@ export const useGCMetadata = (urlOrSlug, language) => {
                 };
 
                 // Override target lang if mapped
-                let apiLang = langMap[language] || 'eng';
+                const apiLang = langMap[language] || 'eng';
                 // For Chinese, Church often uses ?lang=zho for Traditional.
 
                 const endpoint = isChurchUrl ? '/api/fetch-gc-metadata' : '/api/url-preview';

@@ -1,0 +1,38 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ "main", "master", "develop" ]
+  pull_request:
+    branches: [ "main", "master", "develop" ]
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x] # 現在主流の安定版Node.jsを指定します
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm' # npmの依存関係のキャッシュを有効化して高速化します
+
+      - name: Install dependencies
+        run: npm ci # `npm install`よりも厳密で高速なクリーンインストールを行います
+
+      - name: Run ESLint
+        run: npm run lint # Lint（静的コード解析）を実行します
+
+      - name: Run Tests (Vitest)
+        run: npx vitest run # Vitestを1度だけ実行（監視モードをオフ）してテストします
+
+      - name: Build Project
+        run: npm run build # 本番用のビルドが正常に通るかも確認します
